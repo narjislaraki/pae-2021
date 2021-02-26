@@ -34,20 +34,20 @@ public interface Utilisateur {
 
   void setEmail(String email);
 
-  String getMot_de_passe();
+  String getMotDePasse();
 
-  void setMot_de_passe(String mot_de_passe);
+  void setMotDePasse(String motDePasse);
 
   Role getRole();
 
   void setRole(String role);
 
-  boolean isEst_valide();
+  boolean isEstValide();
 
-  void setEst_valide(boolean est_valide);
+  void setEstValide(boolean estValide);
 
-  LocalDateTime getDate_inscription();
+  LocalDateTime getDateInscription();
 
-  void setDate_inscription(LocalDateTime date_inscription);
+  void setDateInscription(LocalDateTime dateInscription);
 
 }

@@ -4,11 +4,15 @@ import java.time.LocalDateTime;
 
 public class UtilisateurImpl implements Utilisateur {
 
-  private int id, adresse;
-  private String pseudo, nom, prenom, email, mot_de_passe;
+  private int id;
+  private int adresse;
+  private String pseudo;
+  private String nom , prenom;
+  private String email;
+  private String motDePasse;
   private Role role;
-  private boolean est_valide;
-  private LocalDateTime date_inscription; // TODO DateTime?
+  private boolean estValide;
+  private LocalDateTime dateInscription; // TODO DateTime?
 
   @Override
   public int getId() {
@@ -71,13 +75,13 @@ public class UtilisateurImpl implements Utilisateur {
   }
 
   @Override
-  public String getMot_de_passe() {
-    return mot_de_passe;
+  public String getMotDePasse() {
+    return motDePasse;
   }
 
   @Override
-  public void setMot_de_passe(String mot_de_passe) {
-    this.mot_de_passe = mot_de_passe;
+  public void setMotDePasse(String motDePasse) {
+    this.motDePasse = motDePasse;
   }
 
   @Override
@@ -106,23 +110,23 @@ public class UtilisateurImpl implements Utilisateur {
   }
 
   @Override
-  public boolean isEst_valide() { // TODO Modifier?
-    return est_valide;
+  public boolean isEstValide() { // TODO Modifier?
+    return estValide;
   }
 
   @Override
-  public void setEst_valide(boolean est_valide) {
-    this.est_valide = est_valide;
+  public void setEstValide(boolean estValide) {
+    this.estValide = estValide;
   }
 
   @Override
-  public LocalDateTime getDate_inscription() {
-    return date_inscription;
+  public LocalDateTime getDateInscription() {
+    return dateInscription;
   }
 
   @Override
-  public void setDate_inscription(LocalDateTime date_inscription) {
-    this.date_inscription = date_inscription;
+  public void setDateInscription(LocalDateTime dateInscription) {
+    this.dateInscription = dateInscription;
   }
 
 }

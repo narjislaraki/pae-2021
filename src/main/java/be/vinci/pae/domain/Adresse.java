@@ -25,9 +25,9 @@ public interface Adresse {
 
   void setVille(String ville);
 
-  String getCode_postal();
+  String getCodePostal();
 
-  void setCode_postal(String code_postal);
+  void setCodePostal(String codePostal);
 
   String getPays();
 

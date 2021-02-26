@@ -2,8 +2,13 @@ package be.vinci.pae.domain;
 
 public class AdresseImpl implements Adresse {
 
-  private int id, boite;
-  private String rue, numero, ville, code_postal, pays;
+  private int id;
+  private int boite;
+  private String rue;
+  private String numero;
+  private String ville;
+  private String codePostal;
+  private String pays;
 
   @Override
   public int getId() {
@@ -56,13 +61,13 @@ public class AdresseImpl implements Adresse {
   }
 
   @Override
-  public String getCode_postal() {
-    return code_postal;
+  public String getCodePostal() {
+    return codePostal;
   }
 
   @Override
-  public void setCode_postal(String code_postal) {
-    this.code_postal = code_postal;
+  public void setCodePostal(String codePostal) {
+    this.codePostal = codePostal;
   }
 
   @Override
