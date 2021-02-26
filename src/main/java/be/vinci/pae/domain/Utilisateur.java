@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public interface Utilisateur {
 
-  public enum Role {
+  enum Role {
     ADMIN, ANTIQUAIRE, CLIENT
   };
 

@@ -7,7 +7,8 @@ public class UtilisateurImpl implements Utilisateur {
   private int id;
   private int adresse;
   private String pseudo;
-  private String nom , prenom;
+  private String nom;
+  private String prenom;
   private String email;
   private String motDePasse;
   private Role role;
