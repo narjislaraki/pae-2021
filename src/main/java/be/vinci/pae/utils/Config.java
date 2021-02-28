@@ -1,10 +1,10 @@
-package be.vinci.pae.services;
+package be.vinci.pae.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Context {
+public class Config {
 
   private static Properties props = new Properties();
 
