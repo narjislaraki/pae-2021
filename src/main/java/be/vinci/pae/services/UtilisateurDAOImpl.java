@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class UtilisateurDAOImpl {
+public class UtilisateurDAOImpl implements UtilisateurDAO {
   private Connection conn = null;
 
   public UtilisateurDAOImpl() {
@@ -35,11 +35,13 @@ public class UtilisateurDAOImpl {
 
   }
 
+  @Override
   public Utilisateur getUtilisateur(String pseudo) {
     // TODO Auto-generated method stub
     return null;
   }
 
+  @Override
   public void addUtilisateur(Utilisateur utilisateur) {
     // TODO Auto-generated method stub
 

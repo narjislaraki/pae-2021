@@ -1,5 +1,6 @@
 package be.vinci.pae.main;
 
+import be.vinci.pae.services.UtilisateurDAO;
 import be.vinci.pae.services.UtilisateurDAOImpl;
 
 /**
@@ -13,7 +14,7 @@ public class Main {
    * 
    * @param args command line arguments
    */
-  static UtilisateurDAOImpl ds = new UtilisateurDAOImpl();
+  static UtilisateurDAO ds = new UtilisateurDAOImpl();
 
   public static void main(String[] args) {
     System.out.println("Hello world!");
