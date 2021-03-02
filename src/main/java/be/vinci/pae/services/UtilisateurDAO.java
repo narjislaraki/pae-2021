@@ -7,6 +7,8 @@ public interface UtilisateurDAO {
 
   Utilisateur getUtilisateur(String pseudo);
 
+  Utilisateur getUtilisateur(int id);
+
   void addUtilisateur(Utilisateur utilisateur);
 
 }

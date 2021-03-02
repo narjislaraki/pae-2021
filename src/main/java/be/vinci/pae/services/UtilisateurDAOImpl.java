@@ -35,15 +35,39 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
   }
 
+  /**
+   * Recherche de l'utilisateur dans la DB via son pseudo
+   * 
+   * @param String pseudo le pseudo
+   * @return l'utilisateur complet s'il existe, sinon null
+   */
   @Override
   public Utilisateur getUtilisateur(String pseudo) {
     // TODO Auto-generated method stub
     return null;
   }
 
+  /**
+   * Recherche de l'utilisateur dans la DB via son id
+   * 
+   * @param int id l'id
+   * @return l'utilisateur complet s'il existe, sinon null
+   */
+  @Override
+  public Utilisateur getUtilisateur(int id) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+  /**
+   * Ajoute un utilisateur
+   * 
+   * @param Utilisateur utilisateur l'utilisateur
+   */
   @Override
   public void addUtilisateur(Utilisateur utilisateur) {
-    // TODO Auto-generated method stub
+    // TODO Auto-generated method stub --> return quelque chose type boolean ou plus complexe?
 
   }
 
