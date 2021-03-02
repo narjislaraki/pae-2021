@@ -4,7 +4,7 @@ public interface Utilisateur extends UtilisateurDTO {
 
   boolean checkMotDePasse(String motDePasse);
 
-  String hashMotDePasse(String password);
+  String hashMotDePasse(String motDePasse);
 
 
 }
