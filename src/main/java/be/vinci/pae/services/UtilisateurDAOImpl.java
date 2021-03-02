@@ -36,9 +36,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
   }
 
   /**
-   * Recherche de l'utilisateur dans la DB via son pseudo
+   * Recherche de l'utilisateur dans la base de données via son pseudo.
    * 
-   * @param String pseudo le pseudo
+   * @param pseudo le pseudo
    * @return l'utilisateur complet s'il existe, sinon null
    */
   @Override
@@ -48,9 +48,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
   }
 
   /**
-   * Recherche de l'utilisateur dans la DB via son id
+   * Recherche de l'utilisateur dans la base de données via son id.
    * 
-   * @param int id l'id
+   * @param id l'id
    * @return l'utilisateur complet s'il existe, sinon null
    */
   @Override
@@ -61,14 +61,13 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 
   /**
-   * Ajoute un utilisateur
+   * Ajoute un utilisateur dans la base de données.
    * 
-   * @param Utilisateur utilisateur l'utilisateur
+   * @param utilisateur l'utilisateur
    */
   @Override
   public void addUtilisateur(Utilisateur utilisateur) {
     // TODO Auto-generated method stub --> return quelque chose type boolean ou plus complexe?
-
   }
 
 
