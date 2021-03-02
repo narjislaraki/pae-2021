@@ -6,10 +6,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DataServiceUserCollection {
+public class DataServiceUtilisateurCollection {
   private Connection conn = null;
 
-  public DataServiceUserCollection() {
+  public DataServiceUtilisateurCollection() {
     Config.load("prod.properties");
     try {
       Class.forName("org.postgresql.Driver");
