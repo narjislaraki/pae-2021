@@ -3,7 +3,7 @@ package be.vinci.pae.api;
 import be.vinci.pae.api.utils.Json;
 import be.vinci.pae.domain.Utilisateur;
 import be.vinci.pae.domain.UtilisateurFactory;
-import be.vinci.pae.services.DataServiceUtilisateurCollection;
+import be.vinci.pae.services.UtilisateurDAOImpl;
 import be.vinci.pae.utils.Config;
 
 import com.auth0.jwt.JWT;
@@ -30,7 +30,7 @@ public class Authentification {
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Inject
-  private DataServiceUtilisateurCollection dataService;
+  private UtilisateurDAOImpl dataService;
 
   @Inject
   private UtilisateurFactory userFactory;

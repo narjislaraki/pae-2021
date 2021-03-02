@@ -3,7 +3,7 @@ package be.vinci.pae.api;
 // import be.vinci.pae.api.filters.Authorize;
 // import be.vinci.pae.api.utils.Json;
 import be.vinci.pae.domain.UtilisateurFactory;
-import be.vinci.pae.services.DataServiceUtilisateurCollection;
+import be.vinci.pae.services.UtilisateurDAOImpl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -14,7 +14,7 @@ import jakarta.ws.rs.Path;
 public class UtilisateurResource {
 
   @Inject
-  private DataServiceUtilisateurCollection dataService;
+  private UtilisateurDAOImpl dataService;
 
   @Inject
   private UtilisateurFactory utilisateurFactory;

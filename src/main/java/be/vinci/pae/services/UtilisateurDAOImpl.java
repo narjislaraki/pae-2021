@@ -7,10 +7,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DataServiceUtilisateurCollection {
+public class UtilisateurDAOImpl {
   private Connection conn = null;
 
-  public DataServiceUtilisateurCollection() {
+  public UtilisateurDAOImpl() {
     Config.load("prod.properties");
     try {
       Class.forName("org.postgresql.Driver");
