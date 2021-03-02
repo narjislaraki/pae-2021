@@ -52,23 +52,7 @@ public class Authentification {
       return Response.status(Status.UNAUTHORIZED).entity("Pseudo ou mot de passe incorrect")
           .type(MediaType.TEXT_PLAIN).build();
     }
-    // Create token
-    String token;
-    try {
-      token = JWT.create().withIssuer("auth0").withClaim("utilisateur", utilisateur.getId())
-          .sign(this.jwtAlgorithm);
-    } catch (Exception e) {
-      throw new WebApplicationException("Incapable de créer un token", e,
-          Status.INTERNAL_SERVER_ERROR);
-    }
-    // Build response
-
-    // load the user data from a public JSON view to filter out the private info not
-    // to be returned by the API (such as password)
-    Utilisateur utilisateurDTO = Json.filterPublicJsonView(utilisateur, Utilisateur.class);
-    ObjectNode node =
-        jsonMapper.createObjectNode().put("token", token).putPOJO("utilisateur", utilisateurDTO);
-    return Response.ok(node, MediaType.APPLICATION_JSON).build();
+    return creerToken(utilisateur);
 
   }
 
@@ -96,7 +80,10 @@ public class Authentification {
     utilisateur.setMotDePasse(utilisateur.hashMotDePasse(password));
     this.dataService.addUtilisateur(utilisateur);
 
-    // Create token
+    return creerToken(utilisateur);
+  }
+
+  private Response creerToken(Utilisateur utilisateur) {
     String token;
     try {
       token = JWT.create().withIssuer("auth0").withClaim("utilisateur", utilisateur.getId())
@@ -109,12 +96,9 @@ public class Authentification {
 
     // load the user data from a public JSON view to filter out the private info not
     // to be returned by the API (such as password)
-    // String publicSerializedUser = Json.serializePublicJsonView(utilisateur);
     Utilisateur utilisateurDTO = Json.filterPublicJsonView(utilisateur, Utilisateur.class);
     ObjectNode node =
         jsonMapper.createObjectNode().put("token", token).putPOJO("utilisateur", utilisateurDTO);
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
-
   }
-
 }
