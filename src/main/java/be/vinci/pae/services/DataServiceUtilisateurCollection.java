@@ -1,5 +1,6 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.domain.Utilisateur;
 import be.vinci.pae.utils.Config;
 
 import java.sql.Connection;
@@ -30,6 +31,16 @@ public class DataServiceUtilisateurCollection {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
+
+  }
+
+  public Utilisateur getUtilisateur(String pseudo) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public void addUtilisateur(Utilisateur utilisateur) {
+    // TODO Auto-generated method stub
 
   }
 

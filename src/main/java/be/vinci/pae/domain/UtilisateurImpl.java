@@ -130,4 +130,16 @@ public class UtilisateurImpl implements Utilisateur {
     this.dateInscription = dateInscription;
   }
 
+  @Override
+  public boolean checkMotDePasse(String motDePasse) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public String hashMotDePasse(String password) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }
