@@ -17,15 +17,16 @@ import java.util.List;
 import views.Vues;
 
 public class Json {
-  private final static ObjectMapper jsonMapper = new ObjectMapper();
+  private static final ObjectMapper jsonMapper = new ObjectMapper();
 
   public static <T> List<T> loadDataFromFile(String dbFilePath, String collectionName,
       Class<T> targetClass) {
     try {
       JsonNode node = jsonMapper.readTree(Paths.get(dbFilePath).toFile());
       JsonNode collection = node.get(collectionName);
-      if (collection == null)
+      if (collection == null) {
         return new ArrayList<T>();
+      }
       return jsonMapper.readerForListOf(targetClass).readValue(node.get(collectionName));
 
     } catch (FileNotFoundException e) {

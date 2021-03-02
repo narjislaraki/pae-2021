@@ -82,12 +82,13 @@ public class Authentification {
           .type(MediaType.TEXT_PLAIN).build();
     }
     String pseudo = json.get("pseudo").asText();
-    String password = json.get("motDePasse").asText();
     // Check if user exists
     if (this.dataService.getUtilisateur(pseudo) != null) {
       return Response.status(Status.CONFLICT).entity("Ce pseudo est déjà utilisé")
           .type(MediaType.TEXT_PLAIN).build();
     }
+
+    String password = json.get("motDePasse").asText();
     // create user
     Utilisateur utilisateur = (Utilisateur) this.userFactory.getUtilisateurDTO();
     utilisateur.setId(1);
