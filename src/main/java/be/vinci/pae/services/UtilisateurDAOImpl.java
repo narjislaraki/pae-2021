@@ -11,6 +11,7 @@ public class UtilisateurDAOImpl {
   private Connection conn = null;
 
   public UtilisateurDAOImpl() {
+    // TODO Attention, la connexion devra se faire dans une classe externe
     Config.load("prod.properties");
     try {
       Class.forName("org.postgresql.Driver");
