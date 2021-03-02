@@ -109,7 +109,7 @@ public class Authentification {
 
     // load the user data from a public JSON view to filter out the private info not
     // to be returned by the API (such as password)
-    String publicSerializedUser = Json.serializePublicJsonView(utilisateur);
+    // String publicSerializedUser = Json.serializePublicJsonView(utilisateur);
     Utilisateur utilisateurDTO = Json.filterPublicJsonView(utilisateur, Utilisateur.class);
     ObjectNode node =
         jsonMapper.createObjectNode().put("token", token).putPOJO("utilisateur", utilisateurDTO);
