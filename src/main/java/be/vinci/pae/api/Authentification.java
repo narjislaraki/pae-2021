@@ -47,7 +47,8 @@ public class Authentification {
     String pseudo = json.get("pseudo").asText();
     String motDePasse = json.get("motDePasse").asText();
     // Try to login
-    Utilisateur utilisateur = this.dataService.getUtilisateur(pseudo);
+    // TODO cast ou DTO?
+    Utilisateur utilisateur = (Utilisateur) this.dataService.getUtilisateur(pseudo);
     if (utilisateur == null || !utilisateur.checkMotDePasse(motDePasse)) {
       return Response.status(Status.UNAUTHORIZED).entity("Pseudo ou mot de passe incorrect")
           .type(MediaType.TEXT_PLAIN).build();

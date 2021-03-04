@@ -1,37 +1,25 @@
 package be.vinci.pae.services;
 
 import be.vinci.pae.domain.Utilisateur;
-import be.vinci.pae.utils.Config;
+import be.vinci.pae.domain.UtilisateurDTO;
+import be.vinci.pae.domain.UtilisateurFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import jakarta.inject.Inject;
+
 public class UtilisateurDAOImpl implements UtilisateurDAO {
-  private Connection conn = null;
+
+  @Inject
+  private DalServices ds;
+
+  @Inject
+  private UtilisateurFactory uf;
 
   public UtilisateurDAOImpl() {
     // TODO Attention, la connexion devra se faire dans une classe externe
-    Config.load("prod.properties");
-    try {
-      Class.forName("org.postgresql.Driver");
-    } catch (ClassNotFoundException e) {
-      System.out.println("Driver postgresql manquant !");
-      System.exit(1);
-    }
-    try {
-      conn = DriverManager.getConnection(Config.getProperty("url"), Config.getProperty("user"),
-          Config.getProperty("password"));
-    } catch (SQLException e) {
-      System.out.println("Impossible de joindre le serveur !");
-      System.exit(1);
-    }
-    try {
-      conn.close();
-      System.out.println("La connexion vient de se fermer");
-    } catch (SQLException e) {
-      System.out.println(e.getMessage());
-    }
 
   }
 
@@ -42,9 +30,37 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
    * @return l'utilisateur complet s'il existe, sinon null
    */
   @Override
-  public Utilisateur getUtilisateur(String pseudo) {
-    // TODO Auto-generated method stub
-    return null;
+  public UtilisateurDTO getUtilisateur(String pseudo) {
+    // TODO PS -> attribut?
+    // TODO retrait astérisque
+    // TODO fetch de l'adresse aussi
+    UtilisateurDTO u = uf.getUtilisateurDTO();
+
+    try {
+      PreparedStatement ps =
+          ds.getPreparedStatement("SELECT * FROM pae.utilisateurs u WHERE u.pseudo = ?;");
+
+      ps.setString(1, pseudo);
+
+      ResultSet rs = ps.executeQuery();
+
+      while (rs.next()) {
+        u.setId(rs.getInt(1));
+        u.setPseudo(rs.getString(2));
+        u.setNom(rs.getString(3));
+        u.setPrenom(rs.getString(4));
+        u.setEmail(rs.getString(5));
+        u.setRole(rs.getString(6));
+        u.setDateInscription(rs.getTimestamp(7).toLocalDateTime());
+        u.setEstValide(rs.getBoolean(8));
+        u.setMotDePasse(rs.getString(9));
+        u.setAdresse(rs.getInt(10));
+      }
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return u;
   }
 
   /**
