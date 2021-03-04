@@ -1,11 +1,12 @@
 package be.vinci.pae.services;
 
 import be.vinci.pae.domain.Utilisateur;
+import be.vinci.pae.domain.UtilisateurDTO;
 
 
 public interface UtilisateurDAO {
 
-  Utilisateur getUtilisateur(String pseudo);
+  UtilisateurDTO getUtilisateur(String pseudo);
 
   Utilisateur getUtilisateur(int id);
 
