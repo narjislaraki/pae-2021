@@ -2,7 +2,6 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.utils.Json;
 import be.vinci.pae.domain.Utilisateur;
-import be.vinci.pae.domain.UtilisateurFactory;
 import be.vinci.pae.domain.UtilisateurUCC;
 import be.vinci.pae.utils.Config;
 
@@ -32,8 +31,7 @@ public class Authentification {
   @Inject
   private UtilisateurUCC userUCC;
 
-  @Inject
-  private UtilisateurFactory uf;
+  // @Inject private UtilisateurFactory uf;
 
   @POST
   @Path("login")
