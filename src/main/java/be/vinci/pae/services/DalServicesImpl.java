@@ -15,14 +15,14 @@ public class DalServicesImpl implements DalServices {
     try {
       Class.forName("org.postgresql.Driver");
     } catch (ClassNotFoundException e) {
-      System.out.println("Driver postgresql manquant !");
+      System.out.println("Missing postgresql driver!");
       System.exit(1);
     }
     try {
-      conn = DriverManager.getConnection(Config.getProperty("url"),
-          Config.getProperty("utilisateur"), Config.getProperty("motDePasse"));
+      conn = DriverManager.getConnection(Config.getProperty("url"), Config.getProperty("user"),
+          Config.getProperty("password"));
     } catch (SQLException e) {
-      System.out.println("Impossible de joindre le serveur !");
+      System.out.println("Unable to reach the server!");
       System.exit(1);
     }
 
