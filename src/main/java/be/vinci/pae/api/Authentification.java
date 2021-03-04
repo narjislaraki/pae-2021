@@ -3,7 +3,7 @@ package be.vinci.pae.api;
 import be.vinci.pae.api.utils.Json;
 import be.vinci.pae.domain.Utilisateur;
 import be.vinci.pae.domain.UtilisateurFactory;
-import be.vinci.pae.services.UtilisateurDAO;
+import be.vinci.pae.domain.UtilisateurUCC;
 import be.vinci.pae.utils.Config;
 
 import com.auth0.jwt.JWT;
@@ -30,10 +30,10 @@ public class Authentification {
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Inject
-  private UtilisateurDAO dataService;
+  private UtilisateurUCC uUCC;
 
   @Inject
-  private UtilisateurFactory userFactory;
+  private UtilisateurFactory uf;
 
   @POST
   @Path("login")
@@ -48,38 +48,11 @@ public class Authentification {
     String motDePasse = json.get("motDePasse").asText();
     // Try to login
     // TODO cast ou DTO?
-    Utilisateur utilisateur = (Utilisateur) this.dataService.getUtilisateur(pseudo);
+    Utilisateur utilisateur = (Utilisateur) uUCC.connexion(pseudo);
     if (utilisateur == null || !utilisateur.checkMotDePasse(motDePasse)) {
       return Response.status(Status.UNAUTHORIZED).entity("Pseudo ou mot de passe incorrect")
           .type(MediaType.TEXT_PLAIN).build();
     }
-    return creerToken(utilisateur);
-
-  }
-
-  @POST
-  @Path("register")
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response register(JsonNode json) {
-    // Get and check credentials
-    if (!json.hasNonNull("pseudo") || !json.hasNonNull("motDePasse")) {
-      return Response.status(Status.UNAUTHORIZED).entity("Pseudo et mot de passe nécessaires")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-    String pseudo = json.get("pseudo").asText();
-    // Check if user exists
-    if (this.dataService.getUtilisateur(pseudo) != null) {
-      return Response.status(Status.CONFLICT).entity("Ce pseudo est déjà utilisé")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-
-    String password = json.get("motDePasse").asText();
-    // create user
-    Utilisateur utilisateur = (Utilisateur) this.userFactory.getUtilisateurDTO();
-    utilisateur.setId(1);
-    utilisateur.setPseudo(pseudo);
-    utilisateur.setMotDePasse(utilisateur.hashMotDePasse(password));
-    this.dataService.addUtilisateur(utilisateur);
 
     return creerToken(utilisateur);
   }

@@ -57,7 +57,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         u.setAdresse(rs.getInt(10));
       }
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return u;

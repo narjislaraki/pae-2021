@@ -25,12 +25,7 @@ public class DalServicesImpl implements DalServices {
       System.out.println("Impossible de joindre le serveur !");
       System.exit(1);
     }
-    try {
-      conn.close();
-      System.out.println("La connexion vient de se fermer");
-    } catch (SQLException e) {
-      System.out.println(e.getMessage());
-    }
+
   }
 
   @Override
