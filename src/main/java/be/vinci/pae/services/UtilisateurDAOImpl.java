@@ -34,17 +34,19 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     // TODO PS -> attribut?
     // TODO retrait astérisque
     // TODO fetch de l'adresse aussi
-    UtilisateurDTO u = uf.getUtilisateurDTO();
+    UtilisateurDTO u = null;
 
     try {
       PreparedStatement ps =
           ds.getPreparedStatement("SELECT * FROM pae.utilisateurs u WHERE u.pseudo = ?;");
+      // u.id_personne, u.pseudo, u.nom, u.prenom, u.email, u.role, u.date_inscription, u.est_valide, u.mot_de_passe
 
       ps.setString(1, pseudo);
 
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
+        u = uf.getUtilisateurDTO(); // TODO bon endroit?
         u.setId(rs.getInt(1));
         u.setPseudo(rs.getString(2));
         u.setNom(rs.getString(3));
