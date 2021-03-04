@@ -1,6 +1,7 @@
 package be.vinci.pae.main;
 
-import be.vinci.pae.services.DataServiceUserCollection;
+import be.vinci.pae.services.UtilisateurDAO;
+import be.vinci.pae.services.UtilisateurDAOImpl;
 
 /**
  * Main class.
@@ -13,7 +14,7 @@ public class Main {
    * 
    * @param args command line arguments
    */
-  static DataServiceUserCollection ds = new DataServiceUserCollection();
+  static UtilisateurDAO ds = new UtilisateurDAOImpl();
 
   public static void main(String[] args) {
     System.out.println("Hello world!");

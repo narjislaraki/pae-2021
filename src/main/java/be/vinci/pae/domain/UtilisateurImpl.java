@@ -1,6 +1,9 @@
 package be.vinci.pae.domain;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.time.LocalDateTime;
+
 
 public class UtilisateurImpl implements Utilisateur {
 
@@ -111,7 +114,7 @@ public class UtilisateurImpl implements Utilisateur {
   }
 
   @Override
-  public boolean isEstValide() { // TODO Modifier?
+  public boolean isEstValide() { // TODO Modifier titre?
     return estValide;
   }
 
@@ -128,6 +131,21 @@ public class UtilisateurImpl implements Utilisateur {
   @Override
   public void setDateInscription(LocalDateTime dateInscription) {
     this.dateInscription = dateInscription;
+  }
+
+  @Override
+  public boolean checkMotDePasse(String motDePasse) {
+    return BCrypt.checkpw(motDePasse, this.motDePasse);
+  }
+
+  @Override
+  public String hashMotDePasse(String motDePasse) {
+    return BCrypt.hashpw(motDePasse, BCrypt.gensalt());
+  }
+
+  @Override
+  public String toString() {
+    return "{id:" + id + ", login:" + pseudo + ", password:" + motDePasse + "}";
   }
 
 }
