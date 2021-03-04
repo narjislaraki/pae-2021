@@ -9,27 +9,27 @@ public interface Address {
 
   void setId(int id);
 
-  public int unitNumber();
+  int unitNumber();
 
-  public void setUnitNumber(int unitNumber);
+  void setUnitNumber(int unitNumber);
 
-  public String getStreet();
+  String getStreet();
 
-  public void setStreet(String street);
+  void setStreet(String street);
 
-  public String getBuildingNumber();
+  String getBuildingNumber();
 
-  public void setBuildingNumber(String buildingNumber);
+  void setBuildingNumber(String buildingNumber);
 
-  public String getCity();
+  String getCity();
 
-  public void setCity(String city);
+  void setCity(String city);
 
-  public String getPostCode();
+  String getPostCode();
 
-  public void setPostCode(String postCode);
+  void setPostCode(String postCode);
 
-  public String getCountry();
+  String getCountry();
 
-  public void setCountry(String country);
+  void setCountry(String country);
 }

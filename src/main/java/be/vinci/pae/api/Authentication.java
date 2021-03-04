@@ -47,7 +47,7 @@ public class Authentication {
     // Try to login
     // TODO cast ou DTO?
     User user = (User) userUCC.connection(username);
-    if (user == null || !user.checkPassword(username)) {
+    if (user == null || !user.checkPassword(password)) {
       return Response.status(Status.UNAUTHORIZED).entity("Pseudo ou mot de passe incorrect")
           .type(MediaType.TEXT_PLAIN).build();
     }
