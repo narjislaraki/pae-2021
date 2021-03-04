@@ -2,10 +2,8 @@ package be.vinci.pae.services;
 
 import be.vinci.pae.domain.Utilisateur;
 
-import java.sql.Connection;
-
 public class UtilisateurDAOImpl implements UtilisateurDAO {
-  
+
   public UtilisateurDAOImpl() {
     // TODO Attention, la connexion devra se faire dans une classe externe
 
