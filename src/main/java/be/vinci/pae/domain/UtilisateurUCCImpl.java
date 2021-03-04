@@ -11,10 +11,9 @@ public class UtilisateurUCCImpl implements UtilisateurUCC {
   private UtilisateurDAO utilisateurDAO;
 
 
-
   @Override
   public UtilisateurDTO connexion(String pseudo) {
-    UtilisateurDTO uDTO = utilisateurDAO.getUtilisateur(pseudo);
-    return uDTO;
+    UtilisateurDTO userDTO = utilisateurDAO.getUtilisateur(pseudo);
+    return userDTO;
   }
 }

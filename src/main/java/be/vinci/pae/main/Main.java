@@ -4,11 +4,6 @@ import be.vinci.pae.services.UtilisateurDAO;
 import be.vinci.pae.services.UtilisateurDAOImpl;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
-/**
- * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
- * 
- * @return Grizzly HTTP server.
- */
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;

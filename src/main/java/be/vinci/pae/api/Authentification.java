@@ -30,7 +30,7 @@ public class Authentification {
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Inject
-  private UtilisateurUCC uUCC;
+  private UtilisateurUCC userUCC;
 
   @Inject
   private UtilisateurFactory uf;
@@ -48,7 +48,7 @@ public class Authentification {
     String motDePasse = json.get("motDePasse").asText();
     // Try to login
     // TODO cast ou DTO?
-    Utilisateur utilisateur = (Utilisateur) uUCC.connexion(pseudo);
+    Utilisateur utilisateur = (Utilisateur) userUCC.connexion(pseudo);
     if (utilisateur == null || !utilisateur.checkMotDePasse(motDePasse)) {
       return Response.status(Status.UNAUTHORIZED).entity("Pseudo ou mot de passe incorrect")
           .type(MediaType.TEXT_PLAIN).build();

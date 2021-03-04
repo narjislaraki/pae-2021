@@ -37,9 +37,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     UtilisateurDTO u = null;
 
     try {
-      PreparedStatement ps =
-          ds.getPreparedStatement("SELECT * FROM pae.utilisateurs u WHERE u.pseudo = ?;");
-      // u.id_personne, u.pseudo, u.nom, u.prenom, u.email, u.role, u.date_inscription, u.est_valide, u.mot_de_passe
+      PreparedStatement ps = ds.getPreparedStatement(
+          "SELECT u.id_personne, u.pseudo, u.nom, u.prenom, u.email, u.role, u.date_inscription, u.est_valide, u.mot_de_passe"
+              + " FROM pae.utilisateurs u WHERE u.pseudo = ?;");
+
 
       ps.setString(1, pseudo);
 
