@@ -1,6 +1,6 @@
 package views;
 
-public class Vues {
+public class Views {
   public static class Public {
   }
 

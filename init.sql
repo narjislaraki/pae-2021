@@ -9,7 +9,7 @@ CREATE TABLE pae.addresses(
 	street VARCHAR(50) NOT NULL,
 	building_number VARCHAR(7) NOT NULL,
 	unit_number INTEGER,
-	commune	VARCHAR(15) NOT NULL,
+	city VARCHAR(15) NOT NULL,
 	postcode VARCHAR(10) NOT NULL,
 	country VARCHAR(15) NOT NULL
 );

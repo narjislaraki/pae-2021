@@ -1,7 +1,7 @@
 package be.vinci.pae.main;
 
-import be.vinci.pae.services.UtilisateurDAO;
-import be.vinci.pae.services.UtilisateurDAOImpl;
+import be.vinci.pae.services.UserDAO;
+import be.vinci.pae.services.UserDAOImpl;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
@@ -13,10 +13,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import java.io.IOException;
 import java.net.URI;
 
-/**
- * Main class.
- *
- */
 public class Main {
   public static HttpServer startServer() {
     // Create a resource config that scans for JAX-RS resources and providers
@@ -34,7 +30,7 @@ public class Main {
    * 
    * @param args command line arguments
    */
-  static UtilisateurDAO ds = new UtilisateurDAOImpl();
+  static UserDAO ds = new UserDAOImpl();
   static String env;
 
   public static void main(String[] args) throws IOException {
@@ -45,10 +41,6 @@ public class Main {
     }
 
     switch (env) {
-      case "dev": // TODO Utile?
-        Config.load("dev.properties");
-        break;
-
       case "test":
         Config.load("test.properties");
         break;

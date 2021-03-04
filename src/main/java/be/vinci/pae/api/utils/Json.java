@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
-import views.Vues;
+import views.Views;
 
 public class Json {
   private static final ObjectMapper jsonMapper = new ObjectMapper();
@@ -14,7 +14,7 @@ public class Json {
   public static <T> String serializePublicJsonView(T item) {
     // serialize using JSON Views : Public View
     try {
-      return jsonMapper.writerWithView(Vues.Public.class).writeValueAsString(item);
+      return jsonMapper.writerWithView(Views.Public.class).writeValueAsString(item);
     } catch (JsonProcessingException e) {
 
       e.printStackTrace();
@@ -31,10 +31,10 @@ public class Json {
       // serialize using JSON Views : public view (all fields not required in the
       // views are set to null)
       String publicItemListAsString =
-          jsonMapper.writerWithView(Vues.Public.class).writeValueAsString(list);
+          jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
       System.out.println("serializing public Json view: " + publicItemListAsString);
       // deserialize using JSON Views : Public View
-      return jsonMapper.readerWithView(Vues.Public.class).forType(type)
+      return jsonMapper.readerWithView(Views.Public.class).forType(type)
           .readValue(publicItemListAsString);
 
     } catch (JsonProcessingException e) {
@@ -51,9 +51,9 @@ public class Json {
       // serialize using JSON Views : public view (all fields not required in the
       // views are set to null)
       String publicItemAsString =
-          jsonMapper.writerWithView(Vues.Public.class).writeValueAsString(item);
+          jsonMapper.writerWithView(Views.Public.class).writeValueAsString(item);
       // deserialize using JSON Views : Public View
-      return jsonMapper.readerWithView(Vues.Public.class).forType(targetClass)
+      return jsonMapper.readerWithView(Views.Public.class).forType(targetClass)
           .readValue(publicItemAsString);
 
     } catch (JsonProcessingException e) {
