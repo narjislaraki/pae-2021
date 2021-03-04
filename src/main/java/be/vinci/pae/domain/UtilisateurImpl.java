@@ -1,9 +1,12 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 
 public class UtilisateurImpl implements Utilisateur {
 
