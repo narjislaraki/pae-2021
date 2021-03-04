@@ -1,0 +1,23 @@
+@baseUrl = http://localhost:8080/usersutilisateurs
+@baseAuthsUrl = http://localhost:8080/auths
+
+
+### FAIL
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "pseudo":"james",
+    "motDePasse":"password"
+}
+
+### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "pseudo":"lianhood",
+    "motDePasse":"1234"
+}
