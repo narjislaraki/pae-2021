@@ -23,7 +23,7 @@ public class UserDAOImpl implements UserDAO {
   }
 
   /**
-   * Searching through thed database for the user, using his username
+   * Searching through thed database for the user, using his username.
    * 
    * @param username the username
    * @return the user if he exists, otherwise null
@@ -66,7 +66,7 @@ public class UserDAOImpl implements UserDAO {
   }
 
   /**
-   * Searching through the database for the user, using his id
+   * Searching through the database for the user, using his id.
    * 
    * @param id the user's id
    * @return the user if he exists, otherwise null
