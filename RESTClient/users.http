@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:8080/usersutilisateurs
+@baseUrl = http://localhost:8080/users
 @baseAuthsUrl = http://localhost:8080/auths
 
 
@@ -8,8 +8,8 @@ POST {{baseAuthsUrl}}/login
 Content-Type: application/json
 
 {
-    "pseudo":"james",
-    "motDePasse":"password"
+    "username":"james",
+    "password":"password"
 }
 
 ### SUCCESS
@@ -18,6 +18,6 @@ POST {{baseAuthsUrl}}/login
 Content-Type: application/json
 
 {
-    "pseudo":"lianhood",
-    "motDePasse":"1234"
+    "username":"test",
+    "password":"1234"
 }

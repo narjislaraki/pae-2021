@@ -1,6 +1,9 @@
 package be.vinci.pae.domain;
 
+import be.vinci.pae.views.Views;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -10,17 +13,28 @@ import java.time.LocalDateTime;
 
 public class UserImpl implements User {
 
+  // TODO assurer les bonnes vues où on le veut
+  @JsonView(Views.Public.class)
   private int id;
+  @JsonView(Views.Internal.class)
   private int address;
+  @JsonView(Views.Public.class)
   private String username;
+  @JsonView(Views.Internal.class)
   private String lastName;
+  @JsonView(Views.Internal.class)
   private String firstName;
+  @JsonView(Views.Public.class)
   private String email;
+  @JsonView(Views.Internal.class)
   private String password;
+  @JsonView(Views.Internal.class)
   private Role role;
+  @JsonView(Views.Internal.class)
   private boolean validated;
+  @JsonView(Views.Internal.class)
   private LocalDateTime registrationDate; // TODO DateTime?
-
+  // TODO Non sérialisable -> solutionner la sérialisation ou changer en String
 
   @Override
   public int getId() {

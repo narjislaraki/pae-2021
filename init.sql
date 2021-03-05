@@ -30,9 +30,9 @@ CREATE TABLE pae.users(
 INSERT INTO pae.addresses VALUES(default, 'rue des sentiers', '7', 1, 'Bruxelles', '1300', 'Belgique');
 -- the mdp of the 2 users is 1234 --
 INSERT INTO pae.users VALUES
-		(default, 'test', 'Heuzer','Nina', 'test@test.com', 'admin', '05/01/2021', true, '$2y$16$KTslMCwnE7lZNJ2QgB9ScO50mn2q8PNyPZBUX9DLPpUqx6Z06xH/y', 1),
-		(default, 'test2', 'Laraki', 'Narjis', 'test2@test.com', 'client', '06/02/2021', true, '$2y$16$KTslMCwnE7lZNJ2QgB9ScO50mn2q8PNyPZBUX9DLPpUqx6Z06xH/y', 1),
-		(default, 'test3', 'de Theux', 'Boris', 'test3@test.com', 'client', '07/02/2021', false, '$2y$16$KTslMCwnE7lZNJ2QgB9ScO50mn2q8PNyPZBUX9DLPpUqx6Z06xH/y', 1);
+		(default, 'test', 'Heuzer','Nina', 'test@test.com', 'admin', '05/01/2021', true, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test2', 'Laraki', 'Narjis', 'test2@test.com', 'client', '06/02/2021', true, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test3', 'de Theux', 'Boris', 'test3@test.com', 'client', '07/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1);
 		
 SELECT * FROM pae.users;	
 		

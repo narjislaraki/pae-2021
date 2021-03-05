@@ -1,8 +1,10 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.time.LocalDateTime;
 
-
+@JsonDeserialize(as = UserImpl.class)
 public interface UserDTO {
 
   enum Role {
