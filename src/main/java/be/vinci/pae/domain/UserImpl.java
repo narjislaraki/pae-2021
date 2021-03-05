@@ -2,6 +2,7 @@ package be.vinci.pae.domain;
 
 import be.vinci.pae.views.Views;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -10,13 +11,14 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({"validated", "address"})
 
 public class UserImpl implements User {
 
   // TODO assurer les bonnes vues où on le veut
   @JsonView(Views.Public.class)
   private int id;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Public.class)
   private int address;
   @JsonView(Views.Public.class)
   private String username;
@@ -30,7 +32,7 @@ public class UserImpl implements User {
   private String password;
   @JsonView(Views.Internal.class)
   private Role role;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Public.class)
   private boolean validated;
   @JsonView(Views.Internal.class)
   private LocalDateTime registrationDate; // TODO DateTime?
@@ -137,8 +139,8 @@ public class UserImpl implements User {
   }
 
   @Override
-  public void setIsValidated(boolean isValidated) {
-    this.validated = isValidated;
+  public void setValidated(boolean validated) {
+    this.validated = validated;
   }
 
   @Override

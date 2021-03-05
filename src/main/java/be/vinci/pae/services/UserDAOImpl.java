@@ -55,9 +55,9 @@ public class UserDAOImpl implements UserDAO {
         user.setEmail(rs.getString(5));
         user.setRole(rs.getString(6));
         user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
-        user.setIsValidated(rs.getBoolean(8));
+        user.setValidated(rs.getBoolean(8));
         user.setPassword(rs.getString(9));
-        // user.setAddress(rs.getInt(10));
+        user.setAddress(rs.getInt(10));
       }
     } catch (SQLException e) {
       e.printStackTrace();
