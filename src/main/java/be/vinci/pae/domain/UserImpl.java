@@ -36,7 +36,8 @@ public class UserImpl implements User {
   private boolean validated;
   @JsonView(Views.Internal.class)
   private LocalDateTime registrationDate; // TODO DateTime?
-  // TODO Non sérialisable -> solutionner la sérialisation ou changer en String
+  // TODO Non sérialisable -> solutionner la sérialisation ou changer en String ?
+  // Ou on ne l'enverra jamais au client...? -> Internal
 
   @Override
   public int getId() {
