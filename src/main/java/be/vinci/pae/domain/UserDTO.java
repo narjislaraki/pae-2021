@@ -45,7 +45,7 @@ public interface UserDTO {
 
   boolean isValidated();
 
-  void setIsValidated(boolean isValidated);
+  void setValidated(boolean isValidated);
 
   LocalDateTime getRegistrationDate();
 
