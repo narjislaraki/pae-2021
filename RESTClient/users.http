@@ -8,7 +8,7 @@ POST {{baseAuthsUrl}}/login
 Content-Type: application/json
 
 {
-    "username":"james",
+    "email":"test.test@test.com",
     "password":"password"
 }
 
@@ -18,6 +18,6 @@ POST {{baseAuthsUrl}}/login
 Content-Type: application/json
 
 {
-    "username":"test",
+    "email":"test@test.com",
     "password":"1234"
 }
