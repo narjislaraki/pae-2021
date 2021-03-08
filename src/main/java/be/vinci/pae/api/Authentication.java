@@ -1,16 +1,15 @@
 package be.vinci.pae.api;
 
-import be.vinci.pae.api.utils.Json;
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.utils.Config;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import be.vinci.pae.api.utils.Json;
+import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -38,17 +37,18 @@ public class Authentication {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
     // Get and check credentials
-    if (!json.hasNonNull("username") || !json.hasNonNull("password")) {
-      return Response.status(Status.UNAUTHORIZED).entity("Pseudo et mot de passe nécessaires")
-          .type(MediaType.TEXT_PLAIN).build();
+    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
+      return Response.status(Status.UNAUTHORIZED)
+          .entity("Les champs avec la mention * doivent être remplis").type(MediaType.TEXT_PLAIN)
+          .build();
     }
-    String username = json.get("username").asText();
+    String email = json.get("email").asText();
     String password = json.get("password").asText();
     // Try to login
     // TODO cast ou DTO?
-    User user = (User) userUCC.connection(username);
-    if (user == null || !user.checkPassword(password)) {
-      return Response.status(Status.UNAUTHORIZED).entity("Pseudo ou mot de passe incorrect")
+    User user = (User) userUCC.connection(email, password);
+    if (user == null) {
+      return Response.status(Status.UNAUTHORIZED).entity("Les données entrées sont incorrectes")
           .type(MediaType.TEXT_PLAIN).build();
     }
 

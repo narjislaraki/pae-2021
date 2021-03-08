@@ -3,12 +3,11 @@ package be.vinci.pae.services;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 
-
 public interface UserDAO {
 
-  UserDTO getUser(String username);
+  UserDTO getUser(String email);
 
-  User getUser(int id);
+  UserDTO getUser(int id);
 
   void addUser(User user);
 
