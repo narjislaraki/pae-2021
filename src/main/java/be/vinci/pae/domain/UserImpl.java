@@ -1,16 +1,10 @@
 package be.vinci.pae.domain;
 
-import be.vinci.pae.views.Views;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
-
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import org.mindrot.jbcrypt.BCrypt;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
+import be.vinci.pae.views.Views;
 
 // @JsonInclude(JsonInclude.Include.NON_NULL)
 // @JsonIgnoreProperties({"validated", "address"})
