@@ -29,13 +29,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class Authentication {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-  private final ObjectMapper jsonMapper= new ObjectMapper();
+  private final ObjectMapper jsonMapper = new ObjectMapper();
 
   public Authentication() {
-	jsonMapper.findAndRegisterModules();
-	jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    jsonMapper.findAndRegisterModules();
+    jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
   }
-	
+
   @Inject
   private UserUCC userUCC;
 
@@ -74,20 +74,19 @@ public class Authentication {
 
     // load the user data from a public JSON view to filter out the private info not
     // to be returned by the API (such as password)
-    //User userDTO = Json.filterPublicJsonView(user, User.class);
-    
+    // User userDTO = Json.filterPublicJsonView(user, User.class);
+
     ObjectNode node = null;
-	try {
-		String json = jsonMapper.writerWithView(Views.Public.class)
-				.writeValueAsString(user);
-		@SuppressWarnings("unchecked")
-		Map<String, String> map = jsonMapper.readValue(json, Map.class);
-		node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
-	} catch (JsonProcessingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	//node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", user);
+    try {
+      String json = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(user);
+      @SuppressWarnings("unchecked")
+      Map<String, String> map = jsonMapper.readValue(json, Map.class);
+      node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
+    } catch (JsonProcessingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", user);
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
 }
