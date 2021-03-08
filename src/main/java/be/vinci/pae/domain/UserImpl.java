@@ -12,8 +12,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-//@JsonInclude(JsonInclude.Include.NON_NULL)
-//@JsonIgnoreProperties({"validated", "address"})
+// @JsonInclude(JsonInclude.Include.NON_NULL)
+// @JsonIgnoreProperties({"validated", "address"})
 
 public class UserImpl implements User {
 
@@ -37,7 +37,7 @@ public class UserImpl implements User {
   @JsonView(Views.Internal.class)
   private boolean validated;
   @JsonView(Views.Public.class)
-  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime registrationDate; // TODO DateTime?
 
   @Override
