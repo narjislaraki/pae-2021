@@ -1,16 +1,19 @@
 package be.vinci.pae.api;
 
-import be.vinci.pae.api.utils.Json;
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.utils.Config;
+import java.util.Map;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.utils.Config;
+import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -28,10 +31,13 @@ public class Authentication {
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
+  public Authentication() {
+    jsonMapper.findAndRegisterModules();
+    jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+  }
+
   @Inject
   private UserUCC userUCC;
-
-  // @Inject private UtilisateurFactory uf;
 
   @POST
   @Path("login")
@@ -68,8 +74,19 @@ public class Authentication {
 
     // load the user data from a public JSON view to filter out the private info not
     // to be returned by the API (such as password)
-    User userDTO = Json.filterPublicJsonView(user, User.class);
-    ObjectNode node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", userDTO);
+    // User userDTO = Json.filterPublicJsonView(user, User.class);
+
+    ObjectNode node = null;
+    try {
+      String json = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(user);
+      @SuppressWarnings("unchecked")
+      Map<String, String> map = jsonMapper.readValue(json, Map.class);
+      node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
+    } catch (JsonProcessingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    // node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", user);
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
 }
