@@ -1,7 +1,10 @@
 package be.vinci.pae.api;
 
+<<<<<<< Upstream, based on origin/master
 import java.util.Map;
 
+=======
+>>>>>>> 7baee6a test - tests on UserUCCImpl
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,10 +13,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+<<<<<<< Upstream, based on origin/master
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
+=======
+import be.vinci.pae.api.utils.Json;
+import be.vinci.pae.domain.User;
+import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.utils.Config;
+>>>>>>> 7baee6a test - tests on UserUCCImpl
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -44,17 +54,18 @@ public class Authentication {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
     // Get and check credentials
-    if (!json.hasNonNull("username") || !json.hasNonNull("password")) {
-      return Response.status(Status.UNAUTHORIZED).entity("Pseudo et mot de passe nécessaires")
-          .type(MediaType.TEXT_PLAIN).build();
+    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
+      return Response.status(Status.UNAUTHORIZED)
+          .entity("Les champs avec la mention * doivent être remplis").type(MediaType.TEXT_PLAIN)
+          .build();
     }
-    String username = json.get("username").asText();
+    String email = json.get("email").asText();
     String password = json.get("password").asText();
     // Try to login
     // TODO cast ou DTO?
-    User user = (User) userUCC.connection(username);
-    if (user == null || !user.checkPassword(password)) {
-      return Response.status(Status.UNAUTHORIZED).entity("Pseudo ou mot de passe incorrect")
+    User user = (User) userUCC.connection(email, password);
+    if (user == null) {
+      return Response.status(Status.UNAUTHORIZED).entity("Les données entrées sont incorrectes")
           .type(MediaType.TEXT_PLAIN).build();
     }
 
