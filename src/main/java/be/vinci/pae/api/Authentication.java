@@ -29,10 +29,9 @@ import jakarta.ws.rs.core.Response.Status;
 public class Authentication {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
-  private final ObjectMapper jsonMapper;
+  private final ObjectMapper jsonMapper= new ObjectMapper();
 
   public Authentication() {
-	jsonMapper = new ObjectMapper();
 	jsonMapper.findAndRegisterModules();
 	jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
   }
@@ -80,6 +79,7 @@ public class Authentication {
     ObjectNode node = null;
 	try {
 		String json = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(user);
+		@SuppressWarnings("unchecked")
 		Map<String, String> map = jsonMapper.readValue(json, Map.class);
 		node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
 	} catch (JsonProcessingException e) {
