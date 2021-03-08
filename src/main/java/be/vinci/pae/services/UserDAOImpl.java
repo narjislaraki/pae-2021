@@ -30,7 +30,6 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getUser(String email) {
     // TODO PS -> attribut?
-    // TODO retrait astérisque
     // TODO fetch de l'adresse aussi
     UserDTO user = null;
 
