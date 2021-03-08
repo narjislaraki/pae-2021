@@ -2,6 +2,7 @@ package be.vinci.pae.domain;
 
 import be.vinci.pae.views.Views;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -9,16 +10,17 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({"validated", "address"})
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonIgnoreProperties({"validated", "address"})
 
 public class UserImpl implements User {
 
   // TODO assurer les bonnes vues où on le veut
   @JsonView(Views.Public.class)
   private int id;
-  @JsonView(Views.Public.class)
+  @JsonView(Views.Internal.class)
   private int address;
   @JsonView(Views.Public.class)
   private String username;
@@ -32,12 +34,11 @@ public class UserImpl implements User {
   private String password;
   @JsonView(Views.Internal.class)
   private Role role;
-  @JsonView(Views.Public.class)
-  private boolean validated;
   @JsonView(Views.Internal.class)
+  private boolean validated;
+  @JsonView(Views.Public.class)
+  @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
   private LocalDateTime registrationDate; // TODO DateTime?
-  // TODO Non sérialisable -> solutionner la sérialisation ou changer en String ?
-  // Ou on ne l'enverra jamais au client...? -> Internal
 
   @Override
   public int getId() {
