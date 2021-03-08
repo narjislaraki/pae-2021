@@ -78,7 +78,8 @@ public class Authentication {
     
     ObjectNode node = null;
 	try {
-		String json = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(user);
+		String json = jsonMapper.writerWithView(Views.Public.class)
+				.writeValueAsString(user);
 		@SuppressWarnings("unchecked")
 		Map<String, String> map = jsonMapper.readValue(json, Map.class);
 		node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
