@@ -2,10 +2,10 @@ let navBar = document.querySelector(".navbar");
 import {getUserSessionData} from "../utils/session.js";
 // destructuring assignment
 const Navbar = () => {
-  let navbar;
+  let nb;
   let user = getUserSessionData();    
   if (user) {
-    navbar = `
+    nb = `
     <h1 class="lines" ></h1>
         <div class= "title">
           <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
@@ -29,7 +29,7 @@ const Navbar = () => {
         </div>
         `;
   } else {
-    navbar = `<h1 class="lines" ></h1>
+    nb = `<h1 class="lines" ></h1>
     <div class= "title">
       <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
       <img class="logo-writing" src="assets/lvs.svg" alt="logo">
@@ -48,7 +48,7 @@ const Navbar = () => {
     <button class="btn btn-dark btn-navbar condensed small-caps">S'identifier</button>`;
   }
 
-  return (navbar.innerHTML = navbar);
+  return (navBar.innerHTML = nb);
 };
 
 export default Navbar;
