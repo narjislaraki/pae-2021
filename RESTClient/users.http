@@ -21,3 +21,13 @@ Content-Type: application/json
     "email":"test@test.com",
     "password":"1234"
 }
+
+### SUCCESS MOCK TEST
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"valid@email.com",
+    "password":"1234"
+}
