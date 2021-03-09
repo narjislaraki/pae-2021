@@ -32,10 +32,6 @@ public class Main {
   static String env;
 
   public static void main(String[] args) throws IOException {
-    // UserUCC us = new UserUCCImpl();
-    //
-    // UserDTO usDTO = us.connection("test@test.com", "1234");
-    // System.out.println(usDTO.getEmail());
 
     try {
       env = args[0];
@@ -44,12 +40,12 @@ public class Main {
     }
 
     switch (env) {
-      case "test":
-        Config.load("test.properties");
+      case "prod":
+        Config.load(Config.PROD);
         break;
 
       default:
-        Config.load("prod.properties");
+        Config.load(Config.TEST);
         break;
     }
 
