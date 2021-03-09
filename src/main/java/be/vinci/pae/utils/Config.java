@@ -19,7 +19,7 @@ public class Config {
   }
 
   public static void load() {
-    try (FileInputStream in = new FileInputStream(PROD)) {
+    try (FileInputStream in = new FileInputStream(TEST)) {
       props.load(in);
     } catch (IOException e) {
       e.printStackTrace();
