@@ -10,6 +10,11 @@ public class DalServicesImpl implements DalServices {
 
   private Connection conn;
 
+  /**
+   * Constructor.
+   * 
+   * Make the connection with the DB using the keys "url", "user", and "password" in a properties file.
+   */
   public DalServicesImpl() {
     try {
       Class.forName("org.postgresql.Driver");

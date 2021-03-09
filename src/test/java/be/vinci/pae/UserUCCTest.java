@@ -26,6 +26,9 @@ public class UserUCCTest {
   private static String badPassword;
   private static String goodEmailNotValidated;
 
+  /**
+   * Initialisation before every tests.
+   */
   @BeforeAll
   public static void init() {
     Config.load();

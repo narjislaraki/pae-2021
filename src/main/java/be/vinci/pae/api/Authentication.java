@@ -37,6 +37,14 @@ public class Authentication {
   @Inject
   private UserUCC userUCC;
 
+  /**
+   * This method is used to attempt to log a client in.
+   * 
+   * Valid email and password are required to be able to send a token and a response 200.
+   * 
+   * @param json post received from the client
+   * @return Response 401 if KO; 200 and credentials + token if OK
+   */
   @POST
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -49,7 +57,7 @@ public class Authentication {
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
-    
+
     User user = (User) userUCC.connection(email, password);
     if (user == null) {
       return Response.status(Status.UNAUTHORIZED).entity("Les données entrées sont incorrectes")
@@ -59,6 +67,14 @@ public class Authentication {
     return createToken(user);
   }
 
+  /**
+   * Create a valid token to be sent to a user.
+   * 
+   * Also append user's public data.
+   * 
+   * @param user a non null user
+   * @return a valid token with user's public data
+   */
   private Response createToken(User user) {
     String token;
     try {
@@ -80,5 +96,5 @@ public class Authentication {
     }
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
-  
+
 }

@@ -12,21 +12,15 @@ import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
 public class Main {
-  public static HttpServer startServer() {
-    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
-        .register(JacksonFeature.class).register(ApplicationBinder.class)
-        .property("jersey.config.server.wadl.disableWadl", true);
-    return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getProperty("BaseUri")), rc);
-  }
+
+  static UserDAO ds = new UserDAOImpl();
+  static String env;
 
   /**
    * Main method.
    * 
    * @param args command line arguments
    */
-  static UserDAO ds = new UserDAOImpl();
-  static String env;
-
   public static void main(String[] args) throws IOException {
 
     try {
@@ -52,6 +46,18 @@ public class Main {
     System.out.println("Hit enter to stop it...");
     System.in.read();
     server.shutdownNow();
+  }
+
+  /**
+   * Start a Grizzly server
+   * 
+   * @return HttpServer the server
+   */
+  public static HttpServer startServer() {
+    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
+        .register(JacksonFeature.class).register(ApplicationBinder.class)
+        .property("jersey.config.server.wadl.disableWadl", true);
+    return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getProperty("BaseUri")), rc);
   }
 
 }
