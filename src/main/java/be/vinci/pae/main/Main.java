@@ -45,7 +45,7 @@ public class Main {
     try {
       env = args[0];
     } catch (Exception e) {
-      env = "prod";
+      env = "test";
     }
 
     switch (env) {
