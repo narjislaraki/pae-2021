@@ -3,17 +3,9 @@ package be.vinci.pae.services;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserFactory;
 import be.vinci.pae.domain.UserImpl;
-import jakarta.inject.Inject;
 
 public class MockUserDAO implements UserDAO {
-
-  @Inject
-  private DalServices dalService;
-
-  @Inject
-  private UserFactory userFactory;
 
   public MockUserDAO() {
     // TODO Beware, the connection has to be done in an extern class
@@ -24,9 +16,7 @@ public class MockUserDAO implements UserDAO {
   public UserDTO getUser(String email) throws NullPointerException {
     UserDTO user = null;
     if (email.equals("test@test.com")) {
-      String str = "2021-01-05 00:00";
       
-
       user = new UserImpl();
       user.setId(0);
       user.setUsername("test");
@@ -34,6 +24,7 @@ public class MockUserDAO implements UserDAO {
       user.setFirstName("Nina");
       user.setEmail("test@test.com");
       user.setRole("admin");
+      String str = "2021-01-05 00:00";
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
       LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
       user.setRegistrationDate(dateTime);

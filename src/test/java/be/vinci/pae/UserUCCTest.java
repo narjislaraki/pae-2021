@@ -14,10 +14,8 @@ import org.junit.jupiter.api.Test;
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.services.UserDAO;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
-import jakarta.inject.Inject;
 
 public class UserUCCTest {
 

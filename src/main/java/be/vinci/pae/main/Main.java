@@ -1,16 +1,11 @@
 package be.vinci.pae.main;
 
+import java.io.IOException;
+import java.net.URI;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-
-import java.io.IOException;
-import java.net.URI;
-
-import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.domain.UserUCCImpl;
 import be.vinci.pae.services.UserDAO;
 import be.vinci.pae.services.UserDAOImpl;
 import be.vinci.pae.utils.ApplicationBinder;
