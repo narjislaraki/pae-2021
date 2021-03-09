@@ -24,11 +24,10 @@ const Navbar = () => {
 
         <div class="user-head">
           <p class="text-user">Bonjour,</p>
-          <p id="username" class="text-user">username</p>
+          <p id="username" class="text-user">${user.user.login}</p>
           <i id="user" class="bi bi-person-circle"></i>
         </div>
         `;
-  ${user.user.login}
   } else {
     navbar = `<h1 class="lines" ></h1>
     <div class= "title">

@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 /* load bootstrap module (JS) */
 import 'bootstrap';
 
-const HEADER_TITLE = ``;
 
 const FOOTER_CONTENT = `
 <p id="copyright" class="condensed">© 2021 Li Vi Satcho</p>
@@ -26,5 +25,4 @@ Navbar();
 Router();
 
 // deal with header and footer
-document.querySelector("#headerTitle").innerText = HEADER_TITLE;
 document.querySelector("#footerContent").innerText = FOOTER_CONTENT;

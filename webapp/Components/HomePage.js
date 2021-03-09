@@ -4,8 +4,6 @@ Furthermore, the frontend has a proxy that allows to redirect
 the API requests.</p>
 `;
 
-import { AnalogClock } from 'customizable-analog-clock';
-
 const HomePage = async () => {  
   let page = document.querySelector("#page");
   page.innerHTML  = homePage + `<div class="d-flex justify-content-center">
@@ -14,10 +12,7 @@ const HomePage = async () => {
                           style="width: 200px; height: 200px;"                         
                       </div>
                         </div>`; 
-  const clock = new AnalogClock({
-    htmlElement : 'my-clock',
-    showIndicators: true,
-});
+;
  
 };
 
