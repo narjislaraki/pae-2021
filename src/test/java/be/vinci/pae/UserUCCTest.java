@@ -68,15 +68,12 @@ public class UserUCCTest {
     goodUserNotValidated.setAddress(1);
   }
 
-  // Email et mdp sont bons, sans remember me
-
   @DisplayName("Test connection with right email and password")
   @Test
   public void connection1Test() {
     User u = (User) userUCC.connection(goodEmail, goodPassword);
     assertEquals(goodUser, u);
   }
-
 
   @DisplayName("Test connection with bad email")
   @Test
@@ -96,13 +93,11 @@ public class UserUCCTest {
     assertNull(userUCC.connection("", goodPassword));
   }
 
-
   @DisplayName("Test connection with empty password")
   @Test
   public void connection5Test() {
     assertNull(userUCC.connection(goodEmail, ""));
   }
-
 
   @DisplayName("Test connection with empty email and empty password")
   @Test
@@ -115,6 +110,5 @@ public class UserUCCTest {
   public void connection7Test() {
     assertNull(userUCC.connection(goodEmailNotValidated, goodPassword));
   }
-
 
 }
