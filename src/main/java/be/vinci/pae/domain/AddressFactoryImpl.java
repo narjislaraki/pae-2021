@@ -6,4 +6,5 @@ public class AddressFactoryImpl implements AddressFactory {
   public AddressImpl getAddress() {
     return new AddressImpl();
   }
+
 }

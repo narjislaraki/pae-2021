@@ -14,12 +14,11 @@ public class UserUCCImpl implements UserUCC {
   public UserDTO connection(String email, String password) {
     UserDTO userDTO = userDAO.getUser(email);
     User user = (User) userDTO;
-    //System.out.println(user.getUsername() + " " + user.getEmail());
-    //TODO sysout OK pour debuger mais fait planter l'appli :-)
     if (user == null || !user.checkPassword(password) || !user.isValidated()) {
       return null;
     }
 
     return userDTO;
   }
+
 }

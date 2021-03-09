@@ -13,13 +13,9 @@ import be.vinci.pae.utils.Config;
 
 public class Main {
   public static HttpServer startServer() {
-    // Create a resource config that scans for JAX-RS resources and providers
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
-        // .packages("org.glassfish.jersey.examples.jackson")
         .register(JacksonFeature.class).register(ApplicationBinder.class)
         .property("jersey.config.server.wadl.disableWadl", true);
-
-    // Create and start a new instance of grizzly http server
     return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getProperty("BaseUri")), rc);
   }
 

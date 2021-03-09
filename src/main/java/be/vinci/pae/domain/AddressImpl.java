@@ -80,5 +80,4 @@ public class AddressImpl implements Address {
     this.country = country;
   }
 
-
 }

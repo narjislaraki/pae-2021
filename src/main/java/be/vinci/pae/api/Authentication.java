@@ -41,7 +41,6 @@ public class Authentication {
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
-    // Get and check credentials
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       return Response.status(Status.UNAUTHORIZED)
           .entity("Les champs avec la mention * doivent être remplis").type(MediaType.TEXT_PLAIN)
@@ -49,8 +48,8 @@ public class Authentication {
     }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
-    // Try to login
-    // TODO cast ou DTO?
+
+    
     User user = (User) userUCC.connection(email, password);
     if (user == null) {
       return Response.status(Status.UNAUTHORIZED).entity("Les données entrées sont incorrectes")
@@ -69,11 +68,6 @@ public class Authentication {
       throw new WebApplicationException("Incapable de créer un token", e,
           Status.INTERNAL_SERVER_ERROR);
     }
-    // Build response
-
-    // load the user data from a public JSON view to filter out the private info not
-    // to be returned by the API (such as password)
-    // User userDTO = Json.filterPublicJsonView(user, User.class);
 
     ObjectNode node = null;
     try {
@@ -82,10 +76,9 @@ public class Authentication {
       Map<String, String> map = jsonMapper.readValue(json, Map.class);
       node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
     } catch (JsonProcessingException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    // node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", user);
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
+  
 }
