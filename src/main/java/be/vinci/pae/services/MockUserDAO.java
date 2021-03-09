@@ -3,6 +3,7 @@ package be.vinci.pae.services;
 import java.time.LocalDateTime;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserFactory;
+import be.vinci.pae.domain.UserImpl;
 import jakarta.inject.Inject;
 
 public class MockUserDAO implements UserDAO {
@@ -19,10 +20,10 @@ public class MockUserDAO implements UserDAO {
 
 
   @Override
-  public UserDTO getUser(String email) {
+  public UserDTO getUser(String email) throws NullPointerException{
     UserDTO user = null;
     if (email.equals("valid@email.com")) {
-        user = userFactory.getUserDTO();
+        user = new UserImpl();
         user.setId(0);
         user.setUsername("test");
         user.setLastName("Jean");
@@ -42,7 +43,7 @@ public class MockUserDAO implements UserDAO {
   public UserDTO getUser(int id) {
     UserDTO user = null;
     if (id == 0) {
-        user = userFactory.getUserDTO();
+        user = new UserImpl();
         user.setId(0);
         user.setUsername("test");
         user.setLastName("Jean");

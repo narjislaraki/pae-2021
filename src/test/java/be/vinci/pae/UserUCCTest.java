@@ -3,39 +3,48 @@ package be.vinci.pae;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.domain.UserUCCImpl;
+import be.vinci.pae.services.MockUserDAO;
 import be.vinci.pae.services.UserDAO;
-import be.vinci.pae.services.UserDAOImpl;
 import be.vinci.pae.utils.ApplicationBinder;
+import jakarta.inject.Inject;
 
-public class DemoTest {
+public class UserUCCTest {
 
   private UserUCC userUCC;
   private User goodUser;
+  private User wrongUser;
+  @Inject
   private UserDAO userDAO;
-  private String goodEmail, badEmail, goodPassword, badPassword, goodEmailNotValidated;
+  private String goodEmail;
+  private String badEmail;
+  private String goodPassword;
+  private String badPassword;
+  private String goodEmailNotValidated;
 
   @BeforeEach
   public void setUp() throws Exception {
-    ServiceLocator locator = ServiceLocatorUtilities.bind(Mockito.mock(ApplicationBinder.class));
-    this.userUCC = locator.getService(UserUCCImpl.class);
-    userDAO = Mockito.mock(UserDAOImpl.class);
-    this.goodUser = (User) userDAO.getUser(goodEmail);
-    this.goodEmail = "test@test.com";
+    ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinder());
+    this.userUCC = locator.getService(UserUCC.class);
+    
+    
+    this.goodEmail = "valid@email.com";
     this.goodPassword = "1234";
-    this.badEmail = "test.test@test.com";
+    this.badEmail = "invalid@email.com";
     this.badPassword = "5678";
     this.goodEmailNotValidated = "test3@test.com";
+    this.goodUser = (User) 
+        userDAO.getUser(goodEmail);
+    
+    this.wrongUser = (User) userDAO.getUser(badEmail);
 
   }
 
