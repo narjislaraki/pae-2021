@@ -21,8 +21,15 @@ public class ApplicationBinder extends AbstractBinder {
 
   @Override
   protected void configure() {
+    Class<?> userDAO = null;
+    try {
+      userDAO = Class.forName(Config.getProperty("be.vinci.pae.services.UserDAO"));
+    } catch (ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     bind(UserFactoryImpl.class).to(UserFactory.class).in(Singleton.class);
-    bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
+    bind(userDAO).to(UserDAO.class).in(Singleton.class);
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(AddressFactoryImpl.class).to(AddressFactory.class).in(Singleton.class);
     bind(DalServicesImpl.class).to(DalServices.class).in(Singleton.class);
