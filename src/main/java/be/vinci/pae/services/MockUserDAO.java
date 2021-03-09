@@ -35,24 +35,4 @@ public class MockUserDAO implements UserDAO {
     return user;
   }
 
-
-  @Override
-  public UserDTO getUser(int id) {
-    UserDTO user = null;
-    if (id == 0) {
-      user = new UserImpl();
-      user.setId(0);
-      user.setUsername("test");
-      user.setLastName("Jean");
-      user.setFirstName("Cérien");
-      user.setEmail("valid@email.com");
-      user.setRole("client");
-      user.setRegistrationDate(LocalDateTime.now());
-      user.setValidated(true);
-      user.setPassword("$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu"); // 1234
-      user.setAddress(0);
-    }
-    return user;
-  }
-
 }

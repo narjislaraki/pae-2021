@@ -6,6 +6,4 @@ public interface UserDAO {
 
   UserDTO getUser(String email);
 
-  UserDTO getUser(int id);
-
 }
