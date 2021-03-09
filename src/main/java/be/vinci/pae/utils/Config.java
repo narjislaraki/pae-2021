@@ -15,6 +15,14 @@ public class Config {
       e.printStackTrace();
     }
   }
+  
+  public static void load() {
+    try (FileInputStream in = new FileInputStream("test.properties")) {
+      props.load(in);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   public static String getProperty(String key) {
     return props.getProperty(key);
