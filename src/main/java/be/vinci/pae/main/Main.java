@@ -1,17 +1,15 @@
 package be.vinci.pae.main;
 
-import be.vinci.pae.services.UserDAO;
-import be.vinci.pae.services.UserDAOImpl;
-import be.vinci.pae.utils.ApplicationBinder;
-import be.vinci.pae.utils.Config;
-
+import java.io.IOException;
+import java.net.URI;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-
-import java.io.IOException;
-import java.net.URI;
+import be.vinci.pae.services.UserDAO;
+import be.vinci.pae.services.UserDAOImpl;
+import be.vinci.pae.utils.ApplicationBinder;
+import be.vinci.pae.utils.Config;
 
 public class Main {
   public static HttpServer startServer() {
@@ -34,10 +32,15 @@ public class Main {
   static String env;
 
   public static void main(String[] args) throws IOException {
+    // UserUCC us = new UserUCCImpl();
+    //
+    // UserDTO usDTO = us.connection("test@test.com", "1234");
+    // System.out.println(usDTO.getEmail());
+
     try {
       env = args[0];
     } catch (Exception e) {
-      env = "prod";
+      env = "test";
     }
 
     switch (env) {

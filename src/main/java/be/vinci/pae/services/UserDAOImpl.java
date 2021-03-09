@@ -1,13 +1,10 @@
 package be.vinci.pae.services;
 
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserFactory;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.UserFactory;
 import jakarta.inject.Inject;
 
 public class UserDAOImpl implements UserDAO {
@@ -23,15 +20,14 @@ public class UserDAOImpl implements UserDAO {
   }
 
   /**
-   * Searching through thed database for the user, using his username.
+   * Searching through the database for the user, using his email.
    * 
-   * @param username the username
+   * @param email the email
    * @return the user if he exists, otherwise null
    */
   @Override
-  public UserDTO getUser(String username) {
+  public UserDTO getUser(String email) {
     // TODO PS -> attribut?
-    // TODO retrait astérisque
     // TODO fetch de l'adresse aussi
     UserDTO user = null;
 
@@ -39,10 +35,10 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalService.getPreparedStatement(
           "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
               + "u.registration_date, u.is_validated, u.password, u.address "
-              + "FROM pae.users u WHERE u.username = ?;");
+              + "FROM pae.users u WHERE u.email = ?;");
 
 
-      ps.setString(1, username);
+      ps.setString(1, email);
 
       ResultSet rs = ps.executeQuery();
 
@@ -64,30 +60,5 @@ public class UserDAOImpl implements UserDAO {
     }
     return user;
   }
-
-  /**
-   * Searching through the database for the user, using his id.
-   * 
-   * @param id the user's id
-   * @return the user if he exists, otherwise null
-   */
-  @Override
-  public User getUser(int id) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-
-  /**
-   * Adds a user in the databas.
-   * 
-   * @param user the user
-   */
-  @Override
-  public void addUser(User user) {
-    // TODO Auto-generated method stub --> return quelque chose type boolean ou plus complexe?
-  }
-
-
 
 }
