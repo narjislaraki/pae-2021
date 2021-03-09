@@ -57,14 +57,6 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html"
-    }),
-    new CopyPlugin({
-      patterns: [
-          {
-              from: path.join(__dirname, "../src/assets"),
-              to: path.join(__dirname, "../dist/assets"),
-          },
-      ],
-  })
+    })
   ]
 };

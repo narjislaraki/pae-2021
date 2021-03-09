@@ -45,10 +45,11 @@ const Navbar = () => {
       </ul>
     </div>
 
-    <button class="btn btn-dark btn-navbar condensed small-caps">S'identifier</button>`;
+    <a class="btn btn-dark btn-navbar condensed small-caps" href="#" data-uri="/login">S'identifier</a>`;
   }
 
-  return (navBar.innerHTML = nb);
+  navBar.innerHTML = nb;
+
 };
 
 export default Navbar;
