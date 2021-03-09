@@ -38,9 +38,8 @@ public class Authentication {
   private UserUCC userUCC;
 
   /**
-   * This method is used to attempt to log a client in.
-   * <p>
-   * Valid email and password are required to be able to send a token and a response 200.
+   * This method is used to attempt to log a client in.Valid email and password are required to be
+   * able to send a token and a response 200.
    * 
    * @param json post received from the client
    * @return Response 401 if KO; 200 and credentials + token if OK
@@ -68,9 +67,7 @@ public class Authentication {
   }
 
   /**
-   * Create a valid token to be sent to a user.
-   * <p>
-   * Also append user's public data.
+   * Create a valid token to be sent to a user. Also append user's public data.
    * 
    * @param user a non null user
    * @return a valid token with user's public data
