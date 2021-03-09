@@ -49,7 +49,7 @@ public class Main {
   }
 
   /**
-   * Start a Grizzly server
+   * Start a Grizzly server.
    * 
    * @return HttpServer the server
    */

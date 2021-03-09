@@ -12,8 +12,10 @@ public class DalServicesImpl implements DalServices {
 
   /**
    * Constructor.
-   * 
-   * Make the connection with the DB using the keys "url", "user", and "password" in a properties file.
+   * <p>
+   * Make the connection with the DB using the keys "url",
+   * <p>
+   * "user", and "password" in a properties file.
    */
   public DalServicesImpl() {
     try {

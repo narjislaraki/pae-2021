@@ -39,7 +39,7 @@ public class Authentication {
 
   /**
    * This method is used to attempt to log a client in.
-   * 
+   * <p>
    * Valid email and password are required to be able to send a token and a response 200.
    * 
    * @param json post received from the client
@@ -69,7 +69,7 @@ public class Authentication {
 
   /**
    * Create a valid token to be sent to a user.
-   * 
+   * <p>
    * Also append user's public data.
    * 
    * @param user a non null user

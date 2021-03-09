@@ -24,7 +24,7 @@ public class Config {
   }
 
   /**
-   * Load a test properties file
+   * Load a test properties file.
    */
   public static void load() {
     try (FileInputStream in = new FileInputStream(TEST)) {
