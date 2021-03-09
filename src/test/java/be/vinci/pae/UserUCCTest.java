@@ -2,15 +2,16 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.UserUCC;
@@ -20,13 +21,13 @@ import be.vinci.pae.utils.Config;
 public class UserUCCTest {
 
   private static UserUCC userUCC;
-  private User goodUser;
-  private User goodUserNotValidated;
-  private String goodEmail;
-  private String badEmail;
-  private String goodPassword;
-  private String badPassword;
-  private String goodEmailNotValidated;
+  private static User goodUser;
+  private static User goodUserNotValidated;
+  private static String goodEmail;
+  private static String badEmail;
+  private static String goodPassword;
+  private static String badPassword;
+  private static String goodEmailNotValidated;
 
 
   @BeforeAll
@@ -34,18 +35,12 @@ public class UserUCCTest {
     Config.load();
     ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinder());
     userUCC = locator.getService(UserUCC.class);
-  }
-
-  @BeforeEach
-  public void setUp() throws Exception {
     goodPassword = "1234";
     goodEmail = "test@test.com";
     badEmail = "test.test@test.com";
     badPassword = "5678";
     goodEmailNotValidated = "test3@test.com";
-    
-    
-    
+
     goodUser = new UserImpl();
     goodUser.setId(0);
     goodUser.setUsername("test");
@@ -61,8 +56,6 @@ public class UserUCCTest {
     goodUser.setPassword("$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu"); // 1234
     goodUser.setAddress(1);
 
-    
-    
     goodUserNotValidated = new UserImpl();
     goodUserNotValidated.setId(1);
     goodUserNotValidated.setUsername("test3");
@@ -77,25 +70,11 @@ public class UserUCCTest {
     goodUserNotValidated
         .setPassword("$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu"); // 1234
     goodUserNotValidated.setAddress(1);
-
-
-
-    // this.goodUser = (User) userDAO.getUser(goodEmail);
-
-    // this.wrongUser = (User) userDAO.getUser(badEmail);
-
   }
-
-  @Test
-  public void demoTest() {
-    assertTrue(true);
-  }
-
 
   // Email et mdp sont bons, sans remember me
 
   @DisplayName("Test connection with right email and password")
-
   @Test
   public void connection1Test() {
     User u = (User) userUCC.connection(goodEmail, goodPassword);
@@ -104,21 +83,18 @@ public class UserUCCTest {
 
 
   @DisplayName("Test connection with bad email")
-
   @Test
   public void connection2Test() {
     assertNull(userUCC.connection(badEmail, goodPassword));
   }
 
   @DisplayName("Test connection with bad password")
-
   @Test
   public void connection3Test() {
     assertNull(userUCC.connection(goodEmail, badPassword));
   }
 
   @DisplayName("Test connection with empty email")
-
   @Test
   public void connection4Test() {
     assertNull(userUCC.connection("", goodPassword));
@@ -126,7 +102,6 @@ public class UserUCCTest {
 
 
   @DisplayName("Test connection with empty password")
-
   @Test
   public void connection5Test() {
     assertNull(userUCC.connection(goodEmail, ""));
@@ -134,14 +109,12 @@ public class UserUCCTest {
 
 
   @DisplayName("Test connection with empty email and empty password")
-
   @Test
   public void connection6Test() {
     assertNull(userUCC.connection("", ""));
   }
 
   @DisplayName("Test connection with good credentials but the user isn't validated yet")
-
   @Test
   public void connection7Test() {
     assertNull(userUCC.connection(goodEmailNotValidated, goodPassword));
