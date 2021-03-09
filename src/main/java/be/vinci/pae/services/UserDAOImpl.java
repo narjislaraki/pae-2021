@@ -3,8 +3,6 @@ package be.vinci.pae.services;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserFactory;
 import jakarta.inject.Inject;
@@ -104,18 +102,5 @@ public class UserDAOImpl implements UserDAO {
 
     return user;
   }
-
-
-  /**
-   * Adds a user in the databas.
-   * 
-   * @param user the user
-   */
-  @Override
-  public void addUser(User user) {
-    // TODO Auto-generated method stub --> return quelque chose type boolean ou plus complexe?
-  }
-
-
 
 }
