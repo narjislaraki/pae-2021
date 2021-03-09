@@ -2,16 +2,13 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserImpl;
 import be.vinci.pae.domain.UserUCC;
@@ -29,7 +26,6 @@ public class UserUCCTest {
   private static String badPassword;
   private static String goodEmailNotValidated;
 
-
   @BeforeAll
   public static void init() {
     Config.load();
@@ -42,7 +38,7 @@ public class UserUCCTest {
     goodEmailNotValidated = "test3@test.com";
 
     goodUser = new UserImpl();
-    goodUser.setId(0);
+    goodUser.setId(1);
     goodUser.setUsername("test");
     goodUser.setLastName("Heuzer");
     goodUser.setFirstName("Nina");
@@ -57,7 +53,7 @@ public class UserUCCTest {
     goodUser.setAddress(1);
 
     goodUserNotValidated = new UserImpl();
-    goodUserNotValidated.setId(1);
+    goodUserNotValidated.setId(3);
     goodUserNotValidated.setUsername("test3");
     goodUserNotValidated.setLastName("de Theux");
     goodUserNotValidated.setFirstName("Boris");
