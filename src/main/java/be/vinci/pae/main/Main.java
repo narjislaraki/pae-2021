@@ -37,10 +37,10 @@ public class Main {
   static String env;
 
   public static void main(String[] args) throws IOException {
-//    UserUCC us = new UserUCCImpl();
-//
-//    UserDTO usDTO = us.connection("test@test.com", "1234");
-//    System.out.println(usDTO.getEmail());
+    // UserUCC us = new UserUCCImpl();
+    //
+    // UserDTO usDTO = us.connection("test@test.com", "1234");
+    // System.out.println(usDTO.getEmail());
 
     try {
       env = args[0];
