@@ -1,10 +1,6 @@
 package be.vinci.pae.api;
 
-<<<<<<< Upstream, based on origin/master
 import java.util.Map;
-
-=======
->>>>>>> 7baee6a test - tests on UserUCCImpl
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,18 +8,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-<<<<<<< Upstream, based on origin/master
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
-=======
-import be.vinci.pae.api.utils.Json;
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.utils.Config;
->>>>>>> 7baee6a test - tests on UserUCCImpl
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
