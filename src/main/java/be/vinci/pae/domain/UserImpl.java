@@ -130,7 +130,7 @@ public class UserImpl implements User {
   }
 
   @Override
-  public boolean isValidated() { // TODO Modifier titre?
+  public boolean isValidated() {
     return validated;
   }
 

@@ -12,30 +12,16 @@ import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
 public class Main {
-  public static HttpServer startServer() {
-    // Create a resource config that scans for JAX-RS resources and providers
-    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
-        // .packages("org.glassfish.jersey.examples.jackson")
-        .register(JacksonFeature.class).register(ApplicationBinder.class)
-        .property("jersey.config.server.wadl.disableWadl", true);
 
-    // Create and start a new instance of grizzly http server
-    return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getProperty("BaseUri")), rc);
-  }
+  static UserDAO ds = new UserDAOImpl();
+  static String env;
 
   /**
    * Main method.
    * 
    * @param args command line arguments
    */
-  static UserDAO ds = new UserDAOImpl();
-  static String env;
-
   public static void main(String[] args) throws IOException {
-    // UserUCC us = new UserUCCImpl();
-    //
-    // UserDTO usDTO = us.connection("test@test.com", "1234");
-    // System.out.println(usDTO.getEmail());
 
     try {
       env = args[0];
@@ -44,12 +30,12 @@ public class Main {
     }
 
     switch (env) {
-      case "test":
-        Config.load("test.properties");
+      case "prod":
+        Config.load(Config.PROD);
         break;
 
       default:
-        Config.load("prod.properties");
+        Config.load(Config.TEST);
         break;
     }
 
@@ -61,4 +47,17 @@ public class Main {
     System.in.read();
     server.shutdownNow();
   }
+
+  /**
+   * Start a Grizzly server.
+   * 
+   * @return HttpServer the server
+   */
+  public static HttpServer startServer() {
+    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
+        .register(JacksonFeature.class).register(ApplicationBinder.class)
+        .property("jersey.config.server.wadl.disableWadl", true);
+    return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getProperty("BaseUri")), rc);
+  }
+
 }

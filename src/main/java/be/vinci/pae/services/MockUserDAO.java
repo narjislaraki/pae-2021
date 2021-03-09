@@ -7,18 +7,13 @@ import be.vinci.pae.domain.UserImpl;
 
 public class MockUserDAO implements UserDAO {
 
-  public MockUserDAO() {
-    // TODO Beware, the connection has to be done in an extern class
-  }
-
-
   @Override
-  public UserDTO getUser(String email) throws NullPointerException {
+  public UserDTO getUser(String email) {
     UserDTO user = null;
     if (email.equals("test@test.com")) {
-      
+
       user = new UserImpl();
-      user.setId(0);
+      user.setId(1);
       user.setUsername("test");
       user.setLastName("Heuzer");
       user.setFirstName("Nina");

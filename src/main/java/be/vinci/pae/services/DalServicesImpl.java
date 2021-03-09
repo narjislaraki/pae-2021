@@ -1,16 +1,19 @@
 package be.vinci.pae.services;
 
-import be.vinci.pae.utils.Config;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import be.vinci.pae.utils.Config;
 
 public class DalServicesImpl implements DalServices {
 
   private Connection conn;
 
+  /**
+   * Constructor. Make the connection with the DB using the keys "url", "user", and "password" in a
+   * properties file.
+   */
   public DalServicesImpl() {
     try {
       Class.forName("org.postgresql.Driver");
@@ -35,7 +38,6 @@ public class DalServicesImpl implements DalServices {
       ps = conn.prepareStatement(sql);
 
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return ps;

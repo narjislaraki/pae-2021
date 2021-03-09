@@ -6,4 +6,5 @@ public class UserFactoryImpl implements UserFactory {
   public UserDTO getUserDTO() {
     return new UserImpl();
   }
+
 }

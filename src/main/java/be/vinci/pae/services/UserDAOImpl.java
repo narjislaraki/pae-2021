@@ -11,13 +11,9 @@ public class UserDAOImpl implements UserDAO {
 
   @Inject
   private DalServices dalService;
-
   @Inject
   private UserFactory userFactory;
 
-  public UserDAOImpl() {
-    // TODO Beware, the connection has to be done in an extern class
-  }
 
   /**
    * Searching through the database for the user, using his email.

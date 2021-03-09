@@ -32,4 +32,5 @@ public interface Address {
   String getCountry();
 
   void setCountry(String country);
+
 }
