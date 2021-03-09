@@ -21,7 +21,7 @@ public class MockUserDAO implements UserDAO {
   @Override
   public UserDTO getUser(String email) {
     UserDTO user = null;
-    if (email == "valid@email.com") {
+    if (email.equals("valid@email.com")) {
         user = userFactory.getUserDTO();
         user.setId(0);
         user.setUsername("test");
