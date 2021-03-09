@@ -46,9 +46,7 @@ public class UserUCCTest {
     badPassword = "5678";
     goodEmailNotValidated = "test3@test.com";
     
-    String str = "2021-01-05 00:00";
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+    
     
     goodUser = new UserImpl();
     goodUser.setId(0);
@@ -57,13 +55,15 @@ public class UserUCCTest {
     goodUser.setFirstName("Nina");
     goodUser.setEmail(goodEmail);
     goodUser.setRole("admin");
+    String str = "2021-01-05 00:00";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
     goodUser.setRegistrationDate(dateTime);
     goodUser.setValidated(true);
     goodUser.setPassword("$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu"); // 1234
     goodUser.setAddress(1);
 
-    str = "2021-02-07 00:00";
-    dateTime = LocalDateTime.parse(str, formatter);
+    
     
     goodUserNotValidated = new UserImpl();
     goodUserNotValidated.setId(1);
@@ -72,6 +72,8 @@ public class UserUCCTest {
     goodUserNotValidated.setFirstName("Boris");
     goodUserNotValidated.setEmail(goodEmailNotValidated);
     goodUserNotValidated.setRole("client");
+    str = "2021-02-07 00:00";
+    dateTime = LocalDateTime.parse(str, formatter);
     goodUserNotValidated.setRegistrationDate(dateTime);
     goodUserNotValidated.setValidated(false);
     goodUserNotValidated

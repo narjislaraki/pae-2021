@@ -16,8 +16,9 @@ public class UserUCCImpl implements UserUCC {
     User user = (User) userDTO;
     //System.out.println(user.getUsername() + " " + user.getEmail());
     //TODO sysout OK pour debuger mais fait planter l'appli :-)
-    if (user == null || !user.checkPassword(password) || !user.isValidated())
+    if (user == null || !user.checkPassword(password) || !user.isValidated()) {
       return null;
+    }
 
     return userDTO;
   }

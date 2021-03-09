@@ -20,9 +20,9 @@ public class UserDAOImpl implements UserDAO {
   }
 
   /**
-   * Searching through thed database for the user, using his username.
+   * Searching through the database for the user, using his email.
    * 
-   * @param username the username
+   * @param email the email
    * @return the user if he exists, otherwise null
    */
   @Override
