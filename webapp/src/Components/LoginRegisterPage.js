@@ -27,7 +27,7 @@ let loginPage = `<div class="register-card"></div>
       <input type="checkbox" class="form-check-input" id="stayconnected">
       <label class="form-check-label" for="exampleCheck1">Rester connecté(e)</label>
     </div>
-    <button class="btn btn-dark btn-navbar condensed small-caps">Se Connecter</button>
+    <button class="btn btn-dark btn-navbar condensed small-caps" type="submit" id="btn-login" >Se Connecter</button>
   </form>
 </div>`;
 
@@ -47,9 +47,10 @@ const onLogin = async (e) => {
   e.preventDefault();
   let login = document.getElementById("email-login");
   let password = document.getElementById("password-login");
+  console.log(login.value);
 
   let user = {
-    login: login.value,
+    email: login.value,
     password: password.value,
   };
 
@@ -62,7 +63,7 @@ const onLogin = async (e) => {
     );
     onUserLogin(userLogged);
   } catch (err) {
-    console.error("LoginPage::onLogin", err);
+    console.error("LoginRegisterPage::onLogin", err);
     PrintError(err);
   }
 };
