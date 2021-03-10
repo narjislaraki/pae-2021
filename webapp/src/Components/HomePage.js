@@ -1,7 +1,5 @@
 let homePage = `<h4 id="pageTitle">Home</h4>
-<p>This frontend runs on Webpack and uses the Customizable Analog Clock npm package. 
-Furthermore, the frontend has a proxy that allows to redirect 
-the API requests.</p>
+<p>Homepage</p>
 `;
 
 const HomePage = async () => {  
