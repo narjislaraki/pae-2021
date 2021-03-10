@@ -50,7 +50,7 @@ const onLogin = async (e) => {
   console.log(login.value);
 
   let user = {
-    login: login.value,
+    email: login.value,
     password: password.value,
   };
 
