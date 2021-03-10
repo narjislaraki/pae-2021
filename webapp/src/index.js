@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap';
 
 
+
 const FOOTER_CONTENT = `
 <p id="copyright" class="condensed">© 2021 Li Vi Satcho</p>
   <p id="rgpd" class="condensed small-caps">Ce site respecte les normes RGPD</p>

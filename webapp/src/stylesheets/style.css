@@ -23,6 +23,7 @@
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css");
 
 :root{
     --colorlight: #D1D8DE;
@@ -183,6 +184,22 @@ input[type="checkbox"]:focus,
     grid-column: 1/2;
     grid-row: 2/3;
 }
+.dropdown-toggle-user{
+    color: black;
+    font-size: 18px;
+    background-color:transparent;
+    border: transparent;
+    width: 100%;
+    align-content: center;
+    border-radius: 0%;
+}
+.user-menu{
+    
+}
+#logout{
+    background-color: red;
+    color: white;
+}
 .dropdown-toggle{
     color: black;
     font-size: 18px;
@@ -202,6 +219,9 @@ input[type="checkbox"]:focus,
 }
 
 .dropdown:hover .dropdown-menu{
+    display:block;
+}
+.dropleft:hover .dropdown-menu{
     display:block;
 }
 .dropdown-menu{
