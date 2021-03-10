@@ -8,25 +8,33 @@ import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 const API_BASE_URL = "/api/auths/";
 
-let loginPage = `<h4 id="pageTitle">Login</h4>
-<form>
-<div class="form-group">
-  <label for="login">Login</label>
-  <input class="form-control" id="login" type="text" nplaceholder="Enter your login" required="" />
-</div>
-<div class="form-group">
-  <label for="password">Password</label>
-  <input class="form-control" id="password" type="password" name="password" placeholder="Enter your password" required=""  />
-</div>
-<button class="btn btn-primary" id="btn" type="submit">Submit</button>
-<!-- Create an alert component with bootstrap that is not displayed by default-->
-<div class="alert alert-danger mt-2 d-none" id="messageBoard"></div>
-</form>`;
+let loginPage = `<div class="register-card"></div>
+<div class="sticker-login condensed"><h2>CONNEXION</h2></div>
+<div class="login-card">
+  <form class="form-login">
+    <div class="mb-3">
+      <i class="bi bi-person-circle"></i>
+      <h2 class="condensed">CARTE DE MEMBRE</h2>
+    </div>
+    
+    <div class="mb-3">
+      <input type="email" class="form-control input-card" id="email-login" aria-describedby="emailHelp" placeholder="E-mail" required="" pattern="^\\w+([.-]?\\w+)*@\\w+([\.-]?\\w+)*(\\.\\w{2,4})+\$">
+    </div>
+    <div class="mb-3">
+      <input type="password" class="form-control input-card" id="password-login" placeholder="Mot-de-passe" required="">
+    </div>
+    <div class="mb-3 form-check stayconnected">
+      <input type="checkbox" class="form-check-input" id="stayconnected">
+      <label class="form-check-label" for="exampleCheck1">Rester connecté(e)</label>
+    </div>
+    <button class="btn btn-dark btn-navbar condensed small-caps">Se Connecter</button>
+  </form>
+</div>`;
 
 const LoginRegisterPage = () => {  
   let page = document.querySelector("#page");
   page.innerHTML = loginPage;
-  let loginForm = document.querySelector("form");
+  let loginForm = document.querySelector(".form-login");
   const user = getUserSessionData();
   if (user) {
     // re-render the navbar for the authenticated user
@@ -37,8 +45,8 @@ const LoginRegisterPage = () => {
 
 const onLogin = async (e) => {
   e.preventDefault();
-  let login = document.getElementById("login");
-  let password = document.getElementById("password");
+  let login = document.getElementById("email-login");
+  let password = document.getElementById("password-login");
 
   let user = {
     login: login.value,
@@ -65,7 +73,7 @@ const onUserLogin = (userData) => {
   setUserSessionData(user);
   // re-render the navbar for the authenticated user
   Navbar();
-  RedirectUrl("/films");
+  RedirectUrl("/");
 };
 
 export default LoginRegisterPage;

@@ -1,10 +1,6 @@
 let homePage = `<h4 id="pageTitle">Home</h4>
-<p>This frontend runs on Webpack and uses the Customizable Analog Clock npm package. 
-Furthermore, the frontend has a proxy that allows to redirect 
-the API requests.</p>
+<p>Homepage</p>
 `;
-
-import { AnalogClock } from 'customizable-analog-clock';
 
 const HomePage = async () => {  
   let page = document.querySelector("#page");
@@ -14,10 +10,7 @@ const HomePage = async () => {
                           style="width: 200px; height: 200px;"                         
                       </div>
                         </div>`; 
-  const clock = new AnalogClock({
-    htmlElement : 'my-clock',
-    showIndicators: true,
-});
+;
  
 };
 
