@@ -24,7 +24,7 @@ const Navbar = () => {
 
         <div class="user-head">
           <p class="text-user">Bonjour,</p>
-          <p id="username" class="text-user">${user.user.login}</p>
+          <p id="username" class="text-user">${user.userlogin}</p>
           <i id="user" class="bi bi-person-circle"></i>
         </div>
         `;
