@@ -3,8 +3,9 @@ import {getUserSessionData} from "../utils/session.js";
 // destructuring assignment
 const Navbar = () => {
   let nb;
-  let user = getUserSessionData();    
-  if (user) {
+  let userData = getUserSessionData();
+  
+  if (userData) {
     nb = `
     <h1 class="lines" ></h1>
         <div class= "title">
@@ -24,7 +25,8 @@ const Navbar = () => {
 
         <div class="user-head">
           <p class="text-user">Bonjour,</p>
-          <p id="username" class="text-user">${user.userlogin}</p>
+          
+          <p id="username" class="text-user">${userData.user.username}</p>
           <i id="user" class="bi bi-person-circle"></i>
         </div>
         `;
