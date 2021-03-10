@@ -1,6 +1,7 @@
 package be.vinci.pae.api;
 
 import java.util.Map;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import be.vinci.pae.domain.User;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -48,7 +50,8 @@ public class Authentication {
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
+    if (!json.hasNonNull("email") || !json.hasNonNull("password")
+        || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
       return Response.status(Status.UNAUTHORIZED)
           .entity("Les champs avec la mention * doivent être remplis").type(MediaType.TEXT_PLAIN)
           .build();

@@ -58,8 +58,10 @@ const Navbar = () => {
   }
 
   navBar.innerHTML = nb;
-  let logout = document.querySelector("#logout");
-  logout.addEventListener("click", onLogout);
+  if (userData){
+    let logout = document.querySelector("#logout");
+    logout.addEventListener("click", onLogout);
+  }
 
 };
 
@@ -68,6 +70,7 @@ const onLogout = (e) =>{
   e.preventDefault();
   removeSessionData();
   RedirectUrl("/");
+  Navbar();
 };
 
 export default Navbar;

@@ -17,11 +17,12 @@ let loginPage = `<div class="register-card"></div>
       <h2 class="condensed">CARTE DE MEMBRE</h2>
     </div>
     
+    <!-- the "require" from the two next fields are momentally disabled to avoid problems with the functional tests -->
     <div class="mb-3">
-      <input type="email" class="form-control input-card" id="email-login" aria-describedby="emailHelp" placeholder="E-mail" required="" pattern="^\\w+([.-]?\\w+)*@\\w+([\.-]?\\w+)*(\\.\\w{2,4})+\$">
+      <input type="email" class="form-control input-card" id="email-login" aria-describedby="emailHelp" placeholder="Email"> <!-- required="" pattern="^\\w+([.-]?\\w+)*@\\w+([\.-]?\\w+)*(\\.\\w{2,4})+\$" -->
     </div>
     <div class="mb-3">
-      <input type="password" class="form-control input-card" id="password-login" placeholder="Mot-de-passe" required="">
+      <input type="password" class="form-control input-card" id="password-login" placeholder="Mot de passe"> <!--  required="" -->
     </div>
     <div class="mb-3 form-check stayconnected">
       <input type="checkbox" class="form-check-input" id="stayconnected">
