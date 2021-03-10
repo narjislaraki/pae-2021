@@ -1,5 +1,6 @@
 let navBar = document.querySelector(".navbar");
-import {getUserSessionData} from "../utils/session.js";
+import {getUserSessionData, removeSessionData} from "../utils/session.js";
+import { RedirectUrl } from "./Router.js";
 // destructuring assignment
 const Navbar = () => {
   let nb;
@@ -27,7 +28,13 @@ const Navbar = () => {
           <p class="text-user">Bonjour,</p>
           
           <p id="username" class="text-user">${userData.user.username}</p>
-          <i id="user" class="bi bi-person-circle"></i>
+          <div class="dropleft">
+            <i id="user" class="bi bi-person-circle dropdown-toggle-user"></i>
+            <ul class="dropdown-menu dropdown-menu-left condensed" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" id="profile" href="#">Profile</a></li>
+              <li><a class="dropdown-item" id="logout" href="#">Se déconnecter</a></li>
+            </ul>
+          </div>
         </div>
         `;
   } else {
@@ -51,7 +58,16 @@ const Navbar = () => {
   }
 
   navBar.innerHTML = nb;
+  let logout = document.querySelector("#logout");
+  logout.addEventListener("click", onLogout);
 
+};
+
+
+const onLogout = (e) =>{
+  e.preventDefault();
+  removeSessionData();
+  RedirectUrl("/");
 };
 
 export default Navbar;

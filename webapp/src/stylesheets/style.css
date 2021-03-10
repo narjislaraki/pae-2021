@@ -183,6 +183,22 @@ input[type="checkbox"]:focus,
     grid-column: 1/2;
     grid-row: 2/3;
 }
+.dropdown-toggle-user{
+    color: black;
+    font-size: 18px;
+    background-color:transparent;
+    border: transparent;
+    width: 100%;
+    align-content: center;
+    border-radius: 0%;
+}
+.user-menu{
+    
+}
+#logout{
+    background-color: red;
+    color: white;
+}
 .dropdown-toggle{
     color: black;
     font-size: 18px;
@@ -202,6 +218,9 @@ input[type="checkbox"]:focus,
 }
 
 .dropdown:hover .dropdown-menu{
+    display:block;
+}
+.dropleft:hover .dropdown-menu{
     display:block;
 }
 .dropdown-menu{
