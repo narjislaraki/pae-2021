@@ -25,4 +25,4 @@ Navbar();
 Router();
 
 // deal with header and footer
-document.querySelector("#footerContent").innerText = FOOTER_CONTENT;
+document.querySelector("#footerContent").innerHTML = FOOTER_CONTENT;

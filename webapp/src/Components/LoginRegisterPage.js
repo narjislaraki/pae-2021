@@ -25,7 +25,7 @@ let loginPage = `<div class="register-card"></div>
     </div>
     <div class="mb-3 form-check stayconnected">
       <input type="checkbox" class="form-check-input" id="stayconnected">
-      <label class="form-check-label" for="exampleCheck1">Rester connecté</label>
+      <label class="form-check-label" for="exampleCheck1">Rester connecté(e)</label>
     </div>
     <button class="btn btn-dark btn-navbar condensed small-caps">Se Connecter</button>
   </form>

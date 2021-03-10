@@ -24,7 +24,7 @@ const Navbar = () => {
 
         <div class="user-head">
           <p class="text-user">Bonjour,</p>
-          <p id="username" class="text-user">${user.user.login}</p>
+          <p id="username" class="text-user">${user.userlogin}</p>
           <i id="user" class="bi bi-person-circle"></i>
         </div>
         `;
@@ -45,10 +45,11 @@ const Navbar = () => {
       </ul>
     </div>
 
-    <button class="btn btn-dark btn-navbar condensed small-caps">S'identifier</button>`;
+    <a class="btn btn-dark btn-navbar condensed small-caps" href="#" data-uri="/login">S'identifier</a>`;
   }
 
-  return (navBar.innerHTML = nb);
+  navBar.innerHTML = nb;
+
 };
 
 export default Navbar;
