@@ -2,10 +2,12 @@ package be.vinci.pae.main;
 
 import java.io.IOException;
 import java.net.URI;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+
 import be.vinci.pae.services.UserDAO;
 import be.vinci.pae.services.UserDAOImpl;
 import be.vinci.pae.utils.ApplicationBinder;
@@ -26,7 +28,7 @@ public class Main {
     try {
       env = args[0];
     } catch (Exception e) {
-      env = "test";
+      env = "prod";
     }
 
     switch (env) {
@@ -35,7 +37,7 @@ public class Main {
         break;
 
       default:
-        Config.load(Config.TEST);
+        Config.load(env);
         break;
     }
 
