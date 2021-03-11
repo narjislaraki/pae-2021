@@ -1,4 +1,4 @@
-package be.vinci.pae.services;
+package be.vinci.pae.services.DAL;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

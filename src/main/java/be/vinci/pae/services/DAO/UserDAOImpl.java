@@ -1,10 +1,12 @@
-package be.vinci.pae.services;
+package be.vinci.pae.services.DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserFactory;
+
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserFactory;
+import be.vinci.pae.services.DAL.DalServices;
 import jakarta.inject.Inject;
 
 public class UserDAOImpl implements UserDAO {

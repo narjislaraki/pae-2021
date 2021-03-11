@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;

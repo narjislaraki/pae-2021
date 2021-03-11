@@ -8,8 +8,8 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import be.vinci.pae.services.UserDAO;
-import be.vinci.pae.services.UserDAOImpl;
+import be.vinci.pae.services.DAO.UserDAO;
+import be.vinci.pae.services.DAO.UserDAOImpl;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 

@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.tests.UserDistributor;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;

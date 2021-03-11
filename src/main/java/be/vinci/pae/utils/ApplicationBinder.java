@@ -1,15 +1,16 @@
 package be.vinci.pae.utils;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import be.vinci.pae.domain.AddressFactory;
-import be.vinci.pae.domain.AddressFactoryImpl;
-import be.vinci.pae.domain.UserFactory;
-import be.vinci.pae.domain.UserFactoryImpl;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.domain.UserUCCImpl;
-import be.vinci.pae.services.DalServices;
-import be.vinci.pae.services.DalServicesImpl;
-import be.vinci.pae.services.UserDAO;
+
+import be.vinci.pae.domain.addresses.AddressFactory;
+import be.vinci.pae.domain.addresses.AddressFactoryImpl;
+import be.vinci.pae.domain.user.UserFactory;
+import be.vinci.pae.domain.user.UserFactoryImpl;
+import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.domain.user.UserUCCImpl;
+import be.vinci.pae.services.DAL.DalServices;
+import be.vinci.pae.services.DAL.DalServicesImpl;
+import be.vinci.pae.services.DAO.UserDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 

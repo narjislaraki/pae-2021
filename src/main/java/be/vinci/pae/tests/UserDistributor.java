@@ -3,8 +3,8 @@ package be.vinci.pae.tests;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserImpl;
+import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserImpl;
 
 public class UserDistributor {
 
