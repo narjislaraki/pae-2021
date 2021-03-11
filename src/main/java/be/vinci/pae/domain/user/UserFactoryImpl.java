@@ -1,4 +1,4 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.user;
 
 public class UserFactoryImpl implements UserFactory {
 

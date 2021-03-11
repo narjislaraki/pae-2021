@@ -1,4 +1,4 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.user;
 
 import java.time.LocalDateTime;
 import org.mindrot.jbcrypt.BCrypt;

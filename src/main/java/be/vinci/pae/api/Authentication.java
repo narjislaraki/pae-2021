@@ -1,5 +1,8 @@
 package be.vinci.pae.api;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Map;
 
 import com.auth0.jwt.JWT;
@@ -10,8 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import be.vinci.pae.domain.User;
-import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
@@ -52,9 +55,8 @@ public class Authentication {
   public Response login(JsonNode json) {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")
         || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
-      return Response.status(Status.UNAUTHORIZED)
-          .entity("Les champs avec la mention * doivent être remplis").type(MediaType.TEXT_PLAIN)
-          .build();
+      return Response.status(Status.UNAUTHORIZED).entity("Missing fields")
+          .type(MediaType.TEXT_PLAIN).build();
     }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
@@ -78,8 +80,8 @@ public class Authentication {
   private Response createToken(User user) {
     String token;
     try {
-      token =
-          JWT.create().withIssuer("auth0").withClaim("user", user.getId()).sign(this.jwtAlgorithm);
+      token = JWT.create().withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+          .withIssuer("auth0").withClaim("user", user.getId()).sign(this.jwtAlgorithm);
     } catch (Exception e) {
       throw new WebApplicationException("Incapable de créer un token", e,
           Status.INTERNAL_SERVER_ERROR);
