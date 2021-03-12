@@ -89,6 +89,12 @@ public class Authentication {
     return createToken(user);
   }
 
+  /**
+   * This method is used for registering a user. It also adds the address into the database
+   * 
+   * @param json post received from the client
+   * @return Response 401 Or 409 if KO; token if OK
+   */
   @POST
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -98,17 +104,17 @@ public class Authentication {
           .type(MediaType.TEXT_PLAIN).build();
     }
 
-    String email = json.get("email").asText();
-    String username = json.get("username").asText();
-    String password = json.get("password").asText();
-    String confirmPassword = json.get("confirmPassword").asText();
-    String firstName = json.get("firstName").asText();
-    String lastName = json.get("lastName").asText();
-    String street = json.get("street").asText();
-    String buildingNumber = json.get("buildingNumber").asText();
-    String city = json.get("city").asText();
-    String postcode = json.get("postcode").asText();
-    String country = json.get("country").asText();
+    final String email = json.get("email").asText();
+    final String username = json.get("username").asText();
+    final String password = json.get("password").asText();
+    final String confirmPassword = json.get("confirmPassword").asText();
+    final String firstName = json.get("firstName").asText();
+    final String lastName = json.get("lastName").asText();
+    final String street = json.get("street").asText();
+    final String buildingNumber = json.get("buildingNumber").asText();
+    final String city = json.get("city").asText();
+    final String postcode = json.get("postcode").asText();
+    final String country = json.get("country").asText();
     int unitNumber = 0;
     if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
       unitNumber = json.get("unitNumber").asInt();

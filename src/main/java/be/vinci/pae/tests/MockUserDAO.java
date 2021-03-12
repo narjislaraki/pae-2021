@@ -10,7 +10,6 @@ public class MockUserDAO implements UserDAO {
   public UserDTO getUserFromEmail(String email) {
     UserDTO user = null;
     if (email.equals("test@test.com")) {
-
       user = UserDistributor.getGoodValidatedUser();
     }
     return user;
@@ -20,13 +19,14 @@ public class MockUserDAO implements UserDAO {
   public UserDTO getUserFromUsername(String username) {
     UserDTO user = null;
     if (username.equals("test@test.com")) {
-
       user = UserDistributor.getGoodValidatedUser();
     }
     return user;
   }
 
   @Override
-  public void addUser(User user) {}
+  public void addUser(User user) {
+
+  }
 
 }
