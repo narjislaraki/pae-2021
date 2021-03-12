@@ -8,9 +8,9 @@ import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.domain.user.UserUCCImpl;
-import be.vinci.pae.services.DAL.DalServices;
-import be.vinci.pae.services.DAL.DalServicesImpl;
-import be.vinci.pae.services.DAO.UserDAO;
+import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.services.dal.DalServicesImpl;
+import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 

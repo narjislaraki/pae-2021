@@ -1,6 +1,6 @@
 package be.vinci.pae.domain.user;
 
-import be.vinci.pae.services.DAO.UserDAO;
+import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
 
 public class UserUCCImpl implements UserUCC {

@@ -14,6 +14,11 @@ public class UserDistributor {
   private String badPassword = "5678";
   private static String goodEmailNotValidated = "test3@test.com";
 
+  /**
+   * Construct a user considered as "a good user model that is validated", and return it.
+   * 
+   * @return the good user
+   */
   public static User getGoodValidatedUser() {
     User goodUser = new UserImpl();
     goodUser.setId(1);
@@ -32,6 +37,12 @@ public class UserDistributor {
     return goodUser;
   }
 
+
+  /**
+   * Construct a user considered as "a good user model but not validated yet", and return it.
+   * 
+   * @return the not-validated good user
+   */
   public static User getGoodNotValidatedUser() {
     User goodUserNotValidated = new UserImpl();
     goodUserNotValidated.setId(3);

@@ -1,7 +1,7 @@
 package be.vinci.pae.tests;
 
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.services.DAO.UserDAO;
+import be.vinci.pae.services.dao.UserDAO;
 
 public class MockUserDAO implements UserDAO {
 
