@@ -42,25 +42,15 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(1, email);
 
       ResultSet rs = ps.executeQuery();
+      user = setUser(rs, user);
 
-      while (rs.next()) {
-        user = userFactory.getUserDTO(); // TODO bon endroit?
-        user.setId(rs.getInt(1));
-        user.setUsername(rs.getString(2));
-        user.setLastName(rs.getString(3));
-        user.setFirstName(rs.getString(4));
-        user.setEmail(rs.getString(5));
-        user.setRole(rs.getString(6));
-        user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
-        user.setValidated(rs.getBoolean(8));
-        user.setPassword(rs.getString(9));
-        user.setAddress(rs.getInt(10));
-      }
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return user;
   }
+
+
 
   /**
    * Searching through the database for the user, using his username.
@@ -84,20 +74,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(1, username);
 
       ResultSet rs = ps.executeQuery();
-
-      while (rs.next()) {
-        user = userFactory.getUserDTO(); // TODO bon endroit?
-        user.setId(rs.getInt(1));
-        user.setUsername(rs.getString(2));
-        user.setLastName(rs.getString(3));
-        user.setFirstName(rs.getString(4));
-        user.setEmail(rs.getString(5));
-        user.setRole(rs.getString(6));
-        user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
-        user.setValidated(rs.getBoolean(8));
-        user.setPassword(rs.getString(9));
-        user.setAddress(rs.getInt(10));
-      }
+      user = setUser(rs, user);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -125,4 +102,25 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
+  private UserDTO setUser(ResultSet rs, UserDTO user) {
+    try {
+      while (rs.next()) {
+        user = userFactory.getUserDTO(); // TODO bon endroit?
+        user.setId(rs.getInt(1));
+        user.setUsername(rs.getString(2));
+        user.setLastName(rs.getString(3));
+        user.setFirstName(rs.getString(4));
+        user.setEmail(rs.getString(5));
+        user.setRole(rs.getString(6));
+        user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
+        user.setValidated(rs.getBoolean(8));
+        user.setPassword(rs.getString(9));
+        user.setAddress(rs.getInt(10));
+      }
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return user;
+  }
 }
