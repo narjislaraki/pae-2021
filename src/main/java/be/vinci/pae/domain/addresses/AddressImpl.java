@@ -21,7 +21,7 @@ public class AddressImpl implements Address {
   }
 
   @Override
-  public int unitNumber() {
+  public int getUnitNumber() {
     return unitNumber;
   }
 
@@ -79,5 +79,6 @@ public class AddressImpl implements Address {
   public void setCountry(String country) {
     this.country = country;
   }
+
 
 }

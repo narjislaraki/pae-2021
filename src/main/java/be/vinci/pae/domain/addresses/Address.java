@@ -9,7 +9,7 @@ public interface Address {
 
   void setId(int id);
 
-  int unitNumber();
+  int getUnitNumber();
 
   void setUnitNumber(int unitNumber);
 

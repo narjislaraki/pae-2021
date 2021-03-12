@@ -1,5 +1,5 @@
-@baseUrl = http://localhost:8080/users
-@baseAuthsUrl = http://localhost:8080/auths
+@baseUrl = http://localhost:8081/users
+@baseAuthsUrl = http://localhost:8081/auths
 
 
 ### FAIL
@@ -30,4 +30,23 @@ Content-Type: application/json
 {
     "email":"valid@email.com",
     "password":"1234"
+}
+
+### SUCCESS
+POST {{baseAuthsUrl}}/register
+Content-Type: application/json
+
+{
+    "email": "register3@email.com",
+    "password": "1234",
+    "confirmPassword": "1234",
+    "username": "register3",
+    "lastName": "Laraki",
+    "firstName": "Narjis",
+    "street": "Rue Neuve",
+    "country": "Belgique",
+    "buildingNumber": "12",
+    "postcode": "1000",
+    "city": "Bruxelles",
+    "unitNumber": 2
 }
