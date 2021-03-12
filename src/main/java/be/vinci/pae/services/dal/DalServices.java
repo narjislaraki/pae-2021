@@ -6,4 +6,6 @@ public interface DalServices {
 
   PreparedStatement getPreparedStatement(String sql);
 
+  PreparedStatement getPreparedStatementWithGeneratedReturn(String sql);
+
 }

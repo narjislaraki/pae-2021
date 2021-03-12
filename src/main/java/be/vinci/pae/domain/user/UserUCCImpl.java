@@ -12,7 +12,7 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO connection(String email, String password) {
-    UserDTO userDTO = userDAO.getUser(email);
+    UserDTO userDTO = userDAO.getUserFromEmail(email);
     User user = (User) userDTO;
     if (user == null || !user.checkPassword(password) || !user.isValidated()) {
       return null;

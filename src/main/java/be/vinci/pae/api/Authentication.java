@@ -1,10 +1,10 @@
 package be.vinci.pae.api;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,9 +12,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import be.vinci.pae.domain.addresses.Address;
+import be.vinci.pae.domain.addresses.AddressFactory;
 import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.services.dao.AddressDAO;
+import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
@@ -42,6 +47,19 @@ public class Authentication {
   @Inject
   private UserUCC userUCC;
 
+  @Inject
+  private UserDAO userDAO;
+
+  @Inject
+  private UserFactory userFactory;
+
+  @Inject
+  private AddressFactory addressFactory;
+
+  @Inject
+  private AddressDAO addressDAO;
+
+
   /**
    * This method is used to attempt to log a client in.Valid email and password are required to be
    * able to send a token and a response 200.
@@ -64,11 +82,98 @@ public class Authentication {
 
     User user = (User) userUCC.connection(email, password);
     if (user == null) {
-      return Response.status(Status.UNAUTHORIZED).entity("Les données entrées sont incorrectes")
+      return Response.status(Status.UNAUTHORIZED).entity("The input data is invalid")
           .type(MediaType.TEXT_PLAIN).build();
     }
 
     return createToken(user);
+  }
+
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response register(JsonNode json) {
+    if (!checkFieldsRegister(json)) {
+      return Response.status(Status.UNAUTHORIZED).entity("Missing fields")
+          .type(MediaType.TEXT_PLAIN).build();
+    }
+
+    String email = json.get("email").asText();
+    String username = json.get("username").asText();
+    String password = json.get("password").asText();
+    String confirmPassword = json.get("confirmPassword").asText();
+    String firstName = json.get("firstName").asText();
+    String lastName = json.get("lastName").asText();
+    String street = json.get("street").asText();
+    String buildingNumber = json.get("buildingNumber").asText();
+    String city = json.get("city").asText();
+    String postcode = json.get("postcode").asText();
+    String country = json.get("country").asText();
+    int unitNumber = 0;
+    if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
+      unitNumber = json.get("unitNumber").asInt();
+    }
+
+    User user = (User) userDAO.getUserFromEmail(email);
+    if (user != null) {
+      return Response.status(Status.CONFLICT).entity("This email is already in use")
+          .type(MediaType.TEXT_PLAIN).build();
+    }
+    user = (User) userDAO.getUserFromUsername(username);
+    if (user != null) {
+      return Response.status(Status.CONFLICT).entity("This username is already in use")
+          .type(MediaType.TEXT_PLAIN).build();
+    }
+
+    if (!password.equals(confirmPassword)) {
+      return Response.status(Status.UNAUTHORIZED).entity("The passwords don't match")
+          .type(MediaType.TEXT_PLAIN).build();
+    }
+
+    Address address = addressFactory.getAddress();
+    address.setStreet(street);
+    address.setCity(city);
+    address.setBuildingNumber(buildingNumber);
+    address.setPostCode(postcode);
+    address.setCountry(country);
+    if (unitNumber != 0) {
+      address.setUnitNumber(unitNumber);
+    }
+
+    int idAddress = addressDAO.addAddress(address);
+    address.setId(idAddress);
+
+    UserDTO userDTO = userFactory.getUserDTO();
+    User userCast = (User) userDTO;
+    userCast.setEmail(email);
+    userCast.setUsername(username);
+    userCast.setFirstName(firstName);
+    userCast.setLastName(lastName);
+    userCast.setPassword(userCast.hashPassword(password));
+    userCast.setValidated(false);
+    userCast.setRegistrationDate(LocalDateTime.now());
+    userCast.setRole("client");
+    userCast.setAddress(idAddress);
+
+    userDAO.addUser(userCast);
+    return createToken(userCast);
+  }
+
+  private boolean checkFieldsRegister(JsonNode json) {
+    if (!json.hasNonNull("email") || !json.hasNonNull("password")
+        || !json.hasNonNull("confirmPassword") || !json.hasNonNull("firstName")
+        || !json.hasNonNull("lastName") || !json.hasNonNull("street")
+        || !json.hasNonNull("buildingNumber") || !json.hasNonNull("city")
+        || !json.hasNonNull("postcode") || !json.hasNonNull("country")
+        || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()
+        || json.get("confirmPassword").asText().isEmpty()
+        || json.get("firstName").asText().isEmpty() || json.get("lastName").asText().isEmpty()
+        || json.get("street").asText().isEmpty() || json.get("buildingNumber").asText().isEmpty()
+        || json.get("city").asText().isEmpty() || json.get("postcode").asText().isEmpty()
+        || json.get("country").asText().isEmpty()) {
+      return false;
+    }
+    return true;
   }
 
   /**

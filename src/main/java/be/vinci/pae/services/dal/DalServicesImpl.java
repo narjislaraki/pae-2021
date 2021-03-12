@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import be.vinci.pae.utils.Config;
 
 public class DalServicesImpl implements DalServices {
@@ -36,6 +37,18 @@ public class DalServicesImpl implements DalServices {
     PreparedStatement ps = null;
     try {
       ps = conn.prepareStatement(sql);
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return ps;
+  }
+
+  @Override
+  public PreparedStatement getPreparedStatementWithGeneratedReturn(String sql) {
+    PreparedStatement ps = null;
+    try {
+      ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
     } catch (SQLException e) {
       e.printStackTrace();

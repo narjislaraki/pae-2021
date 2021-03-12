@@ -1,7 +1,6 @@
 package be.vinci.pae.utils;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-
 import be.vinci.pae.domain.addresses.AddressFactory;
 import be.vinci.pae.domain.addresses.AddressFactoryImpl;
 import be.vinci.pae.domain.user.UserFactory;
@@ -10,6 +9,7 @@ import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.domain.user.UserUCCImpl;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dal.DalServicesImpl;
+import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
@@ -20,8 +20,10 @@ public class ApplicationBinder extends AbstractBinder {
   @Override
   protected void configure() {
     Class<?> userDAO = null;
+    Class<?> addressDAO = null;
     try {
       userDAO = Class.forName(Config.getProperty("be.vinci.pae.services.UserDAO"));
+      addressDAO = Class.forName(Config.getProperty("be.vinci.pae.services.AddressDAO"));
     } catch (ClassNotFoundException e) {
       // TODO Auto-generated catch block
       System.out.println(e);
@@ -31,6 +33,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(userDAO).to(UserDAO.class).in(Singleton.class);
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(AddressFactoryImpl.class).to(AddressFactory.class).in(Singleton.class);
+    bind(addressDAO).to(AddressDAO.class).in(Singleton.class);
     bind(DalServicesImpl.class).to(DalServices.class).in(Singleton.class);
   }
 }
