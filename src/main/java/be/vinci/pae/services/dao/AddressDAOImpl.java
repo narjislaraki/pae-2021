@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import be.vinci.pae.domain.addresses.Address;
-import be.vinci.pae.domain.addresses.AddressFactory;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 
@@ -13,8 +12,6 @@ public class AddressDAOImpl implements AddressDAO {
   @Inject
   private DalServices dalServices;
 
-  @Inject
-  private AddressFactory addressFactory;
 
   @Override
   public int addAddress(Address address) {
