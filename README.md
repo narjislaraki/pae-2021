@@ -2,6 +2,32 @@
 
 ## RESTful API : available operations
 
+### Logger options
+
+#### Two fields exist in the properties file
+#### logPath
+<p>It can be set to default by writing <i>default</i>.<br>
+Doing this, the default location will be the project folder appended by <i>/Logs</i>.<br>
+<b>logPath=default</b></p>
+
+<p>It can also be set to any path following this format <i>A:/a/custom/folder/</i>.<br>
+Note that the last slash <i>/</i> in the path is not mandatory but using backslashes is not managed.<br>
+<b>logPath=A:/a/custom/folder/</b></p>
+
+#### logFileName
+<p>The name, with its extension.<br>
+No default name is managed here. Thus this field must be filled in.<br>
+<b>logFileName=logs.log</b></p>
+
+#### Conclusion
+<p><b>logPath=A:/a/custom/folder/</b><br>
+<b>logFileName=myPersonnalLogs.log</b><br><br>
+Are going to log in <b>A:/a/custom/folder/myPersonnalLogs.log</b></p>
+-----=====-----
+<p><b>logPath=default/</b><br>
+<b>logFileName=logs.log</b><br><br>
+Are going to log in <b>X:/the/project/location/logs.log</b></p>
+
 ### Operations associated with authentication
 
 <br>
