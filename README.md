@@ -30,7 +30,7 @@
 ### Logger options
 
 #### Two fields exist in the properties file
-##### logPath
+#### logPath
 <p>It can be set to default by writing <i>default</i>.<br>
 Doing this, the default location will be the project folder appended by <i>/Logs</i>.<br>
 <b>logPath=default</b></p>
@@ -39,12 +39,12 @@ Doing this, the default location will be the project folder appended by <i>/Logs
 Note that the last slash <i>/</i> in the path is not mandatory but using backslashes is not managed.<br>
 <b>logPath=A:/a/custom/folder/</b></p>
 
-##### logFileName
+#### logFileName
 <p>The name, with its extension.<br>
 No default name is managed here. Thus this field must be filled in.<br>
 <b>logFileName=logs.log</b></p>
 
-##### Conclusion
+#### Conclusion
 <p><b>logPath=A:/a/custom/folder/</b><br>
 <b>logFileName=myPersonnalLogs.log</b><br><br>
 Are going to log in <b>A:/a/custom/folder/myPersonnalLogs.log</b></p>
