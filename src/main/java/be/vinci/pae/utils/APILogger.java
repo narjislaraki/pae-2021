@@ -10,6 +10,12 @@ public class APILogger {
   public static final String APILOGS = "APILogs";
   private static Logger logger;
 
+  /**
+   * Get a logger that write in a file determined in the properties files. Once the logger called,
+   * works as a singleton and send the same logger to every call.
+   * 
+   * @return a logger
+   */
   public static Logger getLogger() {
     if (logger == null) {
       logger = Logger.getLogger(APILOGS);
