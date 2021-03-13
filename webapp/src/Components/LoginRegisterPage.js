@@ -8,7 +8,40 @@ import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 const API_BASE_URL = "/api/auths/";
 
-let loginPage = `<div class="register-card"></div>
+let loginPage = `<div class="register-card">
+<div class="mb-3">
+        <h2 class="condensed">FORMULAIRE D'INSCRIPTION</h2>
+      </div>
+      <form class="form-register register-grid">
+
+        <input type="text" class="form-control input-card" id="pseudo" placeholder="Pseudo*">
+
+        <input type="text" class="form-control input-card" id="name" placeholder="Nom*">
+
+        <input type="text" class="form-control input-card" id="firstname" placeholder="Prénom*">
+
+        <input type="text" class="form-control input-card" id="street" placeholder="Rue*">
+
+        <input type="text" class="form-control input-card" id="number" placeholder="Numéro*">
+
+        <input type="text" class="form-control input-card" id="box" placeholder="Boite">
+
+        <input type="text" class="form-control input-card" id="zipcode" placeholder="Code Postal*">
+
+        <input type="text" class="form-control input-card" id="city" placeholder="Commune*">
+
+        <input type="text" class="form-control input-card" id="country" placeholder="Pays*">
+
+        <input type="email" class="form-control input-card" id="email-register" placeholder="E-mail*">
+
+        <input type="password" class="form-control input-card" id="password-register" placeholder="Mot-de-passe*">
+
+        <input type="password" class="form-control input-card" id="password-confirmation" placeholder="Confirmer mot-de-passe*">
+        
+        <button class="btn btn-dark condensed small-caps" id="btn-register" type="submit">Envoyer Demande d'Inscription</button>
+
+      </form>
+</div>
 <div class="sticker-login condensed"><h2>CONNEXION</h2></div>
 <div class="login-card">
   <form class="form-login">
