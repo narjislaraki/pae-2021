@@ -1,6 +1,6 @@
 package be.vinci.pae.services.dao;
 
-import be.vinci.pae.domain.addresses.Address;
+import be.vinci.pae.domain.address.Address;
 
 public interface AddressDAO {
 

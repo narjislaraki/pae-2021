@@ -49,7 +49,7 @@ public class Main {
     logger = APILogger.getLogger();
     logger.info("Server is starting");
 
-    System.out.println("Jersey app started at " + Config.getProperty("BaseUri"));
+    System.out.println("Jersey app started at " + Config.getStringProperty("BaseUri"));
     // Listen to key press and shutdown server
     System.out.println("Hit enter to stop it...");
     System.in.read();
@@ -65,7 +65,7 @@ public class Main {
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
         .register(JacksonFeature.class).register(ApplicationBinder.class)
         .property("jersey.config.server.wadl.disableWadl", true);
-    return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getProperty("BaseUri")), rc);
+    return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getStringProperty("BaseUri")), rc);
   }
 
 }

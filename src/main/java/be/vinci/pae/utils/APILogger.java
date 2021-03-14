@@ -21,8 +21,8 @@ public class APILogger {
       logger = Logger.getLogger(APILOGS);
       FileHandler fh;
 
-      String path = Config.getProperty("logPath");
-      String fileName = Config.getProperty("logFileName");
+      String path = Config.getStringProperty("logPath");
+      String fileName = Config.getStringProperty("logFileName");
       String fullLogPath;
 
       if (path.toLowerCase().equals("default")) {

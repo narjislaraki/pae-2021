@@ -3,7 +3,8 @@ package be.vinci.pae.services.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import be.vinci.pae.domain.addresses.Address;
+
+import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 

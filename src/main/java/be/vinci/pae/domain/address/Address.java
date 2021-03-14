@@ -1,4 +1,4 @@
-package be.vinci.pae.domain.addresses;
+package be.vinci.pae.domain.address;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
