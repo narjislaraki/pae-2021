@@ -16,12 +16,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import be.vinci.pae.domain.addresses.Address;
-import be.vinci.pae.domain.addresses.AddressFactory;
+import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.APILogger;
@@ -42,7 +43,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class Authentication {
 
   private static final Logger LOGGER = APILogger.getLogger();
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getStringProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   public Authentication() {
@@ -77,11 +78,8 @@ public class Authentication {
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")
-        || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
-      return Response.status(Status.UNAUTHORIZED).entity("Missing fields")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
+    checkLoginFields(json);
+
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
@@ -94,6 +92,14 @@ public class Authentication {
 
     return createToken(user);
   }
+
+  private void checkLoginFields(JsonNode json) {
+    if (!json.hasNonNull("email") || !json.hasNonNull("password")
+        || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
+      throw new FatalException("Missing fields", Status.PRECONDITION_FAILED);
+    }
+  }
+
 
   /**
    * This method is used for registering a user. It also adds the address into the database

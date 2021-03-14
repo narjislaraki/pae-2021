@@ -1,4 +1,4 @@
-package be.vinci.pae.domain.addresses;
+package be.vinci.pae.domain.address;
 
 public class AddressImpl implements Address {
 

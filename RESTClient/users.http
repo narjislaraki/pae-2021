@@ -12,6 +12,17 @@ Content-Type: application/json
     "password":"password"
 }
 
+### FAIL
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test.test@test.com",
+    "smthg":"password"
+}
+
+
 ### SUCCESS
 # @name loggedUser
 POST {{baseAuthsUrl}}/login

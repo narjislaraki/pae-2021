@@ -1,7 +1,9 @@
 package be.vinci.pae.domain.user;
 
+import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response.Status;
 
 public class UserUCCImpl implements UserUCC {
 
@@ -12,13 +14,25 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO connection(String email, String password) {
-    UserDTO userDTO = userDAO.getUserFromEmail(email);
-    User user = (User) userDTO;
-    if (user == null || !user.checkPassword(password) || !user.isValidated()) {
-      return null;
+    User user = (User) userDAO.getUserFromEmail(email);
+
+    String errorMessage = null;
+
+    if (user == null) {
+      errorMessage = "Wrong credentials";
+    } else if (!user.isValidated()) {
+      errorMessage = "User is not validated";
+      // The password is checked after the validation to limit processor usage
+    } else if (!user.checkPassword(password)) {
+      errorMessage = "Wrong credentials";
     }
 
-    return userDTO;
+    if (errorMessage != null) {
+      throw new FatalException(errorMessage, Status.UNAUTHORIZED);
+    }
+
+    return user;
+
   }
 
 }

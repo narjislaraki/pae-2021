@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.utils.Config;
 
 public class DalServicesImpl implements DalServices {
@@ -23,11 +25,10 @@ public class DalServicesImpl implements DalServices {
       System.exit(1);
     }
     try {
-      conn = DriverManager.getConnection(Config.getProperty("url"), Config.getProperty("user"),
-          Config.getProperty("password"));
+      conn = DriverManager.getConnection(Config.getStringProperty("url"), Config.getStringProperty("user"),
+          Config.getStringProperty("password"));
     } catch (SQLException e) {
-      System.out.println("Unable to reach the server!");
-      System.exit(1);
+      throw new FatalException("Unable to reach the SQL server!", e);
     }
 
   }
@@ -39,7 +40,7 @@ public class DalServicesImpl implements DalServices {
       ps = conn.prepareStatement(sql);
 
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return ps;
   }
@@ -51,7 +52,7 @@ public class DalServicesImpl implements DalServices {
       ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return ps;
   }
