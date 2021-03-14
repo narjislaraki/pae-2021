@@ -25,8 +25,8 @@ public class DalServicesImpl implements DalServices {
       System.exit(1);
     }
     try {
-      conn = DriverManager.getConnection(Config.getStringProperty("url"), Config.getStringProperty("user"),
-          Config.getStringProperty("password"));
+      conn = DriverManager.getConnection(Config.getStringProperty("url"),
+          Config.getStringProperty("user"), Config.getStringProperty("password"));
     } catch (SQLException e) {
       throw new FatalException("Unable to reach the SQL server!", e);
     }
