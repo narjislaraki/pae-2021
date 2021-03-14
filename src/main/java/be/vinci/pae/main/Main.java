@@ -65,7 +65,8 @@ public class Main {
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
         .register(JacksonFeature.class).register(ApplicationBinder.class)
         .property("jersey.config.server.wadl.disableWadl", true);
-    return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getStringProperty("BaseUri")), rc);
+    return GrizzlyHttpServerFactory
+        .createHttpServer(URI.create(Config.getStringProperty("BaseUri")), rc);
   }
 
 }
