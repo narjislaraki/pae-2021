@@ -51,7 +51,7 @@ public class UserDAOImpl implements UserDAO {
       user = setUser(rs, user);
 
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return user;
   }
@@ -82,7 +82,7 @@ public class UserDAOImpl implements UserDAO {
       ResultSet rs = ps.executeQuery();
       user = setUser(rs, user);
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return user;
   }
