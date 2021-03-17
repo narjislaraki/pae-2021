@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import be.vinci.pae.api.exceptions.FatalException;
+import be.vinci.pae.api.exceptions.BusinessError;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.tests.UserDistributor;
@@ -57,37 +57,37 @@ public class UserUCCTest {
   @DisplayName("Test connection with bad email")
   @Test
   public void connection2Test() {
-    assertThrows(FatalException.class, () -> userUCC.connection(badEmail, goodPassword));
+    assertThrows(BusinessError.class, () -> userUCC.connection(badEmail, goodPassword));
   }
 
   @DisplayName("Test connection with bad password")
   @Test
   public void connection3Test() {
-    assertThrows(FatalException.class, () -> userUCC.connection(goodEmail, badPassword));
+    assertThrows(BusinessError.class, () -> userUCC.connection(goodEmail, badPassword));
   }
 
   @DisplayName("Test connection with empty email")
   @Test
   public void connection4Test() {
-    assertThrows(FatalException.class, () -> userUCC.connection("", goodPassword));
+    assertThrows(BusinessError.class, () -> userUCC.connection("", goodPassword));
   }
 
   @DisplayName("Test connection with empty password")
   @Test
   public void connection5Test() {
-    assertThrows(FatalException.class, () -> userUCC.connection(goodEmail, ""));
+    assertThrows(BusinessError.class, () -> userUCC.connection(goodEmail, ""));
   }
 
   @DisplayName("Test connection with empty email and empty password")
   @Test
   public void connection6Test() {
-    assertThrows(FatalException.class, () -> userUCC.connection("", ""));
+    assertThrows(BusinessError.class, () -> userUCC.connection("", ""));
   }
 
   @DisplayName("Test connection with good credentials but the user isn't validated yet")
   @Test
   public void connection7Test() {
-    assertThrows(FatalException.class,
+    assertThrows(BusinessError.class,
         () -> userUCC.connection(goodEmailNotValidated, goodPassword));
   }
 
