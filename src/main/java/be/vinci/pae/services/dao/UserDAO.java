@@ -10,4 +10,10 @@ public interface UserDAO {
   UserDTO getUserFromUsername(String username);
 
   void addUser(User user);
+
+  void accept(User user);
+
+  void refuse(User user);
+
+  void setRole(User user, String role);
 }

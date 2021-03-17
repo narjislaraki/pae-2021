@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
@@ -122,5 +123,53 @@ public class UserDAOImpl implements UserDAO {
       e.printStackTrace();
     }
     return user;
+  }
+
+  @Override
+  public void accept(User user) {
+
+    try {
+      String sql = "UPDATE pae.users u SET u.is_validated = TRUE WHERE u.id_user = ?;";
+      ps = dalService.getPreparedStatement(sql);
+      ps.setInt(1, user.getId());
+      ps.execute();
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void refuse(User user) {
+
+    try {
+      String sql = "DELETE FROM pae.users u WHERE u.id_user = ?;";
+
+      ps = dalService.getPreparedStatement(sql);
+      ps.setInt(1, user.getId());
+      ps.execute();
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  @Override
+  public void setRole(User user, String role) {
+
+    try {
+      String sql = "UPDATE pae.users u SET u.role = ? WHERE u.id_user = ?; ";
+
+      ps = dalService.getPreparedStatement(sql);
+      ps.setString(1, role);
+      ps.setInt(2, user.getId());
+
+      ps.execute();
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
   }
 }

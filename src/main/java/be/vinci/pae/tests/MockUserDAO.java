@@ -29,4 +29,22 @@ public class MockUserDAO implements UserDAO {
 
   }
 
+  @Override
+  public void accept(User user) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void refuse(User user) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setRole(User user, String role) {
+    // TODO Auto-generated method stub
+
+  }
+
 }
