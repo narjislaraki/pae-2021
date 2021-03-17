@@ -12,12 +12,23 @@ public class FatalException extends WebApplicationException {
   private static final long serialVersionUID = 14366112877881039L;
   private static Logger logger = APILogger.getLogger();
 
+  /**
+   * Constructor with a Throwable original cause wrapped as parameter.
+   * 
+   * @param cause the original Throwable element
+   */
   public FatalException(Throwable cause) {
     super(Response.status(Status.INTERNAL_SERVER_ERROR).build());
     logger.warning(
         cause.getMessage() == null ? cause.getClass().getCanonicalName() : cause.getMessage());
   }
 
+  /**
+   * Constructor with a Throwable original cause wrapped as parameter and a message.
+   * 
+   * @param message the message
+   * @param cause the original Throwable element
+   */
   public FatalException(String message, Throwable cause) {
     super(cause,
         Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).type("text/plain").build());

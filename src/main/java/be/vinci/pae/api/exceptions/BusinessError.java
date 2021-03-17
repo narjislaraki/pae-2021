@@ -2,9 +2,6 @@ package be.vinci.pae.api.exceptions;
 
 public class BusinessError extends Error {
 
-  /**
-   * 
-   */
   private static final long serialVersionUID = -5107229850612287828L;
   private String message;
 
