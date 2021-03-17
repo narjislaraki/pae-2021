@@ -171,7 +171,7 @@ public class Authentication {
     userCast.setValidated(false);
     userCast.setRegistrationDate(LocalDateTime.now());
     userCast.setRole("client");
-    userCast.setAddress(idAddress);
+    userCast.setAddress(address);
 
     userDAO.addUser(userCast);
     return createToken(userCast);
