@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import be.vinci.pae.api.exceptions.FatalException;
+import be.vinci.pae.api.exceptions.BusinessError;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
@@ -66,6 +66,16 @@ public class Authentication {
   @Inject
   private AddressDAO addressDAO;
 
+  /**
+   * Quick way to construct HTTP Response with text only.
+   * 
+   * @param status the status
+   * @param message the message
+   * @return a Response containing the status and the message
+   */
+  private Response constructResponse(Status status, String message) {
+    return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
+  }
 
   /**
    * This method is used to attempt to log a client in.Valid email and password are required to be
@@ -78,26 +88,28 @@ public class Authentication {
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
-    checkLoginFields(json);
+    if (!checkLoginFields(json)) {
+      return constructResponse(Status.PRECONDITION_FAILED, "The input data is invalid");
+    }
 
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
-
-    User user = (User) userUCC.connection(email, password);
-    if (user == null) {
-      return Response.status(Status.UNAUTHORIZED).entity("The input data is invalid")
-          .type(MediaType.TEXT_PLAIN).build();
+    User user = null;
+    try {
+      user = (User) userUCC.connection(email, password);
+    } catch (BusinessError e) {
+      return constructResponse(Status.UNAUTHORIZED, e.getMessage());
     }
-
     return createToken(user);
   }
 
-  private void checkLoginFields(JsonNode json) {
+  private boolean checkLoginFields(JsonNode json) {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")
         || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
-      throw new FatalException("Missing fields", Status.PRECONDITION_FAILED);
+      return false;
     }
+    return true;
   }
 
 

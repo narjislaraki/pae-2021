@@ -12,13 +12,13 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class ExceptionHandler implements ExceptionMapper<Throwable> {
+public class ExceptionHandler implements ExceptionMapper<Exception> {
 
   private Logger logger = APILogger.getLogger();
 
 
   @Override
-  public Response toResponse(Throwable exception) {
+  public Response toResponse(Exception exception) {
     // from stacktrace to String.
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
