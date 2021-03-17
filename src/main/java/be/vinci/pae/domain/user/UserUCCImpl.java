@@ -1,6 +1,6 @@
 package be.vinci.pae.domain.user;
 
-import be.vinci.pae.exception.FatalException;
+import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;

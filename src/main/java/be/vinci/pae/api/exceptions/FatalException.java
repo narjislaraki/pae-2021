@@ -1,4 +1,4 @@
-package be.vinci.pae.exception;
+package be.vinci.pae.api.exceptions;
 
 import java.sql.SQLException;
 

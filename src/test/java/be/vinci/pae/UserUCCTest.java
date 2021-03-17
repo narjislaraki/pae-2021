@@ -9,9 +9,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.tests.UserDistributor;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;

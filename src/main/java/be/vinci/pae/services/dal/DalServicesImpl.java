@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import be.vinci.pae.exception.FatalException;
+import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.utils.Config;
 
 public class DalServicesImpl implements DalServices {
