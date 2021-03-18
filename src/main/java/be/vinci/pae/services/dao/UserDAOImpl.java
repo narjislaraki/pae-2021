@@ -37,7 +37,6 @@ public class UserDAOImpl implements UserDAO {
     // TODO PS -> attribut?
     // TODO fetch de l'adresse aussi
     UserDTO user = null;
-    user.getAddress();
     try {
       ps = dalService.getPreparedStatement(
           "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
