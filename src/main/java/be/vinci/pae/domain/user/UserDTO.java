@@ -1,8 +1,10 @@
 package be.vinci.pae.domain.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import be.vinci.pae.domain.address.Address;
 
 import be.vinci.pae.domain.address.Address;
 
