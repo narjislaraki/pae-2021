@@ -5,12 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
-import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 
@@ -37,7 +37,6 @@ public class UserDAOImpl implements UserDAO {
     // TODO PS -> attribut?
     // TODO fetch de l'adresse aussi
     UserDTO user = null;
-
     try {
       ps = dalService.getPreparedStatement(
           "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
@@ -62,7 +61,7 @@ public class UserDAOImpl implements UserDAO {
    * Searching through the database for the user, using his username.
    * 
    * @param username the username
-   * @return the user if he exists, otherwise null
+   * @return the user if he exists, otherwise throws error
    */
   @Override
   public UserDTO getUserFromUsername(String username) {

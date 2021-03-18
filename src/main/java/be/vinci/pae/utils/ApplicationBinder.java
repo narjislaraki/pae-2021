@@ -23,8 +23,8 @@ public class ApplicationBinder extends AbstractBinder {
     Class<?> userDAO = null;
     Class<?> addressDAO = null;
     try {
-      userDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.UserDAO"));
-      addressDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.AddressDAO"));
+      userDAO = Class.forName(Config.getStringProperty("UserDAO"));
+      addressDAO = Class.forName(Config.getStringProperty("AddressDAO"));
     } catch (ClassNotFoundException e) {
       // TODO Auto-generated catch block
       System.out.println(e);

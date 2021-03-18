@@ -22,7 +22,6 @@ import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.APILogger;
@@ -66,38 +65,46 @@ public class Authentication {
   @Inject
   private AddressDAO addressDAO;
 
+  /**
+   * Quick way to construct HTTP Response with text only.
+   * 
+   * @param status the status
+   * @param message the message
+   * @return a Response containing the status and the message
+   */
+  private Response constructResponse(Status status, String message) {
+    return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
+  }
 
   /**
    * This method is used to attempt to log a client in.Valid email and password are required to be
    * able to send a token and a response 200.
    * 
    * @param json post received from the client
-   * @return Response 401 if KO; 200 and credentials + token if OK
+   * @return Response 401, 412 if KO; 200 and credentials + token if OK
    */
   @POST
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
-    checkLoginFields(json);
+    if (!checkLoginFields(json)) {
+      return constructResponse(Status.PRECONDITION_FAILED, "The input data is invalid");
+    }
 
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
-
     User user = (User) userUCC.connection(email, password);
-    if (user == null) {
-      return Response.status(Status.UNAUTHORIZED).entity("The input data is invalid")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
 
     return createToken(user);
   }
 
-  private void checkLoginFields(JsonNode json) {
+  private boolean checkLoginFields(JsonNode json) {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")
         || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
-      throw new FatalException("Missing fields", Status.PRECONDITION_FAILED);
+      return false;
     }
+    return true;
   }
 
 
