@@ -35,8 +35,18 @@ const Navbar = () => {
               <li><a class="dropdown-item" id="logout" href="#">Se déconnecter</a></li>
             </ul>
           </div>
+          <div id="adminToolsIcon">          
+          </div>
         </div>
         `;
+    navBar.innerHTML = nb;
+    if (userData.user.role === 'admin'){ //just for test, à remplacer avec roler === 'admin'
+      console.log("salut");
+      let adminTools = document.getElementById("adminToolsIcon");
+      adminTools.innerHTML = `<img src="../assets/key4Admin.png" alt="key" id="keyAdmin" width="30" height="30">`;
+      let keyAdmin = document.getElementById("keyAdmin");
+      keyAdmin.addEventListener("click", onClickTools);
+    }
   } else {
     nb = `<h1 class="lines" ></h1>
     <div class= "title">
@@ -55,9 +65,9 @@ const Navbar = () => {
     </div>
 
     <a class="btn btn-dark btn-navbar condensed small-caps" href="#" data-uri="/login">S'identifier</a>`;
+    navBar.innerHTML = nb;
   }
 
-  navBar.innerHTML = nb;
   if (userData){
     let logout = document.querySelector("#logout");
     logout.addEventListener("click", onLogout);
@@ -72,5 +82,10 @@ const onLogout = (e) =>{
   RedirectUrl("/");
   Navbar();
 };
+
+const onClickTools = (e) => {
+  e.preventDefault();
+  RedirectUrl("/confirmRegistration")
+}
 
 export default Navbar;
