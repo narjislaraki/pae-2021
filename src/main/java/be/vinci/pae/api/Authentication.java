@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import be.vinci.pae.api.exceptions.BusinessError;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
@@ -95,12 +94,8 @@ public class Authentication {
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
-    User user = null;
-    try {
-      user = (User) userUCC.connection(email, password);
-    } catch (BusinessError e) {
-      return constructResponse(Status.UNAUTHORIZED, e.getMessage());
-    }
+    User user = (User) userUCC.connection(email, password);
+
     return createToken(user);
   }
 

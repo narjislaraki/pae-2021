@@ -30,7 +30,10 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
       return Response.status(getStatusCode(exception)).entity(getEntity(exception)).build();
     }
     return Response.status(getStatusCode(exception))
-        .entity("Oh no, something wrong happened! Don't worry, we're on it!").build();
+        .entity(exception.getMessage() == null || exception.getMessage().isEmpty()
+            ? "Oh no, something wrong happened! Don't worry, we're on it!"
+            : exception.getMessage())
+        .build();
   }
 
   /*
@@ -39,6 +42,9 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
   private int getStatusCode(Throwable exception) {
     if (exception instanceof WebApplicationException) {
       return ((WebApplicationException) exception).getResponse().getStatus();
+    }
+    if (exception instanceof UnauthorizedException) {
+      return Response.Status.UNAUTHORIZED.getStatusCode();
     }
     return Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
   }
