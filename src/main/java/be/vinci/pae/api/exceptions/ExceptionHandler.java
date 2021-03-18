@@ -19,12 +19,13 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
   @Override
   public Response toResponse(Exception exception) {
-    // from stacktrace to String.
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    exception.printStackTrace(pw);
-
-    logger.warning(exception.getClass().getCanonicalName() + "\n" + sw.toString());
+    if (exception instanceof BusinessException == false) {
+      // from stacktrace to String.
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      exception.printStackTrace(pw);
+      logger.warning(exception.getClass().getCanonicalName() + "\n" + sw.toString());
+    }
 
     if (Config.getBoolProperty("SendStackTraceToClient")) {
       return Response.status(getStatusCode(exception)).entity(getEntity(exception)).build();
