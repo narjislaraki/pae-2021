@@ -61,7 +61,7 @@ public class UserDAOImpl implements UserDAO {
    * Searching through the database for the user, using his username.
    * 
    * @param username the username
-   * @return the user if he exists, otherwise null
+   * @return the user if he exists, otherwise throws error
    */
   @Override
   public UserDTO getUserFromUsername(String username) {
