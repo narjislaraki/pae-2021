@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
    * Searching through the database for the user, using his email.
    * 
    * @param email the email
-   * @return the user if he exists, otherwise null
+   * @throws @return the user if he exists, otherwise null
    */
   @Override
   public UserDTO getUserFromEmail(String email) {

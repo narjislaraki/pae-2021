@@ -81,7 +81,7 @@ public class Authentication {
    * able to send a token and a response 200.
    * 
    * @param json post received from the client
-   * @return Response 401 if KO; 200 and credentials + token if OK
+   * @return Response 401, 412 if KO; 200 and credentials + token if OK
    */
   @POST
   @Path("login")
