@@ -1,9 +1,12 @@
 package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import be.vinci.pae.domain.addresses.Address;
 import be.vinci.pae.views.Views;
 
 public class FurnitureImpl implements Furniture {
@@ -129,6 +132,19 @@ public class FurnitureImpl implements Furniture {
 
   public void setFavouritePhoto(int favouritePhoto) {
     this.favouritePhoto = favouritePhoto;
+  }
+
+  public void introduceOption(int numberOfDay) {
+
+  }
+
+  public void cancelOption(String cancellationReason) {
+
+  }
+
+  public void introduceRequestForVisite(String timeSlot, Address address,
+      Map<Integer, List<String>> furnitures) {
+
   }
 
 

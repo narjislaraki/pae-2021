@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public interface FurnitureDTO {
 
   enum Condition {
-    EN_ATTENTE("en attente"), VALIDE("validé"), REFUSE("refusé"), EN_RESTAURATION(
+    EN_ATTENTE("proposé"), VALIDE("acheté"), REFUSE("refusé"), EN_RESTAURATION(
         "en restauration"), DEPOSE_EN_MAGASIN("deposé en magasin"), EN_VENTE(
             "en vente"), SOUS_OPTION("sous option"), VENDU("vendu"), EMPORTE(
                 "emporté"), LIVRE("livré"), RESERVE("réservé"), RETIRER("retiré de la vente");
@@ -68,5 +68,6 @@ public interface FurnitureDTO {
   int getFavouritePhoto();
 
   void setFavouritePhoto(int favouritePhoto);
+
 
 }
