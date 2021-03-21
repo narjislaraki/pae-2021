@@ -107,6 +107,37 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
+
+  /**
+   * Searching through the database for the user, using his id.
+   * 
+   * @param id the id
+   * @return the user if he exists, otherwise null
+   */
+  @Override
+  public UserDTO getUserFromId(int id) {
+    // TODO PS -> attribut?
+    // TODO fetch de l'adresse aussi
+    UserDTO user = null;
+
+    try {
+      ps = dalService.getPreparedStatement(
+          "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
+              + "u.registration_date, u.is_validated, u.password, u.address "
+              + "FROM pae.users u WHERE u.id= ?;");
+
+
+      ps.setInt(1, id);
+
+      ResultSet rs = ps.executeQuery();
+      user = setUser(rs, user);
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return user;
+  }
+
   private UserDTO setUser(ResultSet rs, UserDTO user) {
     try {
       while (rs.next()) {

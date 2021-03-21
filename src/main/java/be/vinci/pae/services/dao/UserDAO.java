@@ -9,6 +9,8 @@ public interface UserDAO {
 
   UserDTO getUserFromUsername(String username);
 
+  UserDTO getUserFromId(int id);
+
   void addUser(User user);
 
   void accept(User user);

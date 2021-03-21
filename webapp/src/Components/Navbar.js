@@ -40,7 +40,8 @@ const Navbar = () => {
         </div>
         `;
     navBar.innerHTML = nb;
-    if (userData.user.role === 'admin'){ //just for test, à remplacer avec roler === 'admin'
+    console.log(userData.user);
+    if (userData.user.role === "admin"){ //just for test, à remplacer avec roler === 'admin'
       console.log("salut");
       let adminTools = document.getElementById("adminToolsIcon");
       adminTools.innerHTML = `<img src="../assets/key4Admin.png" alt="key" id="keyAdmin" width="30" height="30">`;
