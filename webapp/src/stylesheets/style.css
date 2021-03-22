@@ -295,11 +295,12 @@ footer{
 .vector-back{
     position: absolute;
     width: 100%;
-    
+    z-index: 1;
 }
 .vector-front{
     position: absolute;
     width:100%;
+    z-index: 2;
 }
 
 /*
@@ -517,7 +518,21 @@ footer{
 }
 
 
+/*
+*=================================
+*=======Confirm Registration======
+*=================================
+*/
 
+.block-display{
+    display:block;
+}
+
+.table{
+    position: absolute;
+    z-index: 100;
+    
+}
 
 
 
