@@ -2,6 +2,7 @@ package be.vinci.pae.services.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.exception.FatalException;
@@ -12,6 +13,9 @@ public class UtilsDAO {
   @Inject
   private static UserFactory userFactory;
 
+
+  @Inject
+  private static AddressDAO addressDAO;
 
   /**
    * Method to set a user from a resultset.
@@ -32,7 +36,9 @@ public class UtilsDAO {
       user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
       user.setValidated(rs.getBoolean(8));
       user.setPassword(rs.getString(9));
-      // user.setAddress(getAddress(rs.getInt(10)));
+      Address address = addressDAO.getAddress(rs.getInt(10));
+      user.setAddress(address);
+
     } catch (SQLException e) {
       throw new FatalException(e);
     }

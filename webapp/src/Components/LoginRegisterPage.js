@@ -14,29 +14,29 @@ let loginPage = `<div class="register-card">
       </div>
       <form class="form-register register-grid">
 
-        <input type="text" class="form-control input-card" id="username" placeholder="Pseudo*">
+        <input type="text" class="form-control input-card" id="username" placeholder="Pseudo*" required>
 
-        <input type="text" class="form-control input-card" id="lastname" placeholder="Nom*">
+        <input type="text" class="form-control input-card" id="lastname" placeholder="Nom*" required>
 
-        <input type="text" class="form-control input-card" id="firstname" placeholder="Prénom*">
+        <input type="text" class="form-control input-card" id="firstname" placeholder="Prénom*" required>
 
-        <input type="text" class="form-control input-card" id="street" placeholder="Rue*">
+        <input type="text" class="form-control input-card" id="street" placeholder="Rue*" required>
 
-        <input type="text" class="form-control input-card" id="number" placeholder="Numéro*">
+        <input type="text" class="form-control input-card" id="number" placeholder="Numéro*" required>
 
         <input type="text" class="form-control input-card" id="unitnumber" placeholder="Boite">
 
-        <input type="text" class="form-control input-card" id="postcode" placeholder="Code Postal*">
+        <input type="text" class="form-control input-card" id="postcode" placeholder="Code Postal*" required>
 
-        <input type="text" class="form-control input-card" id="city" placeholder="Commune*">
+        <input type="text" class="form-control input-card" id="city" placeholder="Commune*" required>
 
-        <input type="text" class="form-control input-card" id="country" placeholder="Pays*">
+        <input type="text" class="form-control input-card" id="country" placeholder="Pays*" required>
 
-        <input type="email" class="form-control input-card" id="email-register" placeholder="E-mail*">
+        <input type="email" class="form-control input-card" id="email-register" placeholder="E-mail*" required>
 
-        <input type="password" class="form-control input-card" id="password-register" placeholder="Mot-de-passe*">
+        <input type="password" class="form-control input-card" id="password-register" placeholder="Mot-de-passe*" required>
 
-        <input type="password" class="form-control input-card" id="password-confirmation" placeholder="Confirmer mot-de-passe*">
+        <input type="password" class="form-control input-card" id="password-confirmation" placeholder="Confirmer mot-de-passe*" required>
         
         <button class="btn btn-dark condensed small-caps" id="btn-register" type="submit">Envoyer Demande d'Inscription</button>
 
