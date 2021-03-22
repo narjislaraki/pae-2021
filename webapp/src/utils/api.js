@@ -26,13 +26,18 @@ async function callAPI(endpoint, method = "get", token, data) {
   )
     headers.append("Content-Type", "application/json");
   options.headers = headers;
+  console.log(options.headers + "jjssj");
   try {
+    console.log("a");
     const response = await fetch(endpoint, options);
-
-    if (!response.ok) {      
+    console.log("b");
+    if (!response.ok) {  
+      console.log("c");    
       const error = await response.text(); // get the textual error message
+      console.log("d");
       throw new Error(error);
     }
+    console.log("e");
     return await response.json();
   } catch (error) {
     console.log("error:", error);

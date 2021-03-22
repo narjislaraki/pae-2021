@@ -14,9 +14,9 @@ let loginPage = `<div class="register-card">
       </div>
       <form class="form-register register-grid">
 
-        <input type="text" class="form-control input-card" id="pseudo" placeholder="Pseudo*">
+        <input type="text" class="form-control input-card" id="username" placeholder="Pseudo*">
 
-        <input type="text" class="form-control input-card" id="name" placeholder="Nom*">
+        <input type="text" class="form-control input-card" id="lastname" placeholder="Nom*">
 
         <input type="text" class="form-control input-card" id="firstname" placeholder="Prénom*">
 
@@ -24,9 +24,9 @@ let loginPage = `<div class="register-card">
 
         <input type="text" class="form-control input-card" id="number" placeholder="Numéro*">
 
-        <input type="text" class="form-control input-card" id="box" placeholder="Boite">
+        <input type="text" class="form-control input-card" id="unitnumber" placeholder="Boite">
 
-        <input type="text" class="form-control input-card" id="zipcode" placeholder="Code Postal*">
+        <input type="text" class="form-control input-card" id="postcode" placeholder="Code Postal*">
 
         <input type="text" class="form-control input-card" id="city" placeholder="Commune*">
 
@@ -69,12 +69,16 @@ const LoginRegisterPage = () => {
   let page = document.querySelector("#page");
   page.innerHTML = loginPage;
   let loginForm = document.querySelector(".form-login");
+  let registerForm = document.querySelector(".form-register");
   const user = getUserSessionData();
   if (user) {
     // re-render the navbar for the authenticated user
     Navbar();
     RedirectUrl("/list");
-  } else loginForm.addEventListener("submit", onLogin);
+  } else {
+    loginForm.addEventListener("submit", onLogin);
+    registerForm.addEventListener("submit", onRegister);
+  }
 };
 
 const onLogin = async (e) => {
@@ -110,5 +114,38 @@ const onUserLogin = (userData) => {
   Navbar();
   RedirectUrl("/");
 };
+
+
+const onRegister = async (e) => {
+  //e.preventDefault();
+  let user = {
+    username : document.getElementById("username").value,
+    firstName : document.getElementById("firstname").value,
+    lastName : document.getElementById("lastname").value,
+    street : document.getElementById("street").value,
+    buildingNumber : document.getElementById("number").value,
+    unitNumber : document.getElementById("unitnumber").value,
+    postcode : document.getElementById("postcode").value,
+    country : document.getElementById("country").value,
+    city : document.getElementById("city").value,
+    email : document.getElementById("email-register").value,
+    password : document.getElementById("password-register").value,
+    confirmPassword : document.getElementById("password-confirmation").value,
+  };
+  
+  console.log(user);
+  try{
+    const userRegistered = await callAPI(
+      API_BASE_URL + "register",
+      "POST",
+      undefined,
+      user
+    );
+    onRegister(userRegistered);
+  }catch(err){
+    console.error("LoginRegisterPage::onRegister", err);
+    PrintError(err);
+  }
+}
 
 export default LoginRegisterPage;

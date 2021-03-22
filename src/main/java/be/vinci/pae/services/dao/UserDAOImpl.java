@@ -98,7 +98,7 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(5, user.getRole().toString().toLowerCase());
       Timestamp registrationDate = Timestamp.valueOf(user.getRegistrationDate());
       ps.setTimestamp(6, registrationDate);
-      ps.setBoolean(7, user.isValidated());
+      ps.setBoolean(7, false);
       ps.setString(8, user.getPassword());
       ps.setInt(9, user.getAddress().getId());
       ps.execute();

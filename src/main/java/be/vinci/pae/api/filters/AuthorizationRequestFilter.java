@@ -45,5 +45,4 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
           this.userDAO.getUserFromId(decodedToken.getClaim("user").asInt()));
     }
   }
-
 }
