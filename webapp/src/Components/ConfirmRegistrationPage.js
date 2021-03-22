@@ -28,26 +28,42 @@ const ConfirmRegistrationPage = async () => {
 
 const onUnregisteredUsersList = (data) =>{
     console.log("onUnregisteredUsersList a");
-    let onUnregisteredUsersListPage = `<ul class="list-group list-group-horizontal-lg">`;
-    let list = document.querySelector("ul");
+    let onUnregisteredUsersListPage = 
+    `<table class="table table-light">
+      <thead>
+        <tr>
+          <th scope="col">Pseudo</th>
+          <th scope="col">Prénom</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Adresse</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+       
+        
+    `;
     console.log(data);
     onUnregisteredUsersListPage += data
-        .map((user) => `<form class="form-register register-grid">
-                            <p>${user.username}</p>
-                            <p>${user.firstName}</p>
-                            <p>${user.lastName}</p>
-                            <p>${user.address}</p>
-                            <button class="btn btn-dark condensed small-caps" id="btn-map" type="submit">Voir sur la carte</button>
-                            <button class="btn btn-dark condensed small-caps" id="btn-accept" type="submit">Accepter</button>
-                            <button class="btn btn-dark condensed small-caps" id="btn-refuse" type="submit">Refuser</button>
-                            <input type="radio" id="nephew" value="nephew">
-                            <label for="nephew">Neveu</label><br>
-                            <input type="radio" id="antique_dealer" value="antique_dealer">
-                            <label for="antique_dealer">Antiquaire</label><br>
-                        </form>`)
+        .map((user) => `<tr>
+                            <td>${user.username}</td>
+                            <td>${user.firstName}</td>
+                            <td>${user.lastName}</td>
+                            <td><p class="block-display">${user.address}</p>
+                            <button class="btn btn-dark condensed small-caps block-display" id="btn-map${user.id}">Voir sur la carte</button></td>
+                            <td><input type="radio" id="nephew${user.id}" name="role${user.id}" value="nephew">
+                            <label for="nephew${user.id}">Neveu</label><br>
+                            <input type="radio" id="antique_dealer${user.id}" name="role${user.id}" value="antique_dealer">
+                            <label for="antique_dealer${user.id}">Antiquaire</label><br></td>
+                            <td><button class="btn btn-dark condensed small-caps block-display" id="btn-accept${user.id}" type="submit">Accepter</button><br>
+                            <button class="btn btn-dark condensed small-caps block-display" id="btn-refuse${user.id}" type="submit">Refuser</button></td>
+                            
+                            </tr>`)
         .join("");
-    onUnregisteredUsersListPage += "</ul>";
-    return (page.innerHTML += onUnregisteredUsersListPage);
+    page.innerHTML += onUnregisteredUsersListPage;
+    page.innerHTML += `</tr></tbody></table>` ;
+    return page;
 }
 
 const onError = (err) => {
