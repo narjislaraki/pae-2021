@@ -15,15 +15,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import be.vinci.pae.views.Views;
 
 public class Json {
-  private final static ObjectMapper jsonMapper = new ObjectMapper();
+  private static final ObjectMapper jsonMapper = new ObjectMapper();
 
   public static <T> List<T> loadDataFromFile(String dbFilePath, String collectionName,
       Class<T> targetClass) {
     try {
       JsonNode node = jsonMapper.readTree(Paths.get(dbFilePath).toFile());
       JsonNode collection = node.get(collectionName);
-      if (collection == null)
+      if (collection == null) {
         return new ArrayList<T>();
+      }
       return jsonMapper.readerForListOf(targetClass).readValue(node.get(collectionName));
 
     } catch (FileNotFoundException e) {
@@ -50,7 +51,7 @@ public class Json {
       // get all collections
       JsonNode allCollections = jsonMapper.readTree(pathToDb.toFile());
 
-      if (allCollections.has(collectionName)) {// remove current collection
+      if (allCollections.has(collectionName)) { // remove current collection
         ((ObjectNode) allCollections).remove(collectionName);
       }
 
@@ -99,7 +100,7 @@ public class Json {
 
       JsonNode allCollections = jsonMapper.readTree(pathToDb.toFile());
 
-      if (allCollections.has(collectionName)) {// remove current collection
+      if (allCollections.has(collectionName)) { // remove current collection
         ((ObjectNode) allCollections).remove(collectionName);
       }
 
