@@ -29,7 +29,6 @@ public class UserDAOImpl implements UserDAO {
     // TODO PS -> attribut?
     // TODO fetch de l'adresse aussi
     UserDTO user = null;
-
     try {
       ps = dalService.getPreparedStatement(
           "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
@@ -55,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
    * Searching through the database for the user, using his username.
    * 
    * @param username the username
-   * @return the user if he exists, otherwise null
+   * @return the user if he exists, otherwise throws error
    */
   @Override
   public UserDTO getUserFromUsername(String username) {
