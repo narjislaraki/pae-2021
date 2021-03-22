@@ -14,4 +14,14 @@ public class AdminUCCImpl implements AdminUCC {
   public List<UserDTO> getUnvalidatedUsers() {
     return adminDAO.getUnvalidatedUsers();
   }
+
+  @Override
+  public void acceptUser(int id) {
+    adminDAO.accept(id);
+  }
+
+  @Override
+  public void refuseUser(int id) {
+    adminDAO.refuse(id);
+  }
 }

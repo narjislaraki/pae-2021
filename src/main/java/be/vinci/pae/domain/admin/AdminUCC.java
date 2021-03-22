@@ -8,4 +8,8 @@ public interface AdminUCC {
 
   List<UserDTO> getUnvalidatedUsers();
 
+  void acceptUser(int id);
+
+  void refuseUser(int id);
+
 }

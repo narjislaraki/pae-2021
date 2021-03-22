@@ -22,22 +22,17 @@ async function callAPI(endpoint, method = "get", token, data) {
   if (
     method.toLowerCase() === "post" ||
     method.toLowerCase() === "patch" ||
+    method.toLowerCase() === "delete" ||
     method.toLowerCase() === "put"
   )
     headers.append("Content-Type", "application/json");
   options.headers = headers;
-  console.log(options.headers + "jjssj");
   try {
-    console.log("a");
     const response = await fetch(endpoint, options);
-    console.log("b");
-    if (!response.ok) {  
-      console.log("c");    
+    if (!response.ok) {    
       const error = await response.text(); // get the textual error message
-      console.log("d");
       throw new Error(error);
     }
-    console.log("e");
     return await response.json();
   } catch (error) {
     console.log("error:", error);
