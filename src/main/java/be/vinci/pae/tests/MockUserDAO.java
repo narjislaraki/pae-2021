@@ -18,7 +18,16 @@ public class MockUserDAO implements UserDAO {
   @Override
   public UserDTO getUserFromUsername(String username) {
     UserDTO user = null;
-    if (username.equals("test@test.com")) {
+    if (username.equals("test")) {
+      user = UserDistributor.getGoodValidatedUser();
+    }
+    return user;
+  }
+
+  @Override
+  public UserDTO getUserFromId(int id) {
+    UserDTO user = null;
+    if (id == 1) {
       user = UserDistributor.getGoodValidatedUser();
     }
     return user;
@@ -26,6 +35,24 @@ public class MockUserDAO implements UserDAO {
 
   @Override
   public void addUser(User user) {
+
+  }
+
+  @Override
+  public void accept(User user) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void refuse(User user) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setRole(User user, String role) {
+    // TODO Auto-generated method stub
 
   }
 

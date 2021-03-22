@@ -28,4 +28,21 @@ public class UserUCCImpl implements UserUCC {
 
   }
 
+  @Override
+  public void confirmRegistration(User user, String role) {
+
+    userDAO.accept(user);
+    if (!role.equals("")) {
+      userDAO.setRole(user, role);
+    }
+
+  }
+
+  @Override
+  public void refuseRegistration(User user) {
+    userDAO.refuse(user);
+  }
+
+
+
 }

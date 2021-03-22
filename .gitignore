@@ -107,4 +107,4 @@ dist
 /webapp/.idea
 
 ### Backend logs ###
-/Logs
+/Logs/logs.log.lck

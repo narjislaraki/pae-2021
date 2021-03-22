@@ -3,7 +3,11 @@ DROP SCHEMA IF EXISTS pae CASCADE;
 CREATE SCHEMA pae;
 
 CREATE TYPE pae.roles AS ENUM('admin','antiquaire','client');
+CREATE TYPE pae.conditions AS ENUM('proposé','acheté','refusé','en restauration',
+'déposé en magasin','en vente','sous option','vendu','emporté','livré','réservé','retiré de la vente');
 
+CREATE TYPE pae.visits_conditions AS ENUM('en attante','accepté','annulé');
+ 
 CREATE TABLE pae.addresses(
 	id_address SERIAL PRIMARY KEY,
 	street VARCHAR(50) NOT NULL,
@@ -26,6 +30,48 @@ CREATE TABLE pae.users(
 	password CHARACTER(60) NOT NULL,
 	address INTEGER REFERENCES pae.addresses(id_address) NOT NULL
 );
+
+CREATE TABLE pae.types_of_furnitures(
+	id_type SERIAL PRIMARY KEY,
+	label VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE pae.requests_for_visits(
+	id_request SERIAL PRIMARY KEY,
+	time_slot VARCHAR(150) NOT NULL,
+	condition pae.visits_conditions NOT NULL,
+	explanatory_note VARCHAR(150),
+	scheduled_date_time TIMESTAMP,
+	warehouse_address INTEGER REFERENCES pae.addresses(id_address),
+	client INTEGER REFERENCES pae.users(id_user) NOT NULL
+);
+
+
+CREATE TABLE pae.furnitures(
+	id_furniture SERIAL PRIMARY KEY,
+	condition pae.conditions NOT NULL,
+	description VARCHAR (150) NOT NULL,
+	purchase_price DOUBLE PRECISION,
+	pick_up_date TIMESTAMP,
+	store_deposit BOOLEAN,
+	deposit_date TIMESTAMP,
+	offered_selling_price DOUBLE PRECISION,
+	id_type INTEGER REFERENCES pae.types_of_furnitures(id_type) NOT NULL,
+	request_visit INTEGER REFERENCES pae.requests_for_visits(id_request),
+	seller INTEGER REFERENCES pae.users(id_user)
+);
+
+CREATE TABLE pae.photos(
+	id_photo SERIAL PRIMARY KEY,
+	photo VARCHAR(400) NOT NULL,
+	is_visible BOOLEAN NOT NULL,
+	description VARCHAR(200),
+	is_a_client_photo BOOLEAN NOT NULL, 
+	furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
+);	
+
+ALTER TABLE pae.furnitures
+ADD favorite_photo INTEGER REFERENCES pae.photos(id_photo);
 
 INSERT INTO pae.addresses VALUES(default, 'rue des sentiers', '7', 1, 'Bruxelles', '1300', 'Belgique');
 -- the mdp of the 2 users is 1234 --
