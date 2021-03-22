@@ -1,11 +1,7 @@
 package be.vinci.pae.domain.user;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import java.time.LocalDateTime;
-
-import be.vinci.pae.domain.address.Address;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import be.vinci.pae.domain.address.Address;
 
 @JsonDeserialize(as = UserImpl.class)
