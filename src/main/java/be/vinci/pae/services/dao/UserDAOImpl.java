@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
@@ -47,8 +46,9 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(1, email);
 
       ResultSet rs = ps.executeQuery();
-      user = setUser(rs, user);
-
+      while (rs.next()) {
+        user = UtilsDAO.setUser(rs, user);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -79,7 +79,9 @@ public class UserDAOImpl implements UserDAO {
       ps.setString(1, username);
 
       ResultSet rs = ps.executeQuery();
-      user = setUser(rs, user);
+      while (rs.next()) {
+        user = UtilsDAO.setUser(rs, user);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -130,34 +132,16 @@ public class UserDAOImpl implements UserDAO {
       ps.setInt(1, id);
 
       ResultSet rs = ps.executeQuery();
-      user = setUser(rs, user);
-
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return user;
-  }
-
-  private UserDTO setUser(ResultSet rs, UserDTO user) {
-    try {
       while (rs.next()) {
-        user = userFactory.getUserDTO();
-        user.setId(rs.getInt(1));
-        user.setUsername(rs.getString(2));
-        user.setLastName(rs.getString(3));
-        user.setFirstName(rs.getString(4));
-        user.setEmail(rs.getString(5));
-        user.setRole(rs.getString(6));
-        user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
-        user.setValidated(rs.getBoolean(8));
-        user.setPassword(rs.getString(9));
-        user.setAddress(getAddress(rs.getInt(10)));
+        user = UtilsDAO.setUser(rs, user);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
     return user;
   }
+
+
 
   @Override
   public void accept(User user) {
@@ -206,35 +190,6 @@ public class UserDAOImpl implements UserDAO {
       e.printStackTrace();
     }
 
-  }
-
-
-  private Address getAddress(int id) {
-    Address address = null;
-    try {
-      ps = dalService
-          .getPreparedStatement("SELECT a.id_address, a.street, a.building_number, a.unit_number, "
-              + "a.city, a.postcode, a.country " + "FROM pae.addresses a WHERE a.id_address = ?;");
-
-      ps.setInt(1, id);
-
-      ResultSet rs = ps.executeQuery();
-
-      while (rs.next()) {
-        address = addressFactory.getAddress();
-        address.setId(rs.getInt(1));
-        address.setStreet(rs.getString(2));
-        address.setBuildingNumber(rs.getString(3));
-        address.setUnitNumber(rs.getInt(4));
-        address.setCity(rs.getString(5));
-        address.setPostCode(rs.getString(6));
-        address.setCountry(rs.getString(7));
-
-      }
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return address;
   }
 }
 

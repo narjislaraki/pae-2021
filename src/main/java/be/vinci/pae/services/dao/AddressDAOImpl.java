@@ -3,8 +3,9 @@ package be.vinci.pae.services.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.address.AddressFactory;
+import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 
@@ -12,6 +13,11 @@ public class AddressDAOImpl implements AddressDAO {
 
   @Inject
   private DalServices dalServices;
+
+  @Inject
+  private AddressFactory addressFactory;
+
+  PreparedStatement ps;
 
 
   @Override
@@ -40,5 +46,33 @@ public class AddressDAOImpl implements AddressDAO {
     }
     return key;
 
+  }
+
+  public Address getAddress(int id) {
+    Address address = null;
+    try {
+      ps = dalServices
+          .getPreparedStatement("SELECT a.id_address, a.street, a.building_number, a.unit_number, "
+              + "a.city, a.postcode, a.country " + "FROM pae.addresses a WHERE a.id_address = ?;");
+
+      ps.setInt(1, id);
+
+      ResultSet rs = ps.executeQuery();
+
+      while (rs.next()) {
+        address = addressFactory.getAddress();
+        address.setId(rs.getInt(1));
+        address.setStreet(rs.getString(2));
+        address.setBuildingNumber(rs.getString(3));
+        address.setUnitNumber(rs.getInt(4));
+        address.setCity(rs.getString(5));
+        address.setPostCode(rs.getString(6));
+        address.setCountry(rs.getString(7));
+
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return address;
   }
 }
