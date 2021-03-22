@@ -14,11 +14,17 @@ import jakarta.ws.rs.core.MediaType;
 
 @Singleton
 @Path("/admin")
-public class AdminRessource {
+public class AdminResource {
 
   @Inject
   private AdminUCC adminUCC;
 
+  /**
+   * Get a list of unvalidated users.
+   * 
+   * @param request the request
+   * @return a list of unvalidated users
+   */
   @GET
   @Path("unvalidatedList")
   @Produces(MediaType.APPLICATION_JSON)

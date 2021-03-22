@@ -12,6 +12,14 @@ public class UtilsDAO {
   @Inject
   private static UserFactory userFactory;
 
+
+  /**
+   * Method to set a user from a resultset.
+   * 
+   * @param rs the resultset
+   * @param user a null user
+   * @return a userDTO
+   */
   public static UserDTO setUser(ResultSet rs, UserDTO user) {
     try {
       user = userFactory.getUserDTO();
