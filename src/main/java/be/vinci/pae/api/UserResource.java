@@ -24,6 +24,13 @@ public class UserResource {
     jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
   }
 
+
+  /**
+   * Get a user.
+   * 
+   * @param request the request
+   * @return a String of user
+   */
   @GET
   @Path("me")
   @Produces(MediaType.APPLICATION_JSON)
