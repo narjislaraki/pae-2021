@@ -29,11 +29,7 @@ public class AdminResource {
   @Path("unvalidatedList")
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getUnvalidatedList(@Context ContainerRequest request) {
-
     List<UserDTO> list = adminUCC.getUnvalidatedUsers();
-
     return list;
-    // return Json.filterPublicJsonView(list, ArrayList.class);
-    // return Json.filterPublicJsonView(UserDistributor.getGoodValidatedUser(), UserDTO.class);
   }
 }

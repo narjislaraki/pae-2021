@@ -17,7 +17,7 @@ const ConfirmRegistrationPage = async () => {
           "GET",
           undefined,
           undefined);
-        
+        console.log(unregisteredUsers + "zkzk");
         onUnregisteredUsersList(unregisteredUsers);
         console.log("onUnregisteredUsersList d");
     }catch(err){

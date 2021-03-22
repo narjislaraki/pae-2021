@@ -14,6 +14,7 @@ import be.vinci.pae.services.dal.DalServicesImpl;
 import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.AdminDAO;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.services.dao.UtilsDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 
@@ -25,10 +26,12 @@ public class ApplicationBinder extends AbstractBinder {
     Class<?> userDAO = null;
     Class<?> addressDAO = null;
     Class<?> adminDAO = null;
+    Class<?> utilsDAO = null;
     try {
       userDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.UserDAO"));
       addressDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.AddressDAO"));
       adminDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.AdminDAO"));
+      utilsDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.UtilsDAO"));
     } catch (ClassNotFoundException e) {
       // TODO Auto-generated catch block
       System.out.println(e);
@@ -42,5 +45,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(DalServicesImpl.class).to(DalServices.class).in(Singleton.class);
     bind(adminDAO).to(AdminDAO.class).in(Singleton.class);
     bind(AdminUCCImpl.class).to(AdminUCC.class).in(Singleton.class);
+    bind(utilsDAO).to(UtilsDAO.class).in(Singleton.class);
+
   }
 }

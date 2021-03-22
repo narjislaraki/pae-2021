@@ -4,9 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 
@@ -14,6 +14,9 @@ public class UserDAOImpl implements UserDAO {
 
   @Inject
   private DalServices dalService;
+
+  @Inject
+  private UtilsDAO utilsDAO;
 
   PreparedStatement ps;
 
@@ -40,7 +43,7 @@ public class UserDAOImpl implements UserDAO {
 
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
-        user = UtilsDAO.setUser(rs, user);
+        user = utilsDAO.setUser(rs, user);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -73,7 +76,7 @@ public class UserDAOImpl implements UserDAO {
 
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
-        user = UtilsDAO.setUser(rs, user);
+        user = utilsDAO.setUser(rs, user);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -126,7 +129,7 @@ public class UserDAOImpl implements UserDAO {
 
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
-        user = UtilsDAO.setUser(rs, user);
+        user = utilsDAO.setUser(rs, user);
       }
     } catch (SQLException e) {
       throw new FatalException(e);

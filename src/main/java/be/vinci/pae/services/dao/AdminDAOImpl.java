@@ -14,6 +14,9 @@ public class AdminDAOImpl implements AdminDAO {
   @Inject
   private DalServices dalService;
 
+  @Inject
+  private UtilsDAO utilsDAO;
+
   PreparedStatement ps;
 
 
@@ -28,8 +31,8 @@ public class AdminDAOImpl implements AdminDAO {
       ResultSet rs = ps.executeQuery();
       UserDTO user = null;
       while (rs.next()) {
-        UtilsDAO.setUser(rs, user);
-        list.add(user);
+        UserDTO userDTO = utilsDAO.setUser(rs, user);
+        list.add(userDTO);
       }
     } catch (SQLException e) {
       e.printStackTrace();
