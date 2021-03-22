@@ -4,10 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.exception.FatalException;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
@@ -16,10 +14,6 @@ public class UserDAOImpl implements UserDAO {
 
   @Inject
   private DalServices dalService;
-  @Inject
-  private UserFactory userFactory;
-  @Inject
-  private AddressFactory addressFactory;
 
   PreparedStatement ps;
 

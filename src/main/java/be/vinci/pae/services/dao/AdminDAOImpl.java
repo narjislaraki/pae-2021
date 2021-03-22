@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 
@@ -14,9 +13,6 @@ public class AdminDAOImpl implements AdminDAO {
 
   @Inject
   private DalServices dalService;
-
-  @Inject
-  private UserFactory userFactory;
 
   PreparedStatement ps;
 
