@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import jakarta.inject.Inject;
@@ -73,6 +74,7 @@ public class UserResource {
    */
   @DELETE
   @Path("user/{id}")
+  @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
     userUCC.refuseUser(id);

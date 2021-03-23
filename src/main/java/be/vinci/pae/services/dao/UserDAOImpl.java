@@ -130,7 +130,7 @@ public class UserDAOImpl implements UserDAO {
       ps = dalService.getPreparedStatement(
           "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
               + "u.registration_date, u.is_validated, u.password, u.address "
-              + "FROM pae.users u WHERE u.id= ?;");
+              + "FROM pae.users u WHERE u.id_user= ?;");
 
 
       ps.setInt(1, id);

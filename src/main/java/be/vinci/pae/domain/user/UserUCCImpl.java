@@ -53,4 +53,8 @@ public class UserUCCImpl implements UserUCC {
     userDAO.refuse(id);
   }
 
+  public UserDTO getUserFromId(int id) {
+    return userDAO.getUserFromId(id);
+  }
+
 }

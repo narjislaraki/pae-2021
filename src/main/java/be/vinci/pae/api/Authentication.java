@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
@@ -219,7 +220,7 @@ public class Authentication {
       token = JWT.create().withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
           .withIssuer("auth0").withClaim("user", user.getId()).sign(this.jwtAlgorithm);
     } catch (Exception e) {
-      throw new WebApplicationException("Incapable de créer un token", e,
+      throw new WebApplicationException("Impossible to create a token", e,
           Status.INTERNAL_SERVER_ERROR);
     }
 
@@ -228,7 +229,7 @@ public class Authentication {
       String json = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(user);
       @SuppressWarnings("unchecked")
       Map<String, String> map = jsonMapper.readValue(json, Map.class);
-      node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
+      node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", user.getId());
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
@@ -241,12 +242,15 @@ public class Authentication {
    * 
    * @param request the request
    * @return a String of user
+   * @throws JsonProcessingException
    */
   @GET
-  @Path("/user/{id}")
+  @Path("user")
+  @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public String getUser(@Context ContainerRequest request, @PathParam("id") int id) {
-    // TODO
-    return null;
+  public String getUser(@Context ContainerRequest request, @PathParam("id") int id)
+      throws JsonProcessingException {
+    return jsonMapper.writerWithView(Views.Public.class)
+        .writeValueAsString((UserDTO) request.getProperty("user"));
   }
 }

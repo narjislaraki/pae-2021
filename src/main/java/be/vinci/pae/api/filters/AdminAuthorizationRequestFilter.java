@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
+import be.vinci.pae.api.exceptions.UnauthorizedException;
+import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
@@ -18,8 +20,8 @@ import jakarta.ws.rs.ext.Provider;
 
 @Singleton
 @Provider
-@Authorize
-public class AuthorizationRequestFilter implements ContainerRequestFilter {
+@AdminAuthorize
+public class AdminAuthorizationRequestFilter implements ContainerRequestFilter {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getStringProperty("JWTSecret"));
   private final JWTVerifier jwtVerifier =
@@ -41,8 +43,12 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       } catch (Exception e) {
         throw new WebApplicationException("Malformed token", e, Status.UNAUTHORIZED);
       }
-      requestContext.setProperty("user",
-          this.userDAO.getUserFromId(decodedToken.getClaim("user").asInt()));
+      UserDTO currentUser = this.userDAO.getUserFromId(decodedToken.getClaim("user").asInt());
+      requestContext.setProperty("user", currentUser);
+
+      if (!currentUser.getRole().getString().toLowerCase().equals("admin")) {
+        throw new UnauthorizedException("Admin only");
+      }
     }
   }
 }

@@ -2,9 +2,12 @@ package be.vinci.pae.domain.user;
 
 
 import java.time.LocalDateTime;
+
 import org.mindrot.jbcrypt.BCrypt;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.views.Views;
 
@@ -24,7 +27,7 @@ public class UserImpl implements User {
   private String lastName;
   @JsonView(Views.Internal.class)
   private String firstName;
-  @JsonView(Views.Public.class)
+  @JsonView(Views.Internal.class)
   private String email;
   @JsonView(Views.Internal.class)
   private String password;
@@ -32,7 +35,7 @@ public class UserImpl implements User {
   private Role role;
   @JsonView(Views.Internal.class)
   private boolean validated;
-  @JsonView(Views.Public.class)
+  @JsonView(Views.Internal.class)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime registrationDate; // TODO DateTime?
 
