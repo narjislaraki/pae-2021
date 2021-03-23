@@ -53,7 +53,6 @@ public class UserResource {
    * 
    * @param request the request
    * @param id the id
-   * @param json the body
    * @return true if OK
    */
   @PATCH

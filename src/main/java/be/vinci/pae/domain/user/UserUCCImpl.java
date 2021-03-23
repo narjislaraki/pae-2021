@@ -39,8 +39,12 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public void acceptUser(int id, String role) {
-    if (id < 0 || (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")))
-      throw new BusinessException("Invalid id or role");
+    if (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")) {
+      throw new BusinessException("Invalid role");
+    }
+    if (id < 0) {
+      throw new BusinessException("Invalid id");
+    }
     userDAO.accept(id, role);
   }
 

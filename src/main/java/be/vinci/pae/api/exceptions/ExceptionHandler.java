@@ -45,8 +45,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
       return ((WebApplicationException) exception).getResponse().getStatus();
     } else if (exception instanceof UnauthorizedException) {
       return Response.Status.UNAUTHORIZED.getStatusCode();
-    }
-    // Insert new exception rules here when extend BusinessException
+    } // Insert new exception rules here when extend BusinessException
     else if (exception instanceof BusinessException) {
       return Response.Status.PRECONDITION_FAILED.getStatusCode();
     }
