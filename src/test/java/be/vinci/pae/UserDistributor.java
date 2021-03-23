@@ -1,4 +1,5 @@
-package be.vinci.pae.tests;
+
+package be.vinci.pae;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

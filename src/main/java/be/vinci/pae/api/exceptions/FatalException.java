@@ -32,9 +32,9 @@ public class FatalException extends WebApplicationException {
   public FatalException(String message, Throwable cause) {
     super(cause,
         Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).type("text/plain").build());
-    logger.warning(message + " // " + cause.getMessage() + "\n" + cause.getMessage() == null
-        ? cause.getClass().getCanonicalName()
-        : cause.getMessage());
+    logger.warning(
+        message + " // " + "\n" + cause.getMessage() == null ? cause.getClass().getCanonicalName()
+            : cause.getMessage());
   }
 
 }
