@@ -3,7 +3,7 @@ import PrintError from "./PrintError.js";
 import {getUserSessionData, removeSessionData} from "../utils/session.js";
 let userData = getUserSessionData();
 let adresse = ``; 
-const API_BASE_URL = "api/admin/";
+const API_BASE_URL = "api/users/";
 let confirmRegistrationPage = `<h4 id="pageTitle">Confirmer l'inscription</h4>`;
 
 const ConfirmRegistrationPage = async () => {
@@ -70,9 +70,10 @@ const onUnregisteredUsersList = (data) =>{
 
 const onAccept = async (e) => {
   let id = e.srcElement.dataset.id;
+  let role = "client";
   try{
-    const userRegistered = await callAPI(
-      API_BASE_URL + "accept/" + id,
+    await callAPI(
+      API_BASE_URL + "user/" + id + "/accept",
       "PATCH",
       undefined,
       undefined
@@ -87,8 +88,8 @@ const onAccept = async (e) => {
 const onRefuse = async (e) => {
   let id = e.srcElement.dataset.id;
   try{
-    const userRegistered = await callAPI(
-      API_BASE_URL + "refuse/" + id,
+    await callAPI(
+      API_BASE_URL + "user/" + id,
       "DELETE",
       undefined,
       undefined,
