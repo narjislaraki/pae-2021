@@ -3,7 +3,7 @@ package be.vinci.pae.domain.furniture;
 import java.util.List;
 import java.util.Map;
 
-import be.vinci.pae.domain.addresses.Address;
+import be.vinci.pae.domain.address.Address;
 
 public interface FurnitureUCC {
 

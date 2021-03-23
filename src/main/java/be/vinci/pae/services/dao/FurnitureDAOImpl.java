@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import be.vinci.pae.domain.addresses.Address;
+import be.vinci.pae.api.exceptions.FatalException;
+import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.services.dal.DalServices;
 import jakarta.inject.Inject;
 
@@ -17,6 +19,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   @Inject
   private DalServices dalService;
+  @Inject
+  private FurnitureFactory furnitureFactory;
 
   PreparedStatement ps;
 
@@ -33,13 +37,21 @@ public class FurnitureDAOImpl implements FurnitureDAO {
         furniture = setFurniture(rs, furniture);
       }
     } catch (SQLException e) {
-      // TODO: handle exception
+      throw new FatalException(e);
     }
-    return null;
+    return furniture;
   }
 
   private FurnitureDTO setFurniture(ResultSet rs, FurnitureDTO furniture) {
-    // TODO Auto-generated method stub
+    try {
+      furniture = furnitureFactory.getFurnitureDTO();
+      furniture.setId(rs.getInt(1));
+      furniture.setCondition(rs.getString(2));
+      furniture.setDescription(rs.getString(3));
+      // furniture.setType(rs.getInt);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
     return null;
   }
 
@@ -55,6 +67,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       e.printStackTrace();
     }
   }
+
+
 
   @Override
   public void introduceOption(int numberOfDay) {

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import be.vinci.pae.domain.addresses.Address;
+import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.views.Views;
 
 public class FurnitureImpl implements Furniture {
@@ -74,9 +74,50 @@ public class FurnitureImpl implements Furniture {
     return condition;
   }
 
-  public void setCondition(Condition condition) {
-    this.condition = condition;
+  public void setCondition(String condition) {
+
+    switch (condition.toLowerCase()) {
+      case "proposé":
+        this.condition = Condition.EN_ATTENTE;
+        break;
+      case "acheté":
+        this.condition = Condition.VALIDE;
+        break;
+      case "refusé":
+        this.condition = Condition.REFUSE;
+        break;
+      case "en restauration":
+        this.condition = Condition.EN_RESTAURATION;
+        break;
+      case "déposé en magasin":
+        this.condition = Condition.DEPOSE_EN_MAGASIN;
+        break;
+      case "en vente":
+        this.condition = Condition.EN_VENTE;
+        break;
+      case "sous option":
+        this.condition = Condition.SOUS_OPTION;
+        break;
+      case "vendu":
+        this.condition = Condition.VENDU;
+        break;
+      case "emporté":
+        this.condition = Condition.EMPORTE;
+        break;
+      case "livré":
+        this.condition = Condition.LIVRE;
+        break;
+      case "réservé":
+        this.condition = Condition.RESERVE;
+        break;
+      case "retiré de la vente":
+        this.condition = Condition.RETIRE;
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
   }
+
 
   public String getDescription() {
     return description;

@@ -6,9 +6,9 @@ public interface FurnitureDTO {
 
   enum Condition {
     EN_ATTENTE("proposé"), VALIDE("acheté"), REFUSE("refusé"), EN_RESTAURATION(
-        "en restauration"), DEPOSE_EN_MAGASIN("deposé en magasin"), EN_VENTE(
+        "en restauration"), DEPOSE_EN_MAGASIN("déposé en magasin"), EN_VENTE(
             "en vente"), SOUS_OPTION("sous option"), VENDU("vendu"), EMPORTE(
-                "emporté"), LIVRE("livré"), RESERVE("réservé"), RETIRER("retiré de la vente");
+                "emporté"), LIVRE("livré"), RESERVE("réservé"), RETIRE("retiré de la vente");
 
     private String condition;
 
@@ -39,7 +39,7 @@ public interface FurnitureDTO {
 
   Condition getCondition();
 
-  void setCondition(Condition condition);
+  void setCondition(String condition);
 
   String getDescription();
 
