@@ -49,6 +49,14 @@ public class UserResource {
     return list;
   }
 
+  /**
+   * Validation of a user.
+   * 
+   * @param request the request
+   * @param id the id
+   * @param json the body
+   * @return true if OK
+   */
   @PATCH
   @Path("user/{id}/accept")
   @Produces(MediaType.APPLICATION_JSON)
@@ -61,6 +69,13 @@ public class UserResource {
     return true;
   }
 
+  /**
+   * Delete a user.
+   * 
+   * @param request the request
+   * @param id the id
+   * @return true if OK
+   */
   @DELETE
   @Path("user/{id}")
   @Produces(MediaType.APPLICATION_JSON)
