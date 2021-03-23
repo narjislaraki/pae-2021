@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +35,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
@@ -217,39 +215,30 @@ public class Authentication {
   private Response createToken(User user) {
     String token;
     try {
-      token = JWT.create().withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+      token = JWT.create().withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
           .withIssuer("auth0").withClaim("user", user.getId()).sign(this.jwtAlgorithm);
     } catch (Exception e) {
       throw new WebApplicationException("Impossible to create a token", e,
           Status.INTERNAL_SERVER_ERROR);
     }
 
-    ObjectNode node = null;
-    try {
-      String json = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(user);
-      @SuppressWarnings("unchecked")
-      Map<String, String> map = jsonMapper.readValue(json, Map.class);
-      node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", user.getId());
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
+    ObjectNode node =
+        jsonMapper.createObjectNode().put("token", token).putPOJO("user", user.getId());
     LOGGER.log(Level.INFO, "Connection of user:" + user.getUsername() + " :: " + user.getId());
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
 
   /**
-   * Get a user.
+   * Get the current user.
    * 
    * @param request the request
    * @return a String of user
-   * @throws JsonProcessingException
    */
   @GET
   @Path("user")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public String getUser(@Context ContainerRequest request, @PathParam("id") int id)
-      throws JsonProcessingException {
+  public String getUser(@Context ContainerRequest request) throws JsonProcessingException {
     return jsonMapper.writerWithView(Views.Public.class)
         .writeValueAsString((UserDTO) request.getProperty("user"));
   }
