@@ -2,11 +2,11 @@ package be.vinci.pae.api.exceptions;
 
 public class UnauthorizedException extends BusinessException {
 
-  private static final long serialVersionUID = -5107229850612287828L;
+  private static final long serialVersionUID = -4333601375181117263L;
   private String message;
 
   public UnauthorizedException(String message) {
-    this.message = message;
+    super(message);
   }
 
   public String getMessage() {

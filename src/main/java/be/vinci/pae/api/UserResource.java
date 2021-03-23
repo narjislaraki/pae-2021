@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -58,14 +57,11 @@ public class UserResource {
    * @return true if OK
    */
   @PATCH
-  @Path("user/{id}/accept")
+  @Path("user/{id}/accept/{role}")
   @Produces(MediaType.APPLICATION_JSON)
   public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id,
-      JsonNode json) {
-    // if (!json.hasNonNull("role") || json.get("role").asText().isEmpty()) {
-    // return false;
-    // }
-    userUCC.acceptUser(id);
+      @PathParam("role") String role) {
+    userUCC.acceptUser(id, role);
     return true;
   }
 

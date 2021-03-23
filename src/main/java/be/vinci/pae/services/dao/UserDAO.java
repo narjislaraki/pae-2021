@@ -20,7 +20,7 @@ public interface UserDAO {
 
   void refuse(int id);
 
-  void accept(int id);
+  void accept(int id, String role);
 
   List<UserDTO> getUnvalidatedUsers();
 

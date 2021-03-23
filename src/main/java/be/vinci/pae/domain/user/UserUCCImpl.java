@@ -2,6 +2,7 @@ package be.vinci.pae.domain.user;
 
 import java.util.List;
 
+import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
@@ -37,8 +38,10 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public void acceptUser(int id) {
-    userDAO.accept(id);
+  public void acceptUser(int id, String role) {
+    if (id < 0 || (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")))
+      throw new BusinessException("Invalid id or role");
+    userDAO.accept(id, role);
   }
 
   @Override
