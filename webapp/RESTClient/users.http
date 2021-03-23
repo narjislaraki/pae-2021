@@ -65,7 +65,7 @@ Content-Type: application/json
 ### FAIL
 DELETE {{baseUrl}}/user/10
 
-### SUCCESS
+### Test of AdminAuthorize with non-admin user
 
 #### SUCCESS
 # @name loggedUser
@@ -77,7 +77,11 @@ Content-Type: application/json
     "password":"1234"
 }
 
-####
+#### SUCCESS
 #@token = {{loggedUser.response.body.token}}
 GET {{baseAuthsUrl}}/user
+Authorization: {{loggedUser.response.body.token}}
+
+#### FAIL
+DELETE {{baseUrl}}/user/10
 Authorization: {{loggedUser.response.body.token}}
