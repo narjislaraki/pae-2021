@@ -1,11 +1,15 @@
 package be.vinci.pae.domain.user;
 
+import java.util.List;
+
 public interface UserUCC {
 
   UserDTO connection(String email, String password);
 
-  void confirmRegistration(User user, String role);
+  void acceptUser(int id);
 
-  void refuseRegistration(User user);
+  void refuseUser(int id);
+
+  List<UserDTO> getUnvalidatedUsers();
 
 }

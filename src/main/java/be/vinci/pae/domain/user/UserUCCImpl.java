@@ -1,5 +1,7 @@
 package be.vinci.pae.domain.user;
 
+import java.util.List;
+
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
@@ -28,21 +30,20 @@ public class UserUCCImpl implements UserUCC {
 
   }
 
+
   @Override
-  public void confirmRegistration(User user, String role) {
-
-    userDAO.accept(user);
-    if (!role.equals("")) {
-      userDAO.setRole(user, role);
-    }
-
+  public List<UserDTO> getUnvalidatedUsers() {
+    return userDAO.getUnvalidatedUsers();
   }
 
   @Override
-  public void refuseRegistration(User user) {
-    userDAO.refuse(user);
+  public void acceptUser(int id) {
+    userDAO.accept(id);
   }
 
-
+  @Override
+  public void refuseUser(int id) {
+    userDAO.refuse(id);
+  }
 
 }

@@ -1,5 +1,8 @@
 package be.vinci.pae.tests;
 
+import java.sql.ResultSet;
+import java.util.List;
+
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -39,21 +42,35 @@ public class MockUserDAO implements UserDAO {
   }
 
   @Override
-  public void accept(User user) {
+  public void setRole(int id, String role) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void refuse(User user) {
+  public void refuse(int id) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void setRole(User user, String role) {
+  public void accept(int id) {
     // TODO Auto-generated method stub
 
   }
+
+  @Override
+  public List<UserDTO> getUnvalidatedUsers() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public UserDTO setUser(ResultSet rs, UserDTO user) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
 
 }
