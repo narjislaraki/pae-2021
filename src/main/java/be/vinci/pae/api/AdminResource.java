@@ -1,8 +1,9 @@
 package be.vinci.pae.api;
 
 import java.util.List;
+
 import org.glassfish.jersey.server.ContainerRequest;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import be.vinci.pae.domain.admin.AdminUCC;
 import be.vinci.pae.domain.user.UserDTO;
 import jakarta.inject.Inject;
@@ -40,17 +41,17 @@ public class AdminResource {
 
 
   @PATCH
-  @Path("accept")
+  @Path("accept/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public boolean acceptUser(@Context ContainerRequest request, JsonNode json) {
-    adminUCC.acceptUser(json.get("id").asInt());
+  public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id) {
+    adminUCC.acceptUser(id);
     return true;
   }
 
   @DELETE
   @Path("refuse/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public boolean refuseUser(@Context ContainerRequest request, JsonNode json, @PathParam("id") int id) {
+  public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
     adminUCC.refuseUser(id);
     return true;
   }

@@ -70,15 +70,12 @@ const onUnregisteredUsersList = (data) =>{
 
 const onAccept = async (e) => {
   let id = e.srcElement.dataset.id;
-  let user = {
-    "id": id,
-  };
   try{
     const userRegistered = await callAPI(
-      API_BASE_URL + "accept",
+      API_BASE_URL + "accept/" + id,
       "PATCH",
       undefined,
-      user
+      undefined
     );
   }catch(err){
     console.error("ConfirmRegistrationPage::onAccept", err);
@@ -89,12 +86,9 @@ const onAccept = async (e) => {
 
 const onRefuse = async (e) => {
   let id = e.srcElement.dataset.id;
-  let user = {
-    "id": id,
-  };
   try{
     const userRegistered = await callAPI(
-      API_BASE_URL + "refuse/" + user.id,
+      API_BASE_URL + "refuse/" + id,
       "DELETE",
       undefined,
       undefined,
