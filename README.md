@@ -19,11 +19,32 @@
     <td style="border:1px solid black;">POST</td>
     <td style="border:1px solid black;">No</td>
     <td style="border:1px solid black;">
-    Check the credentials (username and password) and send back the User and a JWT token if validated
+    Check the credentials (username and password) and send back the User and a JWT token if validated.
+    </td>
+</tr>
+
+<tr>
+    <td style="border:1px solid black;">auths/register</td>
+    <td style="border:1px solid black;">POST</td>
+    <td style="border:1px solid black;">No</td>
+    <td style="border:1px solid black;">
+    Send the information (email, username, password, password confirmation, first name, last name, address [street, building number, city, post code, country and optionally unit number]) to the server, which one will send a response back.
+    those information need to be unique in the DB: email, username.
+    </td>
+</tr>
+
+<tr>
+    <td style="border:1px solid black;">auths/user/{id}</td>
+    <td style="border:1px solid black;">GET</td>
+    <td style="border:1px solid black;">Yes</td>
+    <td style="border:1px solid black;">
+    Retrieving of the information such as id and username.
     </td>
 </tr>
 
 </table>
+
+
 
 ---
 ## Properties
@@ -51,4 +72,4 @@ Are going to log in <b>A:/a/custom/folder/myPersonnalLogs.log</b></p>
 -----=====-----
 <p><b>logPath=default/</b><br>
 <b>logFileName=logs.log</b><br><br>
-Are going to log in <b>X:/the/project/location/logs.log</b></p>
+Are going to log in <b>X:/the/project/location/Logs/logs.log</b></p>
