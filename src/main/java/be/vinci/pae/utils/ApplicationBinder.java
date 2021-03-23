@@ -1,6 +1,7 @@
 package be.vinci.pae.utils;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
 import be.vinci.pae.domain.admin.AdminUCC;
@@ -28,10 +29,10 @@ public class ApplicationBinder extends AbstractBinder {
     Class<?> adminDAO = null;
     Class<?> utilsDAO = null;
     try {
-      userDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.UserDAO"));
-      addressDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.AddressDAO"));
-      adminDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.AdminDAO"));
-      utilsDAO = Class.forName(Config.getStringProperty("be.vinci.pae.services.UtilsDAO"));
+      userDAO = Class.forName(Config.getStringProperty("UserDAO"));
+      addressDAO = Class.forName(Config.getStringProperty("AddressDAO"));
+      adminDAO = Class.forName(Config.getStringProperty("AdminDAO"));
+      utilsDAO = Class.forName(Config.getStringProperty("UtilsDAO"));
     } catch (ClassNotFoundException e) {
       // TODO Auto-generated catch block
       System.out.println(e);
