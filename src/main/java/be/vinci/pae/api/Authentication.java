@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.jersey.server.ContainerRequest;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
@@ -28,9 +32,13 @@ import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -228,4 +236,17 @@ public class Authentication {
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
 
+  /**
+   * Get a user.
+   * 
+   * @param request the request
+   * @return a String of user
+   */
+  @GET
+  @Path("/user/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String getUser(@Context ContainerRequest request, @PathParam("id") int id) {
+    // TODO
+    return null;
+  }
 }
