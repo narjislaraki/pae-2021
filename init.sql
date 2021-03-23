@@ -2,12 +2,6 @@
 DROP SCHEMA IF EXISTS pae CASCADE;
 CREATE SCHEMA pae;
 
-CREATE TYPE pae.roles AS ENUM('admin','antiquaire','client');
-CREATE TYPE pae.conditions AS ENUM('proposé','acheté','refusé','en restauration',
-'déposé en magasin','en vente','sous option','vendu','emporté','livré','réservé','retiré de la vente');
-
-CREATE TYPE pae.visits_conditions AS ENUM('en attante','accepté','annulé');
- 
 CREATE TABLE pae.addresses(
 	id_address SERIAL PRIMARY KEY,
 	street VARCHAR(50) NOT NULL,
@@ -24,7 +18,7 @@ CREATE TABLE pae.users(
 	last_name VARCHAR(50) NOT NULL,
 	first_name VARCHAR(30) NOT NULL,
 	email VARCHAR(60) NOT NULL,
-	role pae.roles NOT NULL,
+	role VARCHAR(10) NOT NULL,
 	registration_date TIMESTAMP NOT NULL,
 	is_validated BOOLEAN NOT NULL,
 	password CHARACTER(60) NOT NULL,
@@ -39,7 +33,7 @@ CREATE TABLE pae.types_of_furnitures(
 CREATE TABLE pae.requests_for_visits(
 	id_request SERIAL PRIMARY KEY,
 	time_slot VARCHAR(150) NOT NULL,
-	condition pae.visits_conditions NOT NULL,
+	condition VARCHAR(10) NOT NULL,
 	explanatory_note VARCHAR(150),
 	scheduled_date_time TIMESTAMP,
 	warehouse_address INTEGER REFERENCES pae.addresses(id_address),
@@ -49,7 +43,7 @@ CREATE TABLE pae.requests_for_visits(
 
 CREATE TABLE pae.furnitures(
 	id_furniture SERIAL PRIMARY KEY,
-	condition pae.conditions NOT NULL,
+	condition VARCHAR(18) NOT NULL,
 	description VARCHAR (150) NOT NULL,
 	purchase_price DOUBLE PRECISION,
 	pick_up_date TIMESTAMP,
@@ -78,7 +72,14 @@ INSERT INTO pae.addresses VALUES(default, 'rue des sentiers', '7', 1, 'Bruxelles
 INSERT INTO pae.users VALUES
 		(default, 'test', 'Heuzer','Nina', 'test@test.com', 'admin', '05/01/2021', true, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
 		(default, 'test2', 'Laraki', 'Narjis', 'test2@test.com', 'client', '06/02/2021', true, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
-		(default, 'test3', 'de Theux', 'Boris', 'test3@test.com', 'client', '07/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1);
+		(default, 'test3', 'de Theux', 'Boris', 'test3@test.com', 'client', '07/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test4', 'Pouet4', 'Pouet4', 'Pouet4@test.com', 'client', '06/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test5', 'Pouet5', 'Pouet5', 'Pouet5@test.com', 'client', '06/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test6', 'Pouet6', 'Pouet6', 'Pouet6@test.com', 'client', '06/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test7', 'Pouet7', 'Pouet7', 'Pouet7@test.com', 'client', '06/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test8', 'Pouet8', 'Pouet8', 'Pouet8@test.com', 'client', '06/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test9', 'Pouet9', 'Pouet9', 'Pouet9@test.com', 'client', '06/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1),
+		(default, 'test10', 'Pouet10', 'Pouet10', 'Pouet10@test.com', 'client', '06/02/2021', false, '$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu', 1);
 		
 SELECT * FROM pae.users;	
 		

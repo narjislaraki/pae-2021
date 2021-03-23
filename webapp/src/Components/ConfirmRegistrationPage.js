@@ -53,11 +53,11 @@ const onUnregisteredUsersList = (data) =>{
                             <td>${user.username}</td>
                             <td>${user.firstName}</td>
                             <td>${user.lastName}</td>
-                            <td><p class="block-display">${user.address}</p>
+                            <td><p class="block-display">${JSON.stringify(user.address)}</p>
                             <button class="btn btn-dark condensed small-caps block-display" id="btn-map" data-id="${user.id}">Voir sur la carte</button></td>
-                            <td><input type="radio" id="nephew" name="role${user.id}" data-id="${user.id}" value="nephew">
+                            <td><input type="radio" id="nephew${user.id}" name="role${user.id}" data-id="${user.id}" value="nephew">
                             <label for="nephew${user.id}" data-id="${user.id}">Neveu</label><br>
-                            <input type="radio" id="antique_dealer" data-id="${user.id}" name="role${user.id}" value="antique_dealer">
+                            <input type="radio" id="antique_dealer${user.id}" data-id="${user.id}" name="role${user.id}" value="antique_dealer">
                             <label for="antique_dealer${user.id}">Antiquaire</label><br></td>
                             <td><button name="accept" class="btn btn-dark condensed small-caps block-display btn-accept" data-id="${user.id}" type="submit">Accepter</button><br>
                             <button name="refuse" class="btn btn-dark condensed small-caps block-display btn-refuse" data-id="${user.id}" type="submit">Refuser</button></td>
@@ -71,9 +71,17 @@ const onUnregisteredUsersList = (data) =>{
 const onAccept = async (e) => {
   let id = e.srcElement.dataset.id;
   let role = "client";
+
+  if (document.getElementById('nephew' + id).checked) {
+    role = "admin";
+  }
+  if (document.getElementById('antique_dealer' + id).checked) {
+    role = "antiquaire";
+  }
+  
   try{
     await callAPI(
-      API_BASE_URL + "user/" + id + "/accept",
+      API_BASE_URL + "user/" + id + "/accept/" + role,
       "PATCH",
       undefined,
       undefined
