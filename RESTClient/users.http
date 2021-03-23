@@ -1,5 +1,5 @@
-@baseUrl = http://localhost:8081/users
-@baseAuthsUrl = http://localhost:8081/auths
+@baseUrl = http://localhost:8080/users
+@baseAuthsUrl = http://localhost:8080/auths
 
 
 ### FAIL
@@ -11,6 +11,17 @@ Content-Type: application/json
     "email":"test.test@test.com",
     "password":"password"
 }
+
+### FAIL
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test.test@test.com",
+    "smthg":"password"
+}
+
 
 ### SUCCESS
 # @name loggedUser

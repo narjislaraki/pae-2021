@@ -104,3 +104,7 @@ node_modules
 .vscode
 package-lock.json
 dist
+/webapp/.idea
+
+### Backend logs ###
+/Logs/logs.log.lck

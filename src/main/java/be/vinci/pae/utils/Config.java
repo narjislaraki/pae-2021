@@ -40,8 +40,12 @@ public class Config {
    * @param key the key
    * @return the value of the key as a String
    */
-  public static String getProperty(String key) {
+  public static String getStringProperty(String key) {
     return props.getProperty(key);
+  }
+
+  public static boolean getBoolProperty(String key) {
+    return Boolean.parseBoolean(props.getProperty(key));
   }
 
 }

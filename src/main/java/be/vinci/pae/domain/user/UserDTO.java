@@ -1,8 +1,8 @@
 package be.vinci.pae.domain.user;
 
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import be.vinci.pae.domain.address.Address;
 
 @JsonDeserialize(as = UserImpl.class)
 public interface UserDTO {
@@ -25,9 +25,9 @@ public interface UserDTO {
 
   void setId(int id);
 
-  int getAddress();
+  Address getAddress();
 
-  void setAddress(int address);
+  void setAddress(Address address);
 
   String getUsername();
 

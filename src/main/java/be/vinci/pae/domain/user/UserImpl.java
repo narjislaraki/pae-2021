@@ -1,9 +1,11 @@
 package be.vinci.pae.domain.user;
 
+
 import java.time.LocalDateTime;
 import org.mindrot.jbcrypt.BCrypt;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
+import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.views.Views;
 
 // @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -15,7 +17,7 @@ public class UserImpl implements User {
   @JsonView(Views.Public.class)
   private int id;
   @JsonView(Views.Internal.class)
-  private int address;
+  private Address address;
   @JsonView(Views.Public.class)
   private String username;
   @JsonView(Views.Internal.class)
@@ -45,14 +47,15 @@ public class UserImpl implements User {
   }
 
   @Override
-  public int getAddress() {
+  public Address getAddress() {
     return address;
   }
 
   @Override
-  public void setAddress(int address) {
+  public void setAddress(Address address) {
     this.address = address;
   }
+
 
   @Override
   public String getUsername() {

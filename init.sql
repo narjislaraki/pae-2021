@@ -46,14 +46,6 @@ CREATE TABLE pae.requests_for_visits(
 	client INTEGER REFERENCES pae.users(id_user) NOT NULL
 );
 
-CREATE TABLE pae.photos(
-	id_photo SERIAL PRIMARY KEY,
-	photo VARCHAR(400) NOT NULL,
-	is_visible BOOLEAN NOT NULL,
-	description VARCHAR(200),
-	is_a_client_photo BOOLEAN NOT NULL, 
-	furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
-);
 
 CREATE TABLE pae.furnitures(
 	id_furniture SERIAL PRIMARY KEY,
@@ -65,11 +57,21 @@ CREATE TABLE pae.furnitures(
 	deposit_date TIMESTAMP,
 	offered_selling_price DOUBLE PRECISION,
 	id_type INTEGER REFERENCES pae.types_of_furnitures(id_type) NOT NULL,
-	request_visite INTEGER REFERENCES pae.request_visite(id_request),
-	seller INTEGER REFERENCES pae.users(id_user),
-	favorite_photo INTEGER REFERENCES pae.photos(id_photo)
+	request_visit INTEGER REFERENCES pae.requests_for_visits(id_request),
+	seller INTEGER REFERENCES pae.users(id_user)
 );
-	
+
+CREATE TABLE pae.photos(
+	id_photo SERIAL PRIMARY KEY,
+	photo VARCHAR(400) NOT NULL,
+	is_visible BOOLEAN NOT NULL,
+	description VARCHAR(200),
+	is_a_client_photo BOOLEAN NOT NULL, 
+	furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
+);	
+
+ALTER TABLE pae.furnitures
+ADD favorite_photo INTEGER REFERENCES pae.photos(id_photo);
 
 INSERT INTO pae.addresses VALUES(default, 'rue des sentiers', '7', 1, 'Bruxelles', '1300', 'Belgique');
 -- the mdp of the 2 users is 1234 --

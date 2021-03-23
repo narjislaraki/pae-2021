@@ -1,4 +1,5 @@
-package be.vinci.pae.tests;
+
+package be.vinci.pae;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,7 +33,7 @@ public class UserDistributor {
     goodUser.setRegistrationDate(dateTime);
     goodUser.setValidated(true);
     goodUser.setPassword("$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu"); // 1234
-    goodUser.setAddress(1);
+    goodUser.setAddress(null);
 
     return goodUser;
   }
@@ -56,7 +57,7 @@ public class UserDistributor {
     goodUserNotValidated.setValidated(false);
     goodUserNotValidated
         .setPassword("$2a$10$9fCguFzUn1ae/wFf.nHFkObDBPQqX8TII5QOaSO/GTNw7iZtLECJu"); // 1234
-    goodUserNotValidated.setAddress(1);
+    goodUserNotValidated.setAddress(null);
 
     return goodUserNotValidated;
   }
