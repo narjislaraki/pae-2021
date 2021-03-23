@@ -29,7 +29,7 @@
     <td style="border:1px solid black;">No</td>
     <td style="border:1px solid black;">
     Send the information (email, username, password, password confirmation, first name, last name, address [street, building number, city, post code, country and optionally unit number]) to the server, which one will send a response back.
-    those information need to be unique in the DB: email, username.
+    The following information need to be unique in the DB: email, username.
     </td>
 </tr>
 
@@ -44,6 +44,48 @@
 
 </table>
 
+
+### Operations associated with users
+
+<br>
+<table style="border:1px solid black; border-collapse: collapse">
+
+<tr>
+    <th style="border:1px solid black;">URI</th>
+    <th style="border:1px solid black;">Function</th>
+    <th style="border:1px solid black;">Auths?</th>
+    <th style="border:1px solid black;">Operation</th>
+</tr>
+
+<tr>
+    <td style="border:1px solid black;">users/unvalidatedList</td>
+    <td style="border:1px solid black;">GET</td>
+    <td style="border:1px solid black;">Yes</td>
+    <td style="border:1px solid black;">
+    Returns a list populated with every accounts not yet validated
+    </td>
+</tr>
+
+<tr>
+    <td style="border:1px solid black;">users/user/{id}/accept/{role}</td>
+    <td style="border:1px solid black;">PATCH</td>
+    <td style="border:1px solid black;">Yes</td>
+    <td style="border:1px solid black;">
+   	Validate a user. {id} is the user's ID, {role} is the user's role to be.
+   	The role has to be <i>client</i>, <i>admin</i> or <i>antiquaire</i>.
+    </td>
+</tr>
+
+<tr>
+    <td style="border:1px solid black;">users/user/{id}</td>
+    <td style="border:1px solid black;">DELETE</td>
+    <td style="border:1px solid black;">Yes</td>
+    <td style="border:1px solid black;">
+    Delete a user from the DB. {id} is the user's id.
+    </td>
+</tr>
+
+</table>
 
 
 ---
