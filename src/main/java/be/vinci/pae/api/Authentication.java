@@ -207,10 +207,10 @@ public class Authentication {
   }
 
   /**
-   * Create a valid token to be sent to a user. Also append user's public data.
+   * Create a valid token to be sent to a user.
    * 
    * @param user a non null user
-   * @return a valid token with user's public data
+   * @return a valid token
    */
   private Response createToken(User user) {
     String token;
@@ -232,7 +232,7 @@ public class Authentication {
    * Get the current user.
    * 
    * @param request the request
-   * @return a String of user
+   * @return a user with public filtered fields as a String
    */
   @GET
   @Path("user")
