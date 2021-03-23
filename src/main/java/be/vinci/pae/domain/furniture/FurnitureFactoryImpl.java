@@ -5,7 +5,7 @@ public class FurnitureFactoryImpl implements FurnitureFactory {
   @Override
   public FurnitureDTO getFurnitureDTO() {
     // TODO Auto-generated method stub
-    return null;
+    return new FurnitureImpl();
   }
 
 }
