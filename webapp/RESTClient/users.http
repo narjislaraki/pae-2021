@@ -61,3 +61,23 @@ Content-Type: application/json
     "city": "Bruxelles",
     "unitNumber": 2
 }
+
+### FAIL
+DELETE {{baseUrl}}/user/10
+
+### SUCCESS
+
+#### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test2@test.com",
+    "password":"1234"
+}
+
+####
+#@token = {{loggedUser.response.body.token}}
+GET {{baseAuthsUrl}}/user
+Authorization: {{loggedUser.response.body.token}}

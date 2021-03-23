@@ -43,6 +43,7 @@ public class UserResource {
    */
   @GET
   @Path("unvalidatedList")
+  @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getUnvalidatedList(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
@@ -58,6 +59,7 @@ public class UserResource {
    */
   @PATCH
   @Path("user/{id}/accept/{role}")
+  @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id,
       @PathParam("role") String role) {
