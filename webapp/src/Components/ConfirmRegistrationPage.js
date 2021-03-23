@@ -94,10 +94,10 @@ const onRefuse = async (e) => {
   };
   try{
     const userRegistered = await callAPI(
-      API_BASE_URL + "refuse",
+      API_BASE_URL + "refuse/" + user.id,
       "DELETE",
       undefined,
-      user
+      undefined,
     );
   }catch(err){
     console.error("ConfirmRegistrationPage::onRefuse", err);
