@@ -3,6 +3,8 @@ package be.vinci.pae.services.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -71,15 +73,35 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
 
   @Override
-  public void introduceOption(int numberOfDay) {
-    // TODO Auto-generated method stub
-
+  public void introduceOption(int optionTerm, int idUser, int idFurniture) {
+    try {
+      String sql = "INSERT INTO pae.options VALUES(DEFAULT, ?, ?, null, ?, ?, ?;";
+      ps = dalService.getPreparedStatement(sql);
+      Timestamp date = Timestamp.valueOf(LocalDateTime.now().toString());
+      ps.setTimestamp(1, date);
+      ps.setInt(2, optionTerm);
+      ps.setString(3, "en cours");
+      ps.setInt(4, idUser);
+      ps.setInt(5, idFurniture);
+      ps.execute();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
   @Override
-  public void cancelOption(String cancellationReason) {
-    // TODO Auto-generated method stub
-
+  public void cancelOption(String cancellationReason, int idOption) {
+    try {
+      String sql =
+          "UPDATE pae.options SET state = ?,cancellation_reason = ? " + "WHERE id_option = ?;";
+      ps = dalService.getPreparedStatement(sql);
+      ps.setString(1, "annulée");
+      ps.setString(2, cancellationReason);
+      ps.setInt(3, idOption);
+      ps.execute();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
   @Override

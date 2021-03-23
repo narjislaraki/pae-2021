@@ -15,9 +15,9 @@ public interface FurnitureUCC {
   // indiquer qu'un meuble est deposé + livré + emporté
   // + fixer un prix d'achat + indiquer un prix de vente
 
-  void introduceOption(int numberOfDay);
+  void introduceOption(int optionTerm, int idUser, int idFurniture);
 
-  void cancelOption(String cancellationReason);
+  void cancelOption(String cancellationReason, int idOption);
 
   void indicateSentToWorkshop(int id);
 

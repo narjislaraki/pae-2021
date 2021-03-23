@@ -11,9 +11,9 @@ public interface FurnitureDAO {
 
   void setCondition(Furniture furniture, String condition);
 
-  void introduceOption(int numberOfDay);
+  void introduceOption(int optionTerm, int idUser, int idFurniture);
 
-  void cancelOption(String cancellationReason);
+  void cancelOption(String cancellationReason, int idOption);
 
   void indicateSentToWorkshop(int id);
 

@@ -95,7 +95,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public void addUser(User user) {
     try {
-      String sql = "INSERT INTO pae.users VALUES(default, ?, ?, ?, ?, ?::pae.roles, ?, ?, ?, ?);";
+      String sql = "INSERT INTO pae.users VALUES(default, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
       ps = dalService.getPreparedStatement(sql);
       ps.setString(1, user.getUsername());
       ps.setString(2, user.getLastName());

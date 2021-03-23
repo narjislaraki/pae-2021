@@ -13,13 +13,13 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   private FurnitureDAO furnitureDao;
 
   @Override
-  public void introduceOption(int numberOfDay) {
+  public void introduceOption(int optionTerm, int idUser, int idFurniture) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void cancelOption(String cancellationReason) {
+  public void cancelOption(String cancellationReason, int idOption) {
     // TODO Auto-generated method stub
 
   }

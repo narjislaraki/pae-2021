@@ -55,6 +55,16 @@ CREATE TABLE pae.furnitures(
 	seller INTEGER REFERENCES pae.users(id_user)
 );
 
+CREATE TABLE pae.options(
+	id_option SERIAL PRIMARY KEY,
+	date TIMESTAMP NOT NULL,
+	option_term INTEGER NOT NULL,
+	cancellation_reason VARCHAR (150),
+	state VARCHAR(9) NOT NULL,
+	user INTEGER REFERENCES pae.users(id_user) NOT NULL,
+	furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
+);
+
 CREATE TABLE pae.photos(
 	id_photo SERIAL PRIMARY KEY,
 	photo VARCHAR(400) NOT NULL,
