@@ -187,8 +187,9 @@ public class UserDAOImpl implements UserDAO {
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
 
-      if (rs.next())
+      if (rs.next()) {
         return true;
+      }
 
     } catch (SQLException e) {
       throw new FatalException(e);
