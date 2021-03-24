@@ -180,7 +180,7 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public void refuse(int id) {
+  public void deleteUser(int id) {
     try {
       String sql = "DELETE FROM pae.users WHERE id_user = ? RETURNING *;";
       ps = dalService.getPreparedStatement(sql);

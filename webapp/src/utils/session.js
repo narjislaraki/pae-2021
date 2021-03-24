@@ -1,3 +1,28 @@
+import callAPI from "../utils/api.js";
+
+var currentUser = null;
+
+const getCurrentUser = () => {
+  if (currentUser == null){
+  try {
+    await callAPI(
+      API_BASE_URL + "login",
+      "POST",
+      undefined,
+      user
+    ).then((response) => {
+      if (response.ok)
+        currentUser =  response.json();
+  });
+  }
+  catch (err) {
+    console.error("LoginRegisterPage::onLogin", err);
+    PrintError(err);
+  }
+}
+return currentUser;
+};
+
 const STORE_NAME = "user";
 
 const THEME = "theme";
@@ -35,4 +60,5 @@ export {
   removeSessionData,
   getTheme,
   setTheme,
+  getCurrentUser
 };

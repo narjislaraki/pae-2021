@@ -79,7 +79,7 @@ public class UserResource {
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
-    userUCC.refuseUser(id);
+    userUCC.deleteUser(id);
     return true;
   }
 

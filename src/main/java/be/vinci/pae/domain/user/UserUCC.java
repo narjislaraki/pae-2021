@@ -8,7 +8,7 @@ public interface UserUCC {
 
   void acceptUser(int id, String role);
 
-  void refuseUser(int id);
+  void deleteUser(int id);
 
   List<UserDTO> getUnvalidatedUsers();
 

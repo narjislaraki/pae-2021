@@ -49,8 +49,8 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public void refuseUser(int id) {
-    userDAO.refuse(id);
+  public void deleteUser(int id) {
+    userDAO.deleteUser(id);
   }
 
   public UserDTO getUserFromId(int id) {

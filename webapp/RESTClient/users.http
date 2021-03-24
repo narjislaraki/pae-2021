@@ -62,9 +62,6 @@ Content-Type: application/json
     "unitNumber": 2
 }
 
-### FAIL
-DELETE {{baseUrl}}/user/10
-
 ############## Test of AdminAuthorize with non-admin user ##############
 
 ### SUCCESS
