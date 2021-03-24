@@ -181,19 +181,19 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public boolean deleteUser(int id) {
-    boolean response = false;
     try {
       String sql = "DELETE FROM pae.users WHERE id_user = ? RETURNING *;";
       ps = dalService.getPreparedStatement(sql);
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
 
-      response = rs.next();
+      if (rs.next())
+        return true;
 
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return response;
+    return false;
   }
 
   @Override
