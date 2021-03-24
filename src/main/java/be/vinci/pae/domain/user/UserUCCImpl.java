@@ -49,8 +49,15 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public void refuseUser(int id) {
-    userDAO.refuse(id);
+  public boolean deleteUser(int id) {
+    if (!userDAO.deleteUser(id)) {
+      throw new BusinessException("Invalid id");
+    }
+    return true;
+  }
+
+  public UserDTO getUserFromId(int id) {
+    return userDAO.getUserFromId(id);
   }
 
 }

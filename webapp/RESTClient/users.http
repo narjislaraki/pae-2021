@@ -61,3 +61,69 @@ Content-Type: application/json
     "city": "Bruxelles",
     "unitNumber": 2
 }
+
+
+########################################## Authorize ##########################################
+
+############## Test of AdminAuthorize with non-admin user ##############
+
+### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test2@test.com",
+    "password":"1234"
+}
+
+### SUCCESS
+#@token = {{loggedUser.response.body.token}}
+GET {{baseAuthsUrl}}/user
+Authorization: {{loggedUser.response.body.token}}
+
+### FAIL ADMIN ONLY
+GET {{baseUrl}}/unvalidatedList
+Authorization: {{loggedUser.response.body.token}}
+
+
+### FAIL ADMIN ONLY
+# Number does not matter because request will be blocked before any DB check
+DELETE {{baseUrl}}/user/10
+Authorization: {{loggedUser.response.body.token}}
+
+############## Test of AdminAuthorize with non-admin user ##############
+
+### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test@test.com",
+    "password":"1234"
+}
+
+### SUCCESS
+#@token = {{loggedUser.response.body.token}}
+GET {{baseAuthsUrl}}/user
+Authorization: {{loggedUser.response.body.token}}
+
+### SUCCESS
+GET {{baseUrl}}/unvalidatedList
+Authorization: {{loggedUser.response.body.token}}
+
+### SUCCESS
+# /!\ should return true if the id exists (the user will be erased), false if not
+DELETE {{baseUrl}}/user/11
+Authorization: {{loggedUser.response.body.token}}
+
+########################################## End Authorize ##########################################
+
+### FAIL
+#@token = {{loggedUser.response.body.token}}
+GET {{baseAuthsUrl}}/user
+
+### FAIL
+# Should return a status 401
+DELETE {{baseUrl}}/user/9

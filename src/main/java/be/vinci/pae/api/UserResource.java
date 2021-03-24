@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import jakarta.inject.Inject;
@@ -42,9 +43,22 @@ public class UserResource {
    */
   @GET
   @Path("unvalidatedList")
+  @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getUnvalidatedList(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
+    // TODO retirer password des users de la liste
+
+    // List<String> list2 = list.stream().map((UserDTO e) -> {
+    // try {
+    // return jsonMapper.writerWithView(Views.Private.class).writeValueAsString(e);
+    // } catch (JsonProcessingException e1) {
+    // // TODO Auto-generated catch block
+    // e1.printStackTrace();
+    // }
+    // return null;
+    // }).collect(Collectors.toList());
+
     return list;
   }
 
@@ -52,11 +66,12 @@ public class UserResource {
    * Validation of a user.
    * 
    * @param request the request
-   * @param id the id
+   * @param id the user's id
    * @return true if OK
    */
   @PATCH
   @Path("user/{id}/accept/{role}")
+  @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id,
       @PathParam("role") String role) {
@@ -68,15 +83,15 @@ public class UserResource {
    * Delete a user.
    * 
    * @param request the request
-   * @param id the id
-   * @return true if OK
+   * @param id the id user's id
+   * @return true if OK, false if nKO
    */
   @DELETE
   @Path("user/{id}")
+  @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
-    userUCC.refuseUser(id);
-    return true;
+    return userUCC.deleteUser(id);
   }
 
 }

@@ -18,9 +18,8 @@ public class FatalException extends WebApplicationException {
    * @param cause the original Throwable element
    */
   public FatalException(Throwable cause) {
-    super(Response.status(Status.INTERNAL_SERVER_ERROR).build());
-    logger.warning(
-        cause.getMessage() == null ? cause.getClass().getCanonicalName() : cause.getMessage());
+    super(cause, Response.status(Status.INTERNAL_SERVER_ERROR).build());
+    logger.warning(cause.getMessage());
   }
 
   /**
@@ -32,9 +31,7 @@ public class FatalException extends WebApplicationException {
   public FatalException(String message, Throwable cause) {
     super(cause,
         Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).type("text/plain").build());
-    logger.warning(
-        message + " // " + "\n" + cause.getMessage() == null ? cause.getClass().getCanonicalName()
-            : cause.getMessage());
+    logger.warning(message + "\n" + cause.getMessage());
   }
 
 }
