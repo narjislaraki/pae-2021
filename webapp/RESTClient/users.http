@@ -65,9 +65,9 @@ Content-Type: application/json
 ### FAIL
 DELETE {{baseUrl}}/user/10
 
-### Test of AdminAuthorize with non-admin user
+############## Test of AdminAuthorize with non-admin user ##############
 
-#### SUCCESS
+### SUCCESS
 # @name loggedUser
 POST {{baseAuthsUrl}}/login
 Content-Type: application/json
@@ -77,11 +77,28 @@ Content-Type: application/json
     "password":"1234"
 }
 
-#### SUCCESS
+### SUCCESS
 #@token = {{loggedUser.response.body.token}}
 GET {{baseAuthsUrl}}/user
 Authorization: {{loggedUser.response.body.token}}
 
-#### FAIL
+### FAIL
+DELETE {{baseUrl}}/user/10
+Authorization: {{loggedUser.response.body.token}}
+
+############## Test of AdminAuthorize with non-admin user ##############
+
+### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test@test.com",
+    "password":"1234"
+}
+
+
+### SUCCESS
 DELETE {{baseUrl}}/user/10
 Authorization: {{loggedUser.response.body.token}}
