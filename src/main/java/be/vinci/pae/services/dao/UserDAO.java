@@ -18,7 +18,7 @@ public interface UserDAO {
 
   void setRole(int id, String role);
 
-  void deleteUser(int id);
+  boolean deleteUser(int id);
 
   void accept(int id, String role);
 

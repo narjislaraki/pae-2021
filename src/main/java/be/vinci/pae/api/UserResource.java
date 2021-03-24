@@ -72,15 +72,14 @@ public class UserResource {
    * 
    * @param request the request
    * @param id the id user's id
-   * @return true if OK
+   * @return true if OK, false if nKO
    */
   @DELETE
   @Path("user/{id}")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
-    userUCC.deleteUser(id);
-    return true;
+    return userUCC.deleteUser(id);
   }
 
 }
