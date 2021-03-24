@@ -1,12 +1,14 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
 import {getUserSessionData} from "../utils/session.js";
-let userData = getUserSessionData();
+let userData;
 let adresse = ``; 
 const API_BASE_URL = "api/users/";
 let confirmRegistrationPage = `<h4 id="pageTitle">Confirmer l'inscription</h4>`;
 
 const ConfirmRegistrationPage = async () => {
+  userData = getUserSessionData();
+  console.log(userData)
     let page = document.querySelector("#page");
     page.innerHTML = confirmRegistrationPage;
     try{

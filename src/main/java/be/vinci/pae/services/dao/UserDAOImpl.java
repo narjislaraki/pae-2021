@@ -95,7 +95,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public void addUser(User user) {
     try {
-      String sql = "INSERT INTO pae.users VALUES(default, ?, ?, ?, ?, ?::pae.roles, ?, ?, ?, ?);";
+      String sql = "INSERT INTO pae.users VALUES(default, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
       ps = dalService.getPreparedStatement(sql);
       ps.setString(1, user.getUsername());
       ps.setString(2, user.getLastName());
@@ -235,7 +235,7 @@ public class UserDAOImpl implements UserDAO {
       user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
       user.setValidated(rs.getBoolean(8));
       user.setPassword(rs.getString(9));
-      Address address = addressDAO.getAddress(rs.getInt(10));
+      Address address = addressDAO.getAddress(rs.getInt(10)); // TODO à revoir
       user.setAddress(address);
     } catch (SQLException e) {
       throw new FatalException(e);

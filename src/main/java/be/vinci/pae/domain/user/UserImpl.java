@@ -11,31 +11,29 @@ import com.fasterxml.jackson.annotation.JsonView;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.views.Views;
 
-// @JsonInclude(JsonInclude.Include.NON_NULL)
-// @JsonIgnoreProperties({"validated", "address"})
 
 public class UserImpl implements User {
 
   // TODO assurer les bonnes vues où on le veut
   @JsonView(Views.Public.class)
   private int id;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private Address address;
   @JsonView(Views.Public.class)
   private String username;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private String lastName;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private String firstName;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private String email;
   @JsonView(Views.Internal.class)
   private String password;
   @JsonView(Views.Public.class)
   private Role role;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private boolean validated;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime registrationDate; // TODO DateTime?
 

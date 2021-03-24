@@ -47,6 +47,18 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getUnvalidatedList(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
+    // TODO retirer password des users de la liste
+
+    // List<String> list2 = list.stream().map((UserDTO e) -> {
+    // try {
+    // return jsonMapper.writerWithView(Views.Private.class).writeValueAsString(e);
+    // } catch (JsonProcessingException e1) {
+    // // TODO Auto-generated catch block
+    // e1.printStackTrace();
+    // }
+    // return null;
+    // }).collect(Collectors.toList());
+
     return list;
   }
 

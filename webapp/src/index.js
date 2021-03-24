@@ -24,14 +24,14 @@ const FOOTER_CONTENT = `
 `;
 
 async function launch() {
-await getCurrentUser();
+  await getCurrentUser();
 
-Navbar();
+  Navbar();
 
-Router();
+  Router();
 
-// deal with header and footer
-document.querySelector("#footerContent").innerHTML = FOOTER_CONTENT;
+  // deal with header and footer
+  document.querySelector("#footerContent").innerHTML = FOOTER_CONTENT;
 }
 
 launch();

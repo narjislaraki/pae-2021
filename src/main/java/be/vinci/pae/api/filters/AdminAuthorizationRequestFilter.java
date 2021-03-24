@@ -16,6 +16,9 @@ public class AdminAuthorizationRequestFilter extends AuthorizationRequestFilter 
     super.filter(requestContext);
     UserDTO currentUser = (UserDTO) requestContext.getProperty("user");
 
+    if (currentUser == null)
+      return;
+
     if (!currentUser.getRole().getString().toLowerCase().equals("admin")) {
       throw new UnauthorizedException("Admin only");
     }

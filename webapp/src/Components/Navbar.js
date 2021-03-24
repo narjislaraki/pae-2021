@@ -5,8 +5,7 @@ import { RedirectUrl } from "./Router.js";
 const Navbar = () => {
   let nb;
   let user = currentUser;
-  console.log("USER !!!!!!! : " + user)
-  
+
   if (user) {
     nb = `
     <h1 class="lines" ></h1>
@@ -42,7 +41,6 @@ const Navbar = () => {
         `;
     navBar.innerHTML = nb;
     if (user.role == "ADMIN"){
-      console.log("salut");
       let adminTools = document.getElementById("adminToolsIcon");
       adminTools.innerHTML = `<img src="../assets/key4Admin.png" alt="key" id="keyAdmin" width="30" height="30">`;
       let keyAdmin = document.getElementById("keyAdmin");
@@ -80,8 +78,8 @@ const Navbar = () => {
 const onLogout = (e) =>{
   e.preventDefault();
   removeSessionData();
-  RedirectUrl("/");
   resetCurrentUser();
+  RedirectUrl("/");
   Navbar();
 };
 

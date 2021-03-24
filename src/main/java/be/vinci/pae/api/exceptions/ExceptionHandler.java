@@ -31,8 +31,11 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
       return Response.status(getStatusCode(exception)).entity(getEntity(exception)).build();
     }
     if (exception instanceof FatalException) {
-      return Response.status(getStatusCode(exception)).entity(exception.getCause().getMessage())
-          .build();
+      Throwable cause = exception.getCause();
+      if (cause == null) {
+        return Response.status(getStatusCode(exception)).entity(exception.getMessage()).build();
+      }
+      return Response.status(getStatusCode(exception)).entity(cause.getMessage()).build();
     }
     return Response.status(getStatusCode(exception))
         .entity(exception.getMessage() == null || exception.getMessage().isEmpty()
