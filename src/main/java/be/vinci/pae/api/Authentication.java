@@ -238,8 +238,9 @@ public class Authentication {
   @Path("user")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public String getUser(@Context ContainerRequest request) throws JsonProcessingException {
-    return jsonMapper.writerWithView(Views.Public.class)
-        .writeValueAsString((UserDTO) request.getProperty("user"));
+  public Response getUser(@Context ContainerRequest request) throws JsonProcessingException {
+    System.out.println(request.getProperty("user"));
+    return Response.ok(jsonMapper.writerWithView(Views.Public.class)
+        .writeValueAsString((UserDTO) request.getProperty("user"))).build();
   }
 }

@@ -31,7 +31,7 @@ public class UserImpl implements User {
   private String email;
   @JsonView(Views.Internal.class)
   private String password;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Public.class)
   private Role role;
   @JsonView(Views.Internal.class)
   private boolean validated;

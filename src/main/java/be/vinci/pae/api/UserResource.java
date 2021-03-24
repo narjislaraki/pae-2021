@@ -54,7 +54,7 @@ public class UserResource {
    * Validation of a user.
    * 
    * @param request the request
-   * @param id the id
+   * @param id the user's id
    * @return true if OK
    */
   @PATCH
@@ -71,7 +71,7 @@ public class UserResource {
    * Delete a user.
    * 
    * @param request the request
-   * @param id the id
+   * @param id the id user's id
    * @return true if OK
    */
   @DELETE

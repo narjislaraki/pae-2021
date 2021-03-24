@@ -1,27 +1,26 @@
 import callAPI from "../utils/api.js";
 
-var currentUser = null;
+var currentUser;
 
-const getCurrentUser = () => {
-  if (currentUser == null){
+async function getCurrentUser(){
+  let userData = getUserSessionData();
+  if (!currentUser && userData){
   try {
     await callAPI(
-      API_BASE_URL + "login",
-      "POST",
-      undefined,
-      user
+      "/api/auths/user",
+      "GET",
+      userData.token,
+      undefined
     ).then((response) => {
-      if (response.ok)
-        currentUser =  response.json();
+        currentUser =  response;
   });
   }
   catch (err) {
-    console.error("LoginRegisterPage::onLogin", err);
-    PrintError(err);
+    console.error("session.js::getCurrentUser", err);
   }
 }
 return currentUser;
-};
+}
 
 const STORE_NAME = "user";
 
@@ -54,11 +53,17 @@ const removeSessionData = () => {
   localStorage.removeItem(THEME);
 };
 
+const resetCurrentUser = () => {
+  currentUser = null;
+}
+
 export {
   getUserSessionData,
   setUserSessionData,
   removeSessionData,
   getTheme,
   setTheme,
-  getCurrentUser
+  getCurrentUser,
+  currentUser,
+  resetCurrentUser
 };

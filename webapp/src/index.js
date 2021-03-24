@@ -7,6 +7,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 /* load bootstrap module (JS) */
 import 'bootstrap';
 
+import {getCurrentUser} from "./utils/session.js"
+
 
 
 const FOOTER_CONTENT = `
@@ -21,9 +23,17 @@ const FOOTER_CONTENT = `
   <img id="devanture" src="assets/logoAE_v2.png" alt="devanture">
 `;
 
+async function launch() {
+await getCurrentUser();
+
 Navbar();
 
 Router();
 
 // deal with header and footer
 document.querySelector("#footerContent").innerHTML = FOOTER_CONTENT;
+}
+
+launch();
+
+

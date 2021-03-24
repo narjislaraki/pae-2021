@@ -1,13 +1,13 @@
 let navBar = document.querySelector(".navbar");
-import {getUserSessionData, removeSessionData} from "../utils/session.js";
+import {removeSessionData, currentUser, resetCurrentUser} from "../utils/session.js";
 import { RedirectUrl } from "./Router.js";
 // destructuring assignment
 const Navbar = () => {
   let nb;
-  let userData = getUserSessionData();
+  let user = currentUser;
+  console.log("USER !!!!!!! : " + user)
   
-  
-  if (userData) {
+  if (user) {
     nb = `
     <h1 class="lines" ></h1>
         <div class= "title">
@@ -28,7 +28,7 @@ const Navbar = () => {
         <div class="user-head">
           <p class="text-user">Bonjour,</p>
           
-          <p id="username" class="text-user">${userData.user.username}</p>
+          <p id="username" class="text-user">${user.username}</p>
           <div class="dropleft">
             <i id="user" class="bi bi-person-circle dropdown-toggle-user"></i>
             <ul class="dropdown-menu dropdown-menu-left condensed" aria-labelledby="dropdownMenuButton1">
@@ -41,8 +41,7 @@ const Navbar = () => {
         </div>
         `;
     navBar.innerHTML = nb;
-    console.log(userData.user);
-    if (userData){ //just for test, à remplacer avec roler === 'admin'
+    if (user.role == "ADMIN"){
       console.log("salut");
       let adminTools = document.getElementById("adminToolsIcon");
       adminTools.innerHTML = `<img src="../assets/key4Admin.png" alt="key" id="keyAdmin" width="30" height="30">`;
@@ -70,7 +69,7 @@ const Navbar = () => {
     navBar.innerHTML = nb;
   }
 
-  if (userData){
+  if (user){
     let logout = document.querySelector("#logout");
     logout.addEventListener("click", onLogout);
   }
@@ -82,6 +81,7 @@ const onLogout = (e) =>{
   e.preventDefault();
   removeSessionData();
   RedirectUrl("/");
+  resetCurrentUser();
   Navbar();
 };
 

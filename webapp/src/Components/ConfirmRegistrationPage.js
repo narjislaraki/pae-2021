@@ -1,6 +1,6 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
-import {getUserSessionData, removeSessionData} from "../utils/session.js";
+import {getUserSessionData} from "../utils/session.js";
 let userData = getUserSessionData();
 let adresse = ``; 
 const API_BASE_URL = "api/users/";
@@ -10,11 +10,10 @@ const ConfirmRegistrationPage = async () => {
     let page = document.querySelector("#page");
     page.innerHTML = confirmRegistrationPage;
     try{
-        //ça foire ici
         const unregisteredUsers = await callAPI(
           API_BASE_URL + "unvalidatedList",
           "GET",
-          undefined,
+          userData.token,
           undefined);
         onUnregisteredUsersList(unregisteredUsers);
     }catch(err){
