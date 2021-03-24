@@ -182,10 +182,16 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public void refuse(int id) {
     try {
-      String sql = "DELETE FROM pae.users WHERE id_user = ?;";
+      String sql = "DELETE FROM pae.users WHERE id_user = ? RETURNING *;";
       ps = dalService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
+      ResultSet rs = ps.executeQuery();
+      rs.next();
+      try {
+        rs.getInt(1);
+      } catch (Exception e) {
+        throw new FatalException("This user does not exist", e);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
