@@ -44,6 +44,10 @@ public class Config {
     return props.getProperty(key);
   }
 
+  public static int getIntProperty(String key) {
+    return Integer.parseInt(props.getProperty(key));
+  }
+
   public static boolean getBoolProperty(String key) {
     return Boolean.parseBoolean(props.getProperty(key));
   }

@@ -2,19 +2,19 @@ package be.vinci.pae.services.dao;
 
 import java.sql.ResultSet;
 import java.util.List;
-
-import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 
 public interface UserDAO {
 
   UserDTO getUserFromEmail(String email);
 
+  boolean existsUserFromEmailOrUsername(String email, String username);
+
   UserDTO getUserFromUsername(String username);
 
   UserDTO getUserFromId(int id);
 
-  void addUser(User user);
+  void addUser(UserDTO user);
 
   void setRole(int id, String role);
 

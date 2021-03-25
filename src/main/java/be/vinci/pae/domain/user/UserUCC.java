@@ -6,6 +6,8 @@ public interface UserUCC {
 
   UserDTO connection(String email, String password);
 
+  void registration(UserDTO user);
+
   void acceptUser(int id, String role);
 
   void refuseUser(int id);
