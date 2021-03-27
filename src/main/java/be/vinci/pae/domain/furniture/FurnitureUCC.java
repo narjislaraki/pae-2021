@@ -2,7 +2,6 @@ package be.vinci.pae.domain.furniture;
 
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.domain.address.Address;
 
 public interface FurnitureUCC {
@@ -27,7 +26,7 @@ public interface FurnitureUCC {
 
   void cancelOption(String cancellationReason, int idOption);
 
-  List<FurnitureDTO> SeeFurnitureList();
+  List<FurnitureDTO> seeFurnitureList();
 
   // pas encore pour le livrable
   void introduceRequestForVisite(String timeSlot, Address address,

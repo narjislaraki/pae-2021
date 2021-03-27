@@ -3,7 +3,6 @@ package be.vinci.pae.domain.furniture;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.domain.address.Address;
@@ -136,7 +135,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
-  public List<FurnitureDTO> SeeFurnitureList() {
+  public List<FurnitureDTO> seeFurnitureList() {
     // TODO Auto-generated method stub
 
     return null;
