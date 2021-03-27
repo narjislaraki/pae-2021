@@ -32,13 +32,6 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     password = Config.getStringProperty("password");
     connectionQuantity = Config.getIntProperty("connectionQuantity");
 
-    // // ds = new BasicDataSource();
-    // ds.setUrl(url);
-    // ds.setUsername(user);
-    // ds.setPassword(password);
-    //
-    // ds.setMinIdle(5);
-    // ds.setMaxIdle(10);
     properties.setProperty("driverClassName", "org.postgresql.Driver");
     properties.setProperty("url", url);
     properties.setProperty("username", user);
@@ -50,7 +43,6 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     try {
       ds = BasicDataSourceFactory.createDataSource(properties);
     } catch (Exception e1) {
-      // TODO Auto-generated catch block
       throw new FatalException(e1);
     }
     td = new ThreadLocal<Connection>();

@@ -101,7 +101,7 @@ INSERT INTO pae.users VALUES
 
 INSERT INTO pae.requests_for_visits VALUES
 		(default, 'lundi de 18h à 22h', 'accepté', null, '2021-03-29 20:00:00', 4, 4),
-		(default, 'lundi de 18h à 22h', 'annulée', 'Meuble trop récent', null, 4, 4),
+		(default, 'lundi de 18h à 22h', 'annulé', 'Meuble trop récent', null, 4, 4),
 		(default, 'tous les jours de 15h à 18h', 'acceptée', null, '2021-03-29 15:00:00', 5, 5);
 	
 INSERT INTO pae.types_of_furnitures VALUES
