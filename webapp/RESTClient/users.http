@@ -1,0 +1,129 @@
+@baseUrl = http://localhost:8081/users
+@baseAuthsUrl = http://localhost:8081/auths
+
+
+### FAIL
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test.test@test.com",
+    "password":"password"
+}
+
+### FAIL
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test.test@test.com",
+    "smthg":"password"
+}
+
+
+### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test@test.com",
+    "password":"1234"
+}
+
+### SUCCESS MOCK TEST
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"valid@email.com",
+    "password":"1234"
+}
+
+### SUCCESS
+POST {{baseAuthsUrl}}/register
+Content-Type: application/json
+
+{
+    "email": "register3@email.com",
+    "password": "1234",
+    "confirmPassword": "1234",
+    "username": "register3",
+    "lastName": "Laraki",
+    "firstName": "Narjis",
+    "street": "Rue Neuve",
+    "country": "Belgique",
+    "buildingNumber": "12",
+    "postcode": "1000",
+    "city": "Bruxelles",
+    "unitNumber": 2
+}
+
+
+########################################## Authorize ##########################################
+
+############## Test of AdminAuthorize with non-admin user ##############
+
+### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test2@test.com",
+    "password":"1234"
+}
+
+### SUCCESS
+#@token = {{loggedUser.response.body.token}}
+GET {{baseAuthsUrl}}/user
+Authorization: {{loggedUser.response.body.token}}
+
+### FAIL ADMIN ONLY
+GET {{baseUrl}}/unvalidatedList
+Authorization: {{loggedUser.response.body.token}}
+
+
+### FAIL ADMIN ONLY
+# Number does not matter because request will be blocked before any DB check
+DELETE {{baseUrl}}/user/10
+Authorization: {{loggedUser.response.body.token}}
+
+############## Test of AdminAuthorize with non-admin user ##############
+
+### SUCCESS
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test@test.com",
+    "password":"1234"
+}
+
+### SUCCESS
+#@token = {{loggedUser.response.body.token}}
+GET {{baseAuthsUrl}}/user
+Authorization: {{loggedUser.response.body.token}}
+
+### SUCCESS
+GET {{baseUrl}}/unvalidatedList
+Authorization: {{loggedUser.response.body.token}}
+
+### SUCCESS
+# /!\ should return true if the id exists (the user will be erased), false if not
+DELETE {{baseUrl}}/user/11
+Authorization: {{loggedUser.response.body.token}}
+
+########################################## End Authorize ##########################################
+
+### FAIL
+#@token = {{loggedUser.response.body.token}}
+GET {{baseAuthsUrl}}/user
+
+### FAIL
+# Should return a status 401
+DELETE {{baseUrl}}/user/9

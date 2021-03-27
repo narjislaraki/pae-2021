@@ -1,15 +1,11 @@
 package be.vinci.pae.api;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,14 +14,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import be.vinci.pae.api.exceptions.UnauthorizedException;
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.services.dao.AddressDAO;
-import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
@@ -35,7 +31,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
@@ -60,16 +55,11 @@ public class Authentication {
   private UserUCC userUCC;
 
   @Inject
-  private UserDAO userDAO;
-
-  @Inject
   private UserFactory userFactory;
 
   @Inject
   private AddressFactory addressFactory;
 
-  @Inject
-  private AddressDAO addressDAO;
 
   /**
    * Quick way to construct HTTP Response with text only.
@@ -129,65 +119,30 @@ public class Authentication {
           .type(MediaType.TEXT_PLAIN).build();
     }
 
-    final String email = json.get("email").asText();
-    final String username = json.get("username").asText();
-    final String password = json.get("password").asText();
-    final String confirmPassword = json.get("confirmPassword").asText();
-    final String firstName = json.get("firstName").asText();
-    final String lastName = json.get("lastName").asText();
-    final String street = json.get("street").asText();
-    final String buildingNumber = json.get("buildingNumber").asText();
-    final String city = json.get("city").asText();
-    final String postcode = json.get("postcode").asText();
-    final String country = json.get("country").asText();
-    int unitNumber = 0;
-    if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
-      unitNumber = json.get("unitNumber").asInt();
+    if (!json.get("password").asText().equals(json.get("confirmPassword").asText())) {
+      throw new UnauthorizedException("The passwords don't match");
     }
 
-    User user = (User) userDAO.getUserFromEmail(email);
-    if (user != null) {
-      return Response.status(Status.CONFLICT).entity("This email is already in use")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-    user = (User) userDAO.getUserFromUsername(username);
-    if (user != null) {
-      return Response.status(Status.CONFLICT).entity("This username is already in use")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-
-    if (!password.equals(confirmPassword)) {
-      return Response.status(Status.UNAUTHORIZED).entity("The passwords don't match")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-
+    UserDTO user = userFactory.getUserDTO();
+    user.setEmail(json.get("email").asText());
+    user.setUsername(json.get("username").asText());
+    user.setPassword(json.get("password").asText());
+    user.setFirstName(json.get("firstName").asText());
+    user.setLastName(json.get("lastName").asText());
     Address address = addressFactory.getAddress();
-    address.setStreet(street);
-    address.setCity(city);
-    address.setBuildingNumber(buildingNumber);
-    address.setPostCode(postcode);
-    address.setCountry(country);
-    if (unitNumber != 0) {
-      address.setUnitNumber(unitNumber);
+    user.setAddress(address);
+    address.setStreet(json.get("street").asText());
+    address.setBuildingNumber(json.get("buildingNumber").asText());
+    address.setCity(json.get("city").asText());
+    address.setPostCode(json.get("postcode").asText());
+    address.setCountry(json.get("country").asText());
+    if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
+      address.setUnitNumber(json.get("unitNumber").asInt());
     }
 
-    int idAddress = addressDAO.addAddress(address);
-    address.setId(idAddress);
+    userUCC.registration(user);
 
-    UserDTO userDTO = userFactory.getUserDTO();
-    User userCast = (User) userDTO;
-    userCast.setEmail(email);
-    userCast.setUsername(username);
-    userCast.setFirstName(firstName);
-    userCast.setLastName(lastName);
-    userCast.setPassword(userCast.hashPassword(password));
-    userCast.setValidated(false);
-    userCast.setRegistrationDate(LocalDateTime.now());
-    userCast.setRole("client");
-    userCast.setAddress(address);
-
-    userDAO.addUser(userCast);
-    return createToken(userCast);
+    return createToken((User) user);
   }
 
   private boolean checkFieldsRegister(JsonNode json) {
@@ -208,45 +163,39 @@ public class Authentication {
   }
 
   /**
-   * Create a valid token to be sent to a user. Also append user's public data.
+   * Create a valid token to be sent to a user.
    * 
    * @param user a non null user
-   * @return a valid token with user's public data
+   * @return a valid token
    */
   private Response createToken(User user) {
     String token;
     try {
-      token = JWT.create().withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+      token = JWT.create().withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
           .withIssuer("auth0").withClaim("user", user.getId()).sign(this.jwtAlgorithm);
     } catch (Exception e) {
-      throw new WebApplicationException("Incapable de créer un token", e,
+      throw new WebApplicationException("Impossible to create a token", e,
           Status.INTERNAL_SERVER_ERROR);
     }
 
-    ObjectNode node = null;
-    try {
-      String json = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(user);
-      @SuppressWarnings("unchecked")
-      Map<String, String> map = jsonMapper.readValue(json, Map.class);
-      node = jsonMapper.createObjectNode().put("token", token).putPOJO("user", map);
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
+    ObjectNode node =
+        jsonMapper.createObjectNode().put("token", token).putPOJO("user", user.getId());
     LOGGER.log(Level.INFO, "Connection of user:" + user.getUsername() + " :: " + user.getId());
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
 
   /**
-   * Get a user.
+   * Get the current user.
    * 
    * @param request the request
-   * @return a String of user
+   * @return a user with public filtered fields as a String
    */
   @GET
-  @Path("/user/{id}")
+  @Path("user")
+  @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public String getUser(@Context ContainerRequest request, @PathParam("id") int id) {
-    // TODO
-    return null;
+  public Response getUser(@Context ContainerRequest request) throws JsonProcessingException {
+    return Response.ok(jsonMapper.writerWithView(Views.Public.class)
+        .writeValueAsString((UserDTO) request.getProperty("user"))).build();
   }
 }

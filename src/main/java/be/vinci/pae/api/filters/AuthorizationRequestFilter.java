@@ -1,10 +1,10 @@
 package be.vinci.pae.api.filters;
 
-import java.io.IOException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
@@ -29,7 +29,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   private UserDAO userDAO;
 
   @Override
-  public void filter(ContainerRequestContext requestContext) throws IOException {
+  public void filter(ContainerRequestContext requestContext) {
     String token = requestContext.getHeaderString("Authorization");
     if (token == null) {
       requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
