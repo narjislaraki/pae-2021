@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 public interface DalBackendServices {
 
   /**
-   * Allows you to have a PreparedStatement
+   * Allows you to have a PreparedStatement.
    * 
    * @param sql the sql request
    * @return a preparedStatement

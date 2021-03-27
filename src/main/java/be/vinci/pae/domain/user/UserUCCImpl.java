@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
-import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -16,12 +15,6 @@ public class UserUCCImpl implements UserUCC {
 
   @Inject
   private UserDAO userDAO;
-
-  @Inject
-  private UserFactory userFactory;
-
-  @Inject
-  private AddressFactory addressFactory;
 
   @Inject
   private AddressDAO addressDAO;

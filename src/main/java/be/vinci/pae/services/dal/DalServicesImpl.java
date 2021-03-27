@@ -27,7 +27,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
    * properties file.
    */
   public DalServicesImpl() {
-    url = (Config.getStringProperty("url"));
+    url = Config.getStringProperty("url");
     user = Config.getStringProperty("user");
     password = Config.getStringProperty("password");
     connectionQuantity = Config.getIntProperty("connectionQuantity");

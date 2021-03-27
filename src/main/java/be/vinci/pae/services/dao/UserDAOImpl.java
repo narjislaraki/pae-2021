@@ -27,6 +27,12 @@ public class UserDAOImpl implements UserDAO {
   PreparedStatement ps;
 
 
+  /**
+   * Searching through the database for the user, using his email.
+   * 
+   * @param email the email
+   * @return the user if he exists, otherwise null
+   */
   public UserDTO getUserFromEmail(String email) {
     // TODO PS -> attribut?
     // TODO fetch de l'adresse aussi
@@ -50,7 +56,7 @@ public class UserDAOImpl implements UserDAO {
   }
 
   /**
-   * Searching through the database for the user, using his email.
+   * Searching through the database for a user, using his email and his username.
    * 
    * @param email the email
    * @return the user if he exists, otherwise null

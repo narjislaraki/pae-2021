@@ -21,8 +21,6 @@ import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.services.dao.AddressDAO;
-import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
@@ -57,16 +55,11 @@ public class Authentication {
   private UserUCC userUCC;
 
   @Inject
-  private UserDAO userDAO;
-
-  @Inject
   private UserFactory userFactory;
 
   @Inject
   private AddressFactory addressFactory;
 
-  @Inject
-  private AddressDAO addressDAO;
 
   /**
    * Quick way to construct HTTP Response with text only.
