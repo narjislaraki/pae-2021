@@ -14,14 +14,14 @@ import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
-import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
 public class FurnitureDAOImpl implements FurnitureDAO {
 
 
   @Inject
-  private DalServices dalService;
+  private DalBackendServices dalBackendService;
   @Inject
   private FurnitureFactory furnitureFactory;
 
@@ -33,7 +33,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       String sql = ("SELECT id_furniture, condition, description, purchase_price, pick_up_date,"
           + " store_deposit, deposit_date, offered_selling_price, id_type, request_visit, seller"
           + " FROM pae.furnitures WHERE id_furniture = ?;");
-      ps = dalService.getPreparedStatement(sql);
+      ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
@@ -51,7 +51,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     try {
       String sql =
           ("SELECT SUM(o.options_term) FROM pae.options o WHERE f.id_furniture = ? AND u.id_user = ?");
-      ps = dalService.getPreparedStatement(sql);
+      ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, idFurniture);
       ps.setInt(2, idUser);
       ResultSet rs = ps.executeQuery();
@@ -82,7 +82,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public void setCondition(Furniture furniture, Condition condition) {
     try {
       String sql = "UPDATE pae.furnitures f SET f.condition = ? WHERE f.id_furniture = ? ;";
-      ps = dalService.getPreparedStatement(sql);
+      ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, condition.toString());
       ps.setInt(2, furniture.getId());
       ps.execute();
@@ -101,7 +101,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public void introduceOption(int optionTerm, int idUser, int idFurniture) {
     try {
       String sql = "INSERT INTO pae.options VALUES(DEFAULT, ?, ?, null, ?, ?, ?;";
-      ps = dalService.getPreparedStatement(sql);
+      ps = dalBackendService.getPreparedStatement(sql);
       Timestamp date = Timestamp.valueOf(LocalDateTime.now().toString());
       ps.setTimestamp(1, date);
       ps.setInt(2, optionTerm);
@@ -119,7 +119,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     try {
       String sql =
           "UPDATE pae.options SET state = ?,cancellation_reason = ? " + "WHERE id_option = ?;";
-      ps = dalService.getPreparedStatement(sql);
+      ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, "annulée");
       ps.setString(2, cancellationReason);
       ps.setInt(3, idOption);
@@ -147,7 +147,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     try {
       String sql =
           "UPDATE pae.furnitures f SET f.condition = ?, f.offered_selling_price = ? WHERE f.id_furniture = ? ;";
-      ps = dalService.getPreparedStatement(sql);
+      ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, Condition.EN_VENTE.toString());
       ps.setDouble(2, price);
       ps.setInt(3, furniture.getId());
