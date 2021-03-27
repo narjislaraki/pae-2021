@@ -81,7 +81,7 @@ public class FurnitureImpl implements Furniture {
         this.condition = Condition.EN_ATTENTE;
         break;
       case "acheté":
-        this.condition = Condition.VALIDE;
+        this.condition = Condition.ACHETE;
         break;
       case "refusé":
         this.condition = Condition.REFUSE;
@@ -187,7 +187,5 @@ public class FurnitureImpl implements Furniture {
       Map<Integer, List<String>> furnitures) {
 
   }
-
-
 
 }

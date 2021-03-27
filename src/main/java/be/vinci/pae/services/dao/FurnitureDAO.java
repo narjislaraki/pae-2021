@@ -6,10 +6,16 @@ import java.util.Map;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 
 public interface FurnitureDAO {
 
-  void setCondition(Furniture furniture, String condition);
+  FurnitureDTO getFurnitureById(int id);
+
+  // A REVOIR
+  int getNumberOfReservation(int idFurniture, int idUser);
+
+  void setCondition(Furniture furniture, Condition condition);
 
   void introduceOption(int optionTerm, int idUser, int idFurniture);
 
@@ -19,7 +25,7 @@ public interface FurnitureDAO {
 
   void indicateDropOfStore(int id);
 
-  void indicateOfferedForSale(int id);
+  void indicateOfferedForSale(Furniture furniture, double price);
 
   void withdrawSale(int id);
 
