@@ -9,16 +9,14 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.dao.UserDAOImpl;
-import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
+import jakarta.inject.Inject;
 
 public class Main {
 
-  static UserDAO ds = new UserDAOImpl();
   static String env;
+  @Inject
   static Logger logger;
 
   /**
@@ -46,8 +44,7 @@ public class Main {
 
     final HttpServer server = startServer();
 
-    logger = APILogger.getLogger();
-    logger.info("Server is starting");
+    // logger.info("Server is starting");
 
     System.out.println("Jersey app started at " + Config.getStringProperty("BaseUri"));
     // Listen to key press and shutdown server
