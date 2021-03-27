@@ -71,13 +71,12 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public void withdrawSale(int id) {
-    // TODO Auto-generated method stub
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
 
     if (furniture.getCondition().equals(Condition.EN_VENTE)) {
-      furniture.setCondition("retiré de la vente");
+      furnitureDao.withdrawSale(id);
     } else {
-      throw new BusinessException("");
+      throw new BusinessException("State error");
     }
   }
 
@@ -128,6 +127,11 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       Map<Integer, List<String>> furnitures) {
     // TODO Auto-generated method stub
 
+  }
+
+
+  public FurnitureDTO getFurnitureById(int id) {
+    return furnitureDao.getFurnitureById(id);
   }
 
 

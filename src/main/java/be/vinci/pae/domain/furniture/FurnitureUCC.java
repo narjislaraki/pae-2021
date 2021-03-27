@@ -32,4 +32,5 @@ public interface FurnitureUCC {
   void introduceRequestForVisite(String timeSlot, Address address,
       Map<Integer, List<String>> furnitures);
 
+  FurnitureDTO getFurnitureById(int id);
 }

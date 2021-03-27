@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
@@ -50,7 +50,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     int number = -1;
     try {
       String sql =
-          ("SELECT SUM(o.options_term) FROM pae.options o WHERE f.id_furniture = ? AND u.id_user = ?");
+          ("SELECT SUM(o.options_term) FROM pae.options o WHERE o.id_furniture = ? AND o.id_user = ?");
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, idFurniture);
       ps.setInt(2, idUser);
@@ -70,7 +70,15 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       furniture.setId(rs.getInt(1));
       furniture.setCondition(rs.getString(2));
       furniture.setDescription(rs.getString(3));
+      furniture.setPurchasePrice(rs.getDouble(4));
+      furniture.setPickUpDate(rs.getTimestamp(5).toLocalDateTime());
+      furniture.setStoreDeposit(rs.getBoolean(6));
+      furniture.setDepositDate(rs.getTimestamp(7).toLocalDateTime());
+      furniture.setOfferedSellingPrice(rs.getDouble(8));
       furniture.setType(rs.getInt(9));
+      furniture.setRequestForVisit(rs.getInt(10));
+      furniture.setSeller(rs.getInt(11));
+      furniture.setFavouritePhoto(rs.getInt(12));
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -90,11 +98,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       e.printStackTrace();
     }
   }
-  /*
-   * public void getCondition(Furniture furniture) { try { String sql = "SELECT f.condition FROM pae.furnitures f WHERE f.id_furniture = ?;"; ps =
-   * dalService.getPreparedStatement(sql); } }
-   */
-
 
 
   @Override
@@ -153,23 +156,40 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ps.setInt(3, furniture.getId());
       ps.execute();
     } catch (SQLException e) {
-      // TODO
-      e.printStackTrace();
+      throw new FatalException(e);
     }
   }
 
   @Override
   public void withdrawSale(int id) {
-    // TODO Auto-generated method stub
+    Furniture furniture = (Furniture) getFurnitureById(id);
+    setCondition(furniture, Condition.RETIRE);
 
   }
 
   @Override
   public List<FurnitureDTO> SeeFurnitureList() {
-    // TODO Auto-generated method stub
-
-    return null;
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql =
+          "SELECT id_furniture, condition, description, purchase_price, pick_up_date, store_deposit, deposit_date, "
+              + "offered_selling_price, id_type, request_visit, seller, favorite_photo "
+              + "FROM pae.furnitures WHERE condition = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_VENTE.toString());
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    System.out.println(list);
+    return list;
   }
+
 
   @Override
   public void introduceRequestForVisite(String timeSlot, Address address,
