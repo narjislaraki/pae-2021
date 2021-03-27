@@ -6,7 +6,7 @@ CREATE TABLE pae.addresses(
 	id_address SERIAL PRIMARY KEY,
 	street VARCHAR(50) NOT NULL,
 	building_number VARCHAR(7) NOT NULL,
-	unit_number INTEGER,
+	unit_number VARCHAR(10),
 	city VARCHAR(15) NOT NULL,
 	postcode VARCHAR(10) NOT NULL,
 	country VARCHAR(15) NOT NULL
@@ -88,7 +88,7 @@ SELECT * FROM pae.users;
 INSERT INTO pae.addresses VALUES
 		(default, 'sente des artistes', '1bis', null, 'Verviers', '4800', 'Belgique'),
 		(default, 'sente des artistes', '18', null, 'Verviers', '4800', 'Belgique'),
-		(default, 'Rue de l\'Eglise', '11', 'B1', 'Stoumont', '4987', 'Belgique'),
+		(default, 'Rue de l''Eglise', '11', 'B1', 'Stoumont', '4987', 'Belgique'),
 		(default, 'Rue de Renkin', '7', null, 'Verviers', '4800', 'Belgique'),
 		(default, 'Lammerskreuzstrasse', '6', null, 'Roetgen', '52159', 'Allemagne');
 
@@ -100,9 +100,9 @@ INSERT INTO pae.users VALUES
 		(default, 'bazz', 'Ile', 'Basile', 'bazz.ile@gmail.be', 'client', '20210323', true, 'mdpusr.2', 5);
 
 INSERT INTO pae.requests_for_visits VALUES
-		(default, 'lundi de 18h à 22h', 'accepté', null, '29/03/2021 20:00:00', 4, 4),
+		(default, 'lundi de 18h à 22h', 'accepté', null, '2021-03-29 20:00:00', 4, 4),
 		(default, 'lundi de 18h à 22h', 'annulée', 'Meuble trop récent', null, 4, 4),
-		(default, 'tous les jours de 15h à 18h', 'acceptée', null, '29/03/2021 15:00:00', 5, 5);
+		(default, 'tous les jours de 15h à 18h', 'acceptée', null, '2021-03-29 15:00:00', 5, 5);
 	
 INSERT INTO pae.types_of_furnitures VALUES
 		(default, 'Bahut'),
@@ -111,11 +111,11 @@ INSERT INTO pae.types_of_furnitures VALUES
 		(default, 'Secrétaire');
 		
 INSERT INTO pae.furnitures VALUES
-		(default, 'acheté', 'Bahut profond d\'une largeur de 112cm et d\'une hauteur de 147cm.', 200.00, '30/03/2021', null, null, null, 1, 1, null, null),
-		(default, 'acheté', 'Large bureau 1m87 cm, 2 colonnes de tiroirs', 150.00, '30/03/2021', null, null, null, 2, 1, null, null),
+		(default, 'acheté', 'Bahut profond d''une largeur de 112cm et d''une hauteur de 147cm.', 200.00, '2021-03-30', null, null, null, 1, 1, null, null),
+		(default, 'acheté', 'Large bureau 1m87 cm, 2 colonnes de tiroirs', 150.00, '2021-03-30', null, null, null, 2, 1, null, null),
 		(default, 'annulé', 'Table jardin en bois brut', null, null, null, null, null, 3, 2, null, null),
-		(default, 'acheté', 'Table en chêne, pieds en fer forgé', 140.00, '29/03/2021', null, null, null, 3, 3, null, null),
-		(default, 'acheté', 'Secrétaire en acajou, marqueterie', 90.00, '29/03/2021', null, null, null, 4, 3, null, null);
+		(default, 'acheté', 'Table en chêne, pieds en fer forgé', 140.00, '2021-03-29', null, null, null, 3, 3, null, null),
+		(default, 'acheté', 'Secrétaire en acajou, marqueterie', 90.00, '2021-03-29', null, null, null, 4, 3, null, null);
 		
 INSERT INTO pae.photos VALUES
 		(default, 'Bahut_2.png', false, true, 1),
