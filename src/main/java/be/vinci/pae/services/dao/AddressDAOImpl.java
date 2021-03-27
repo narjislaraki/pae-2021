@@ -6,13 +6,13 @@ import java.sql.SQLException;
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
-import be.vinci.pae.services.dal.DalServices;
+import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
 public class AddressDAOImpl implements AddressDAO {
 
   @Inject
-  private DalServices dalServices;
+  private DalBackendServices dalBackendServices;
 
   @Inject
   private AddressFactory addressFactory;
@@ -25,7 +25,7 @@ public class AddressDAOImpl implements AddressDAO {
     int key = 0;
     try {
       String sql = "INSERT INTO pae.addresses VALUES(default, ?, ?, ?, ?, ?, ?);";
-      PreparedStatement ps = dalServices.getPreparedStatementWithGeneratedReturn(sql);
+      PreparedStatement ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, address.getStreet());
       ps.setString(2, address.getBuildingNumber());
       if (address.getUnitNumber() != 0) {
@@ -54,7 +54,7 @@ public class AddressDAOImpl implements AddressDAO {
   public Address getAddress(int id) {
     Address address = null;
     try {
-      ps = dalServices
+      ps = dalBackendServices
           .getPreparedStatement("SELECT a.id_address, a.street, a.building_number, a.unit_number, "
               + "a.city, a.postcode, a.country " + "FROM pae.addresses a WHERE a.id_address = ?;");
 
