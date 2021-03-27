@@ -1,7 +1,7 @@
 /* In a template literal, the ` (backtick), \ (backslash), and $ (dollar sign) characters should be 
 escaped using the escape character \ if they are to be included in their template value. 
 By default, all escape sequences in a template literal are ignored.*/
-import { getUserSessionData, setUserSessionData } from "../utils/session.js";
+import { setUserSessionData, getCurrentUser, currentUser} from "../utils/session.js";
 import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
@@ -65,16 +65,14 @@ let loginPage = `<div class="register-card">
   </form>
 </div>`;
 
-const LoginRegisterPage = () => {  
+const LoginRegisterPage = async () => {  
   let page = document.querySelector("#page");
   page.innerHTML = loginPage;
   let loginForm = document.querySelector(".form-login");
   let registerForm = document.querySelector(".form-register");
-  const user = getUserSessionData();
-  if (user) {
+  if (currentUser) {
     // re-render the navbar for the authenticated user
     Navbar();
-    RedirectUrl("/list");
   } else {
     loginForm.addEventListener("submit", onLogin);
     registerForm.addEventListener("submit", onRegister);
@@ -87,17 +85,15 @@ const onLogin = async (e) => {
   let password = document.getElementById("password-login");
   console.log(login.value);
 
-  let user = {
-    email: login.value,
-    password: password.value,
-  };
-
   try {
     const userLogged = await callAPI(
       API_BASE_URL + "login",
       "POST",
       undefined,
-      user
+      {
+        email: login.value,
+        password: password.value,
+      }
     );
     onUserLogin(userLogged);
   } catch (err) {
@@ -106,10 +102,11 @@ const onLogin = async (e) => {
   }
 };
 
-const onUserLogin = (userData) => {
+const onUserLogin = async (userData) => {
   console.log("onUserLogin:", userData);
   const user = { ...userData, isAutenticated: true };
   setUserSessionData(user);
+  await getCurrentUser();
   // re-render the navbar for the authenticated user
   Navbar();
   RedirectUrl("/");

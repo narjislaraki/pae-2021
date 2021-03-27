@@ -1,20 +1,21 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
-import {getUserSessionData, removeSessionData} from "../utils/session.js";
-let userData = getUserSessionData();
+import {getUserSessionData} from "../utils/session.js";
+let userData;
 let adresse = ``; 
 const API_BASE_URL = "api/users/";
 let confirmRegistrationPage = `<h4 id="pageTitle">Confirmer l'inscription</h4>`;
 
 const ConfirmRegistrationPage = async () => {
+  userData = getUserSessionData();
+  console.log(userData)
     let page = document.querySelector("#page");
     page.innerHTML = confirmRegistrationPage;
     try{
-        //ça foire ici
         const unregisteredUsers = await callAPI(
           API_BASE_URL + "unvalidatedList",
           "GET",
-          undefined,
+          userData.token,
           undefined);
         onUnregisteredUsersList(unregisteredUsers);
     }catch(err){

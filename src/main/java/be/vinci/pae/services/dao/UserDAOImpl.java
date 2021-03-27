@@ -156,7 +156,7 @@ public class UserDAOImpl implements UserDAO {
       ps = dalBackendService.getPreparedStatement(
           "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
               + "u.registration_date, u.is_validated, u.password, u.address "
-              + "FROM pae.users u WHERE u.id= ?;");
+              + "FROM pae.users u WHERE u.id_user= ?;");
 
 
       ps.setInt(1, id);
@@ -206,15 +206,21 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public void refuse(int id) {
+  public boolean deleteUser(int id) {
     try {
       String sql = "DELETE FROM pae.users WHERE id_user = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
+      ResultSet rs = ps.executeQuery();
+
+      if (rs.next()) {
+        return true;
+      }
+
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return false;
   }
 
   @Override
@@ -255,7 +261,7 @@ public class UserDAOImpl implements UserDAO {
       user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
       user.setValidated(rs.getBoolean(8));
       user.setPassword(rs.getString(9));
-      Address address = addressDAO.getAddress(rs.getInt(10));
+      Address address = addressDAO.getAddress(rs.getInt(10)); // TODO à revoir
       user.setAddress(address);
     } catch (SQLException e) {
       throw new FatalException(e);

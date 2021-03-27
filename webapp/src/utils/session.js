@@ -1,3 +1,27 @@
+import callAPI from "../utils/api.js";
+
+var currentUser;
+
+async function getCurrentUser(){
+  let userData = getUserSessionData();
+  if (!currentUser && userData){
+  try {
+    await callAPI(
+      "/api/auths/user",
+      "GET",
+      userData.token,
+      undefined
+    ).then((response) => {
+        currentUser =  response;
+  });
+  }
+  catch (err) {
+    console.error("session.js::getCurrentUser", err);
+  }
+}
+return currentUser;
+}
+
 const STORE_NAME = "user";
 
 const THEME = "theme";
@@ -29,10 +53,17 @@ const removeSessionData = () => {
   localStorage.removeItem(THEME);
 };
 
+const resetCurrentUser = () => {
+  currentUser = null;
+}
+
 export {
   getUserSessionData,
   setUserSessionData,
   removeSessionData,
   getTheme,
   setTheme,
+  getCurrentUser,
+  currentUser,
+  resetCurrentUser
 };
