@@ -1,8 +1,8 @@
 package be.vinci.pae.domain.user;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
@@ -49,12 +49,7 @@ public class UserUCCImpl implements UserUCC {
     if (alreadyPresent) {
       throw new BusinessException("This email or username is already in use");
     }
-    try {
-      dalServices.commitTransactionAndContinue();
-    } catch (SQLException e1) {
-      return;
-    }
-
+    dalServices.commitTransactionAndContinue();
 
     user.getAddress().setId(addressDAO.addAddress(user.getAddress()));
 
@@ -66,11 +61,8 @@ public class UserUCCImpl implements UserUCC {
 
     userDAO.addUser(user);
 
-    try {
-      dalServices.commitTransaction();
-    } catch (SQLException e) {
-      dalServices.rollbackTransaction();
-    }
+    dalServices.commitTransaction();
+
   }
 
 
