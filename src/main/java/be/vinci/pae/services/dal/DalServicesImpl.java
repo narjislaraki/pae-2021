@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
+
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.utils.Config;
 
@@ -87,21 +89,30 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   }
 
   @Override
-  public void commitTransaction() throws SQLException {
-    Connection connection = commitTransac();
-    td.remove();
-    connection.close();
+  public void commitTransaction() {
+    Connection connection;
+    try {
+      connection = commitTransac();
+      td.remove();
+      connection.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
 
-  private Connection commitTransac() throws SQLException {
+  private Connection commitTransac() {
     Connection connection = td.get();
-    connection.commit();
+    try {
+      connection.commit();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
     return connection;
   }
 
   @Override
-  public void commitTransactionAndContinue() throws SQLException {
+  public void commitTransactionAndContinue() {
     commitTransac();
   }
 

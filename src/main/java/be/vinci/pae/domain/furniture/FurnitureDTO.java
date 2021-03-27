@@ -16,7 +16,7 @@ public interface FurnitureDTO {
       this.condition = condition;
     }
 
-    public String getString() {
+    public String toString() {
       return this.condition;
     }
   }
