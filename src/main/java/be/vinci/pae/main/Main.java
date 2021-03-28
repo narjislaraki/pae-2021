@@ -9,15 +9,16 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
 
 public class Main {
 
-  static String env;
+  static private String env;
   @Inject
-  static Logger logger;
+  static private Logger logger;
 
   /**
    * Main method.
@@ -44,7 +45,8 @@ public class Main {
 
     final HttpServer server = startServer();
 
-    // logger.info("Server is starting");
+    logger = APILogger.getLogger();
+    logger.info("Server is starting");
 
     System.out.println("Jersey app started at " + Config.getStringProperty("BaseUri"));
     // Listen to key press and shutdown server

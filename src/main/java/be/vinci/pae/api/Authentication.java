@@ -26,7 +26,6 @@ import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
@@ -46,7 +45,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/auths")
 public class Authentication {
 
-  private static final Logger LOGGER = APILogger.getLogger();
+  @Inject
+  private Logger logger;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getStringProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -224,7 +224,7 @@ public class Authentication {
 
     ObjectNode node =
         jsonMapper.createObjectNode().put("token", token).putPOJO("user", user.getId());
-    LOGGER.log(Level.INFO, "Connection of user:" + user.getUsername() + " :: " + user.getId());
+    logger.log(Level.INFO, "Connection of user:" + user.getUsername() + " :: " + user.getId());
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
 
