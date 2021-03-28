@@ -12,12 +12,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
-import jakarta.inject.Inject;
 
 public class Main {
 
   static private String env;
-  @Inject
   static private Logger logger;
 
   /**
