@@ -59,16 +59,11 @@ public class Authentication {
   private UserUCC userUCC;
 
   @Inject
-  private UserDAO userDAO;
-
-  @Inject
   private UserFactory userFactory;
 
   @Inject
   private AddressFactory addressFactory;
 
-  @Inject
-  private AddressDAO addressDAO;
 
   /**
    * Quick way to construct HTTP Response with text only.
@@ -128,65 +123,30 @@ public class Authentication {
           .type(MediaType.TEXT_PLAIN).build();
     }
 
-    final String email = json.get("email").asText();
-    final String username = json.get("username").asText();
-    final String password = json.get("password").asText();
-    final String confirmPassword = json.get("confirmPassword").asText();
-    final String firstName = json.get("firstName").asText();
-    final String lastName = json.get("lastName").asText();
-    final String street = json.get("street").asText();
-    final String buildingNumber = json.get("buildingNumber").asText();
-    final String city = json.get("city").asText();
-    final String postcode = json.get("postcode").asText();
-    final String country = json.get("country").asText();
-    int unitNumber = 0;
-    if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
-      unitNumber = json.get("unitNumber").asInt();
+    if (!json.get("password").asText().equals(json.get("confirmPassword").asText())) {
+      throw new UnauthorizedException("The passwords don't match");
     }
 
-    User user = (User) userDAO.getUserFromEmail(email);
-    if (user != null) {
-      return Response.status(Status.CONFLICT).entity("This email is already in use")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-    user = (User) userDAO.getUserFromUsername(username);
-    if (user != null) {
-      return Response.status(Status.CONFLICT).entity("This username is already in use")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-
-    if (!password.equals(confirmPassword)) {
-      return Response.status(Status.UNAUTHORIZED).entity("The passwords don't match")
-          .type(MediaType.TEXT_PLAIN).build();
-    }
-
+    UserDTO user = userFactory.getUserDTO();
+    user.setEmail(json.get("email").asText());
+    user.setUsername(json.get("username").asText());
+    user.setPassword(json.get("password").asText());
+    user.setFirstName(json.get("firstName").asText());
+    user.setLastName(json.get("lastName").asText());
     Address address = addressFactory.getAddress();
-    address.setStreet(street);
-    address.setCity(city);
-    address.setBuildingNumber(buildingNumber);
-    address.setPostCode(postcode);
-    address.setCountry(country);
-    if (unitNumber != 0) {
-      address.setUnitNumber(unitNumber);
+    user.setAddress(address);
+    address.setStreet(json.get("street").asText());
+    address.setBuildingNumber(json.get("buildingNumber").asText());
+    address.setCity(json.get("city").asText());
+    address.setPostCode(json.get("postcode").asText());
+    address.setCountry(json.get("country").asText());
+    if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
+      address.setUnitNumber(json.get("unitNumber").asInt());
     }
 
-    int idAddress = addressDAO.addAddress(address);
-    address.setId(idAddress);
+    userUCC.registration(user);
 
-    UserDTO userDTO = userFactory.getUserDTO();
-    User userCast = (User) userDTO;
-    userCast.setEmail(email);
-    userCast.setUsername(username);
-    userCast.setFirstName(firstName);
-    userCast.setLastName(lastName);
-    userCast.setPassword(userCast.hashPassword(password));
-    userCast.setValidated(false);
-    userCast.setRegistrationDate(LocalDateTime.now());
-    userCast.setRole("client");
-    userCast.setAddress(address);
-
-    userDAO.addUser(userCast);
-    return createToken(userCast);
+    return createToken((User) user);
   }
 
   private boolean checkFieldsRegister(JsonNode json) {

@@ -138,7 +138,6 @@ const onRegister = async (e) => {
       undefined,
       user
     );
-    onRegister(userRegistered);
   }catch(err){
     console.error("LoginRegisterPage::onRegister", err);
     PrintError(err);

@@ -1,11 +1,15 @@
 package be.vinci.pae.services.dal;
 
-import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public interface DalServices {
 
-  PreparedStatement getPreparedStatement(String sql);
+  void getConnection(boolean autoCommit);
 
-  PreparedStatement getPreparedStatementWithGeneratedReturn(String sql);
+  void commitTransaction() throws SQLException;
+
+  void commitTransactionAndContinue() throws SQLException;
+
+  void rollbackTransaction();
 
 }

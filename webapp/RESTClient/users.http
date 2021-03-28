@@ -1,5 +1,5 @@
-@baseUrl = http://localhost:8080/users
-@baseAuthsUrl = http://localhost:8080/auths
+@baseUrl = http://localhost:8081/users
+@baseAuthsUrl = http://localhost:8081/auths
 
 
 ### FAIL
