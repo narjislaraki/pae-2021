@@ -77,7 +77,7 @@ const Navbar = () => {
     let logout = document.querySelector("#logout");
     logout.addEventListener("click", onLogout);
   }
-  let voir = document.getElementById("voir");
+  let voir = document.getElementById("all-furnitures-navbar");
   voir.addEventListener("click", onFurnitureListPage);
 
 };

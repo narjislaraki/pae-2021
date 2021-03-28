@@ -14,7 +14,7 @@ const routes = {
   "/error": ErrorPage,
 };
 
-let navBar = document.querySelector(".navbar");
+let navBar = document.querySelector(".navigationbar");
 let componentToRender;
 
 // dictionnary of routes
