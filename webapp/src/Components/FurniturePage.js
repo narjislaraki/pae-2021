@@ -13,7 +13,7 @@ let smallImg5 = document.getElementById("small-img5");
 
 
 
-const FurniturePage = (id) => {  
+async function FurniturePage (id) {  
     let page = document.querySelector("#page");
     let furniture;
     let type;
@@ -40,7 +40,7 @@ const FurniturePage = (id) => {
                     <img src="" alt="" id="big-img" class="main-image">
                 </div>
                 <div class="condensed small-caps" id="furniture-type">
-                    Intitule
+                    ${furniture.type}
                 </div>
                 <div class="condensed" id="furniture-description">
                     ${furniture.description}
@@ -74,10 +74,10 @@ function gallerySlides(smallImg){
     bigImg.src = smallImg.src;
 }
 
-smallImg1.addEventListener("mouseover", () => { gallerySlides(smallImg1); });
+/*smallImg1.addEventListener("mouseover", () => { gallerySlides(smallImg1); });
 smallImg2.addEventListener("mouseover", () => { gallerySlides(smallImg2); });
 smallImg3.addEventListener("mouseover", () => { gallerySlides(smallImg3); });
 smallImg4.addEventListener("mouseover", () => { gallerySlides(smallImg4); });
-smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });
+smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
 
-export default FurniturePage;
+export { FurniturePage};

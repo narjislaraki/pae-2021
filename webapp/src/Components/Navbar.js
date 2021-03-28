@@ -17,6 +17,9 @@ const Navbar = () => {
           <span class="btn btn-secondary dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             Types de meuble
           </span>
+          <button id="voir">
+            Voir tous les meubles
+          </button>
           <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
             <li><a class="dropdown-item" href="#">Type1</a></li>
             <li><a class="dropdown-item" href="#">Type2</a></li>
@@ -56,6 +59,9 @@ const Navbar = () => {
       <span class="btn btn-secondary dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
         Types de meuble
       </span>
+      <button id="voir">
+        Voir tous les meubles
+      </button>
       <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
         <li><a class="dropdown-item" href="#">Type1</a></li>
         <li><a class="dropdown-item" href="#">Type2</a></li>
@@ -71,9 +77,15 @@ const Navbar = () => {
     let logout = document.querySelector("#logout");
     logout.addEventListener("click", onLogout);
   }
+  let voir = document.getElementById("voir");
+  voir.addEventListener("click", onFurnitureListPage);
 
 };
 
+const onFurnitureListPage = (e) => {
+  e.preventDefault;
+  RedirectUrl("/furnitures");
+};
 
 const onLogout = (e) =>{
   e.preventDefault();

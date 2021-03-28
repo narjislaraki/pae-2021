@@ -3,12 +3,14 @@ import LoginRegisterPage from "./LoginRegisterPage.js";
 import LogoutComponent from "./LogoutComponent.js";
 import ErrorPage from "./ErrorPage.js";
 import ConfirmRegistrationPage from "./ConfirmRegistrationPage.js";
+import FurnitureListPage from "./FurnitureListPage.js";
 
 const routes = {
   "/": HomePage,
   "/login": LoginRegisterPage,
   "/logout": LogoutComponent,
   "/confirmRegistration": ConfirmRegistrationPage,
+  "/furnitures": FurnitureListPage,
   "/error": ErrorPage,
 };
 
