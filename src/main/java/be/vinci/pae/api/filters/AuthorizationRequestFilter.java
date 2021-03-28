@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-
+import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
@@ -28,6 +28,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   @Inject
   private UserDAO userDAO;
 
+  @Inject
+  private DalServices dalServices;
+
   @Override
   public void filter(ContainerRequestContext requestContext) {
     String token = requestContext.getHeaderString("Authorization");
@@ -41,6 +44,8 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       } catch (Exception e) {
         throw new WebApplicationException("Malformed token", e, Status.UNAUTHORIZED);
       }
+
+      dalServices.getConnection(true);
       requestContext.setProperty("user",
           this.userDAO.getUserFromId(decodedToken.getClaim("user").asInt()));
     }
