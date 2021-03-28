@@ -11,47 +11,58 @@ let smallImg3 = document.getElementById("small-img3");
 let smallImg4 = document.getElementById("small-img4");
 let smallImg5 = document.getElementById("small-img5");
 
-let furniturePage = 
-`
-<div class="furniture-container">
-            <div class="furniture-pictures">
-                <div class="furniture-small-images">
-                    <img id="small-img1" src="" alt="">
-                    <img id="small-img2" src="" alt="">
-                    <img id="small-img3" src="" alt="">
-                    <img id="small-img4" src="" alt="">
-                    <img id="small-img5" src="" alt="">
-                </div>
-                <img src="" alt="" id="big-img" class="main-image">
-            </div>
-            <div class="condensed small-caps" id="furniture-type">
-                Intitule
-            </div>
-            <div class="condensed" id="furniture-description">
-                descriptionnnnnnnnnnnn
-            </div>
-            <div class="furniture-price-inline">
-                <div id="furniture-price">50000</div>
-                <div class="currency">euro</div>
-            </div>
-        </div>
 
-        <div class="furniture-options">
-            <div class="option-duration condensed">
-                <div class="option-duration-text small-caps">Durée de l’option</div>
-                <button class="btn btn-light option-counter">- O +</button>
-            </div>
-            <div class="option-buttons">
-                <div class="btn btn-success condensed small-caps">Introduire une option</div>
-                <div class="option-days condensed small-caps">Vous avez deja reserve x jour(s)</div>
-            </div>
-            <div class="options-info">Attention,  vous ne pouvez cumuler que 5 jours d’option au total sur un meuble </div>
-        </div>
-`;
 
-const FurniturePage = () => {  
+const FurniturePage = (id) => {  
     let page = document.querySelector("#page");
-    page.innerHTML = furniturePage;
+    let furniture;
+    let type;
+    try{
+        furniture = await callAPI(
+          API_BASE_URL + "furniture/" + id,
+          "GET",
+          undefined,
+          undefined);
+    }catch(err){
+        console.error("FurniturePage::get furniture", err);
+        PrintError(err);
+    }
+    page.innerHTML = `
+    <div class="furniture-container">
+                <div class="furniture-pictures">
+                    <div class="furniture-small-images">
+                        <img id="small-img1" src="" alt="">
+                        <img id="small-img2" src="" alt="">
+                        <img id="small-img3" src="" alt="">
+                        <img id="small-img4" src="" alt="">
+                        <img id="small-img5" src="" alt="">
+                    </div>
+                    <img src="" alt="" id="big-img" class="main-image">
+                </div>
+                <div class="condensed small-caps" id="furniture-type">
+                    Intitule
+                </div>
+                <div class="condensed" id="furniture-description">
+                    ${furniture.description}
+                </div>
+                <div class="furniture-price-inline">
+                    <div id="furniture-price">${furniture.offeredSellingPrice}</div>
+                    <div class="currency">euro</div>
+                </div>
+            </div>
+    
+            <div class="furniture-options">
+                <div class="option-duration condensed">
+                    <div class="option-duration-text small-caps">Durée de l’option</div>
+                    <button class="btn btn-light option-counter">- O +</button>
+                </div>
+                <div class="option-buttons">
+                    <div class="btn btn-success condensed small-caps">Introduire une option</div>
+                    <div class="option-days condensed small-caps">Vous avez deja reserve x jour(s)</div>
+                </div>
+                <div class="options-info">Attention,  vous ne pouvez cumuler que 5 jours d’option au total sur un meuble </div>
+            </div>
+    `;
     
     const user = getUserSessionData();
 };

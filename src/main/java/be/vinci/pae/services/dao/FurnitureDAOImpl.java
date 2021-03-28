@@ -30,9 +30,10 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public FurnitureDTO getFurnitureById(int id) {
     FurnitureDTO furniture = null;
     try {
-      String sql = ("SELECT id_furniture, condition, description, purchase_price, pick_up_date,"
-          + " store_deposit, deposit_date, offered_selling_price, id_type, request_visit, seller"
-          + " FROM pae.furnitures WHERE id_furniture = ?;");
+      String sql =
+          ("SELECT id_furniture, condition, description, purchase_price, pick_up_date, store_deposit, deposit_date,"
+              + " offered_selling_price, id_type, request_visit, seller, favorite_photo"
+              + " FROM pae.furnitures WHERE id_furniture = ?;");
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
@@ -71,14 +72,16 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       furniture.setCondition(rs.getString(2));
       furniture.setDescription(rs.getString(3));
       furniture.setPurchasePrice(rs.getDouble(4));
-      furniture.setPickUpDate(rs.getTimestamp(5).toLocalDateTime());
+      furniture
+          .setPickUpDate(rs.getTimestamp(5) == null ? null : rs.getTimestamp(5).toLocalDateTime());
       furniture.setStoreDeposit(rs.getBoolean(6));
-      furniture.setDepositDate(rs.getTimestamp(7).toLocalDateTime());
+      furniture
+          .setDepositDate(rs.getTimestamp(7) == null ? null : rs.getTimestamp(7).toLocalDateTime());
       furniture.setOfferedSellingPrice(rs.getDouble(8));
-      furniture.setType(rs.getInt(9));
-      furniture.setRequestForVisit(rs.getInt(10));
-      furniture.setSeller(rs.getInt(11));
-      furniture.setFavouritePhoto(rs.getInt(12));
+      furniture.setTypeId(rs.getInt(9));
+      furniture.setRequestForVisitId(rs.getInt(10));
+      furniture.setSellerId(rs.getInt(11));
+      furniture.setFavouritePhotoId(rs.getInt(12));
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -168,15 +171,16 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public List<FurnitureDTO> SeeFurnitureList() {
+  public List<FurnitureDTO> getFurnitureList() {
     List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
     try {
       String sql =
           "SELECT id_furniture, condition, description, purchase_price, pick_up_date, store_deposit, deposit_date, "
               + "offered_selling_price, id_type, request_visit, seller, favorite_photo "
-              + "FROM pae.furnitures WHERE condition = ?;";
+              + "FROM pae.furnitures WHERE condition = ? OR condition = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, Condition.EN_VENTE.toString());
+      ps.setString(2, Condition.SOUS_OPTION.toString());
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
@@ -186,7 +190,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    System.out.println(list);
+    list.forEach((e) -> System.out.println(e.toString()));
     return list;
   }
 
@@ -196,6 +200,39 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       Map<Integer, List<String>> furnitures) {
     // TODO Auto-generated method stub
 
+  }
+
+  public String getTypeById(int id) {
+    String label = "";
+    try {
+      String sql = "SELECT label FROM pae.types_of_furnitures WHERE id_type = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, id);
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        label = rs.getString(1);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return label;
+  }
+
+  public String getFavouritePhotoById(int id) {
+    String favouritePhoto = "";
+    try {
+      String sql = "SELECT photo FROM pae.photos WHERE id_photo = ?";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, id);
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        favouritePhoto = rs.getString(1);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    System.out.println(favouritePhoto);
+    return favouritePhoto;
   }
 
 

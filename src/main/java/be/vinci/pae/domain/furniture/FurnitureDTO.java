@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
+import be.vinci.pae.domain.user.UserDTO;
 
 public interface FurnitureDTO {
 
@@ -21,53 +22,68 @@ public interface FurnitureDTO {
     }
   }
 
-  int getId();
+  public int getId();
 
-  void setId(int id);
+  public void setId(int id);
 
-  int getType();
+  public int getTypeId();
 
-  void setType(int type);
+  public void setTypeId(int typeId);
 
-  int getRequestForVisit();
+  public String getType();
 
-  void setRequestForVisit(int requestForVisit);
+  public void setType(String type);
 
-  int getSeller();
+  public int getRequestForVisitId();
 
-  void setSeller(int seller);
+  public void setRequestForVisitId(int requestForVisitId);
 
-  Condition getCondition();
+  public int getSellerId();
 
-  void setCondition(String condition);
+  public void setSellerId(int sellerId);
 
-  String getDescription();
+  public UserDTO getSeller();
 
-  void setDescription(String description);
+  public void setSeller(UserDTO seller);
 
-  double getPurchasePrice();
+  public Condition getCondition();
 
-  void setPurchasePrice(double purchasePrice);
+  public void setCondition(String condition);
 
-  LocalDateTime getPickUpDate();
+  public String getDescription();
 
-  void setPickUpDate(LocalDateTime pickUpDate);
+  public void setDescription(String description);
 
-  boolean isStoreDeposit();
+  public double getPurchasePrice();
 
-  void setStoreDeposit(boolean storeDeposit);
+  public void setPurchasePrice(double purchasePrice);
 
-  LocalDateTime getDepositDate();
+  public LocalDateTime getPickUpDate();
 
-  void setDepositDate(LocalDateTime depositDate);
+  public void setPickUpDate(LocalDateTime pickUpDate);
 
-  double getOfferedSellingPrice();
+  public boolean isStoreDeposit();
 
-  void setOfferedSellingPrice(double offeredSellingPrice);
+  public void setStoreDeposit(boolean storeDeposit);
 
-  int getFavouritePhoto();
+  public LocalDateTime getDepositDate();
 
-  void setFavouritePhoto(int favouritePhoto);
+  public void setDepositDate(LocalDateTime depositDate);
 
+  public double getOfferedSellingPrice();
+
+  public void setOfferedSellingPrice(double offeredSellingPrice);
+
+  public int getFavouritePhotoId();
+
+  public void setFavouritePhotoId(int favouritePhotoId);
+
+  public byte[] getFavouritePhoto();
+
+  public void setFavouritePhoto(byte[] favouritePhoto);
+
+  public void setFavouritePhoto(String encodedPhoto);
+
+  public String toString();
 
 }

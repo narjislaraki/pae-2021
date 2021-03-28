@@ -8,12 +8,16 @@ import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.FurnitureDAO;
+import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
 
 public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Inject
   private FurnitureDAO furnitureDao;
+
+  @Inject
+  private UserDAO userDAO;
 
   @Inject
   private DalServices dalServices;
@@ -97,11 +101,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new UnauthorizedException("You can't book more than : " + daysLeft + " days");
     } else {
       furnitureDao.introduceOption(optionTerm, idUser, idFurniture);
-
       dalServices.commitTransaction();
     }
-
-
   }
 
   @Override
@@ -115,10 +116,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
-  public List<FurnitureDTO> seeFurnitureList() {
-    // TODO Auto-generated method stub
-
-    return null;
+  public List<FurnitureDTO> getFurnitureList() {
+    dalServices.getConnection(true);
+    return furnitureDao.getFurnitureList();
   }
 
 
@@ -126,12 +126,20 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void introduceRequestForVisite(String timeSlot, Address address,
       Map<Integer, List<String>> furnitures) {
     // TODO Auto-generated method stub
-
   }
 
 
   public FurnitureDTO getFurnitureById(int id) {
-    return furnitureDao.getFurnitureById(id);
+    dalServices.getConnection(true);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
+    // dalServices.commitTransactionAndContinue();
+    furniture.setSeller(userDAO.getUserFromId(furniture.getSellerId()));
+    // TODO tests si présent?
+    furniture.setType(furnitureDao.getTypeById(furniture.getTypeId()));
+    furniture
+        .setFavouritePhoto(furnitureDao.getFavouritePhotoById(furniture.getFavouritePhotoId()));
+    // dalServices.commitTransaction();
+    return furniture;
   }
 
 

@@ -1,12 +1,11 @@
 package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-
+import java.util.Arrays;
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
 import com.fasterxml.jackson.annotation.JsonView;
-
-import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.api.exceptions.BusinessException;
+import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.views.Views;
 
 public class FurnitureImpl implements Furniture {
@@ -15,12 +14,16 @@ public class FurnitureImpl implements Furniture {
   private int id;
 
   // on peut faire comme pour adresse get avec un int
+  @JsonView(Views.Internal.class)
+  private int typeId;
   @JsonView(Views.Public.class)
-  private int type;
+  private String type;
   @JsonView(Views.Internal.class)
-  private int RequestForVisit;
+  private int requestForVisitId;
   @JsonView(Views.Internal.class)
-  private int seller;
+  private int sellerId;
+  @JsonView(Views.Private.class)
+  private UserDTO seller;
   @JsonView(Views.Internal.class)
   private Condition condition;
   @JsonView(Views.Public.class)
@@ -32,11 +35,14 @@ public class FurnitureImpl implements Furniture {
   @JsonView(Views.Internal.class)
   private boolean storeDeposit;
   @JsonView(Views.Internal.class)
-  private LocalDateTime DepositDate;
+  private LocalDateTime depositDate;
   @JsonView(Views.Public.class)
   private double offeredSellingPrice;
   @JsonView(Views.Internal.class)
-  private int favouritePhoto;
+  private int favouritePhotoId;
+  @JsonView(Views.Public.class)
+  private byte[] favouritePhoto;
+
 
   public int getId() {
     return id;
@@ -46,27 +52,43 @@ public class FurnitureImpl implements Furniture {
     this.id = id;
   }
 
-  public int getType() {
+  public int getTypeId() {
+    return typeId;
+  }
+
+  public void setTypeId(int typeId) {
+    this.typeId = typeId;
+  }
+
+  public String getType() {
     return type;
   }
 
-  public void setType(int type) {
+  public void setType(String type) {
     this.type = type;
   }
 
-  public int getRequestForVisit() {
-    return RequestForVisit;
+  public int getRequestForVisitId() {
+    return requestForVisitId;
   }
 
-  public void setRequestForVisit(int requestForVisit) {
-    RequestForVisit = requestForVisit;
+  public void setRequestForVisitId(int requestForVisitId) {
+    this.requestForVisitId = requestForVisitId;
   }
 
-  public int getSeller() {
+  public int getSellerId() {
+    return sellerId;
+  }
+
+  public void setSellerId(int sellerId) {
+    this.sellerId = sellerId;
+  }
+
+  public UserDTO getSeller() {
     return seller;
   }
 
-  public void setSeller(int seller) {
+  public void setSeller(UserDTO seller) {
     this.seller = seller;
   }
 
@@ -114,26 +136,33 @@ public class FurnitureImpl implements Furniture {
         this.condition = Condition.RETIRE;
         break;
       default:
-        throw new IllegalArgumentException();
+        throw new BusinessException("Set condition failed");
     }
   }
-
 
   public String getDescription() {
     return description;
   }
 
+
+
   public void setDescription(String description) {
     this.description = description;
   }
+
+
 
   public double getPurchasePrice() {
     return purchasePrice;
   }
 
+
+
   public void setPurchasePrice(double purchasePrice) {
     this.purchasePrice = purchasePrice;
   }
+
+
 
   public LocalDateTime getPickUpDate() {
     return pickUpDate;
@@ -152,11 +181,11 @@ public class FurnitureImpl implements Furniture {
   }
 
   public LocalDateTime getDepositDate() {
-    return DepositDate;
+    return depositDate;
   }
 
   public void setDepositDate(LocalDateTime depositDate) {
-    DepositDate = depositDate;
+    this.depositDate = depositDate;
   }
 
   public double getOfferedSellingPrice() {
@@ -167,25 +196,35 @@ public class FurnitureImpl implements Furniture {
     this.offeredSellingPrice = offeredSellingPrice;
   }
 
-  public int getFavouritePhoto() {
+  public int getFavouritePhotoId() {
+    return favouritePhotoId;
+  }
+
+  public void setFavouritePhotoId(int favouritePhotoId) {
+    this.favouritePhotoId = favouritePhotoId;
+  }
+
+  public byte[] getFavouritePhoto() {
     return favouritePhoto;
   }
 
-  public void setFavouritePhoto(int favouritePhoto) {
+  public void setFavouritePhoto(byte[] favouritePhoto) {
     this.favouritePhoto = favouritePhoto;
   }
 
-  public void introduceOption(int numberOfDay) {
-
+  @Override
+  public String toString() {
+    return "FurnitureImpl [id=" + id + ", typeId=" + typeId + ", type=" + type
+        + ", requestForVisitId=" + requestForVisitId + ", sellerId=" + sellerId + ", seller="
+        + seller + ", condition=" + condition + ", description=" + description + ", purchasePrice="
+        + purchasePrice + ", pickUpDate=" + pickUpDate + ", storeDeposit=" + storeDeposit
+        + ", depositDate=" + depositDate + ", offeredSellingPrice=" + offeredSellingPrice
+        + ", favouritePhotoId=" + favouritePhotoId + ", favouritePhoto="
+        + Arrays.toString(favouritePhoto) + "]";
   }
 
-  public void cancelOption(String cancellationReason) {
-
-  }
-
-  public void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures) {
-
+  public void setFavouritePhoto(String encodedPhoto) {
+    this.favouritePhoto = Base64.decode(encodedPhoto);
   }
 
 }
