@@ -1,6 +1,9 @@
 package be.vinci.pae.utils;
 
+import java.util.logging.Logger;
+
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
 import be.vinci.pae.domain.user.UserFactory;
@@ -29,5 +32,6 @@ public class ApplicationBinder extends AbstractBinder {
     bind(AddressDAOImpl.class).to(AddressDAO.class).in(Singleton.class);
     bind(DalServicesImpl.class).to(DalServices.class).in(Singleton.class);
     bind(DalServicesImpl.class).to(DalBackendServices.class).in(Singleton.class);
+    bind(APILogger.getLogger()).to(Logger.class);
   }
 }

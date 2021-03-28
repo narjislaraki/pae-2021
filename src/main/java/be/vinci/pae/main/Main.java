@@ -9,17 +9,14 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.dao.UserDAOImpl;
 import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
 public class Main {
 
-  static UserDAO ds = new UserDAOImpl();
-  static String env;
-  static Logger logger;
+  private static String env;
+  private static Logger logger;
 
   /**
    * Main method.
