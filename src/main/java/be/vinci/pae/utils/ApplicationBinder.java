@@ -10,6 +10,7 @@ import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.domain.user.UserUCCImpl;
+import be.vinci.pae.services.dal.DalBackendServices;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dal.DalServicesImpl;
 import be.vinci.pae.services.dao.AddressDAO;
