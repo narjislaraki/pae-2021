@@ -1,4 +1,4 @@
-let navBar = document.querySelector(".navbar");
+let navBar = document.querySelector(".navigationbar");
 import {removeSessionData, currentUser, resetCurrentUser} from "../utils/session.js";
 import { RedirectUrl } from "./Router.js";
 // destructuring assignment
@@ -13,17 +13,17 @@ const Navbar = () => {
           <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
           <img class="logo-writing" src="assets/lvs.svg" alt="logo">
         </div>
+        <button id="all-furnitures-navbar" class="condensed small-caps">
+          Voir tous les meubles
+        </button>
         <div id="category" class="dropdown">
-          <span class="btn btn-secondary dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class=" dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
             Types de meuble
           </span>
-          <button id="voir">
-            Voir tous les meubles
-          </button>
           <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#">Type1</a></li>
-            <li><a class="dropdown-item" href="#">Type2</a></li>
-            <li><a class="dropdown-item" href="#">Type3</a></li>
+            <li><a class="dropdown-toggle-item" href="#">Type1</a></li>
+            <li><a class="dropdown-toggle-item" href="#">Type2</a></li>
+            <li><a class="dropdown-toggle-item" href="#">Type3</a></li>
           </ul>
         </div>
 
@@ -55,17 +55,17 @@ const Navbar = () => {
       <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
       <img class="logo-writing" src="assets/lvs.svg" alt="logo">
     </div>
+    <button id="all-furnitures-navbar" class="condensed small-caps">
+        Voir tous les meubles
+    </button>
     <div id="category" class="dropdown">
-      <span class="btn btn-secondary dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      <span class=" dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
         Types de meuble
       </span>
-      <button id="voir">
-        Voir tous les meubles
-      </button>
       <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-item" href="#">Type1</a></li>
-        <li><a class="dropdown-item" href="#">Type2</a></li>
-        <li><a class="dropdown-item" href="#">Type3</a></li>
+        <li><a class="dropdown-toggle-item" href="#">Type1</a></li>
+        <li><a class="dropdown-toggle-item" href="#">Type2</a></li>
+        <li><a class="dropdown-toggle-item" href="#">Type3</a></li>
       </ul>
     </div>
 
