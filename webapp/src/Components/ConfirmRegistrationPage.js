@@ -4,7 +4,7 @@ import {getUserSessionData} from "../utils/session.js";
 let userData;
 let adresse = ``; 
 const API_BASE_URL = "/api/users/";
-let confirmRegistrationPage = `<h4 id="pageTitle">Confirmer l'inscription</h4>`;
+let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer l'inscription</div>`;
 
 const ConfirmRegistrationPage = async () => {
   userData = getUserSessionData();
