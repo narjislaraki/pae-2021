@@ -35,6 +35,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       dalServices.commitTransaction();
 
     } else {
+      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
@@ -52,6 +53,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       dalServices.commitTransaction();
 
     } else {
+      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
@@ -69,17 +71,21 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       dalServices.commitTransaction();
 
     } else {
+      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
 
   @Override
   public void withdrawSale(int id) {
+    dalServices.getConnection(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
 
     if (furniture.getCondition().equals(Condition.EN_VENTE)) {
       furnitureDao.withdrawSale(id);
+      dalServices.commitTransaction();
     } else {
+      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
@@ -95,8 +101,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.commitTransactionAndContinue();
 
     if (nbrDaysActually == 5) {
+      dalServices.rollbackTransaction();
       throw new UnauthorizedException("You have already reached the maximum number of days");
     } else if (nbrDaysActually + optionTerm > 5) {
+      dalServices.rollbackTransaction();
       int daysLeft = 5 - nbrDaysActually;
       throw new UnauthorizedException("You can't book more than : " + daysLeft + " days");
     } else {

@@ -3,7 +3,7 @@ import PrintError from "./PrintError.js";
 import {getUserSessionData} from "../utils/session.js";
 let userData;
 let adresse = ``; 
-const API_BASE_URL = "api/users/";
+const API_BASE_URL = "/api/users/";
 let confirmRegistrationPage = `<h4 id="pageTitle">Confirmer l'inscription</h4>`;
 
 const ConfirmRegistrationPage = async () => {
@@ -70,6 +70,7 @@ const onUnregisteredUsersList = (data) =>{
 }
 
 const onAccept = async (e) => {
+  console.log(e);
   let id = e.srcElement.dataset.id;
   let role = "client";
 

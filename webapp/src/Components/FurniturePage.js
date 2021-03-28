@@ -3,7 +3,7 @@ import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
-const API_BASE_URL = "/api/furnitures/";
+const API_BASE_URL = "api/furnitures/";
 
 let smallImg1 = document.getElementById("small-img1");
 let smallImg2 = document.getElementById("small-img2");
@@ -80,4 +80,4 @@ smallImg3.addEventListener("mouseover", () => { gallerySlides(smallImg3); });
 smallImg4.addEventListener("mouseover", () => { gallerySlides(smallImg4); });
 smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
 
-export { FurniturePage};
+export { FurniturePage };

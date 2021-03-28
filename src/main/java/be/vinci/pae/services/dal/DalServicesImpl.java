@@ -5,10 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
-
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.utils.Config;
 
@@ -38,9 +36,10 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     properties.setProperty("url", url);
     properties.setProperty("username", user);
     properties.setProperty("password", password);
-    properties.setProperty("maxActive", String.valueOf(connectionQuantity));
-    properties.setProperty("maxIdle", "10");
-    properties.setProperty("maxWait", "30000");
+    // properties.setProperty("maxActive", String.valueOf(connectionQuantity));
+    // properties.setProperty("maxIdle", "10");
+    // properties.setProperty("maxWait", "30000");
+    properties.setProperty("maxTotal", String.valueOf(connectionQuantity));
 
     try {
       ds = BasicDataSourceFactory.createDataSource(properties);

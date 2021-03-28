@@ -17,14 +17,14 @@ import jakarta.ws.rs.core.MediaType;
 
 @Singleton
 @Path("/furnitures")
-public class FurnitureRessource {
+public class FurnitureResource {
 
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Inject
   private FurnitureUCC furnitureUCC;
 
-  public FurnitureRessource() {
+  public FurnitureResource() {
     jsonMapper.findAndRegisterModules();
     jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
   }

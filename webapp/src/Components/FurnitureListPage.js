@@ -4,7 +4,7 @@ import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import { FurniturePage } from "./FurniturePage.js";
-const API_BASE_URL = "api/furnitures/";
+const API_BASE_URL = "/api/furnitures/";
 
 let furnitureListTab;
 
@@ -33,30 +33,42 @@ async function FurnitureListPage(){
       PrintError(err);
     }
     page.innerHTML = furnitureListPage;
-    furnitures.forEach(element => {
+    let data = 
+    furnitures.map((element) => {
         page.innerHTML += 
         `
-        <div class="item-card">
+        <div data-id="${element.id}" class="item-card furniture">
             <div class="item-img-container">
                 <img src="${element.favouritePhoto}" alt="" class="item-img">
-                <h3 class="item-img-hover condensed">Voir<br>article</h3>
+                <h3 data-id="${element.id}" class="item-img-hover condensed">Voir<br>article</h3>
             </div>
             <div class="item-name">${element.description}</div>
             <div class="item-price condensed">${element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
         </div>
     `;
+    
     });
 
 
     //close the div
     page.innerHTML += `</div>`;
+    let list = document.getElementsByClassName("furniture");
+    console.log(list, "ici");
+    Array.from(list).forEach((e) => {
+      e.addEventListener("click", onFurniture);
+    });
+
     const user = getUserSessionData();
   };
 
-  //return a list of all the buyable furnitures
-  function getBuyableFurnituresList(){
+  const onFurniture= (e) => {
+    console.log(e);
+    let id = e.srcElement.dataset.id;
+    console.log(id);
+    FurniturePage(id);
+  }; 
+  
 
-  }
 
 
   export default FurnitureListPage;
