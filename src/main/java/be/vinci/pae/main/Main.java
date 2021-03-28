@@ -15,8 +15,8 @@ import be.vinci.pae.utils.Config;
 
 public class Main {
 
-  static private String env;
-  static private Logger logger;
+  private static String env;
+  private static Logger logger;
 
   /**
    * Main method.
