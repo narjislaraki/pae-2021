@@ -92,13 +92,13 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Override
   public void setCondition(Furniture furniture, Condition condition) {
     try {
-      String sql = "UPDATE pae.furnitures f SET f.condition = ? WHERE f.id_furniture = ? ;";
+      String sql = "UPDATE pae.furnitures SET condition = ? WHERE id_furniture = ? ;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, condition.toString());
       ps.setInt(2, furniture.getId());
       ps.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
   }
 
@@ -152,7 +152,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public void indicateOfferedForSale(Furniture furniture, double price) {
     try {
       String sql =
-          "UPDATE pae.furnitures f SET f.condition = ?, f.offered_selling_price = ? WHERE f.id_furniture = ? ;";
+          "UPDATE pae.furnitures SET condition = ?, offered_selling_price = ? WHERE id_furniture = ? ;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, Condition.EN_VENTE.toString());
       ps.setDouble(2, price);
@@ -177,10 +177,10 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       String sql =
           "SELECT id_furniture, condition, description, purchase_price, pick_up_date, store_deposit, deposit_date, "
               + "offered_selling_price, id_type, request_visit, seller, favorite_photo "
-              + "FROM pae.furnitures WHERE condition = ? OR condition = ?;";
+              + "FROM pae.furnitures;"; /* WHERE condition = ? OR condition = ?;"; */
       ps = dalBackendService.getPreparedStatement(sql);
-      ps.setString(1, Condition.EN_VENTE.toString());
-      ps.setString(2, Condition.SOUS_OPTION.toString());
+      // ps.setString(1, Condition.EN_VENTE.toString());
+      // ps.setString(2, Condition.SOUS_OPTION.toString());
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
@@ -234,7 +234,4 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     System.out.println(favouritePhoto);
     return favouritePhoto;
   }
-
-
-
 }

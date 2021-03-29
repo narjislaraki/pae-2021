@@ -1,4 +1,4 @@
-import { getUserSessionData} from "../utils/session.js";
+import { getUserSessionData, currentUser} from "../utils/session.js";
 import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
@@ -11,11 +11,12 @@ let smallImg3 = document.getElementById("small-img3");
 let smallImg4 = document.getElementById("small-img4");
 let smallImg5 = document.getElementById("small-img5");
 
-
+let furniture;
+let userData;
 
 async function FurniturePage (id) {  
     let page = document.querySelector("#page");
-    let furniture;
+    userData = getUserSessionData();
     let type;
     try{
         furniture = await callAPI(
@@ -27,44 +28,262 @@ async function FurniturePage (id) {
         console.error("FurniturePage::get furniture", err);
         PrintError(err);
     }
-    page.innerHTML = `
-    <div class="furniture-container">
-                <div class="furniture-pictures">
-                    <div class="furniture-small-images">
-                        <img id="small-img1" src="" alt="">
-                        <img id="small-img2" src="" alt="">
-                        <img id="small-img3" src="" alt="">
-                        <img id="small-img4" src="" alt="">
-                        <img id="small-img5" src="" alt="">
+    if (currentUser == null){
+        page.innerHTML = `
+        <div class="furniture-container">
+                    <div class="furniture-pictures">
+                        <div class="furniture-small-images">
+                            <img id="small-img1" src="" alt="">
+                            <img id="small-img2" src="" alt="">
+                            <img id="small-img3" src="" alt="">
+                            <img id="small-img4" src="" alt="">
+                            <img id="small-img5" src="" alt="">
+                        </div>
+                        <img src="" alt="" id="big-img" class="main-image">
                     </div>
-                    <img src="" alt="" id="big-img" class="main-image">
+                    <div class="condensed small-caps" id="furniture-type">
+                        ${furniture.type}
+                    </div>
+                    <div class="condensed" id="furniture-description">
+                        ${furniture.description}
+                    </div>
+                    <div class="furniture-price-inline">
+                        <div id="furniture-price">${furniture.offeredSellingPrice}</div>
+                        <div class="currency">euro</div>
+                    </div>
                 </div>
-                <div class="condensed small-caps" id="furniture-type">
-                    ${furniture.type}
+        `;
+    }else if (currentUser.role == "CLIENT"){
+        page.innerHTML = `
+        <div class="furniture-container">
+                    <div class="furniture-pictures">
+                        <div class="furniture-small-images">
+                            <img id="small-img1" src="" alt="">
+                            <img id="small-img2" src="" alt="">
+                            <img id="small-img3" src="" alt="">
+                            <img id="small-img4" src="" alt="">
+                            <img id="small-img5" src="" alt="">
+                        </div>
+                        <img src="" alt="" id="big-img" class="main-image">
+                    </div>
+                    <div class="condensed small-caps" id="furniture-type">
+                        ${furniture.type}
+                    </div>
+                    <div class="condensed" id="furniture-description">
+                        ${furniture.description}
+                    </div>
+                    <div class="furniture-price-inline">
+                        <div id="furniture-price">${furniture.offeredSellingPrice}</div>
+                        <div class="currency">euro</div>
+                    </div>
+        </div>
+        
+                <div class="furniture-options">
+                    <div class="option-duration condensed">
+                        <div class="option-duration-text small-caps">Durée de l’option</div>
+                        <button class="btn btn-light option-counter">- O +</button>
+                    </div>
+                    <div class="option-buttons">
+                        <div class="btn btn-success condensed small-caps">Introduire une option</div>
+                        <div class="option-days condensed small-caps">Vous avez deja reserve x jour(s)</div>
+                    </div>
+                    <div class="options-info">Attention,  vous ne pouvez cumuler que 5 jours d’option au total sur un meuble </div>
                 </div>
-                <div class="condensed" id="furniture-description">
-                    ${furniture.description}
+        `;
+    }else if (currentUser.role == "ADMIN"){
+        page.innerHTML = `
+        <div class="furniture-container">
+                    <div class="furniture-pictures">
+                        <div class="furniture-small-images">
+                            <img id="small-img1" src="" alt="">
+                            <img id="small-img2" src="" alt="">
+                            <img id="small-img3" src="" alt="">
+                            <img id="small-img4" src="" alt="">
+                            <img id="small-img5" src="" alt="">
+                        </div>
+                        <img src="" alt="" id="big-img" class="main-image">
+                    </div>
+                    <div class="condensed small-caps" id="furniture-type">
+                        ${furniture.type}
+                    </div>
+                    <div class="condensed" id="furniture-description">
+                        ${furniture.description}
+                    </div>`;
+                    
+        if(furniture.condition != "DEPOSE_EN_MAGASIN"){
+            page.innerHTML += `<div class="furniture-price-inline" >
+                        <div id="furniture-price">${furniture.offeredSellingPrice}</div>
+                        <div class="currency">euro</div>
+                    </div>
                 </div>
-                <div class="furniture-price-inline">
-                    <div id="furniture-price">${furniture.offeredSellingPrice}</div>
-                    <div class="currency">euro</div>
+            `;    
+        }else{
+            page.innerHTML += `<div class="furniture-price-inline" >
+                        <input type="number"  min="0" id="furniture-price" required>Entrez un prix de vente</div>
+                        <div class="currency">euro</div>
+                    </div>
+                </div>
+            `;    
+        }
+                    
+    }
+
+    let menuDeroulant = '';
+    console.log(furniture.condition);
+    if (furniture.condition == "ACHETE"){
+        menuDeroulant = `
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${furniture.condition}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button id="buttonEnRestauration" class="dropdown-item" type="button">En restauration</button>
+                    <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
+                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
                 </div>
             </div>
-    
-            <div class="furniture-options">
-                <div class="option-duration condensed">
-                    <div class="option-duration-text small-caps">Durée de l’option</div>
-                    <button class="btn btn-light option-counter">- O +</button>
+        `;
+    }else if (furniture.condition == "EN_RESTAURATION"){
+        menuDeroulant = `
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${furniture.condition}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                    <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
+                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
                 </div>
-                <div class="option-buttons">
-                    <div class="btn btn-success condensed small-caps">Introduire une option</div>
-                    <div class="option-days condensed small-caps">Vous avez deja reserve x jour(s)</div>
-                </div>
-                <div class="options-info">Attention,  vous ne pouvez cumuler que 5 jours d’option au total sur un meuble </div>
             </div>
-    `;
+        `;
+    }else if (furniture.condition == "DEPOSE_EN_MAGASIN"){
+        menuDeroulant = `
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${furniture.condition}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                    <button id="buttonEnVente" class="dropdown-item" type="button">En vente</button>
+                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                </div>
+            </div>
+        `;
+    }else if (furniture.condition == "EN_VENTE"){
+        menuDeroulant = `
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${furniture.condition}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                    <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                </div>
+            </div>
+        `;
+    }else if (furniture.condition == "RETIRE"){
+        menuDeroulant = `
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${furniture.condition}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                </div>
+            </div>
+        `;
+    }
+    page.innerHTML += menuDeroulant;
+    let buttonEnRestauration = document.getElementById("buttonEnRestauration");
+    let buttonMagasin = document.getElementById("buttonMagasin");
+    let buttonEnVente = document.getElementById("buttonEnVente");
+    let buttonRetire = document.getElementById("buttonRetire");
+    buttonEnRestauration.addEventListener("click", onWorkShop);
+    buttonMagasin.addEventListener("click", onDropOfStore);
+    buttonEnVente.addEventListener("click", onOfferedForSale);
+    buttonRetire.addEventListener("click", onWithdrawSale)
+        
     
-    const user = getUserSessionData();
+    
+};
+
+const onWorkShop = async() =>{
+    let id = furniture.id;
+    console.log(userData.token);
+    try{
+      await callAPI(
+        API_BASE_URL + "furniture/" + id + '/workShop',
+        "PATCH",
+        userData.token,
+        undefined,
+      );
+    }catch(err){
+      console.error("FurniturePage::onWorkShop", err);
+      PrintError(err);
+    }
+    FurniturePage(id);
+  };
+
+
+const onDropOfStore = async() =>{
+    let id = furniture.id;
+    console.log(userData.token);
+    try{
+      await callAPI(
+        API_BASE_URL + "furniture/" + id + '/dropOfStore',
+        "PATCH",
+        userData.token,
+        undefined,
+      );
+    }catch(err){
+      console.error("FurniturePage::dropOfStore", err);
+      PrintError(err);
+    }
+    FurniturePage(id);
+  };
+
+const onOfferedForSale = async() =>{
+    let id = furniture.id;
+    let price = document.getElementById("furniture-price").value;
+    
+    try{
+      await callAPI(
+        API_BASE_URL + "furniture/" + id + '/offeredForSale/' + price,
+        "PATCH",
+        userData.token,
+        undefined,
+      );
+    }catch(err){
+      console.error("FurniturePage::offeredForSale", err);
+      PrintError(err);
+    }
+    FurniturePage(id);
+  };
+
+
+const onWithdrawSale = async() =>{
+  let id = furniture.id;
+  console.log(userData.token);
+  try{
+    await callAPI(
+      API_BASE_URL + "furniture/" + id + '/withdrawSale',
+      "PATCH",
+      userData.token,
+      undefined,
+    );
+  }catch(err){
+    console.error("FurniturePage::onWithdrawSale", err);
+    PrintError(err);
+  }
+  FurniturePage(id);
 };
 
 

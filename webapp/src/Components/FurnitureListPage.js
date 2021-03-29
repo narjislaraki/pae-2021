@@ -35,6 +35,7 @@ async function FurnitureListPage(){
     page.innerHTML = furnitureListPage;
     let data = 
     furnitures.map((element) => {
+      console.log(element);
         page.innerHTML += 
         `
         <div data-id="${element.id}" class="item-card furniture">
@@ -51,7 +52,7 @@ async function FurnitureListPage(){
 
 
     //close the div
-    page.innerHTML += `</div>`;
+    page.innerHTML += `<div class="white-space"></div></div>`;
     let list = document.getElementsByClassName("furniture");
     console.log(list, "ici");
     Array.from(list).forEach((e) => {

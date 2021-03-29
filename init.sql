@@ -123,7 +123,7 @@ INSERT INTO pae.types_of_furnitures VALUES
 INSERT INTO pae.furnitures VALUES
 		(default, 'acheté', 'Bahut profond d''une largeur de 112cm et d''une hauteur de 147cm.', 200.00, '2021-03-30', null, null, null, 1, 1, null, null),
 		(default, 'acheté', 'Large bureau 1m87 cm, 2 colonnes de tiroirs', 150.00, '2021-03-30', null, null, null, 2, 1, null, null),
-		(default, 'annulé', 'Table jardin en bois brut', null, null, null, null, null, 3, 2, null, null),
+		(default, 'refusé', 'Table jardin en bois brut', null, null, null, null, null, 3, 2, null, null),
 		(default, 'acheté', 'Table en chêne, pieds en fer forgé', 140.00, '2021-03-29', null, null, null, 3, 3, null, null),
 		(default, 'acheté', 'Secrétaire en acajou, marqueterie', 90.00, '2021-03-29', null, null, null, 4, 3, null, null),
 		-- test perso

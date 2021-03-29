@@ -2,7 +2,6 @@ package be.vinci.pae.domain.furniture;
 
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.domain.address.Address;
@@ -27,14 +26,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void indicateSentToWorkshop(int id) {
     dalServices.getConnection(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
-
-    dalServices.commitTransactionAndContinue();
-
     if (furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateSentToWorkshop(id);
-
       dalServices.commitTransaction();
-
     } else {
       dalServices.rollbackTransaction();
       throw new BusinessException("State error");
@@ -45,14 +39,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void indicateDropOfStore(int id) {
     dalServices.getConnection(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
-
-    dalServices.commitTransactionAndContinue();
-
     if (furniture.getCondition().equals(Condition.EN_RESTAURATION)
         || furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateDropOfStore(id);
       dalServices.commitTransaction();
-
     } else {
       dalServices.rollbackTransaction();
       throw new BusinessException("State error");
@@ -63,14 +53,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void indicateOfferedForSale(int id, double price) {
     dalServices.getConnection(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
-
-    dalServices.commitTransactionAndContinue();
-
     if (price > 0 && furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.indicateOfferedForSale(furniture, price);
-
       dalServices.commitTransaction();
-
     } else {
       dalServices.rollbackTransaction();
       throw new BusinessException("State error");
@@ -81,7 +66,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void withdrawSale(int id) {
     dalServices.getConnection(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
-
     if (furniture.getCondition().equals(Condition.EN_VENTE)) {
       furnitureDao.withdrawSale(id);
       dalServices.commitTransaction();
@@ -98,9 +82,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     }
     dalServices.getConnection(false);
     int nbrDaysActually = furnitureDao.getNumberOfReservation(idFurniture, idUser);
-
-    dalServices.commitTransactionAndContinue();
-
     if (nbrDaysActually == 5) {
       dalServices.rollbackTransaction();
       throw new UnauthorizedException("You have already reached the maximum number of days");
@@ -129,6 +110,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.getConnection(false);
     List<FurnitureDTO> furnitureList = furnitureDao.getFurnitureList();
     dalServices.commitTransaction();
+    System.out.println(furnitureList);
     return furnitureList;
   }
 
