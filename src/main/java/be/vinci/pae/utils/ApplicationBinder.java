@@ -1,6 +1,7 @@
 package be.vinci.pae.utils;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -33,8 +34,8 @@ public class ApplicationBinder extends AbstractBinder {
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(AddressFactoryImpl.class).to(AddressFactory.class).in(Singleton.class);
     bind(AddressDAOImpl.class).to(AddressDAO.class).in(Singleton.class);
-    bind(DalServicesImpl.class).to(DalServices.class).in(Singleton.class);
-    bind(DalServicesImpl.class).to(DalBackendServices.class).in(Singleton.class);
+    bind(DalServicesImpl.class).to(DalServices.class).to(DalBackendServices.class)
+        .in(Singleton.class);
     bind(FurnitureDAOImpl.class).to(FurnitureDAO.class).in(Singleton.class);
     bind(FurnitureUCCImpl.class).to(FurnitureUCC.class).in(Singleton.class);
     bind(FurnitureFactoryImpl.class).to(FurnitureFactory.class).in(Singleton.class);

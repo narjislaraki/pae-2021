@@ -212,16 +212,10 @@ public class UserDAOImpl implements UserDAO {
       String sql = "DELETE FROM pae.users WHERE id_user = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ResultSet rs = ps.executeQuery();
-
-      if (rs.next()) {
-        return true;
-      }
-
+      return ps.executeUpdate() == 1 ? true : false;
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return false;
   }
 
   @Override

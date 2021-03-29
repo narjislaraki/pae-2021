@@ -39,8 +39,8 @@ POST {{baseAuthsUrl}}/login
 Content-Type: application/json
 
 {
-    "email":"valid@email.com",
-    "password":"1234"
+    "email":"bert.satcho@gmail.be",
+    "password":"Jaune;10."
 }
 
 ### SUCCESS

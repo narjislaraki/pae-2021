@@ -25,9 +25,9 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO connection(String email, String password) {
-    dalServices.getConnection(true);
+    dalServices.getConnection(false);
     User user = (User) userDAO.getUserFromEmail(email);
-
+    dalServices.commitTransaction();
     if (user == null) {
       throw new UnauthorizedException("Wrong credentials");
     } else if (!user.isValidated()) {
@@ -68,8 +68,10 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public List<UserDTO> getUnvalidatedUsers() {
-    dalServices.getConnection(true);
-    return userDAO.getUnvalidatedUsers();
+    dalServices.getConnection(false);
+    List<UserDTO> list = userDAO.getUnvalidatedUsers();
+    dalServices.commitTransaction();
+    return list;
   }
 
   @Override
@@ -81,20 +83,27 @@ public class UserUCCImpl implements UserUCC {
     if (id < 0) {
       throw new BusinessException("Invalid id");
     }
-    dalServices.getConnection(true);
+    dalServices.getConnection(false);
     userDAO.accept(id, role);
+    dalServices.commitTransaction();
   }
 
   @Override
   public boolean deleteUser(int id) {
+    dalServices.getConnection(false);
     if (!userDAO.deleteUser(id)) {
+      dalServices.rollbackTransaction();
       throw new BusinessException("Invalid id");
     }
+    dalServices.commitTransaction();
     return true;
   }
 
   public UserDTO getUserFromId(int id) {
-    return userDAO.getUserFromId(id);
+    dalServices.getConnection(false);
+    UserDTO user = userDAO.getUserFromId(id);
+    dalServices.commitTransaction();
+    return user;
   }
 
 }

@@ -38,12 +38,12 @@ async function FurnitureListPage(){
         page.innerHTML += 
         `
         <div data-id="${element.id}" class="item-card furniture">
-            <div class="item-img-container">
-                <img src="${element.favouritePhoto}" alt="" class="item-img">
+            <div data-id="${element.id}" class="item-img-container">
+                <img data-id="${element.id}" src="${element.favouritePhoto}" alt="" class="item-img">
                 <h3 data-id="${element.id}" class="item-img-hover condensed">Voir<br>article</h3>
             </div>
-            <div class="item-name">${element.description}</div>
-            <div class="item-price condensed">${element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
+            <div data-id="${element.id}" class="item-name">${element.description}</div>
+            <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
         </div>
     `;
     

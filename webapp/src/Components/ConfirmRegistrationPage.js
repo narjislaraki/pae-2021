@@ -85,7 +85,7 @@ const onAccept = async (e) => {
     await callAPI(
       API_BASE_URL + "user/" + id + "/accept/" + role,
       "PATCH",
-      undefined,
+      userData.token,
       undefined
     );
   }catch(err){
@@ -97,11 +97,12 @@ const onAccept = async (e) => {
 
 const onRefuse = async (e) => {
   let id = e.srcElement.dataset.id;
+  console.log(id);
   try{
     await callAPI(
       API_BASE_URL + "user/" + id,
       "DELETE",
-      undefined,
+      userData.token,
       undefined,
     );
   }catch(err){

@@ -2,6 +2,7 @@ package be.vinci.pae.domain.furniture;
 
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.domain.address.Address;
@@ -120,13 +121,15 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     }
     dalServices.getConnection(true);
     furnitureDao.cancelOption(cancellationReason, idOption);
-
+    dalServices.commitTransaction();
   }
 
   @Override
   public List<FurnitureDTO> getFurnitureList() {
-    dalServices.getConnection(true);
-    return furnitureDao.getFurnitureList();
+    dalServices.getConnection(false);
+    List<FurnitureDTO> furnitureList = furnitureDao.getFurnitureList();
+    dalServices.commitTransaction();
+    return furnitureList;
   }
 
 
@@ -138,7 +141,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
 
   public FurnitureDTO getFurnitureById(int id) {
-    dalServices.getConnection(true);
+    dalServices.getConnection(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
     // dalServices.commitTransactionAndContinue();
     furniture.setSeller(userDAO.getUserFromId(furniture.getSellerId()));
@@ -147,6 +150,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     furniture
         .setFavouritePhoto(furnitureDao.getFavouritePhotoById(furniture.getFavouritePhotoId()));
     // dalServices.commitTransaction();
+    dalServices.commitTransaction();
     return furniture;
   }
 
