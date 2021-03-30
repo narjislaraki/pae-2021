@@ -103,7 +103,7 @@ async function FurniturePage(id) {
                 <div class="option-days-below">
                 <p>Raison de l'annulation</p>
                 <input type="text" id="cancelOption">
-                <button id="cancelOptionBtn">Annuler l'option</button>
+                <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
                 </div>
                 `;
                 let cancelOptionBtn = document.getElementById("cancelOptionBtn");
@@ -126,7 +126,7 @@ async function FurniturePage(id) {
                             <button class="btn plus-btn" type="button">+</button>
                         </div>
 
-                <button id="introduceOptionBtn">Introduire une option</button>
+                <button class="btn-dark" id="introduceOptionBtn">Introduire une option</button>
                 </div>`;
                 //option counter
                 document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
