@@ -27,7 +27,7 @@ public interface FurnitureDAO {
 
   void indicateSentToWorkshop(int id);
 
-  void indicateDropOfStore(int id);
+  void indicateDropInStore(int id);
 
   void indicateOfferedForSale(Furniture furniture, double price);
 

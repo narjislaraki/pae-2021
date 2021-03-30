@@ -63,7 +63,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.EN_RESTAURATION)
         || furniture.getCondition().equals(Condition.ACHETE)) {
-      furnitureDao.indicateDropOfStore(id);
+      furnitureDao.indicateDropInStore(id);
       dalServices.commitTransaction();
     } else {
       dalServices.rollbackTransaction();

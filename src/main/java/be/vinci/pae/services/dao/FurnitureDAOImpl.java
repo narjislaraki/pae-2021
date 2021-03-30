@@ -198,8 +198,22 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void indicateDropOfStore(int id) {
+  public void indicateDropInStore(int id) {
     Furniture furniture = (Furniture) getFurnitureById(id);
+    try {
+      String sql =
+          "UPDATE pae.furnitures SET condition = ?, store_deposit = ?, deposit_date = ? WHERE id_furniture = ? ;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.DEPOSE_EN_MAGASIN.toString());
+      ps.setBoolean(2, true);
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      Timestamp date = Timestamp.valueOf(LocalDateTime.now().format(formatter));
+      ps.setTimestamp(3, date);
+      ps.setInt(4, furniture.getId());
+      ps.execute();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
     setCondition(furniture, Condition.DEPOSE_EN_MAGASIN);
   }
 
