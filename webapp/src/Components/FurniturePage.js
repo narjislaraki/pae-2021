@@ -81,7 +81,11 @@ async function FurniturePage (id) {
                 <div class="furniture-options">
                     <div class="option-duration condensed">
                         <div class="option-duration-text small-caps">Durée de l’option</div>
-                        <button class="btn btn-light option-counter">- O +</button>
+                        <div class="plus-minus">
+                            <button class="btn minus-btn disabled" type="button">-</button>
+                            <input type="text" id="quantity" value="1">
+                            <button class="btn plus-btn" type="button">+</button>
+                        </div>
                     </div>
                     <div class="option-buttons">
                         <div class="btn btn-success condensed small-caps">Introduire une option</div>
@@ -90,6 +94,12 @@ async function FurniturePage (id) {
                     <div class="options-info">Attention,  vous ne pouvez cumuler que 5 jours d’option au total sur un meuble </div>
                 </div>
         `;
+        //option counter
+        document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
+        document.querySelector(".plus-btn").addEventListener("click", incrementCounter());
+        document.querySelector(".minus-btn").addEventListener("click", decrementCounter());
+
+
     }else if (currentUser.role == "ADMIN"){
         page.innerHTML = `
         <div class="furniture-container">
@@ -298,5 +308,35 @@ smallImg2.addEventListener("mouseover", () => { gallerySlides(smallImg2); });
 smallImg3.addEventListener("mouseover", () => { gallerySlides(smallImg3); });
 smallImg4.addEventListener("mouseover", () => { gallerySlides(smallImg4); });
 smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
+
+let valueCount;
+
+function incrementCounter(){
+  console.log("increment")
+  valueCount = document.getElementById("quantity").value;
+  valueCount++;
+  document.getElementById("quantity").value = valueCount;
+  if(valueCount > 1){
+      document.querySelector(".minus-btn").removeAttribute("disabled");
+      document.querySelector(".minus-btn").classList.remove("disabled");
+  }
+  if(valueCount == 5){
+      document.querySelector(".plus-btn").setAttribute("disabled", "disabled");
+  }
+}
+
+function decrementCounter(){
+  console.log("decrement")
+  valueCount = document.getElementById("quantity").value;
+  valueCount--;
+  document.getElementById("quantity").value = valueCount;
+  if(valueCount == 1){
+      document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
+  }
+  if(valueCount < 5){
+      document.querySelector(".plus-btn").removeAttribute("disabled");
+      document.querySelector(".plus-btn").classList.remove("disabled");
+  }
+}
 
 export { FurniturePage };
