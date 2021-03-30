@@ -1,6 +1,9 @@
 package be.vinci.pae.utils;
 
+import java.util.logging.Logger;
+
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -41,5 +44,6 @@ public class ApplicationBinder extends AbstractBinder {
     bind(FurnitureUCCImpl.class).to(FurnitureUCC.class).in(Singleton.class);
     bind(FurnitureFactoryImpl.class).to(FurnitureFactory.class).in(Singleton.class);
     bind(OptionFactoryImpl.class).to(OptionFactory.class).in(Singleton.class);
+    bind(APILogger.getLogger()).to(Logger.class);
   }
 }

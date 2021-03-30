@@ -5,7 +5,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +24,6 @@ import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
@@ -42,7 +43,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/auths")
 public class Authentication {
 
-  private static final Logger LOGGER = APILogger.getLogger();
+  @Inject
+  private Logger logger;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getStringProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -180,7 +182,7 @@ public class Authentication {
 
     ObjectNode node =
         jsonMapper.createObjectNode().put("token", token).putPOJO("user", user.getId());
-    LOGGER.log(Level.INFO, "Connection of user:" + user.getUsername() + " :: " + user.getId());
+    logger.log(Level.INFO, "Connection of user:" + user.getUsername() + " :: " + user.getId());
     return Response.ok(node, MediaType.APPLICATION_JSON).build();
   }
 
