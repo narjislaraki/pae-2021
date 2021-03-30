@@ -96,6 +96,11 @@ public class FurnitureImpl implements Furniture {
     return condition;
   }
 
+  /**
+   * Set condition of the furniture.
+   * 
+   * @param condition the condition
+   */
   public void setCondition(String condition) {
 
     switch (condition.toLowerCase()) {
@@ -212,6 +217,10 @@ public class FurnitureImpl implements Furniture {
     this.favouritePhoto = favouritePhoto;
   }
 
+  public void setFavouritePhoto(String encodedPhoto) {
+    this.favouritePhoto = Base64.decode(encodedPhoto);
+  }
+
   @Override
   public String toString() {
     return "FurnitureImpl [id=" + id + ", typeId=" + typeId + ", type=" + type
@@ -223,8 +232,6 @@ public class FurnitureImpl implements Furniture {
         + Arrays.toString(favouritePhoto) + "]";
   }
 
-  public void setFavouritePhoto(String encodedPhoto) {
-    this.favouritePhoto = Base64.decode(encodedPhoto);
-  }
+
 
 }

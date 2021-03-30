@@ -3,7 +3,6 @@ package be.vinci.pae.api.exceptions;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Logger;
-
 import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import jakarta.ws.rs.WebApplicationException;
@@ -30,8 +29,9 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
     if (Config.getBoolProperty("SendStackTraceToClient")) {
       return withStackTrace(exception);
-    } else
+    } else {
       return withoutStackTrace(exception);
+    }
   }
 
   private Response withStackTrace(Exception exception) {

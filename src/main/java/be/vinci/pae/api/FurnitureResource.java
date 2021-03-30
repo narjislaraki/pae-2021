@@ -38,7 +38,7 @@ public class FurnitureResource {
   }
 
   /**
-   * Get a list of furnitures.
+   * Get a list of furnitures for the unlogged users.
    * 
    * @param request the request
    * @return a list of furnitures
@@ -53,6 +53,12 @@ public class FurnitureResource {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Get a list of furnitures for the logged users.
+   * 
+   * @param request the request
+   * @return a list of furniture adapted if it's the user is a client or an admin
+   */
   @GET
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)

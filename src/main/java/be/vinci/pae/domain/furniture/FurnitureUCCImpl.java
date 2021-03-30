@@ -27,9 +27,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public OptionDTO getOption(int id) {
     dalServices.getConnection(false);
     OptionDTO option = furnitureDao.getOption(id);
-    if (option == null) {
-
-    }
     dalServices.commitTransaction();
     return option;
   }
@@ -37,9 +34,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public int getNbOfDay(int idFurniture, int idUser) {
     dalServices.getConnection(false);
-    int aReturn = furnitureDao.getNumberOfReservation(idFurniture, idUser);
+    int nbOfDay = furnitureDao.getNumberOfOptions(idFurniture, idUser);
     dalServices.commitTransaction();
-    return aReturn;
+    return nbOfDay;
   }
 
 
@@ -104,7 +101,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new UnauthorizedException("optionTerm negative");
     }
     dalServices.getConnection(false);
-    int nbrDaysActually = furnitureDao.getNumberOfReservation(idFurniture, idUser);
+    int nbrDaysActually = furnitureDao.getNumberOfOptions(idFurniture, idUser);
     if (nbrDaysActually == 5) {
       dalServices.rollbackTransaction();
       throw new UnauthorizedException("You have already reached the maximum number of days");
@@ -125,8 +122,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new BusinessException("Invalid id");
     }
     dalServices.getConnection(false);
-    int id_furniture = furnitureDao.cancelOption(cancellationReason, idOption);
-    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id_furniture);
+    int idFurniture = furnitureDao.cancelOption(cancellationReason, idOption);
+    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(idFurniture);
     furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
     dalServices.commitTransaction();
   }
@@ -147,7 +144,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     // TODO Auto-generated method stub
   }
 
-
+  @Override
   public FurnitureDTO getFurnitureById(int id) {
     dalServices.getConnection(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);

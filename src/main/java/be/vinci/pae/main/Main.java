@@ -3,12 +3,10 @@ package be.vinci.pae.main;
 import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Logger;
-
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.dao.UserDAOImpl;
 import be.vinci.pae.utils.APILogger;
@@ -16,7 +14,6 @@ import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
 public class Main {
-	
 
   static UserDAO ds = new UserDAOImpl();
   static String env;

@@ -97,6 +97,7 @@ public class UserUCCImpl implements UserUCC {
     return true;
   }
 
+  @Override
   public UserDTO getUserFromId(int id) {
     dalServices.getConnection(false);
     UserDTO user = userDAO.getUserFromId(id);

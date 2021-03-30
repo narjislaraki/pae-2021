@@ -17,7 +17,7 @@ public interface FurnitureDAO {
 
   void setCondition(Furniture furniture, Condition condition);
 
-  int getNumberOfReservation(int idFurniture, int idUser);
+  int getNumberOfOptions(int idFurniture, int idUser);
 
   void introduceOption(int optionTerm, int idUser, int idFurniture);
 
