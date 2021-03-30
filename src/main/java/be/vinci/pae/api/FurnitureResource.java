@@ -65,8 +65,9 @@ public class FurnitureResource {
   public List<FurnitureDTO> getFurnituresList(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     List<FurnitureDTO> list = furnitureUCC.getFurnitureList();
-    if (user.getRole() == Role.ADMIN)
+    if (user.getRole() == Role.ADMIN) {
       return list;
+    }
     return list.stream().filter(
         e -> e.getCondition() == Condition.EN_VENTE || e.getCondition() == Condition.SOUS_OPTION)
         .collect(Collectors.toList());

@@ -19,31 +19,31 @@ public interface OptionDTO {
     }
   }
 
-  public int getId();
+  int getId();
 
-  public void setId(int id);
+  void setId(int id);
 
-  public LocalDateTime getDate();
+  LocalDateTime getDate();
 
-  public void setDate(LocalDateTime date);
+  void setDate(LocalDateTime date);
 
-  public int getOptionTerm();
+  int getOptionTerm();
 
-  public void setOptionTerm(int optionTerm);
+  void setOptionTerm(int optionTerm);
 
-  public String getCancellationReason();
+  String getCancellationReason();
 
-  public void setCancellationReason(String cancellationReason);
+  void setCancellationReason(String cancellationReason);
 
-  public State getCondition();
+  State getCondition();
 
-  public void setCondition(String condition);
+  void setCondition(String condition);
 
-  public int getIdUser();
+  int getIdUser();
 
-  public void setIdUser(int idUser);
+  void setIdUser(int idUser);
 
-  public int getIdFurniture();
+  int getIdFurniture();
 
-  public void setIdFurniture(int idFurniture);
+  void setIdFurniture(int idFurniture);
 }

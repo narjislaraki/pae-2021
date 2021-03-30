@@ -4,9 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -29,8 +27,6 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   @Inject
   private UserUCC userUCC;
 
-  @Inject
-  private DalServices dalServices;
 
   @Override
   public void filter(ContainerRequestContext requestContext) {

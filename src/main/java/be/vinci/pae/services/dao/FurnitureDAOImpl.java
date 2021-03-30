@@ -43,10 +43,10 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public FurnitureDTO getFurnitureById(int id) {
     FurnitureDTO furniture = null;
     try {
-      String sql = ("SELECT id_furniture, condition, description, purchase_price, pick_up_date, "
+      String sql = "SELECT id_furniture, condition, description, purchase_price, pick_up_date, "
           + "store_deposit, deposit_date,"
           + " offered_selling_price, id_type, request_visit, seller, favorite_photo"
-          + " FROM pae.furnitures WHERE id_furniture = ?;");
+          + " FROM pae.furnitures WHERE id_furniture = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
@@ -70,7 +70,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     int number = -1;
     try {
       String sql =
-          ("SELECT SUM(option_term) FROM pae.options WHERE id_furniture = ? AND id_user = ?");
+          "SELECT SUM(option_term) FROM pae.options WHERE id_furniture = ? AND id_user = ?";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, idFurniture);
       ps.setInt(2, idUser);
@@ -173,7 +173,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ps.setString(2, cancellationReason);
       ps.setInt(3, idOption);
       ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
+      if (rs.next()) {
         return rs.getInt(1);
       }
     } catch (SQLException e) {
@@ -186,9 +186,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public OptionDTO getOption(int id) {
     OptionDTO option = null;
     try {
-      String sql = ("SELECT id_option, date, option_term, cancellation_reason, "
+      String sql = "SELECT id_option, date, option_term, cancellation_reason, "
           + "condition, id_user, id_furniture"
-          + " FROM pae.options WHERE id_furniture = ? AND condition = ?;");
+          + " FROM pae.options WHERE id_furniture = ? AND condition = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
       ps.setString(2, State.EN_COURS.toString());

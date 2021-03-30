@@ -22,68 +22,68 @@ public interface FurnitureDTO {
     }
   }
 
-  public int getId();
+  int getId();
 
-  public void setId(int id);
+  void setId(int id);
 
-  public int getTypeId();
+  int getTypeId();
 
-  public void setTypeId(int typeId);
+  void setTypeId(int typeId);
 
-  public String getType();
+  String getType();
 
-  public void setType(String type);
+  void setType(String type);
 
-  public int getRequestForVisitId();
+  int getRequestForVisitId();
 
-  public void setRequestForVisitId(int requestForVisitId);
+  void setRequestForVisitId(int requestForVisitId);
 
-  public int getSellerId();
+  int getSellerId();
 
-  public void setSellerId(int sellerId);
+  void setSellerId(int sellerId);
 
-  public UserDTO getSeller();
+  UserDTO getSeller();
 
-  public void setSeller(UserDTO seller);
+  void setSeller(UserDTO seller);
 
-  public Condition getCondition();
+  Condition getCondition();
 
-  public void setCondition(String condition);
+  void setCondition(String condition);
 
-  public String getDescription();
+  String getDescription();
 
-  public void setDescription(String description);
+  void setDescription(String description);
 
-  public double getPurchasePrice();
+  double getPurchasePrice();
 
-  public void setPurchasePrice(double purchasePrice);
+  void setPurchasePrice(double purchasePrice);
 
-  public LocalDateTime getPickUpDate();
+  LocalDateTime getPickUpDate();
 
-  public void setPickUpDate(LocalDateTime pickUpDate);
+  void setPickUpDate(LocalDateTime pickUpDate);
 
-  public boolean isStoreDeposit();
+  boolean isStoreDeposit();
 
-  public void setStoreDeposit(boolean storeDeposit);
+  void setStoreDeposit(boolean storeDeposit);
 
-  public LocalDateTime getDepositDate();
+  LocalDateTime getDepositDate();
 
-  public void setDepositDate(LocalDateTime depositDate);
+  void setDepositDate(LocalDateTime depositDate);
 
-  public double getOfferedSellingPrice();
+  double getOfferedSellingPrice();
 
-  public void setOfferedSellingPrice(double offeredSellingPrice);
+  void setOfferedSellingPrice(double offeredSellingPrice);
 
-  public int getFavouritePhotoId();
+  int getFavouritePhotoId();
 
-  public void setFavouritePhotoId(int favouritePhotoId);
+  void setFavouritePhotoId(int favouritePhotoId);
 
-  public byte[] getFavouritePhoto();
+  byte[] getFavouritePhoto();
 
-  public void setFavouritePhoto(byte[] favouritePhoto);
+  void setFavouritePhoto(byte[] favouritePhoto);
 
-  public void setFavouritePhoto(String encodedPhoto);
+  void setFavouritePhoto(String encodedPhoto);
 
-  public String toString();
+  String toString();
 
 }
