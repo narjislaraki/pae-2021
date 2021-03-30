@@ -26,7 +26,8 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   int connectionQuantity;
 
   /**
-   * Constructor. Make the connection with the DB using the keys "url", "user", and "password" in a properties file.
+   * Constructor. Make the connection with the DB using the keys "url", "user", and "password" in a
+   * properties file.
    */
   public DalServicesImpl() {
     url = Config.getStringProperty("url");
@@ -77,7 +78,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   public void getConnection(boolean autoCommit) {
     try {
       if (td.get() != null) {
-        throw new FatalException(new IllegalStateException());// TODO
+        throw new FatalException("Connection already given");
       }
       Connection connection = ds.getConnection();
       connection.setAutoCommit(autoCommit);
