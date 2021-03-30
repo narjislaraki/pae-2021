@@ -28,14 +28,33 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
     }
 
     if (Config.getBoolProperty("SendStackTraceToClient")) {
-      return Response.status(getStatusCode(exception)).entity(getEntity(exception)).build();
-    }
+      return withStackTrace(exception);
+    } else
+      return withoutStackTrace(exception);
+  }
+
+  private Response withStackTrace(Exception exception) {
     if (exception instanceof FatalException) {
       Throwable cause = exception.getCause();
       if (cause == null) {
         return Response.status(getStatusCode(exception)).entity(exception.getMessage()).build();
       }
-      return Response.status(getStatusCode(exception)).entity(cause.getMessage()).build();
+      return Response.status(getStatusCode(exception)).entity(getEntity(cause)).build();
+    }
+    return Response.status(getStatusCode(exception)).entity(getEntity(exception)).build();
+  }
+
+  private Response withoutStackTrace(Exception exception) {
+    if (exception instanceof FatalException) {
+      Throwable cause = exception.getCause();
+      if (cause == null) {
+        return Response.status(getStatusCode(exception)).entity(exception.getMessage()).build();
+      }
+      return Response.status(getStatusCode(exception))
+          .entity(cause.getMessage() == null || cause.getMessage().isEmpty()
+              ? "Oh no, something wrong happened! Don't worry, we're on it!"
+              : cause.getMessage())
+          .build();
     }
     return Response.status(getStatusCode(exception))
         .entity(exception.getMessage() == null || exception.getMessage().isEmpty()
