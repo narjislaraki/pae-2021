@@ -1,7 +1,7 @@
 /* In a template literal, the ` (backtick), \ (backslash), and $ (dollar sign) characters should be 
 escaped using the escape character \ if they are to be included in their template value. 
 By default, all escape sequences in a template literal are ignored.*/
-import { setUserSessionData, getCurrentUser, currentUser} from "../utils/session.js";
+import { setUserSessionData, getCurrentUser, currentUser } from "../utils/session.js";
 import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
@@ -65,7 +65,7 @@ let loginPage = `<div class="register-card">
   </form>
 </div>`;
 
-const LoginRegisterPage = async () => {  
+const LoginRegisterPage = async () => {
   let page = document.querySelector("#page");
   page.innerHTML = loginPage;
   let loginForm = document.querySelector(".form-login");
@@ -97,6 +97,12 @@ const onLogin = async (e) => {
     );
     onUserLogin(userLogged);
   } catch (err) {
+    console.log(err);
+    if (err == "Error: Wrong credentials") {
+      err.message = "Email ou mot de passe invalide ! ";
+    } else if (err == "Error: User is not validated") {
+      err.message = "L'utilisateur n'est pas encore validé ! ";
+    }
     console.error("LoginRegisterPage::onLogin", err);
     PrintError(err);
   }
@@ -116,29 +122,32 @@ const onUserLogin = async (userData) => {
 const onRegister = async (e) => {
   //e.preventDefault();
   let user = {
-    username : document.getElementById("username").value,
-    firstName : document.getElementById("firstname").value,
-    lastName : document.getElementById("lastname").value,
-    street : document.getElementById("street").value,
-    buildingNumber : document.getElementById("number").value,
-    unitNumber : document.getElementById("unitnumber").value,
-    postcode : document.getElementById("postcode").value,
-    country : document.getElementById("country").value,
-    city : document.getElementById("city").value,
-    email : document.getElementById("email-register").value,
-    password : document.getElementById("password-register").value,
-    confirmPassword : document.getElementById("password-confirmation").value,
+    username: document.getElementById("username").value,
+    firstName: document.getElementById("firstname").value,
+    lastName: document.getElementById("lastname").value,
+    street: document.getElementById("street").value,
+    buildingNumber: document.getElementById("number").value,
+    unitNumber: document.getElementById("unitnumber").value,
+    postcode: document.getElementById("postcode").value,
+    country: document.getElementById("country").value,
+    city: document.getElementById("city").value,
+    email: document.getElementById("email-register").value,
+    password: document.getElementById("password-register").value,
+    confirmPassword: document.getElementById("password-confirmation").value,
   };
-  
+
   console.log(user);
-  try{
+  try {
     const userRegistered = await callAPI(
       API_BASE_URL + "register",
       "POST",
       undefined,
       user
     );
-  }catch(err){
+  } catch (err) {
+    if (err == "Error: This email or username is already in use") {
+      err.message = "L'email ou le pseudo est déjà utilisé";
+    }
     console.error("LoginRegisterPage::onRegister", err);
     PrintError(err);
   }

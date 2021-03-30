@@ -2,7 +2,6 @@ package be.vinci.pae.domain.user;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
@@ -76,7 +75,6 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public void acceptUser(int id, String role) {
-
     if (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")) {
       throw new BusinessException("Invalid role");
     }

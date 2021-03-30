@@ -122,7 +122,7 @@ async function FurniturePage(id) {
                 <p>Durée de l'option</p>
                 <div class="plus-minus">
                             <button class="btn minus-btn disabled" type="button">-</button>
-                            <input type="text" id="optionTerm" value="1">
+                            <input type="text" id="optionTerm" value="1" readonly="readonly">
                             <button class="btn plus-btn" type="button">+</button>
                         </div>
 
@@ -130,8 +130,8 @@ async function FurniturePage(id) {
                 </div>`;
                 //option counter
                 document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
-                document.querySelector(".plus-btn").addEventListener("click", incrementCounter());
-                document.querySelector(".minus-btn").addEventListener("click", decrementCounter());
+                document.querySelector(".plus-btn").addEventListener("click", incrementCounter);
+                document.querySelector(".minus-btn").addEventListener("click", decrementCounter);
 
                 let introduceOptionBtn = document.getElementById("introduceOptionBtn");
                 introduceOptionBtn.addEventListener("click", onIntroduceOption);
@@ -197,7 +197,7 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
-        } else if (furniture.condition == "RETIRE") {
+        } else if (furniture.condition == "RETIRE" || furniture.condition == "REFUSE") {
             menuDeroulant = `
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -213,7 +213,6 @@ async function FurniturePage(id) {
         `;
         }
         page.innerHTML += menuDeroulant;
-
         let buttonEnRestauration = document.getElementById("buttonEnRestauration");
         let buttonMagasin = document.getElementById("buttonMagasin");
         let buttonEnVente = document.getElementById("buttonEnVente");
@@ -266,7 +265,13 @@ const onOfferedForSale = async () => {
     let id = furniture.id;
     let price = document.getElementById("price").value;
     console.log(price);
-
+    if (price == ""){
+        let error = {
+            message: "Veuillez d'abord entrer un prix de vente",
+        }
+        PrintError(error);
+        return;
+    }
     try {
         await callAPI(
             API_BASE_URL + "furniture/" + id + '/offeredForSale/' + price,
@@ -302,6 +307,13 @@ const onWithdrawSale = async () => {
 const onCancelOption = async () => {
     let id = furniture.id;
     let reason = document.getElementById("cancelOption").value;
+    if (reason == ""){
+        let error = {
+            message: "Veuillez d'abord entrer une raison d'annulation",
+        }
+        PrintError(error);
+        return;
+    }
     let id_option = option.id;
     try {
         await callAPI(
@@ -350,7 +362,7 @@ smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
 
 let valueCount;
 
-function incrementCounter() {
+const incrementCounter = () => {
     console.log("increment")
     valueCount = document.getElementById("optionTerm").value;
     valueCount++;
@@ -364,7 +376,7 @@ function incrementCounter() {
     }
 }
 
-function decrementCounter() {
+const decrementCounter = () => {
     console.log("decrement")
     valueCount = document.getElementById("optionTerm").value;
     valueCount--;
