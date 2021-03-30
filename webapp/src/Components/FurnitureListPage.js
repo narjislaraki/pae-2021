@@ -1,4 +1,4 @@
-import { getUserSessionData} from "../utils/session.js";
+import { getUserSessionData, currentUser } from "../utils/session.js";
 import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
@@ -10,8 +10,8 @@ let furnitureListTab;
 
 
 
-let furnitureListPage = 
-`
+let furnitureListPage =
+  `
         <div class="all-furn-title small-caps">Tous les meubles</div>
 
         <div class="parent-furnitures-container">
@@ -19,24 +19,40 @@ let furnitureListPage =
 `;
 
 
-async function FurnitureListPage(){  
-    let page = document.querySelector("#page");
-    let furnitures;
-    try{
+async function FurnitureListPage() {
+  let page = document.querySelector("#page");
+  let furnitures;
+  if (currentUser) {
+    let userData = getUserSessionData();
+    try {
       furnitures = await callAPI(
         API_BASE_URL,
         "GET",
-        undefined,
+        userData.token,
         undefined);
-    }catch(err){
+    } catch (err) {
       console.error("FurnitureListPage::get listfurnitures", err);
       PrintError(err);
     }
-    page.innerHTML = furnitureListPage;
-    let data = 
+  }
+  else {
+    try {
+      furnitures = await callAPI(
+        API_BASE_URL + "/public",
+        "GET",
+        undefined,
+        undefined);
+    } catch (err) {
+      console.error("FurnitureListPage::get listfurnitures", err);
+      PrintError(err);
+    }
+  }
+
+  page.innerHTML = furnitureListPage;
+  let data =
     furnitures.map((element) => {
       console.log(element);
-        page.innerHTML += 
+      page.innerHTML +=
         `
         <div data-id="${element.id}" class="item-card furniture">
             <div data-id="${element.id}" class="item-img-container">
@@ -47,29 +63,29 @@ async function FurnitureListPage(){
             <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
         </div>
     `;
-    
+
     });
 
 
-    //close the div
-    page.innerHTML += `<div class="white-space"></div></div>`;
-    let list = document.getElementsByClassName("furniture");
-    console.log(list, "ici");
-    Array.from(list).forEach((e) => {
-      e.addEventListener("click", onFurniture);
-    });
+  //close the div
+  page.innerHTML += `<div class="white-space"></div></div>`;
+  let list = document.getElementsByClassName("furniture");
+  console.log(list, "ici");
+  Array.from(list).forEach((e) => {
+    e.addEventListener("click", onFurniture);
+  });
 
-    const user = getUserSessionData();
-  };
+  const user = getUserSessionData();
+};
 
-  const onFurniture= (e) => {
-    console.log(e);
-    let id = e.srcElement.dataset.id;
-    console.log(id);
-    FurniturePage(id);
-  }; 
-  
-
+const onFurniture = (e) => {
+  console.log(e);
+  let id = e.srcElement.dataset.id;
+  console.log(id);
+  FurniturePage(id);
+};
 
 
-  export default FurnitureListPage;
+
+
+export default FurnitureListPage;
