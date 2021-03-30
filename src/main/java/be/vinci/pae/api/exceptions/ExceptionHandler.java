@@ -15,6 +15,7 @@ import jakarta.ws.rs.ext.Provider;
 public class ExceptionHandler implements ExceptionMapper<Exception> {
 
   private Logger logger = APILogger.getLogger();
+  private static final String OHNO = "Oh no, something wrong happened! Don't worry, we're on it!";
 
 
   @Override
@@ -50,15 +51,12 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
       if (cause == null) {
         return Response.status(getStatusCode(exception)).entity(exception.getMessage()).build();
       }
-      return Response.status(getStatusCode(exception))
-          .entity(cause.getMessage() == null || cause.getMessage().isEmpty()
-              ? "Oh no, something wrong happened! Don't worry, we're on it!"
-              : cause.getMessage())
+      return Response.status(getStatusCode(exception)).entity(
+          cause.getMessage() == null || cause.getMessage().isEmpty() ? OHNO : cause.getMessage())
           .build();
     }
     return Response.status(getStatusCode(exception))
-        .entity(exception.getMessage() == null || exception.getMessage().isEmpty()
-            ? "Oh no, something wrong happened! Don't worry, we're on it!"
+        .entity(exception.getMessage() == null || exception.getMessage().isEmpty() ? OHNO
             : exception.getMessage())
         .build();
   }
