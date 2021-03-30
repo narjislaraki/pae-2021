@@ -21,7 +21,6 @@ async function FurniturePage(id) {
     console.log(currentUser);
     let page = document.querySelector("#page");
     userData = getUserSessionData();
-    let type;
     /****** Furniture ******/
     try {
         furniture = await callAPI(
@@ -346,5 +345,35 @@ smallImg2.addEventListener("mouseover", () => { gallerySlides(smallImg2); });
 smallImg3.addEventListener("mouseover", () => { gallerySlides(smallImg3); });
 smallImg4.addEventListener("mouseover", () => { gallerySlides(smallImg4); });
 smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
+
+let valueCount;
+
+function incrementCounter(){
+  console.log("increment")
+  valueCount = document.getElementById("quantity").value;
+  valueCount++;
+  document.getElementById("quantity").value = valueCount;
+  if(valueCount > 1){
+      document.querySelector(".minus-btn").removeAttribute("disabled");
+      document.querySelector(".minus-btn").classList.remove("disabled");
+  }
+  if(valueCount == 5){
+      document.querySelector(".plus-btn").setAttribute("disabled", "disabled");
+  }
+}
+
+function decrementCounter(){
+  console.log("decrement")
+  valueCount = document.getElementById("quantity").value;
+  valueCount--;
+  document.getElementById("quantity").value = valueCount;
+  if(valueCount == 1){
+      document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
+  }
+  if(valueCount < 5){
+      document.querySelector(".plus-btn").removeAttribute("disabled");
+      document.querySelector(".plus-btn").classList.remove("disabled");
+  }
+}
 
 export { FurniturePage };

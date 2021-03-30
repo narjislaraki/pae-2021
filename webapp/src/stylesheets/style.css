@@ -670,3 +670,168 @@ footer{
 .white-space{
     height: 300px;
 }
+
+/*FURNITURE PAGE*/
+
+
+.furniture-container{
+
+}
+.furniture-pictures{
+    width: max-content;
+}
+.furniture-small-images img{
+    object-fit: cover;
+    margin: 10px 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius:50%;
+    overflow: hidden;
+    display: block;
+    opacity: 0.5;
+}
+.furniture-small-images img:hover{
+    opacity: 1;
+}
+.furniture-small-images{
+    position: absolute;
+    left: 10%;
+    top: 10%;
+}
+.main-image{
+    position: absolute;
+    width: 30%;
+    height: 36%;
+    background-color: var(--colordark);
+    border-radius: 22px;
+    left: 15%;
+    top: 10%;
+}
+#furniture-type{
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 37px;
+    letter-spacing: 0.23em;
+    text-align: left;
+
+    position: absolute;
+    top: 10%;;
+    left: 50%;
+}
+#furniture-description{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 175.69%;
+    text-align: left;
+    position: absolute;
+    top: 17%;
+    left: 50%;
+}
+.furniture-price-inline{
+    width:max-content;
+    position: absolute;
+    top: 32%;
+    left: 50%;
+}
+#furniture-price{
+    display: inline;
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 56px;
+}
+.currency{
+    display: inline;
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 28px;
+}
+.furniture-options{
+    
+}
+.option-duration{
+    width:max-content;
+    position: absolute;
+    top: 52%;
+    left: 40%;
+}
+.option-duration-text{
+    display: inline;
+    font-size: 18px;
+    line-height: 24px;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.002em;
+}
+.btn-success{
+    position: absolute;
+    top: 50%;
+    right: 20%;
+    z-index: 100;
+    background: #398941;
+    border-radius: 22px !important;
+    font-weight: 300;
+    font-size: 1.3em;
+    line-height: 0px;
+    letter-spacing: 0.002em;
+    height: 3.2rem;
+    padding: 1.35em;
+    text-align: center;
+    color: #FFFFFF;
+    width: 18rem;
+}
+.option-days{
+    position: absolute;
+    top: 46%;
+    right: 21.5%;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.002em;
+    color: #FFFFFF;
+    background: #C53434;
+    border-radius: 12px 12px 0px 0px;
+    width: 16rem;
+    text-align: center;
+    padding: 0.4rem;
+}
+.options-info{
+    position: absolute;
+    font-size: 14px;
+    line-height: 24px;
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.122em;
+    bottom: 35%;
+    left: 25%
+}
+.plus-minus{
+    display: flex;
+    justify-content: center;
+}
+.plus-minus button{
+    width: 35px;
+    height: 35px;
+    background-color: white;
+    border: transparent;
+}
+.plus-minus button:hover{
+    background-color: var(--colorlight);
+}
+.minus-btn{
+    border-radius: 25% 0 0 25% !important;
+}
+.plus-btn{
+    border-radius: 0 25% 25% 0 !important;
+}
+.plus-minus input{
+    text-align: center;
+    width: 50px;
+    height: 35px;
+}

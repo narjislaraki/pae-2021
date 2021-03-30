@@ -16,6 +16,7 @@ import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
 public class Main {
+	
 
   static UserDAO ds = new UserDAOImpl();
   static String env;
