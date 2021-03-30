@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,9 @@ import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
+import be.vinci.pae.domain.furniture.OptionDTO;
+import be.vinci.pae.domain.furniture.OptionDTO.State;
+import be.vinci.pae.domain.furniture.OptionFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
@@ -24,6 +28,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   private DalBackendServices dalBackendService;
   @Inject
   private FurnitureFactory furnitureFactory;
+  @Inject
+  private OptionFactory optionFactory;
 
   PreparedStatement ps;
 
@@ -51,7 +57,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     int number = -1;
     try {
       String sql =
-          ("SELECT SUM(o.options_term) FROM pae.options o WHERE o.id_furniture = ? AND o.id_user = ?");
+          ("SELECT SUM(option_term) FROM pae.options WHERE id_furniture = ? AND id_user = ?");
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, idFurniture);
       ps.setInt(2, idUser);
@@ -88,6 +94,22 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return furniture;
   }
 
+  private OptionDTO setOption(ResultSet rs, OptionDTO option) {
+    try {
+      option = optionFactory.getOptionDTO();
+      option.setId(rs.getInt(1));
+      option.setDate(rs.getTimestamp(2) == null ? null : rs.getTimestamp(2).toLocalDateTime());
+      option.setOptionTerm(rs.getInt(3));
+      option.setCancellationReason(rs.getString(4));
+      option.setCondition(rs.getString(5));
+      option.setIdUser(rs.getInt(6));
+      option.setIdFurniture(rs.getInt(7));
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return option;
+  }
+
 
   @Override
   public void setCondition(Furniture furniture, Condition condition) {
@@ -106,9 +128,10 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Override
   public void introduceOption(int optionTerm, int idUser, int idFurniture) {
     try {
-      String sql = "INSERT INTO pae.options VALUES(DEFAULT, ?, ?, null, ?, ?, ?;";
+      String sql = "INSERT INTO pae.options VALUES(DEFAULT, ?, ?, null, ?, ?, ?);";
       ps = dalBackendService.getPreparedStatement(sql);
-      Timestamp date = Timestamp.valueOf(LocalDateTime.now().toString());
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      Timestamp date = Timestamp.valueOf(LocalDateTime.now().format(formatter));
       ps.setTimestamp(1, date);
       ps.setInt(2, optionTerm);
       ps.setString(3, "en cours");
@@ -121,19 +144,51 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void cancelOption(String cancellationReason, int idOption) {
+  public void indicateUnderOption(int id) {
+    Furniture furniture = (Furniture) getFurnitureById(id);
+    setCondition(furniture, Condition.SOUS_OPTION);
+  }
+
+  @Override
+  public int cancelOption(String cancellationReason, int idOption) {
     try {
-      String sql =
-          "UPDATE pae.options SET state = ?,cancellation_reason = ? " + "WHERE id_option = ?;";
+
+      String sql = "UPDATE pae.options SET condition = ?, cancellation_reason = ? "
+          + "WHERE id_option = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, "annulée");
       ps.setString(2, cancellationReason);
       ps.setInt(3, idOption);
-      ps.execute();
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        return rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return -1;
   }
+
+  @Override
+  public OptionDTO getOption(int id) {
+    OptionDTO option = null;
+    try {
+      String sql =
+          ("SELECT id_option, date, option_term, cancellation_reason, condition, id_user, id_furniture"
+              + " FROM pae.options WHERE id_furniture = ? AND condition = ?;");
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, id);
+      ps.setString(2, State.EN_COURS.toString());
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        option = setOption(rs, option);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return option;
+  }
+
 
   @Override
   public void indicateSentToWorkshop(int id) {

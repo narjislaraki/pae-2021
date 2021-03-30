@@ -44,7 +44,7 @@ async function FurnitureListPage(){
                 <h3 data-id="${element.id}" class="item-img-hover condensed">Voir<br>article</h3>
             </div>
             <div data-id="${element.id}" class="item-name">${element.description}</div>
-            <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
+            <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
         </div>
     `;
     

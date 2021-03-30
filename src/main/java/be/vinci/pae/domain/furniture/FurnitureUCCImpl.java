@@ -22,6 +22,28 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Inject
   private DalServices dalServices;
 
+
+  @Override
+  public OptionDTO getOption(int id) {
+    dalServices.getConnection(false);
+    OptionDTO option = furnitureDao.getOption(id);
+    if (option == null) {
+
+    }
+    dalServices.commitTransaction();
+    return option;
+  }
+
+  @Override
+  public int getNbOfDay(int idFurniture, int idUser) {
+    dalServices.getConnection(false);
+    int aReturn = furnitureDao.getNumberOfReservation(idFurniture, idUser);
+    dalServices.commitTransaction();
+    return aReturn;
+  }
+
+
+
   @Override
   public void indicateSentToWorkshop(int id) {
     dalServices.getConnection(false);
@@ -91,6 +113,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new UnauthorizedException("You can't book more than : " + daysLeft + " days");
     } else {
       furnitureDao.introduceOption(optionTerm, idUser, idFurniture);
+      furnitureDao.indicateUnderOption(idFurniture);
       dalServices.commitTransaction();
     }
   }
@@ -100,8 +123,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     if (idOption < 1) {
       throw new BusinessException("Invalid id");
     }
-    dalServices.getConnection(true);
-    furnitureDao.cancelOption(cancellationReason, idOption);
+    dalServices.getConnection(false);
+    int id_furniture = furnitureDao.cancelOption(cancellationReason, idOption);
+    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id_furniture);
+    furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
     dalServices.commitTransaction();
   }
 

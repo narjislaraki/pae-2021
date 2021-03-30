@@ -33,4 +33,8 @@ public interface FurnitureUCC {
       Map<Integer, List<String>> furnitures);
 
   FurnitureDTO getFurnitureById(int id);
+
+  OptionDTO getOption(int id);
+
+  int getNbOfDay(int idFurniture, int idUser);
 }

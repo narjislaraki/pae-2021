@@ -60,9 +60,9 @@ CREATE TABLE pae.options(
 	date TIMESTAMP NOT NULL,
 	option_term INTEGER NOT NULL,
 	cancellation_reason VARCHAR (150),
-	state VARCHAR(9) NOT NULL,
+	condition VARCHAR(9) NOT NULL,
 	id_user INTEGER REFERENCES pae.users(id_user) NOT NULL,
-	furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
+	id_furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
 );
 
 CREATE TABLE pae.photos(
@@ -71,7 +71,7 @@ CREATE TABLE pae.photos(
 	is_visible BOOLEAN NOT NULL,
 	--description VARCHAR(200),
 	is_a_client_photo BOOLEAN NOT NULL, 
-	furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
+	id_furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
 );	
 
 ALTER TABLE pae.furnitures

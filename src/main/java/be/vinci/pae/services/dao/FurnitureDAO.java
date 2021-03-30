@@ -6,19 +6,24 @@ import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
+import be.vinci.pae.domain.furniture.OptionDTO;
 
 public interface FurnitureDAO {
 
   FurnitureDTO getFurnitureById(int id);
 
   // A REVOIR
-  int getNumberOfReservation(int idFurniture, int idUser);
+
 
   void setCondition(Furniture furniture, Condition condition);
 
+  int getNumberOfReservation(int idFurniture, int idUser);
+
   void introduceOption(int optionTerm, int idUser, int idFurniture);
 
-  void cancelOption(String cancellationReason, int idOption);
+  int cancelOption(String cancellationReason, int idOption);
+
+  void indicateUnderOption(int id);
 
   void indicateSentToWorkshop(int id);
 
@@ -38,4 +43,6 @@ public interface FurnitureDAO {
   String getTypeById(int id);
 
   String getFavouritePhotoById(int id);
+
+  OptionDTO getOption(int id);
 }

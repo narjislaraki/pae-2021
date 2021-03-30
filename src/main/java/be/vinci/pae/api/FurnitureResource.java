@@ -5,8 +5,10 @@ import org.glassfish.jersey.server.ContainerRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
+import be.vinci.pae.domain.furniture.OptionDTO;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -50,7 +52,23 @@ public class FurnitureResource {
     return furnitureUCC.getFurnitureById(id);
   }
 
+  @Authorize
+  @GET
+  @Path("furniture/{id}/getOption")
+  @Produces(MediaType.APPLICATION_JSON)
+  public OptionDTO getOption(@Context ContainerRequest request, @PathParam("id") int id) {
+    OptionDTO opt = furnitureUCC.getOption(id);
+    return opt;
+  }
 
+  @Authorize
+  @GET
+  @Path("furniture/{idFurniture}/{idUser}/getNbOfDay")
+  @Produces(MediaType.APPLICATION_JSON)
+  public int getNbOfDay(@Context ContainerRequest request,
+      @PathParam("idFurniture") int idFurniture, @PathParam("idUser") int idUser) {
+    return furnitureUCC.getNbOfDay(idFurniture, idUser);
+  }
 
   @AdminAuthorize
   @PATCH
@@ -88,5 +106,28 @@ public class FurnitureResource {
     furnitureUCC.withdrawSale(id);
     return true;
   }
+
+  @Authorize
+  @PATCH
+  @Path("furniture/{id_option}/{reason}/cancelOption")
+  @Produces(MediaType.APPLICATION_JSON)
+  public boolean cancelOption(@Context ContainerRequest request, @PathParam("id_option") int id,
+      @PathParam("reason") String reason) {
+    furnitureUCC.cancelOption(reason, id);
+    return true;
+  }
+
+  @Authorize
+  @PATCH
+  @Path("furniture/{optionTerm}/{idFurniture}/{idUser}/introduceOption")
+  @Produces(MediaType.APPLICATION_JSON)
+  public boolean introduceOption(@Context ContainerRequest request,
+      @PathParam("optionTerm") int optionTerm, @PathParam("idFurniture") int idFurniture,
+      @PathParam("idUser") int idUser) {
+    furnitureUCC.introduceOption(optionTerm, idUser, idFurniture);
+    return true;
+  }
+
+
 
 }
