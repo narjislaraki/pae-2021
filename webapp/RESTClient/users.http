@@ -39,8 +39,8 @@ POST {{baseAuthsUrl}}/login
 Content-Type: application/json
 
 {
-    "email":"valid@email.com",
-    "password":"1234"
+    "email":"bert.satcho@gmail.be",
+    "password":"Jaune;10."
 }
 
 ### SUCCESS
@@ -54,7 +54,7 @@ Content-Type: application/json
     "username": "register3",
     "lastName": "Laraki",
     "firstName": "Narjis",
-    "street": "Rue Neuve",
+    "street": "Rue Neuve 2",
     "country": "Belgique",
     "buildingNumber": "12",
     "postcode": "1000",

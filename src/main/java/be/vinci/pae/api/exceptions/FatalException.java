@@ -14,7 +14,7 @@ public class FatalException extends WebApplicationException {
   private Logger logger;
 
   /**
-   * Constructor with a Throwable original cause wrapped as parameter.
+   * Constructor with a Throwable original cause wrapped as parameter. The error will be logged.
    * 
    * @param cause the original Throwable element
    */
@@ -24,7 +24,8 @@ public class FatalException extends WebApplicationException {
   }
 
   /**
-   * Constructor with a Throwable original cause wrapped as parameter and a message.
+   * Constructor with a Throwable original cause wrapped as parameter and a message. The error will
+   * be logged.
    * 
    * @param message the message
    * @param cause the original Throwable element
@@ -33,6 +34,16 @@ public class FatalException extends WebApplicationException {
     super(cause,
         Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).type("text/plain").build());
     logger.warning(message + "\n" + cause.getMessage());
+  }
+
+  /**
+   * Constructor with a message only. The error will be logged.
+   * 
+   * @param message the message
+   */
+  public FatalException(String message) {
+    super(Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).type("text/plain").build());
+    logger.warning(message);
   }
 
 }

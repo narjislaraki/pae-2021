@@ -3,7 +3,6 @@ package be.vinci.pae.api.exceptions;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Logger;
-
 import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import jakarta.ws.rs.WebApplicationException;
@@ -15,6 +14,7 @@ import jakarta.ws.rs.ext.Provider;
 public class ExceptionHandler implements ExceptionMapper<Exception> {
 
   private Logger logger = APILogger.getLogger();
+  private static final String OHNO = "Oh no, something wrong happened! Don't worry, we're on it!";
 
 
   @Override
@@ -28,18 +28,35 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
     }
 
     if (Config.getBoolProperty("SendStackTraceToClient")) {
-      return Response.status(getStatusCode(exception)).entity(getEntity(exception)).build();
+      return withStackTrace(exception);
+    } else {
+      return withoutStackTrace(exception);
     }
+  }
+
+  private Response withStackTrace(Exception exception) {
     if (exception instanceof FatalException) {
       Throwable cause = exception.getCause();
       if (cause == null) {
         return Response.status(getStatusCode(exception)).entity(exception.getMessage()).build();
       }
-      return Response.status(getStatusCode(exception)).entity(cause.getMessage()).build();
+      return Response.status(getStatusCode(exception)).entity(getEntity(cause)).build();
+    }
+    return Response.status(getStatusCode(exception)).entity(getEntity(exception)).build();
+  }
+
+  private Response withoutStackTrace(Exception exception) {
+    if (exception instanceof FatalException) {
+      Throwable cause = exception.getCause();
+      if (cause == null) {
+        return Response.status(getStatusCode(exception)).entity(exception.getMessage()).build();
+      }
+      return Response.status(getStatusCode(exception)).entity(
+          cause.getMessage() == null || cause.getMessage().isEmpty() ? OHNO : cause.getMessage())
+          .build();
     }
     return Response.status(getStatusCode(exception))
-        .entity(exception.getMessage() == null || exception.getMessage().isEmpty()
-            ? "Oh no, something wrong happened! Don't worry, we're on it!"
+        .entity(exception.getMessage() == null || exception.getMessage().isEmpty() ? OHNO
             : exception.getMessage())
         .build();
   }

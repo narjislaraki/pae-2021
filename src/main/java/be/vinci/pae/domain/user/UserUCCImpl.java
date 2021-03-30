@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.user;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import be.vinci.pae.api.exceptions.BusinessException;
@@ -25,9 +24,9 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO connection(String email, String password) {
-    dalServices.getConnection(true);
+    dalServices.getConnection(false);
     User user = (User) userDAO.getUserFromEmail(email);
-
+    dalServices.commitTransaction();
     if (user == null) {
       throw new UnauthorizedException("Wrong credentials");
     } else if (!user.isValidated()) {
@@ -49,12 +48,7 @@ public class UserUCCImpl implements UserUCC {
     if (alreadyPresent) {
       throw new BusinessException("This email or username is already in use");
     }
-    try {
-      dalServices.commitTransactionAndContinue();
-    } catch (SQLException e1) {
-      return;
-    }
-
+    dalServices.commitTransactionAndContinue();
 
     user.getAddress().setId(addressDAO.addAddress(user.getAddress()));
 
@@ -66,43 +60,49 @@ public class UserUCCImpl implements UserUCC {
 
     userDAO.addUser(user);
 
-    try {
-      dalServices.commitTransaction();
-    } catch (SQLException e) {
-      dalServices.rollbackTransaction();
-    }
+    dalServices.commitTransaction();
+
   }
 
 
   @Override
   public List<UserDTO> getUnvalidatedUsers() {
-    dalServices.getConnection(true);
-    return userDAO.getUnvalidatedUsers();
+    dalServices.getConnection(false);
+    List<UserDTO> list = userDAO.getUnvalidatedUsers();
+    dalServices.commitTransaction();
+    return list;
   }
 
   @Override
   public void acceptUser(int id, String role) {
-
     if (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")) {
       throw new BusinessException("Invalid role");
     }
     if (id < 0) {
       throw new BusinessException("Invalid id");
     }
-    dalServices.getConnection(true);
+    dalServices.getConnection(false);
     userDAO.accept(id, role);
+    dalServices.commitTransaction();
   }
 
   @Override
   public boolean deleteUser(int id) {
+    dalServices.getConnection(false);
     if (!userDAO.deleteUser(id)) {
+      dalServices.rollbackTransaction();
       throw new BusinessException("Invalid id");
     }
+    dalServices.commitTransaction();
     return true;
   }
 
+  @Override
   public UserDTO getUserFromId(int id) {
-    return userDAO.getUserFromId(id);
+    dalServices.getConnection(false);
+    UserDTO user = userDAO.getUserFromId(id);
+    dalServices.commitTransaction();
+    return user;
   }
 
 }

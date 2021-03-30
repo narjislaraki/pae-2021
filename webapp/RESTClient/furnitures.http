@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:8081/furnitures
+@baseAuthsUrl = http://localhost:8081/auths
+
+
+### FAIL
+# @name loggedUser
+POST {{baseAuthsUrl}}/login
+Content-Type: application/json
+
+{
+    "email":"test.test@test.com",
+    "password":"password"
+}
+###
+
+GET {{baseUrl}}
+Content-Type: application/json
+###
+
+GET {{baseUrl}}/furniture/1
+Content-Type: application/json

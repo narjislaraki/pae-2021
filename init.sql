@@ -55,13 +55,23 @@ CREATE TABLE pae.furnitures(
 	seller INTEGER REFERENCES pae.users(id_user)
 );
 
+CREATE TABLE pae.options(
+	id_option SERIAL PRIMARY KEY,
+	date TIMESTAMP NOT NULL,
+	option_term INTEGER NOT NULL,
+	cancellation_reason VARCHAR (150),
+	condition VARCHAR(9) NOT NULL,
+	id_user INTEGER REFERENCES pae.users(id_user) NOT NULL,
+	id_furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
+);
+
 CREATE TABLE pae.photos(
 	id_photo SERIAL PRIMARY KEY,
-	photo VARCHAR(400) NOT NULL,
+	photo TEXT NOT NULL,
 	is_visible BOOLEAN NOT NULL,
 	--description VARCHAR(200),
 	is_a_client_photo BOOLEAN NOT NULL, 
-	furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
+	id_furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
 );	
 
 ALTER TABLE pae.furnitures
@@ -93,11 +103,11 @@ INSERT INTO pae.addresses VALUES
 		(default, 'Lammerskreuzstrasse', '6', null, 'Roetgen', '52159', 'Allemagne');
 
 INSERT INTO pae.users VALUES
-		(default, 'bert', 'Satcho', 'Albert', 'bert.satcho@gmail.be', 'admin', '20210322', true, 'Jaune;10.', 1),
-		(default, 'lau', 'Satcho', 'Laurent', 'laurent.satcho@gmail.be', 'admin', '20210322', true, 'Mauve;7?', 2),
-		(default, 'Caro', 'Line', 'Caroline', 'caro.line@hotmail.com', 'antiquaire', '20210323', true, 'mdpusr.2', 3),
-		(default, 'achil', 'Ile', 'Achille', 'ach.ile@gmail.com', 'client', '20210323', true, 'mdpusr.2', 4),
-		(default, 'bazz', 'Ile', 'Basile', 'bazz.ile@gmail.be', 'client', '20210323', true, 'mdpusr.2', 5);
+		(default, 'bert', 'Satcho', 'Albert', 'bert.satcho@gmail.be', 'admin', '20210322', true, '$2a$10$eq5fAnhEKa9oSjBAu1B38.hd6uJv50n4EsXWqc3d2pdWSd0LdDOES', 1),--Jaune;10.
+		(default, 'lau', 'Satcho', 'Laurent', 'laurent.satcho@gmail.be', 'admin', '20210322', true, '$2a$10$57whA09ftjlLqfKN9T4ei.Mzq/FYvNFxzlDt07DpTK2tNRxKsSF0a', 2),--Mauve;7?
+		(default, 'Caro', 'Line', 'Caroline', 'caro.line@hotmail.com', 'antiquaire', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 3),--mdpusr.2
+		(default, 'achil', 'Ile', 'Achille', 'ach.ile@gmail.com', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 4),--mdpusr.2
+		(default, 'bazz', 'Ile', 'Basile', 'bazz.ile@gmail.be', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 5); --mdpusr.2
 
 INSERT INTO pae.requests_for_visits VALUES
 		(default, 'lundi de 18h à 22h', 'accepté', null, '2021-03-29 20:00:00', 4, 4),
@@ -113,9 +123,11 @@ INSERT INTO pae.types_of_furnitures VALUES
 INSERT INTO pae.furnitures VALUES
 		(default, 'acheté', 'Bahut profond d''une largeur de 112cm et d''une hauteur de 147cm.', 200.00, '2021-03-30', null, null, null, 1, 1, null, null),
 		(default, 'acheté', 'Large bureau 1m87 cm, 2 colonnes de tiroirs', 150.00, '2021-03-30', null, null, null, 2, 1, null, null),
-		(default, 'annulé', 'Table jardin en bois brut', null, null, null, null, null, 3, 2, null, null),
+		(default, 'refusé', 'Table jardin en bois brut', null, null, null, null, null, 3, 2, null, null),
 		(default, 'acheté', 'Table en chêne, pieds en fer forgé', 140.00, '2021-03-29', null, null, null, 3, 3, null, null),
 		(default, 'acheté', 'Secrétaire en acajou, marqueterie', 90.00, '2021-03-29', null, null, null, 4, 3, null, null);
+		-- test perso
+		--(default, 'en vente', 'Meuble test', 90.00, '2021-03-29', null, null, 500, 4, 3, null, null);
 		
 INSERT INTO pae.photos VALUES
 		(default, 'Bahut_2.png', false, true, 1),

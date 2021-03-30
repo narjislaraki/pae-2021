@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.UserDTO;
@@ -211,16 +212,10 @@ public class UserDAOImpl implements UserDAO {
       String sql = "DELETE FROM pae.users WHERE id_user = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ResultSet rs = ps.executeQuery();
-
-      if (rs.next()) {
-        return true;
-      }
-
+      return ps.executeUpdate() == 1 ? true : false;
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return false;
   }
 
   @Override

@@ -5,17 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
+
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.utils.Config;
 
 public class DalServicesImpl implements DalServices, DalBackendServices {
 
+  private ThreadLocal<Connection> td;
 
-  private static ThreadLocal<Connection> td;
-  private static Properties properties = new Properties();
-  private static BasicDataSource ds;
+  private Properties properties = new Properties();
+
+  private BasicDataSource ds;
 
   String url;
   String user;
@@ -36,14 +39,13 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     properties.setProperty("url", url);
     properties.setProperty("username", user);
     properties.setProperty("password", password);
-    properties.setProperty("maxActive", String.valueOf(connectionQuantity));
-    properties.setProperty("maxIdle", "10");
-    properties.setProperty("maxWait", "30000");
+
+    properties.setProperty("maxTotal", String.valueOf(connectionQuantity));
 
     try {
       ds = BasicDataSourceFactory.createDataSource(properties);
-    } catch (Exception e1) {
-      throw new FatalException(e1);
+    } catch (Exception e) {
+      throw new FatalException(e);
     }
     td = new ThreadLocal<Connection>();
   }
@@ -73,35 +75,47 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
 
 
   @Override
-  public synchronized void getConnection(boolean autoCommit) {
+  public void getConnection(boolean autoCommit) {
     try {
+      if (td.get() != null) {
+        throw new FatalException("Connection already given");
+      }
       Connection connection = ds.getConnection();
       connection.setAutoCommit(autoCommit);
-      // if (td.get() == null) {
-      // td.remove();
-      // }
       td.set(connection);
     } catch (SQLException e) {
       throw new FatalException(e);
     }
   }
 
+
   @Override
-  public void commitTransaction() throws SQLException {
-    Connection connection = commitTransac();
-    td.remove();
-    connection.close();
+  public void commitTransaction() {
+    Connection connection;
+    try {
+      connection = commitTransac();
+
+      td.remove();
+      connection.close();
+      // ds.invalidateConnection(connection);// TODO
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
 
-  private Connection commitTransac() throws SQLException {
+  private Connection commitTransac() {
     Connection connection = td.get();
-    connection.commit();
+    try {
+      connection.commit();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
     return connection;
   }
 
   @Override
-  public void commitTransactionAndContinue() throws SQLException {
+  public void commitTransactionAndContinue() {
     commitTransac();
   }
 
@@ -116,4 +130,6 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
       throw new FatalException(e);
     }
   }
+
+
 }
