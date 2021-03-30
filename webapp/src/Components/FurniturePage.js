@@ -16,10 +16,10 @@ let userData;
 let nbOfDay;
 let option;
 let menuDeroulant = '';
-
+let page = document.querySelector("#page");
 async function FurniturePage(id) {
     console.log(currentUser);
-    let page = document.querySelector("#page");
+    
     userData = getUserSessionData();
     /****** Furniture ******/
     try {
@@ -84,7 +84,7 @@ async function FurniturePage(id) {
                         ${furniture.description}
                     </div>
                     <div class="furniture-price-inline">
-                        <div id="furniture-price">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div>
+                        <div id="furniture-price">${furniture.offeredSellingPrice == 0 ? "N/A" : furniture.offeredSellingPrice}</div>
                         <div class="currency">euro</div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@ async function FurniturePage(id) {
             } else {
                 page.innerHTML += `
                 <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
-                <div>
+                <div class="option-days-below">
                 <p>Raison de l'annulation</p>
                 <input type="text" id="cancelOption">
                 <button id="cancelOptionBtn">Annuler l'option</button>
@@ -113,25 +113,26 @@ async function FurniturePage(id) {
         } else if (furniture.condition == "EN_VENTE") {
             if (nbOfDay >= 5) {
                 page.innerHTML += `<div class="option-days condensed small-caps">Vous avez atteint la limite d'option pour cet objet</div>`;
-            } else if (nbOfDay > 0) {
-                page.innerHTML += `
-                <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
-                <div>
-                <p>Durée de l'option</p>
-                <input type="number" id="optionTerm">
-                <button id="introduceOptionBtn">Introduire une option</button>
-                </div>
-                `;
-                let introduceOptionBtn = document.getElementById("introduceOptionBtn");
-                introduceOptionBtn.addEventListener("click", onIntroduceOption);
             } else {
-                page.innerHTML += `
-                <div>
+                if (nbOfDay > 0) {
+                    page.innerHTML += `
+                    <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>`;
+                }
+                page.innerHTML += `<div>
                 <p>Durée de l'option</p>
-                <input type="number" id="optionTerm">
+                <div class="plus-minus">
+                            <button class="btn minus-btn disabled" type="button">-</button>
+                            <input type="text" id="optionTerm" value="1">
+                            <button class="btn plus-btn" type="button">+</button>
+                        </div>
+
                 <button id="introduceOptionBtn">Introduire une option</button>
-                </div>
-                `;
+                </div>`;
+                //option counter
+                document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
+                document.querySelector(".plus-btn").addEventListener("click", incrementCounter());
+                document.querySelector(".minus-btn").addEventListener("click", decrementCounter());
+
                 let introduceOptionBtn = document.getElementById("introduceOptionBtn");
                 introduceOptionBtn.addEventListener("click", onIntroduceOption);
             }
@@ -167,8 +168,8 @@ async function FurniturePage(id) {
         `;
         } else if (furniture.condition == "DEPOSE_EN_MAGASIN") {
             menuDeroulant = `
-            <div class="furniture-price-inline" >
-                        <input type="number"  min="0" id="furniture-price" required>Entrez un prix de vente</div>
+            <div class="price-inline" >
+                        <input type="number"  min="0" id="price" required/>Entrez un prix de vente</div>
                         <div class="currency">euro</div>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -178,7 +179,7 @@ async function FurniturePage(id) {
                     <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
                     <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
                     <button id="buttonEnVente" class="dropdown-item" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                    <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
                 </div>
             </div>
         `;
@@ -263,7 +264,8 @@ const onDropOfStore = async () => {
 
 const onOfferedForSale = async () => {
     let id = furniture.id;
-    let price = document.getElementById("furniture-price").value;
+    let price = document.getElementById("price").value;
+    console.log(price);
 
     try {
         await callAPI(
@@ -348,32 +350,33 @@ smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
 
 let valueCount;
 
-function incrementCounter(){
-  console.log("increment")
-  valueCount = document.getElementById("quantity").value;
-  valueCount++;
-  document.getElementById("quantity").value = valueCount;
-  if(valueCount > 1){
-      document.querySelector(".minus-btn").removeAttribute("disabled");
-      document.querySelector(".minus-btn").classList.remove("disabled");
-  }
-  if(valueCount == 5){
-      document.querySelector(".plus-btn").setAttribute("disabled", "disabled");
-  }
+function incrementCounter() {
+    console.log("increment")
+    valueCount = document.getElementById("optionTerm").value;
+    valueCount++;
+    document.getElementById("optionTerm").value = valueCount;
+    if (valueCount > 1) {
+        document.querySelector(".minus-btn").removeAttribute("disabled");
+        document.querySelector(".minus-btn").classList.remove("disabled");
+    }
+    if (valueCount == 5) {
+        document.querySelector(".plus-btn").setAttribute("disabled", "disabled");
+    }
 }
 
-function decrementCounter(){
-  console.log("decrement")
-  valueCount = document.getElementById("quantity").value;
-  valueCount--;
-  document.getElementById("quantity").value = valueCount;
-  if(valueCount == 1){
-      document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
-  }
-  if(valueCount < 5){
-      document.querySelector(".plus-btn").removeAttribute("disabled");
-      document.querySelector(".plus-btn").classList.remove("disabled");
-  }
+function decrementCounter() {
+    console.log("decrement")
+    valueCount = document.getElementById("optionTerm").value;
+    valueCount--;
+    document.getElementById("optionTerm").value = valueCount;
+    if (valueCount == 1) {
+        document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
+    }
+    if (valueCount < 5) {
+        document.querySelector(".plus-btn").removeAttribute("disabled");
+        document.querySelector(".plus-btn").classList.remove("disabled");
+    }
 }
+
 
 export { FurniturePage };

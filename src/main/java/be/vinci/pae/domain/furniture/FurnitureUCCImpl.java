@@ -88,7 +88,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void withdrawSale(int id) {
     dalServices.getConnection(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
-    if (furniture.getCondition().equals(Condition.EN_VENTE)) {
+    if (furniture.getCondition().equals(Condition.EN_VENTE)
+        || furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.withdrawSale(id);
       dalServices.commitTransaction();
     } else {

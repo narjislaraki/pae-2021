@@ -735,6 +735,12 @@ footer{
     top: 32%;
     left: 50%;
 }
+.price-inline{
+    width:max-content;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+}
 #furniture-price{
     display: inline;
     font-family: Roboto;
@@ -799,6 +805,21 @@ footer{
     text-align: center;
     padding: 0.4rem;
 }
+.option-days-below{
+    position: absolute;
+    top: 58%;
+    right: 21.5%;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.002em;
+    color: #FFFFFF;
+    background: grey;
+    border-radius: 12px 12px 0px 0px;
+    width: 16rem;
+    text-align: center;
+    padding: 0.4rem;
+}
+
 .options-info{
     position: absolute;
     font-size: 14px;

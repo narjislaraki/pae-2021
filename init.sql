@@ -127,7 +127,7 @@ INSERT INTO pae.furnitures VALUES
 		(default, 'acheté', 'Table en chêne, pieds en fer forgé', 140.00, '2021-03-29', null, null, null, 3, 3, null, null),
 		(default, 'acheté', 'Secrétaire en acajou, marqueterie', 90.00, '2021-03-29', null, null, null, 4, 3, null, null),
 		-- test perso
-		(default, 'en vente', 'Meuble test', 90.00, '2021-03-29', null, null, 500, 4, 3, null, null);
+		--(default, 'en vente', 'Meuble test', 90.00, '2021-03-29', null, null, 500, 4, 3, null, null);
 		
 INSERT INTO pae.photos VALUES
 		(default, 'Bahut_2.png', false, true, 1),
