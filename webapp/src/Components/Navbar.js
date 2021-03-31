@@ -27,27 +27,34 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <div class="user-head">
-          <p class="text-user">Bonjour,</p>
+        <div class="user-menu">
+        
+          <p class="text-user" id="bonjour">Bonjour,</p>
           
-          <p id="username" class="text-user">${user.username}</p>
-          <div class="dropleft">
-            <i id="user" class="bi bi-person-circle dropdown-toggle-user"></i>
-            <ul class="dropdown-menu dropdown-menu-left condensed" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" id="profile" href="#">Profile</a></li>
-              <li><a class="dropdown-item" id="logout" href="#">Se déconnecter</a></li>
-            </ul>
-          </div>
-          <div id="adminToolsIcon">          
-          </div>
+          <p id="username-menu" class="text-user">${user.username}</p>
+            <div class="dropleft" id="head-menu">
+              <i id="user" class="bi bi-person-circle dropdown-toggle-user"></i>
+              <ul class="dropdown-menu dropdown-menu-left condensed" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" id="profile" href="#">Profile</a></li>
+                <li><a class="dropdown-item" id="logout" href="#">Se déconnecter</a></li>
+              </ul>
+            </div>
+            <div id="adminToolsIcon">          
+            </div>
         </div>
         `;
     navBar.innerHTML = nb;
     if (user.role == "ADMIN"){
       let adminTools = document.getElementById("adminToolsIcon");
       adminTools.innerHTML = `<img src="../assets/key4Admin.png" alt="key" id="keyAdmin" width="30" height="30">`;
+      //adminTools.innerHTML = `<i class="bi bi-key-fill" id="keyAdmin" width="30" height="30"></i>`;
       let keyAdmin = document.getElementById("keyAdmin");
       keyAdmin.addEventListener("click", onClickTools);
+    }
+    else{
+      let userMenu = document.querySelector(".user-menu");
+      console.log("change grid col")
+      userMenu.style.gridTemplateColumns = "25% 25% 25% 25%";
     }
   } else {
     nb = `<h1 class="lines" ></h1>
