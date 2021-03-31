@@ -19,7 +19,7 @@ let menuDeroulant = '';
 let page = document.querySelector("#page");
 async function FurniturePage(id) {
     console.log(currentUser);
-    
+
     userData = getUserSessionData();
     /****** Furniture ******/
     try {
@@ -35,32 +35,34 @@ async function FurniturePage(id) {
 
     /****** nbOfDays ******/
     let idFurniture = furniture.id;
-    let idUser = currentUser.id;
-    try {
-        nbOfDay = await callAPI(
-            API_BASE_URL + "furniture/" + idFurniture + "/" + idUser + "/getNbOfDay",
-            "GET",
-            userData.token,
-            undefined,
-        );
-    } catch (err) {
-        console.error("FurniturePage::onNbOfDay", err);
-        PrintError(err);
-    }
-
-    /****** Option ******/
-    try {
-        option = await callAPI(
-            API_BASE_URL + "furniture/" + idFurniture + "/getOption",
-            "GET",
-            userData.token,
-            undefined,
-        );
-    } catch (err) {
-        //ugly and terrible idea but it works!
-        if (err != "SyntaxError: Unexpected end of JSON input") {
-            console.error("FurniturePage::onGetOption", err);
+    if (currentUser) {
+        let idUser = currentUser.id;
+        try {
+            nbOfDay = await callAPI(
+                API_BASE_URL + "furniture/" + idFurniture + "/" + idUser + "/getNbOfDay",
+                "GET",
+                userData.token,
+                undefined,
+            );
+        } catch (err) {
+            console.error("FurniturePage::onNbOfDay", err);
             PrintError(err);
+        }
+
+        /****** Option ******/
+        try {
+            option = await callAPI(
+                API_BASE_URL + "furniture/" + idFurniture + "/getOption",
+                "GET",
+                userData.token,
+                undefined,
+            );
+        } catch (err) {
+            //ugly and terrible idea but it works!
+            if (err != "SyntaxError: Unexpected end of JSON input") {
+                console.error("FurniturePage::onGetOption", err);
+                PrintError(err);
+            }
         }
     }
 
@@ -208,7 +210,7 @@ async function FurniturePage(id) {
                 <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
                 </div>
                 `;
-                menuDeroulant = `
+            menuDeroulant = `
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     ${furniture.condition}
@@ -247,9 +249,9 @@ async function FurniturePage(id) {
         buttonRetire.addEventListener("click", onWithdrawSale)
         try {
             let cancelOptionBtn = document.getElementById("cancelOptionBtn");
-                cancelOptionBtn.addEventListener("click", onCancelOption);
-        } catch(err){
-            
+            cancelOptionBtn.addEventListener("click", onCancelOption);
+        } catch (err) {
+
         }
     }
 };
@@ -295,7 +297,7 @@ const onOfferedForSale = async () => {
     let id = furniture.id;
     let price = document.getElementById("price").value;
     console.log(price);
-    if (price == ""){
+    if (price == "") {
         let error = {
             message: "Veuillez d'abord entrer un prix de vente",
         }
@@ -338,7 +340,7 @@ const onCancelOption = async () => {
     console.log("ceci n'est pas un test")
     let id = furniture.id;
     let reason = document.getElementById("cancelOption").value;
-    if (reason == ""){
+    if (reason == "") {
         let error = {
             message: "Veuillez d'abord entrer une raison d'annulation",
         }
