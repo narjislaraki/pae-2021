@@ -115,17 +115,37 @@ INSERT INTO pae.requests_for_visits VALUES
 		(default, 'tous les jours de 15h à 18h', 'acceptée', null, '2021-03-29 15:00:00', 5, 5);
 	
 INSERT INTO pae.types_of_furnitures VALUES
+		(default, 'Armoire'),
 		(default, 'Bahut'),
+		(default, 'Bibliothèque'),
+		(default, 'Bonnetière'),
+		(default, 'Buffet'),
 		(default, 'Bureau'),
+		(default, 'Chaise'),
+		(default, 'Chiffonnier'),
+		(default, 'Coffre'),
+		(default, 'Coiffeuse'),
+		(default, 'Commode'),
+		(default, 'Confident / Indiscret'),
+		(default, 'Console'),
+		(default, 'Dresse'),
+		(default, 'Fauteuil'),
+		(default, 'Guéridon'),
+		(default, 'Lingère'),
+		(default, 'Lit'),
+		(default, 'Penderie'),
+		(default, 'Secrétaire'),
 		(default, 'Table'),
-		(default, 'Secrétaire');
+		(default, 'Tabouret'),
+		(default, 'Vaisselier'),
+		(default, 'Valet muet');
 		
 INSERT INTO pae.furnitures VALUES
-		(default, 'acheté', 'Bahut profond d''une largeur de 112cm et d''une hauteur de 147cm.', 200.00, '2021-03-30', null, null, null, 1, 1, null, null),
-		(default, 'acheté', 'Large bureau 1m87 cm, 2 colonnes de tiroirs', 150.00, '2021-03-30', null, null, null, 2, 1, null, null),
-		(default, 'refusé', 'Table jardin en bois brut', null, null, null, null, null, 3, 2, null, null),
-		(default, 'acheté', 'Table en chêne, pieds en fer forgé', 140.00, '2021-03-29', null, null, null, 3, 3, null, null),
-		(default, 'acheté', 'Secrétaire en acajou, marqueterie', 90.00, '2021-03-29', null, null, null, 4, 3, null, null);
+		(default, 'acheté', 'Bahut profond d''une largeur de 112cm et d''une hauteur de 147cm.', 200.00, '2021-03-30', null, null, null, 2, 1, null, null),
+		(default, 'acheté', 'Large bureau 1m87 cm, 2 colonnes de tiroirs', 150.00, '2021-03-30', null, null, null, 6, 1, null, null),
+		(default, 'refusé', 'Table jardin en bois brut', null, null, null, null, null, 21, 2, null, null),
+		(default, 'acheté', 'Table en chêne, pieds en fer forgé', 140.00, '2021-03-29', null, null, null, 21, 3, null, null),
+		(default, 'acheté', 'Secrétaire en acajou, marqueterie', 90.00, '2021-03-29', null, null, null, 20, 3, null, null);
 		-- test perso
 		--(default, 'en vente', 'Meuble test', 90.00, '2021-03-29', null, null, 500, 4, 3, null, null);
 		

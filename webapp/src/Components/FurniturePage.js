@@ -172,7 +172,6 @@ async function FurniturePage(id) {
             menuDeroulant = `
             <div class="price-inline" >
                         <input type="number"  min="0" id="price" required/>Entrez un prix de vente</div>
-                        <div class="currency">euro</div>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     ${furniture.condition}
@@ -347,10 +346,9 @@ const onCancelOption = async () => {
         PrintError(error);
         return;
     }
-    let id_option = option.id;
     try {
         await callAPI(
-            API_BASE_URL + "furniture/" + id_option + "/" + reason + "/cancelOption",
+            API_BASE_URL + "furniture/" + id + "/" + reason + "/cancelOption",
             "PATCH",
             userData.token,
             undefined,
