@@ -51,14 +51,13 @@ const onUnregisteredUsersList = (data) =>{
     `;
     console.log("ici")
    
-    //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
     onUnregisteredUsersListPage += data
         .map((user) =>
-        `<tr data-id="${user.id}">
+        `<tr data-id="${user.id}" id="tablewithspace">
                             <td>${user.username}</td>
                             <td>${user.firstName}</td>
                             <td>${user.lastName}</td>
-                            <td><p class="block-display">${user.address.street}, ${user.address.buildingNumber}${(user.address.unitNumber == 0 ? "" : "/" + user.address.unitNumber)}<br>
+                            <td><p class="block-display">${user.address.street}, ${user.address.buildingNumber}${(user.address.unitNumber == null? "" : "/" + user.address.unitNumber)}<br>
                             ${user.address.postCode} - ${user.address.city} <br>
                             ${user.address.country}</p>
                             <button class="btn btn-dark condensed small-caps block-display" id="btn-map" data-id="${user.id}">Voir sur la carte</button></td>
@@ -68,10 +67,12 @@ const onUnregisteredUsersList = (data) =>{
                             <label for="antique_dealer${user.id}">Antiquaire</label><br></td>
                             <td><button name="accept" class="btn btn-dark condensed small-caps block-display btn-accept" data-id="${user.id}" type="submit">Accepter</button><br>
                             <button name="refuse" class="btn btn-dark condensed small-caps block-display btn-refuse" data-id="${user.id}" type="submit">Refuser</button></td>
-                            </tr>`)
+                            </tr>
+                            `)
         .join("");
     page.innerHTML += onUnregisteredUsersListPage;
-    page.innerHTML += `</tr></tbody></table>` ;
+    page.innerHTML += `</tbody></table> ` ;    
+
     return page;
 }
 

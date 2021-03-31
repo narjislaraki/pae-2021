@@ -137,9 +137,14 @@ public class Authentication {
     address.setCity(json.get("city").asText());
     address.setPostCode(json.get("postcode").asText());
     address.setCountry(json.get("country").asText());
-    if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
+    if (json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
       address.setUnitNumber(json.get("unitNumber").asText());
     }
+    System.out.println(user.getAddress());
+    if (user.getAddress().getUnitNumber() == null)
+      System.out.println("est null");
+    else
+      System.out.println("pas null");
 
     userUCC.registration(user);
 
