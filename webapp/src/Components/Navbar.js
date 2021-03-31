@@ -10,8 +10,10 @@ const Navbar = () => {
     nb = `
     <h1 class="lines" ></h1>
         <div class= "title">
-          <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
-          <img class="logo-writing" src="assets/lvs.svg" alt="logo">
+          <a id="home" href="#">
+            <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
+            <img class="logo-writing" src="assets/lvs.svg" alt="logo">
+          </a>
         </div>
         <button id="all-furnitures-navbar" class="condensed small-caps">
           Voir tous les meubles
@@ -52,8 +54,10 @@ const Navbar = () => {
   } else {
     nb = `<h1 class="lines" ></h1>
     <div class= "title">
-      <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
-      <img class="logo-writing" src="assets/lvs.svg" alt="logo">
+      <a id="home" href="#">
+        <img class="rect-logo" src="assets/rectangle.svg" alt="rectangle logo">
+        <img class="logo-writing" src="assets/lvs.svg" alt="logo">
+      </a>
     </div>
     <button id="all-furnitures-navbar" class="condensed small-caps">
         Voir tous les meubles
@@ -80,11 +84,19 @@ const Navbar = () => {
   let voir = document.getElementById("all-furnitures-navbar");
   voir.addEventListener("click", onFurnitureListPage);
 
+  let home = document.getElementById("home");
+  home.addEventListener("click", onHomePage);
+
+
 };
 
 const onFurnitureListPage = (e) => {
-  e.preventDefault;
+  e.preventDefault();
   RedirectUrl("/furnitures");
+};
+const onHomePage = (e) => {
+  e.preventDefault();
+  RedirectUrl("/");
 };
 
 const onLogout = (e) =>{
