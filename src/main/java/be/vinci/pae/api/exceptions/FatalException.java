@@ -2,7 +2,7 @@ package be.vinci.pae.api.exceptions;
 
 import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
+import be.vinci.pae.utils.APILogger;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -10,8 +10,8 @@ import jakarta.ws.rs.core.Response.Status;
 public class FatalException extends WebApplicationException {
 
   private static final long serialVersionUID = 14366112877881039L;
-  @Inject
-  private Logger logger;
+
+  private Logger logger = APILogger.getLogger();
 
   /**
    * Constructor with a Throwable original cause wrapped as parameter. The error will be logged.
@@ -24,8 +24,7 @@ public class FatalException extends WebApplicationException {
   }
 
   /**
-   * Constructor with a Throwable original cause wrapped as parameter and a message. The error will
-   * be logged.
+   * Constructor with a Throwable original cause wrapped as parameter and a message. The error will be logged.
    * 
    * @param message the message
    * @param cause the original Throwable element

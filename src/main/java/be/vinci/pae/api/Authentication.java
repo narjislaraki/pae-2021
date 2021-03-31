@@ -75,8 +75,7 @@ public class Authentication {
   }
 
   /**
-   * This method is used to attempt to log a client in.Valid email and password are required to be
-   * able to send a token and a response 200.
+   * This method is used to attempt to log a client in.Valid email and password are required to be able to send a token and a response 200.
    * 
    * @param json post received from the client
    * @return Response 401, 412 if KO; 200 and credentials + token if OK
@@ -139,7 +138,7 @@ public class Authentication {
     address.setPostCode(json.get("postcode").asText());
     address.setCountry(json.get("country").asText());
     if (!json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
-      address.setUnitNumber(json.get("unitNumber").asInt());
+      address.setUnitNumber(json.get("unitNumber").asText());
     }
 
     userUCC.registration(user);

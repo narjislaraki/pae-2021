@@ -49,12 +49,18 @@ const onUnregisteredUsersList = (data) =>{
        
         
     `;
+    console.log("ici")
+   
+    //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
     onUnregisteredUsersListPage += data
-        .map((user) => `<tr data-id="${user.id}">
+        .map((user) =>
+        `<tr data-id="${user.id}">
                             <td>${user.username}</td>
                             <td>${user.firstName}</td>
                             <td>${user.lastName}</td>
-                            <td><p class="block-display">${JSON.stringify(user.address)}</p>
+                            <td><p class="block-display">${user.address.street}, ${user.address.buildingNumber}${(user.address.unitNumber == 0 ? "" : "/" + user.address.unitNumber)}<br>
+                            ${user.address.postCode} - ${user.address.city} <br>
+                            ${user.address.country}</p>
                             <button class="btn btn-dark condensed small-caps block-display" id="btn-map" data-id="${user.id}">Voir sur la carte</button></td>
                             <td><input type="radio" id="nephew${user.id}" name="role${user.id}" data-id="${user.id}" value="nephew">
                             <label for="nephew${user.id}" data-id="${user.id}">Neveu</label><br>
