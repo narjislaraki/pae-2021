@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
@@ -120,6 +121,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    System.out.println(option);
     return option;
   }
 
@@ -183,14 +185,16 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public OptionDTO getOption(int id) {
+  public OptionDTO getOption(int idFurniture) {
     OptionDTO option = null;
     try {
       String sql = "SELECT id_option, date, option_term, cancellation_reason, "
           + "condition, id_user, id_furniture"
           + " FROM pae.options WHERE id_furniture = ? AND condition = ?;";
+
+      System.out.println(State.EN_COURS.toString());
       ps = dalBackendService.getPreparedStatement(sql);
-      ps.setInt(1, id);
+      ps.setInt(1, idFurniture);
       ps.setString(2, State.EN_COURS.toString());
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
