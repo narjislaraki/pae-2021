@@ -51,9 +51,10 @@ const onUnregisteredUsersList = (data) =>{
     `;
     console.log("ici")
    
+    //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
     onUnregisteredUsersListPage += data
         .map((user) =>
-        `<tr data-id="${user.id}" id="tablewithspace">
+        `<tr data-id="${user.id}">
                             <td>${user.username}</td>
                             <td>${user.firstName}</td>
                             <td>${user.lastName}</td>
@@ -71,7 +72,8 @@ const onUnregisteredUsersList = (data) =>{
                             `)
         .join("");
     page.innerHTML += onUnregisteredUsersListPage;
-    page.innerHTML += `</tbody></table> ` ;    
+    page.innerHTML += `</tbody></table>` ;
+    //<div class="white-space"></div>
 
     return page;
 }

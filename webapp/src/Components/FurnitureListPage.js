@@ -68,7 +68,7 @@ async function FurnitureListPage() {
 
 
   //close the div
-  page.innerHTML += `<div class="white-space"></div></div>`;
+  page.innerHTML += `</div>`;
   let list = document.getElementsByClassName("furniture");
   console.log(list, "ici");
   Array.from(list).forEach((e) => {
