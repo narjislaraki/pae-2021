@@ -2,9 +2,12 @@ package be.vinci.pae.api;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -141,7 +144,7 @@ public class FurnitureResource {
   @Produces(MediaType.APPLICATION_JSON)
   public boolean cancelOption(@Context ContainerRequest request, @PathParam("id_option") int id,
       @PathParam("reason") String reason) {
-    furnitureUCC.cancelOption(reason, id);
+    furnitureUCC.cancelOption(reason, id, (UserDTO) request.getProperty("user"));
     return true;
   }
 

@@ -2,10 +2,13 @@ package be.vinci.pae.domain.furniture;
 
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.api.exceptions.BusinessException;
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserDTO.Role;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.FurnitureDAO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -117,11 +120,16 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
-  public void cancelOption(String cancellationReason, int idOption) {
+  public void cancelOption(String cancellationReason, int idOption, UserDTO user) {
     if (idOption < 1) {
       throw new BusinessException("Invalid id");
     }
     dalServices.getConnection(false);
+    OptionDTO opt = furnitureDao.getOption(idOption);
+    if (user.getId() != opt.getIdUser() && user.getRole() != Role.ADMIN) {
+      dalServices.commitTransaction();
+      throw new BusinessException("You have no right to delete this option");
+    }
     int idFurniture = furnitureDao.cancelOption(cancellationReason, idOption);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(idFurniture);
     furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
