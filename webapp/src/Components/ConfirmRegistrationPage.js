@@ -1,39 +1,42 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
-import {getUserSessionData} from "../utils/session.js";
+import { getUserSessionData } from "../utils/session.js";
 let userData;
-let adresse = ``; 
+let adresse = ``;
 const API_BASE_URL = "/api/users/";
 let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer l'inscription</div>`;
 
 const ConfirmRegistrationPage = async () => {
   userData = getUserSessionData();
   console.log(userData)
-    let page = document.querySelector("#page");
-    page.innerHTML = confirmRegistrationPage;
-    try{
-        const unregisteredUsers = await callAPI(
-          API_BASE_URL + "unvalidatedList",
-          "GET",
-          userData.token,
-          undefined);
-        onUnregisteredUsersList(unregisteredUsers);
-    }catch(err){
-        console.error("ConfirmRegistrationPage::onUnregisteredUsersList", err);
-        PrintError(err);
+  let page = document.querySelector("#page");
+  page.innerHTML = confirmRegistrationPage;
+  try {
+    const unregisteredUsers = await callAPI(
+      API_BASE_URL + "unvalidatedList",
+      "GET",
+      userData.token,
+      undefined);
+    onUnregisteredUsersList(unregisteredUsers);
+  } catch (err) {
+    if (err == "Error: Admin only") {
+      err.message = "Seuls les administrateurs peuvent accéder à cette page !";
     }
-    let validateBtn = document.getElementsByClassName("btn-accept");
-    let refuseBtn = document.getElementsByClassName("btn-refuse");
-    Array.from(validateBtn).forEach((e) => {
-      e.addEventListener("click", onAccept);
-    });
-    Array.from(refuseBtn).forEach((e) => {
-      e.addEventListener("click", onRefuse);
-    });
+    console.error("ConfirmRegistrationPage::onUnregisteredUsersList", err);
+    PrintError(err);
+  }
+  let validateBtn = document.getElementsByClassName("btn-accept");
+  let refuseBtn = document.getElementsByClassName("btn-refuse");
+  Array.from(validateBtn).forEach((e) => {
+    e.addEventListener("click", onAccept);
+  });
+  Array.from(refuseBtn).forEach((e) => {
+    e.addEventListener("click", onRefuse);
+  });
 };
 
-const onUnregisteredUsersList = (data) =>{
-    let onUnregisteredUsersListPage = 
+const onUnregisteredUsersList = (data) => {
+  let onUnregisteredUsersListPage =
     `<table class="table table-light">
       <thead>
         <tr>
@@ -49,16 +52,16 @@ const onUnregisteredUsersList = (data) =>{
        
         
     `;
-    console.log("ici")
-   
-    //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
-    onUnregisteredUsersListPage += data
-        .map((user) =>
-        `<tr data-id="${user.id}">
+  console.log("ici")
+
+  //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
+  onUnregisteredUsersListPage += data
+    .map((user) =>
+      `<tr data-id="${user.id}">
                             <td>${user.username}</td>
                             <td>${user.firstName}</td>
                             <td>${user.lastName}</td>
-                            <td><p class="block-display">${user.address.street}, ${user.address.buildingNumber}${(user.address.unitNumber == null? "" : "/" + user.address.unitNumber)}<br>
+                            <td><p class="block-display">${user.address.street}, ${user.address.buildingNumber}${(user.address.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
                             ${user.address.postCode} - ${user.address.city} <br>
                             ${user.address.country}</p>
                             <button class="btn btn-dark condensed small-caps block-display" id="btn-map" data-id="${user.id}">Voir sur la carte</button></td>
@@ -70,12 +73,12 @@ const onUnregisteredUsersList = (data) =>{
                             <button name="refuse" class="btn btn-dark condensed small-caps block-display btn-refuse" data-id="${user.id}" type="submit">Refuser</button></td>
                             </tr>
                             `)
-        .join("");
-    page.innerHTML += onUnregisteredUsersListPage;
-    page.innerHTML += `</tbody></table>` ;
-    //<div class="white-space"></div>
+    .join("");
+  page.innerHTML += onUnregisteredUsersListPage;
+  page.innerHTML += `</tbody></table>`;
+  //<div class="white-space"></div>
 
-    return page;
+  return page;
 }
 
 const onAccept = async (e) => {
@@ -89,49 +92,49 @@ const onAccept = async (e) => {
   if (document.getElementById('antique_dealer' + id).checked) {
     role = "antiquaire";
   }
-  
-  try{
+
+  try {
     await callAPI(
       API_BASE_URL + "user/" + id + "/accept/" + role,
       "PATCH",
       userData.token,
       undefined
     );
-  }catch(err){
+  } catch (err) {
     console.error("ConfirmRegistrationPage::onAccept", err);
     PrintError(err);
   }
   ConfirmRegistrationPage();
-}; 
+};
 
 const onRefuse = async (e) => {
   let id = e.srcElement.dataset.id;
   console.log(id);
-  try{
+  try {
     await callAPI(
       API_BASE_URL + "user/" + id,
       "DELETE",
       userData.token,
       undefined,
     );
-  }catch(err){
+  } catch (err) {
     console.error("ConfirmRegistrationPage::onRefuse", err);
     PrintError(err);
   }
   ConfirmRegistrationPage();
-}; 
+};
 
 
 const onError = (err) => {
-    console.error("ConfirmRegistrationPage::onError:", err);
-    let errorMessage;
-    if (err.message) {
-      errorMessage = err.message;
-    } else errorMessage = err;
-    if (errorMessage.includes("jwt expired"))
-      errorMessage += "<br> Please logout first, then login.";
-    RedirectUrl("/error", errorMessage);
-    //TODO
-  };
+  console.error("ConfirmRegistrationPage::onError:", err);
+  let errorMessage;
+  if (err.message) {
+    errorMessage = err.message;
+  } else errorMessage = err;
+  if (errorMessage.includes("jwt expired"))
+    errorMessage += "<br> Please logout first, then login.";
+  RedirectUrl("/error", errorMessage);
+  //TODO
+};
 
 export default ConfirmRegistrationPage;
