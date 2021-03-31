@@ -185,7 +185,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public OptionDTO getOption(int id_furniture) {
+  public OptionDTO getOption(int idFurniture) {
     OptionDTO option = null;
     try {
       String sql = "SELECT id_option, date, option_term, cancellation_reason, "
@@ -194,7 +194,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
       System.out.println(State.EN_COURS.toString());
       ps = dalBackendService.getPreparedStatement(sql);
-      ps.setInt(1, id_furniture);
+      ps.setInt(1, idFurniture);
       ps.setString(2, State.EN_COURS.toString());
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
