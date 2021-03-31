@@ -72,8 +72,9 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
     } // Insert new exception rules here when extend BusinessException
     else if (exception instanceof BusinessException) {
       return Response.Status.PRECONDITION_FAILED.getStatusCode();
+    } else {
+      return Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
     }
-    return Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
   }
 
   /*
