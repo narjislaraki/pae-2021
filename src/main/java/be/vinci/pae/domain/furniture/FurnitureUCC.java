@@ -2,7 +2,9 @@ package be.vinci.pae.domain.furniture;
 
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.user.UserDTO;
 
 public interface FurnitureUCC {
 
@@ -24,7 +26,7 @@ public interface FurnitureUCC {
 
   void introduceOption(int optionTerm, int idUser, int idFurniture);
 
-  void cancelOption(String cancellationReason, int idOption);
+  void cancelOption(String cancellationReason, int idOption, UserDTO user);
 
   List<FurnitureDTO> getFurnitureList();
 

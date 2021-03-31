@@ -197,6 +197,30 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
+        } else if (furniture.condition == "SOUS_OPTION") {
+            console.log(option);
+            console.log("pouet")
+            console.log(currentUser)
+            page.innerHTML += `
+                <div class="option-days-below">
+                <p>Raison de l'annulation</p>
+                <input type="text" id="cancelOption">
+                <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+                </div>
+                `;
+                menuDeroulant = `
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${furniture.condition}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                    <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                </div>
+            </div>
+        `;
         } else if (furniture.condition == "RETIRE" || furniture.condition == "REFUSE") {
             menuDeroulant = `
             <div class="dropdown">
@@ -221,6 +245,12 @@ async function FurniturePage(id) {
         buttonMagasin.addEventListener("click", onDropOfStore);
         buttonEnVente.addEventListener("click", onOfferedForSale);
         buttonRetire.addEventListener("click", onWithdrawSale)
+        try {
+            let cancelOptionBtn = document.getElementById("cancelOptionBtn");
+                cancelOptionBtn.addEventListener("click", onCancelOption);
+        } catch(err){
+            
+        }
     }
 };
 
@@ -305,6 +335,7 @@ const onWithdrawSale = async () => {
 };
 
 const onCancelOption = async () => {
+    console.log("ceci n'est pas un test")
     let id = furniture.id;
     let reason = document.getElementById("cancelOption").value;
     if (reason == ""){
