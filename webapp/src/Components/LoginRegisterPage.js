@@ -52,13 +52,13 @@ let loginPage = `<div class="register-card">
     
     <!-- the "require" from the two next fields are momentally disabled to avoid problems with the functional tests -->
     <div class="mb-3">
-      <input type="email" class="form-control input-card" id="email-login" aria-describedby="emailHelp" placeholder="Email"> <!-- required="" pattern="^\\w+([.-]?\\w+)*@\\w+([\.-]?\\w+)*(\\.\\w{2,4})+\$" -->
+      <input type="email" class="form-control input-card-login" id="email-login" aria-describedby="emailHelp" placeholder="Email"> <!-- required="" pattern="^\\w+([.-]?\\w+)*@\\w+([\.-]?\\w+)*(\\.\\w{2,4})+\$" -->
     </div>
     <div class="mb-3">
-      <input type="password" class="form-control input-card" id="password-login" placeholder="Mot de passe"> <!--  required="" -->
+      <input type="password" class="form-control input-card input-card-login" id="password-login" placeholder="Mot de passe"> <!--  required="" -->
     </div>
-    <div class="mb-3 form-check stayconnected">
-      <input type="checkbox" class="form-check-input" id="stayconnected">
+    <div class="mb-3  stayconnected">
+      <input type="checkbox" id="stayconnected">
       <label class="form-check-label" for="exampleCheck1">Rester connecté(e)</label>
     </div>
     <button class="btn btn-dark btn-navbar condensed small-caps" type="submit" id="btn-login" >Se Connecter</button>
