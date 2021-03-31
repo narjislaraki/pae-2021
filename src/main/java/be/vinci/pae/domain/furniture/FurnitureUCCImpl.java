@@ -126,14 +126,15 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     }
     dalServices.getConnection(false);
     OptionDTO opt = furnitureDao.getOption(idOption);
-    if (user.getId() != opt.getIdUser() && user.getRole() != Role.ADMIN) {
+    if (user.getId() == opt.getIdUser() || user.getRole() == Role.ADMIN) {
+      int idFurniture = furnitureDao.cancelOption(cancellationReason, opt.getId());
+      Furniture furniture = (Furniture) furnitureDao.getFurnitureById(idFurniture);
+      furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
+      dalServices.commitTransaction();
+    } else {
       dalServices.commitTransaction();
       throw new BusinessException("You have no right to delete this option");
     }
-    int idFurniture = furnitureDao.cancelOption(cancellationReason, idOption);
-    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(idFurniture);
-    furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
-    dalServices.commitTransaction();
   }
 
   @Override
