@@ -36,7 +36,7 @@ public interface FurnitureUCC {
 
   FurnitureDTO getFurnitureById(int id);
 
-  OptionDTO getOption(int id_furniture);
+  OptionDTO getOption(int idFurniture);
 
   int getNbOfDay(int idFurniture, int idUser);
 }
