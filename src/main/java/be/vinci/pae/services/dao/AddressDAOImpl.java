@@ -3,6 +3,7 @@ package be.vinci.pae.services.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
@@ -28,8 +29,9 @@ public class AddressDAOImpl implements AddressDAO {
       PreparedStatement ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, address.getStreet());
       ps.setString(2, address.getBuildingNumber());
-      if (address.getUnitNumber() != 0) {
-        ps.setInt(3, address.getUnitNumber());
+      System.out.println("coucou " + address.toString());
+      if (address.getUnitNumber() != null) { // TODO
+        ps.setString(3, address.getUnitNumber());
       } else {
         ps.setObject(3, null);
       }
@@ -66,8 +68,8 @@ public class AddressDAOImpl implements AddressDAO {
         address = addressFactory.getAddress();
         address.setId(rs.getInt(1));
         address.setStreet(rs.getString(2));
-        address.setBuildingNumber(rs.getString(3));
-        address.setUnitNumber(rs.getInt(4));
+        address.setBuildingNumber(rs.getString(3) == null ? "0" : rs.getString(3));
+        address.setUnitNumber(rs.getString(4));
         address.setCity(rs.getString(5));
         address.setPostCode(rs.getString(6));
         address.setCountry(rs.getString(7));

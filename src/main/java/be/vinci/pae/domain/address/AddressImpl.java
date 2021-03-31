@@ -3,7 +3,7 @@ package be.vinci.pae.domain.address;
 public class AddressImpl implements Address {
 
   private int id;
-  private int unitNumber;
+  private String unitNumber;
   private String street;
   private String buildingNumber;
   private String city;
@@ -21,12 +21,12 @@ public class AddressImpl implements Address {
   }
 
   @Override
-  public int getUnitNumber() {
+  public String getUnitNumber() {
     return unitNumber;
   }
 
   @Override
-  public void setUnitNumber(int unitNumber) {
+  public void setUnitNumber(String unitNumber) {
     this.unitNumber = unitNumber;
   }
 
@@ -80,5 +80,11 @@ public class AddressImpl implements Address {
     this.country = country;
   }
 
+  @Override
+  public String toString() {
+    return "AddressImpl [id=" + id + ", unitNumber=" + unitNumber + ", street=" + street
+        + ", buildingNumber=" + buildingNumber + ", city=" + city + ", postCode=" + postCode
+        + ", country=" + country + "]";
+  }
 
 }

@@ -9,9 +9,9 @@ public interface Address {
 
   void setId(int id);
 
-  int getUnitNumber();
+  String getUnitNumber();
 
-  void setUnitNumber(int unitNumber);
+  void setUnitNumber(String unitNumber);
 
   String getStreet();
 
