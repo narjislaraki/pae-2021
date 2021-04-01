@@ -16,15 +16,15 @@ public interface FurnitureDAO {
   // A REVOIR
 
 
-  void setCondition(Furniture furniture, Condition condition);
+  void setFurnitureCondition(Furniture furniture, Condition condition);
 
-  int getNumberOfOptions(int idFurniture, int idUser);
+  int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser);
 
   void introduceOption(int optionTerm, int idUser, int idFurniture);
 
   int cancelOption(String cancellationReason, int idOption);
 
-  void indicateUnderOption(int id);
+  void indicateFurnitureUnderOption(int id);
 
   void indicateSentToWorkshop(int id);
 
@@ -43,7 +43,7 @@ public interface FurnitureDAO {
       Map<Integer, List<String>> furnitures);
 
 
-  String getTypeById(int id);
+  String getFurnitureTypeById(int id);
 
   String getFavouritePhotoById(int id);
 

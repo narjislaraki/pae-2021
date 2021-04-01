@@ -35,9 +35,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
-  public int getNbOfDay(int idFurniture, int idUser) {
+  public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
     dalServices.getConnection(false);
-    int nbOfDay = furnitureDao.getNumberOfOptions(idFurniture, idUser);
+    int nbOfDay = furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
     dalServices.commitTransaction();
     return nbOfDay;
   }
@@ -104,7 +104,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new UnauthorizedException("optionTerm negative");
     }
     dalServices.getConnection(false);
-    int nbrDaysActually = furnitureDao.getNumberOfOptions(idFurniture, idUser);
+    int nbrDaysActually = furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
     if (nbrDaysActually == 5) {
       dalServices.rollbackTransaction();
       throw new UnauthorizedException("You have already reached the maximum number of days");
@@ -114,7 +114,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new UnauthorizedException("You can't book more than : " + daysLeft + " days");
     } else {
       furnitureDao.introduceOption(optionTerm, idUser, idFurniture);
-      furnitureDao.indicateUnderOption(idFurniture);
+      furnitureDao.indicateFurnitureUnderOption(idFurniture);
       dalServices.commitTransaction();
     }
   }
@@ -161,7 +161,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     // dalServices.commitTransactionAndContinue();
     furniture.setSeller(userDAO.getUserFromId(furniture.getSellerId()));
     // TODO tests si présent?
-    furniture.setType(furnitureDao.getTypeById(furniture.getTypeId()));
+    furniture.setType(furnitureDao.getFurnitureTypeById(furniture.getTypeId()));
     furniture
         .setFavouritePhoto(furnitureDao.getFavouritePhotoById(furniture.getFavouritePhotoId()));
     // dalServices.commitTransaction();

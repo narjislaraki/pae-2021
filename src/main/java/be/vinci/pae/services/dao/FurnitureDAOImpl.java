@@ -67,7 +67,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    * @param idUser the id of the user
    */
   @Override
-  public int getNumberOfOptions(int idFurniture, int idUser) {
+  public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
     int number = -1;
     try {
       String sql =
@@ -126,7 +126,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
 
   @Override
-  public void setCondition(Furniture furniture, Condition condition) {
+  public void setFurnitureCondition(Furniture furniture, Condition condition) {
     try {
       String sql = "UPDATE pae.furnitures SET condition = ? WHERE id_furniture = ? ;";
       ps = dalBackendService.getPreparedStatement(sql);
@@ -158,9 +158,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void indicateUnderOption(int id) {
+  public void indicateFurnitureUnderOption(int id) {
     Furniture furniture = (Furniture) getFurnitureById(id);
-    setCondition(furniture, Condition.SOUS_OPTION);
+    setFurnitureCondition(furniture, Condition.SOUS_OPTION);
   }
 
   @Override
@@ -208,7 +208,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Override
   public void indicateSentToWorkshop(int id) {
     Furniture furniture = (Furniture) getFurnitureById(id);
-    setCondition(furniture, Condition.EN_RESTAURATION);
+    setFurnitureCondition(furniture, Condition.EN_RESTAURATION);
 
   }
 
@@ -229,7 +229,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    setCondition(furniture, Condition.DEPOSE_EN_MAGASIN);
+    setFurnitureCondition(furniture, Condition.DEPOSE_EN_MAGASIN);
   }
 
   @Override
@@ -250,7 +250,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Override
   public void withdrawSale(int id) {
     Furniture furniture = (Furniture) getFurnitureById(id);
-    setCondition(furniture, Condition.RETIRE);
+    setFurnitureCondition(furniture, Condition.RETIRE);
 
   }
 
@@ -311,7 +311,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    * @param id the id of the type
    */
   @Override
-  public String getTypeById(int id) {
+  public String getFurnitureTypeById(int id) {
     String label = "";
     try {
       String sql = "SELECT label FROM pae.types_of_furnitures WHERE id_type = ?;";

@@ -87,16 +87,16 @@ public class FurnitureResource {
   @GET
   @Path("furniture/{idFurniture}/{idUser}/getNbOfDay")
   @Produces(MediaType.APPLICATION_JSON)
-  public int getNbOfDay(@Context ContainerRequest request,
+  public int getSumOfOptionDaysForAUserAboutAFurniture(@Context ContainerRequest request,
       @PathParam("idFurniture") int idFurniture, @PathParam("idUser") int idUser) {
-    return furnitureUCC.getNbOfDay(idFurniture, idUser);
+    return furnitureUCC.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
   }
 
   @AdminAuthorize
   @PATCH
   @Path("furniture/{id}/workShop")
   @Produces(MediaType.APPLICATION_JSON)
-  public boolean workShop(@Context ContainerRequest request, @PathParam("id") int id) {
+  public boolean sendToWorkShop(@Context ContainerRequest request, @PathParam("id") int id) {
     furnitureUCC.indicateSentToWorkshop(id);
     return true;
   }

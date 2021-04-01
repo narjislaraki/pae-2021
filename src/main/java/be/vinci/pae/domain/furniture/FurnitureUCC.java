@@ -38,5 +38,5 @@ public interface FurnitureUCC {
 
   OptionDTO getOption(int idFurniture);
 
-  int getNbOfDay(int idFurniture, int idUser);
+  int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser);
 }
