@@ -275,6 +275,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return list;
   }
 
+  @Override
   public List<FurnitureDTO> getPublicFurnitureList() {
     List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
     try {
