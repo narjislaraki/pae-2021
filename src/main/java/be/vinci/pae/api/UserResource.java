@@ -45,7 +45,7 @@ public class UserResource {
   @Path("unvalidatedList")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
-  public List<UserDTO> getUnvalidatedList(@Context ContainerRequest request) {
+  public List<UserDTO> getListOfUnvalidatedUsers(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
     // TODO retirer password des users de la liste
 
@@ -53,7 +53,6 @@ public class UserResource {
     // try {
     // return jsonMapper.writerWithView(Views.Private.class).writeValueAsString(e);
     // } catch (JsonProcessingException e1) {
-    // // TODO Auto-generated catch block
     // e1.printStackTrace();
     // }
     // return null;
@@ -80,7 +79,7 @@ public class UserResource {
   }
 
   /**
-   * Delete a user.
+   * Deletion of a user.
    * 
    * @param request the request
    * @param id the id user's id
