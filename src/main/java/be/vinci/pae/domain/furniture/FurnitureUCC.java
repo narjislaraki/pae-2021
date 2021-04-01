@@ -28,7 +28,7 @@ public interface FurnitureUCC {
 
   void cancelOption(String cancellationReason, int idOption, UserDTO user);
 
-  List<FurnitureDTO> getFurnitureList();
+  List<FurnitureDTO> getFurnitureList(UserDTO user);
 
   // pas encore pour le livrable
   void introduceRequestForVisite(String timeSlot, Address address,

@@ -29,7 +29,6 @@ public class AddressDAOImpl implements AddressDAO {
       PreparedStatement ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, address.getStreet());
       ps.setString(2, address.getBuildingNumber());
-      System.out.println("coucou " + address.toString());
       if (address.getUnitNumber() != null) { // TODO
         ps.setString(3, address.getUnitNumber());
       } else {

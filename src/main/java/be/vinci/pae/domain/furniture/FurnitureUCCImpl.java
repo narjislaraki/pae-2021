@@ -138,12 +138,13 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
-  public List<FurnitureDTO> getFurnitureList() {
-    dalServices.getConnection(false);
-    List<FurnitureDTO> furnitureList = furnitureDao.getFurnitureList();
-    dalServices.commitTransaction();
-    System.out.println(furnitureList);
-    return furnitureList;
+  public List<FurnitureDTO> getFurnitureList(UserDTO user) {
+    dalServices.getConnection(true);
+    List<FurnitureDTO> furnitureList;
+    if (user != null && user.getRole() == Role.ADMIN) {
+      return furnitureDao.getFurnitureList();
+    }
+    return furnitureDao.getPublicFurnitureList();
   }
 
 

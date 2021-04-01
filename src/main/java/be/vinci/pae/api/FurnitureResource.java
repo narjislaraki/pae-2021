@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -11,11 +10,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserDTO.Role;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -50,10 +47,8 @@ public class FurnitureResource {
   @Path("public")
   @Produces(MediaType.APPLICATION_JSON)
   public List<FurnitureDTO> getPublicFurnituresList(@Context ContainerRequest request) {
-    List<FurnitureDTO> list = furnitureUCC.getFurnitureList();
-    return list.stream().filter(
-        e -> e.getCondition() == Condition.EN_VENTE || e.getCondition() == Condition.SOUS_OPTION)
-        .collect(Collectors.toList());
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureList(null);
+    return list;
   }
 
   /**
@@ -67,13 +62,9 @@ public class FurnitureResource {
   @Produces(MediaType.APPLICATION_JSON)
   public List<FurnitureDTO> getFurnituresList(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
-    List<FurnitureDTO> list = furnitureUCC.getFurnitureList();
-    if (user.getRole() == Role.ADMIN) {
-      return list;
-    }
-    return list.stream().filter(
-        e -> e.getCondition() == Condition.EN_VENTE || e.getCondition() == Condition.SOUS_OPTION)
-        .collect(Collectors.toList());
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureList(user);
+
+    return list;
   }
 
   @GET

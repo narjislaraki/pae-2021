@@ -189,7 +189,6 @@ public class UserDAOImpl implements UserDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    System.out.println(list);
     return list;
   }
 

@@ -5,7 +5,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.address.Address;
@@ -137,12 +140,6 @@ public class Authentication {
     address.setCountry(json.get("country").asText());
     if (json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
       address.setUnitNumber(json.get("unitNumber").asText());
-    }
-    System.out.println(user.getAddress());
-    if (user.getAddress().getUnitNumber() == null) {
-      System.out.println("est null");
-    } else {
-      System.out.println("pas null");
     }
 
     userUCC.registration(user);
