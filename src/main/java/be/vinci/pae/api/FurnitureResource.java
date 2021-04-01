@@ -118,7 +118,7 @@ public class FurnitureResource {
    * 
    * @param request the request
    * @param id the furniture id
-   * @param json
+   * @param json the json
    * @return true or an error
    */
   @AdminAuthorize
@@ -154,7 +154,7 @@ public class FurnitureResource {
    * 
    * @param request the request
    * @param id the option id
-   * @param json
+   * @param json the json
    * @return true
    */
   @Authorize
@@ -169,6 +169,15 @@ public class FurnitureResource {
     return true;
   }
 
+  /**
+   * Introduce an option related to a furniture and a user.
+   * 
+   * @param request the request
+   * @param idFurniture the furniture id
+   * @param idUser the user id
+   * @param json the json
+   * @return true
+   */
   @Authorize
   @POST
   @Path("{idFurniture}/{idUser}/introduceOption")
