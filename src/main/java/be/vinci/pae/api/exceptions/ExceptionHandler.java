@@ -3,6 +3,7 @@ package be.vinci.pae.api.exceptions;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Logger;
+
 import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import jakarta.ws.rs.WebApplicationException;
@@ -69,8 +70,9 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
       return ((WebApplicationException) exception).getResponse().getStatus();
     } else if (exception instanceof UnauthorizedException) {
       return Response.Status.UNAUTHORIZED.getStatusCode();
-    } // Insert new exception rules here when extend BusinessException
-    else if (exception instanceof BusinessException) {
+      // Insert new exception rules below this condition (before checking BusinessException) when
+      // extend BusinessException
+    } else if (exception instanceof BusinessException) {
       return Response.Status.PRECONDITION_FAILED.getStatusCode();
     } else {
       return Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();

@@ -43,7 +43,7 @@ public class AddressDAOImpl implements AddressDAO {
         key = rs.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return key;
 

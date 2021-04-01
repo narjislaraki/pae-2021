@@ -28,17 +28,15 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public OptionDTO getOption(int id) {
-    dalServices.getConnection(false);
+    dalServices.getConnection(true);
     OptionDTO option = furnitureDao.getOption(id);
-    dalServices.commitTransaction();
     return option;
   }
 
   @Override
   public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
-    dalServices.getConnection(false);
+    dalServices.getConnection(true);
     int nbOfDay = furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
-    dalServices.commitTransaction();
     return nbOfDay;
   }
 
@@ -104,7 +102,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new UnauthorizedException("optionTerm negative");
     }
     dalServices.getConnection(false);
-    int nbrDaysActually = furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
+    int nbrDaysActually =
+        furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
     if (nbrDaysActually == 5) {
       dalServices.rollbackTransaction();
       throw new UnauthorizedException("You have already reached the maximum number of days");
@@ -132,7 +131,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
       dalServices.commitTransaction();
     } else {
-      dalServices.commitTransaction();
+      dalServices.rollbackTransaction();
       throw new BusinessException("You have no right to delete this option");
     }
   }
@@ -140,7 +139,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public List<FurnitureDTO> getFurnitureList(UserDTO user) {
     dalServices.getConnection(true);
-    List<FurnitureDTO> furnitureList;
     if (user != null && user.getRole() == Role.ADMIN) {
       return furnitureDao.getFurnitureList();
     }
@@ -156,16 +154,21 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public FurnitureDTO getFurnitureById(int id) {
-    dalServices.getConnection(false);
+    dalServices.getConnection(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
-    // dalServices.commitTransactionAndContinue();
-    furniture.setSeller(userDAO.getUserFromId(furniture.getSellerId()));
-    // TODO tests si présent?
+    if (furniture == null) {
+      throw new BusinessException("There are no furniture for the given id");
+    }
+    int seller = furniture.getSellerId();
+    if (seller != 0) {
+      furniture.setSeller(userDAO.getUserFromId(seller));
+    }
+    int idPhoto = furniture.getFavouritePhotoId();
+    if (idPhoto != 0) {
+      furniture.setFavouritePhoto(furnitureDao.getFavouritePhotoById(idPhoto));
+    }
     furniture.setType(furnitureDao.getFurnitureTypeById(furniture.getTypeId()));
-    furniture
-        .setFavouritePhoto(furnitureDao.getFavouritePhotoById(furniture.getFavouritePhotoId()));
-    // dalServices.commitTransaction();
-    dalServices.commitTransaction();
+
     return furniture;
   }
 
