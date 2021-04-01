@@ -3,12 +3,12 @@ package be.vinci.pae.domain.furniture;
 import java.util.List;
 import java.util.Map;
 
-import be.vinci.pae.api.exceptions.BusinessException;
-import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
+import be.vinci.pae.exceptions.BusinessException;
+import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.FurnitureDAO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -28,17 +28,17 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public OptionDTO getOption(int id) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(true);
     OptionDTO option = furnitureDao.getOption(id);
-    dalServices.commitTransaction();
+    dalServices.stopBizzTransaction();
     return option;
   }
 
   @Override
-  public int getNbOfDay(int idFurniture, int idUser) {
-    dalServices.getConnection(false);
-    int nbOfDay = furnitureDao.getNumberOfOptions(idFurniture, idUser);
-    dalServices.commitTransaction();
+  public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
+    dalServices.getBizzTransaction(true);
+    int nbOfDay = furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
+    dalServices.stopBizzTransaction();
     return nbOfDay;
   }
 
@@ -46,7 +46,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public void indicateSentToWorkshop(int id) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateSentToWorkshop(id);
@@ -59,7 +59,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public void indicateDropOfStore(int id) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.EN_RESTAURATION)
         || furniture.getCondition().equals(Condition.ACHETE)) {
@@ -73,7 +73,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public void indicateOfferedForSale(int id, double price) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
     if (price > 0 && furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.indicateOfferedForSale(furniture, price);
@@ -86,7 +86,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public void withdrawSale(int id) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(false);
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.EN_VENTE)
         || furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
@@ -103,8 +103,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     if (optionTerm <= 0) {
       throw new UnauthorizedException("optionTerm negative");
     }
-    dalServices.getConnection(false);
-    int nbrDaysActually = furnitureDao.getNumberOfOptions(idFurniture, idUser);
+    dalServices.getBizzTransaction(false);
+    int nbrDaysActually =
+        furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
     if (nbrDaysActually == 5) {
       dalServices.rollbackTransaction();
       throw new UnauthorizedException("You have already reached the maximum number of days");
@@ -114,7 +115,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       throw new UnauthorizedException("You can't book more than : " + daysLeft + " days");
     } else {
       furnitureDao.introduceOption(optionTerm, idUser, idFurniture);
-      furnitureDao.indicateUnderOption(idFurniture);
+      furnitureDao.indicateFurnitureUnderOption(idFurniture);
       dalServices.commitTransaction();
     }
   }
@@ -124,7 +125,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     if (idOption < 1) {
       throw new BusinessException("Invalid id");
     }
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(false);
     OptionDTO opt = furnitureDao.getOption(idOption);
     if (user.getId() == opt.getIdUser() || user.getRole() == Role.ADMIN) {
       int idFurniture = furnitureDao.cancelOption(cancellationReason, opt.getId());
@@ -132,18 +133,22 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
       dalServices.commitTransaction();
     } else {
-      dalServices.commitTransaction();
+      dalServices.rollbackTransaction();
       throw new BusinessException("You have no right to delete this option");
     }
   }
 
   @Override
-  public List<FurnitureDTO> getFurnitureList() {
-    dalServices.getConnection(false);
-    List<FurnitureDTO> furnitureList = furnitureDao.getFurnitureList();
-    dalServices.commitTransaction();
-    System.out.println(furnitureList);
-    return furnitureList;
+  public List<FurnitureDTO> getFurnitureList(UserDTO user) {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list;
+    if (user != null && user.getRole() == Role.ADMIN) {
+      list = furnitureDao.getFurnitureList();
+    } else {
+      list = furnitureDao.getPublicFurnitureList();
+    }
+    dalServices.stopBizzTransaction();
+    return list;
   }
 
 
@@ -155,16 +160,21 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public FurnitureDTO getFurnitureById(int id) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
-    // dalServices.commitTransactionAndContinue();
-    furniture.setSeller(userDAO.getUserFromId(furniture.getSellerId()));
-    // TODO tests si présent?
-    furniture.setType(furnitureDao.getTypeById(furniture.getTypeId()));
-    furniture
-        .setFavouritePhoto(furnitureDao.getFavouritePhotoById(furniture.getFavouritePhotoId()));
-    // dalServices.commitTransaction();
-    dalServices.commitTransaction();
+    if (furniture == null) {
+      throw new BusinessException("There are no furniture for the given id");
+    }
+    int seller = furniture.getSellerId();
+    if (seller != 0) {
+      furniture.setSeller(userDAO.getUserFromId(seller));
+    }
+    int idPhoto = furniture.getFavouritePhotoId();
+    if (idPhoto != 0) {
+      furniture.setFavouritePhoto(furnitureDao.getFavouritePhotoById(idPhoto));
+    }
+    furniture.setType(furnitureDao.getFurnitureTypeById(furniture.getTypeId()));
+    dalServices.stopBizzTransaction();
     return furniture;
   }
 

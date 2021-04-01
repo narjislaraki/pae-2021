@@ -4,9 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
@@ -29,7 +29,6 @@ public class AddressDAOImpl implements AddressDAO {
       PreparedStatement ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, address.getStreet());
       ps.setString(2, address.getBuildingNumber());
-      System.out.println("coucou " + address.toString());
       if (address.getUnitNumber() != null) { // TODO
         ps.setString(3, address.getUnitNumber());
       } else {
@@ -44,7 +43,7 @@ public class AddressDAOImpl implements AddressDAO {
         key = rs.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new FatalException(e);
     }
     return key;
 

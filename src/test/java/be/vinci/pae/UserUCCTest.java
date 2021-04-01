@@ -2,6 +2,7 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,9 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import be.vinci.pae.api.exceptions.UnauthorizedException;
+
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.ApplicationBinder;
@@ -57,7 +59,6 @@ public class UserUCCTest {
   @BeforeEach
   public void reset() {
     Mockito.reset(userDAO);
-    Mockito.doNothing().when(dalServices).getConnection(true);
   }
 
   @DisplayName("Test connection with right email and password")

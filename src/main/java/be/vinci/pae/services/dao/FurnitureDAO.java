@@ -2,6 +2,7 @@ package be.vinci.pae.services.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -15,15 +16,15 @@ public interface FurnitureDAO {
   // A REVOIR
 
 
-  void setCondition(Furniture furniture, Condition condition);
+  void setFurnitureCondition(Furniture furniture, Condition condition);
 
-  int getNumberOfOptions(int idFurniture, int idUser);
+  int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser);
 
   void introduceOption(int optionTerm, int idUser, int idFurniture);
 
   int cancelOption(String cancellationReason, int idOption);
 
-  void indicateUnderOption(int id);
+  void indicateFurnitureUnderOption(int id);
 
   void indicateSentToWorkshop(int id);
 
@@ -35,12 +36,14 @@ public interface FurnitureDAO {
 
   List<FurnitureDTO> getFurnitureList();
 
+  List<FurnitureDTO> getPublicFurnitureList();
+
   // pas encore pour le livrable
   void introduceRequestForVisite(String timeSlot, Address address,
       Map<Integer, List<String>> furnitures);
 
 
-  String getTypeById(int id);
+  String getFurnitureTypeById(int id);
 
   String getFavouritePhotoById(int id);
 

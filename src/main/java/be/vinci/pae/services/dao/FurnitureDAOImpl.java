@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -18,6 +17,7 @@ import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.OptionDTO.State;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.domain.furniture.OptionFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
@@ -67,7 +67,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    * @param idUser the id of the user
    */
   @Override
-  public int getNumberOfOptions(int idFurniture, int idUser) {
+  public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
     int number = -1;
     try {
       String sql =
@@ -121,13 +121,12 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    System.out.println(option);
     return option;
   }
 
 
   @Override
-  public void setCondition(Furniture furniture, Condition condition) {
+  public void setFurnitureCondition(Furniture furniture, Condition condition) {
     try {
       String sql = "UPDATE pae.furnitures SET condition = ? WHERE id_furniture = ? ;";
       ps = dalBackendService.getPreparedStatement(sql);
@@ -159,9 +158,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void indicateUnderOption(int id) {
+  public void indicateFurnitureUnderOption(int id) {
     Furniture furniture = (Furniture) getFurnitureById(id);
-    setCondition(furniture, Condition.SOUS_OPTION);
+    setFurnitureCondition(furniture, Condition.SOUS_OPTION);
   }
 
   @Override
@@ -192,7 +191,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
           + "condition, id_user, id_furniture"
           + " FROM pae.options WHERE id_furniture = ? AND condition = ?;";
 
-      System.out.println(State.EN_COURS.toString());
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, idFurniture);
       ps.setString(2, State.EN_COURS.toString());
@@ -210,7 +208,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Override
   public void indicateSentToWorkshop(int id) {
     Furniture furniture = (Furniture) getFurnitureById(id);
-    setCondition(furniture, Condition.EN_RESTAURATION);
+    setFurnitureCondition(furniture, Condition.EN_RESTAURATION);
 
   }
 
@@ -231,7 +229,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    setCondition(furniture, Condition.DEPOSE_EN_MAGASIN);
+    setFurnitureCondition(furniture, Condition.DEPOSE_EN_MAGASIN);
   }
 
   @Override
@@ -252,7 +250,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Override
   public void withdrawSale(int id) {
     Furniture furniture = (Furniture) getFurnitureById(id);
-    setCondition(furniture, Condition.RETIRE);
+    setFurnitureCondition(furniture, Condition.RETIRE);
 
   }
 
@@ -263,10 +261,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       String sql = "SELECT id_furniture, condition, description, purchase_price, "
           + "pick_up_date, store_deposit, deposit_date, "
           + "offered_selling_price, id_type, request_visit, seller, favorite_photo "
-          + "FROM pae.furnitures;"; /* WHERE condition = ? OR condition = ?;"; */
+          + "FROM pae.furnitures;";
       ps = dalBackendService.getPreparedStatement(sql);
-      // ps.setString(1, Condition.EN_VENTE.toString());
-      // ps.setString(2, Condition.SOUS_OPTION.toString());
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
@@ -276,7 +272,29 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    list.forEach((e) -> System.out.println(e.toString()));
+    return list;
+  }
+
+  @Override
+  public List<FurnitureDTO> getPublicFurnitureList() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT id_furniture, condition, description, purchase_price, "
+          + "pick_up_date, store_deposit, deposit_date, "
+          + "offered_selling_price, id_type, request_visit, seller, favorite_photo "
+          + "FROM pae.furnitures WHERE condition = ? OR condition = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_VENTE.toString());
+      ps.setString(2, Condition.SOUS_OPTION.toString());
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
     return list;
   }
 
@@ -294,7 +312,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    * @param id the id of the type
    */
   @Override
-  public String getTypeById(int id) {
+  public String getFurnitureTypeById(int id) {
     String label = "";
     try {
       String sql = "SELECT label FROM pae.types_of_furnitures WHERE id_type = ?;";
@@ -328,7 +346,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    System.out.println(favouritePhoto);
     return favouritePhoto;
   }
 }

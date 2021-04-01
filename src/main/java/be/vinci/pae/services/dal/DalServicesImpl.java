@@ -9,7 +9,7 @@ import java.util.Properties;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp2.BasicDataSourceFactory;
 
-import be.vinci.pae.api.exceptions.FatalException;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.utils.Config;
 
 public class DalServicesImpl implements DalServices, DalBackendServices {
@@ -75,7 +75,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
 
 
   @Override
-  public void getConnection(boolean autoCommit) {
+  public void getBizzTransaction(boolean autoCommit) {
     try {
       if (td.get() != null) {
         throw new FatalException("Connection already given");
@@ -88,16 +88,25 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     }
   }
 
+  @Override
+  public void stopBizzTransaction() {
+    Connection connection = td.get();
+    td.remove();
+    try {
+      connection.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
 
   @Override
   public void commitTransaction() {
     Connection connection;
     try {
       connection = commitTransac();
-
       td.remove();
       connection.close();
-      // ds.invalidateConnection(connection);// TODO
     } catch (SQLException e) {
       throw new FatalException(e);
     }

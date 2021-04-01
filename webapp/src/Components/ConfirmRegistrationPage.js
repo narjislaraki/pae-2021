@@ -84,21 +84,23 @@ const onUnregisteredUsersList = (data) => {
 const onAccept = async (e) => {
   console.log(e);
   let id = e.srcElement.dataset.id;
-  let role = "client";
+  let userRole = "client";
 
   if (document.getElementById('nephew' + id).checked) {
-    role = "admin";
+    userRole = "admin";
   }
   if (document.getElementById('antique_dealer' + id).checked) {
-    role = "antiquaire";
+    userRole = "antiquaire";
   }
 
   try {
     await callAPI(
-      API_BASE_URL + "user/" + id + "/accept/" + role,
-      "PATCH",
+      API_BASE_URL + id + "/accept/",
+      "POST",
       userData.token,
-      undefined
+      {
+        role: userRole,
+      },
     );
   } catch (err) {
     console.error("ConfirmRegistrationPage::onAccept", err);
@@ -112,7 +114,7 @@ const onRefuse = async (e) => {
   console.log(id);
   try {
     await callAPI(
-      API_BASE_URL + "user/" + id,
+      API_BASE_URL + id,
       "DELETE",
       userData.token,
       undefined,

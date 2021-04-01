@@ -1,7 +1,7 @@
 package be.vinci.pae.api.filters;
 
-import be.vinci.pae.api.exceptions.UnauthorizedException;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.exceptions.UnauthorizedException;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.ext.Provider;

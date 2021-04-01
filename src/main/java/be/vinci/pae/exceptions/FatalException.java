@@ -1,4 +1,4 @@
-package be.vinci.pae.api.exceptions;
+package be.vinci.pae.exceptions;
 
 import java.util.logging.Logger;
 import be.vinci.pae.utils.APILogger;

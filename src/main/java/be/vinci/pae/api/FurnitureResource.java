@@ -1,25 +1,24 @@
 package be.vinci.pae.api;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserDTO.Role;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -50,10 +49,8 @@ public class FurnitureResource {
   @Path("public")
   @Produces(MediaType.APPLICATION_JSON)
   public List<FurnitureDTO> getPublicFurnituresList(@Context ContainerRequest request) {
-    List<FurnitureDTO> list = furnitureUCC.getFurnitureList();
-    return list.stream().filter(
-        e -> e.getCondition() == Condition.EN_VENTE || e.getCondition() == Condition.SOUS_OPTION)
-        .collect(Collectors.toList());
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureList(null);
+    return list;
   }
 
   /**
@@ -67,17 +64,13 @@ public class FurnitureResource {
   @Produces(MediaType.APPLICATION_JSON)
   public List<FurnitureDTO> getFurnituresList(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
-    List<FurnitureDTO> list = furnitureUCC.getFurnitureList();
-    if (user.getRole() == Role.ADMIN) {
-      return list;
-    }
-    return list.stream().filter(
-        e -> e.getCondition() == Condition.EN_VENTE || e.getCondition() == Condition.SOUS_OPTION)
-        .collect(Collectors.toList());
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureList(user);
+
+    return list;
   }
 
   @GET
-  @Path("furniture/{id}")
+  @Path("{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public FurnitureDTO getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
     return furnitureUCC.getFurnitureById(id);
@@ -85,7 +78,7 @@ public class FurnitureResource {
 
   @Authorize
   @GET
-  @Path("furniture/{id}/getOption")
+  @Path("{id}/getOption")
   @Produces(MediaType.APPLICATION_JSON)
   public OptionDTO getOption(@Context ContainerRequest request, @PathParam("id") int id) {
     OptionDTO opt = furnitureUCC.getOption(id);
@@ -94,71 +87,107 @@ public class FurnitureResource {
 
   @Authorize
   @GET
-  @Path("furniture/{idFurniture}/{idUser}/getNbOfDay")
+  @Path("{idFurniture}/getSumOfOptionDays")
   @Produces(MediaType.APPLICATION_JSON)
-  public int getNbOfDay(@Context ContainerRequest request,
-      @PathParam("idFurniture") int idFurniture, @PathParam("idUser") int idUser) {
-    return furnitureUCC.getNbOfDay(idFurniture, idUser);
+  public int getSumOfOptionDaysForAUserAboutAFurniture(@Context ContainerRequest request,
+      @PathParam("idFurniture") int idFurniture) {
+    int idUser = ((UserDTO) request.getProperty("user")).getId();
+    return furnitureUCC.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
   }
 
   @AdminAuthorize
-  @PATCH
-  @Path("furniture/{id}/workShop")
+  @POST
+  @Path("{id}/workShop")
   @Produces(MediaType.APPLICATION_JSON)
-  public boolean workShop(@Context ContainerRequest request, @PathParam("id") int id) {
+  public boolean sendToWorkShop(@Context ContainerRequest request, @PathParam("id") int id) {
     furnitureUCC.indicateSentToWorkshop(id);
     return true;
   }
 
   @AdminAuthorize
-  @PATCH
-  @Path("furniture/{id}/dropOfStore")
+  @POST
+  @Path("{id}/dropOfStore")
   @Produces(MediaType.APPLICATION_JSON)
   public boolean dropOfStore(@Context ContainerRequest request, @PathParam("id") int id) {
     furnitureUCC.indicateDropOfStore(id);
     return true;
   }
 
+  /**
+   * Set a furniture to a sold state.
+   * 
+   * @param request the request
+   * @param id the furniture id
+   * @param json the json
+   * @return true or an error
+   */
   @AdminAuthorize
-  @PATCH
-  @Path("furniture/{id}/offeredForSale/{price}")
+  @POST
+  @Path("{id}/offeredForSale")
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public boolean offeredForSale(@Context ContainerRequest request, @PathParam("id") int id,
-      @PathParam("price") double price) {
+      JsonNode json) {
+    double price = json.get("furniturePrice").asDouble();
     furnitureUCC.indicateOfferedForSale(id, price);
     return true;
   }
 
+  /**
+   * Withdraw a furniture and set its state to a withdrawn state.
+   * 
+   * @param request the request
+   * @param id the furniture id
+   * @return true or an error
+   */
   @AdminAuthorize
-  @PATCH
-  @Path("furniture/{id}/withdrawSale")
+  @POST
+  @Path("{id}/withdrawSale")
   @Produces(MediaType.APPLICATION_JSON)
   public boolean withdrawSale(@Context ContainerRequest request, @PathParam("id") int id) {
     furnitureUCC.withdrawSale(id);
     return true;
   }
 
+  /**
+   * Cancel an option.
+   * 
+   * @param request the request
+   * @param id the option id
+   * @param json the json
+   * @return true
+   */
   @Authorize
-  @PATCH
-  @Path("furniture/{id_option}/{reason}/cancelOption")
+  @POST
+  @Path("{id_option}/cancelOption")
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public boolean cancelOption(@Context ContainerRequest request, @PathParam("id_option") int id,
-      @PathParam("reason") String reason) {
+      JsonNode json) {
+    String reason = json.get("cancelReason").asText();
     furnitureUCC.cancelOption(reason, id, (UserDTO) request.getProperty("user"));
     return true;
   }
 
+  /**
+   * Introduce an option related to a furniture and a user.
+   * 
+   * @param request the request
+   * @param idFurniture the furniture id
+   * @param idUser the user id
+   * @param json the json
+   * @return true
+   */
   @Authorize
-  @PATCH
-  @Path("furniture/{optionTerm}/{idFurniture}/{idUser}/introduceOption")
+  @POST
+  @Path("{idFurniture}/{idUser}/introduceOption")
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public boolean introduceOption(@Context ContainerRequest request,
-      @PathParam("optionTerm") int optionTerm, @PathParam("idFurniture") int idFurniture,
-      @PathParam("idUser") int idUser) {
+      @PathParam("idFurniture") int idFurniture, @PathParam("idUser") int idUser, JsonNode json) {
+    int optionTerm = json.get("duration").asInt();
     furnitureUCC.introduceOption(optionTerm, idUser, idFurniture);
     return true;
   }
-
-
 
 }

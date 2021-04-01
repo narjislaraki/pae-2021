@@ -24,7 +24,7 @@ async function FurniturePage(id) {
     /****** Furniture ******/
     try {
         furniture = await callAPI(
-            API_BASE_URL + "furniture/" + id,
+            API_BASE_URL + id,
             "GET",
             undefined,
             undefined);
@@ -39,7 +39,7 @@ async function FurniturePage(id) {
         let idUser = currentUser.id;
         try {
             nbOfDay = await callAPI(
-                API_BASE_URL + "furniture/" + idFurniture + "/" + idUser + "/getNbOfDay",
+                API_BASE_URL + idFurniture  + "/getSumOfOptionDays",
                 "GET",
                 userData.token,
                 undefined,
@@ -52,7 +52,7 @@ async function FurniturePage(id) {
         /****** Option ******/
         try {
             option = await callAPI(
-                API_BASE_URL + "furniture/" + idFurniture + "/getOption",
+                API_BASE_URL + idFurniture + "/getOption",
                 "GET",
                 userData.token,
                 undefined,
@@ -262,8 +262,8 @@ const onWorkShop = async () => {
     let id = furniture.id;
     try {
         await callAPI(
-            API_BASE_URL + "furniture/" + id + '/workShop',
-            "PATCH",
+            API_BASE_URL + id + '/workShop',
+            "POST",
             userData.token,
             undefined,
         );
@@ -280,8 +280,8 @@ const onDropOfStore = async () => {
     console.log(userData.token);
     try {
         await callAPI(
-            API_BASE_URL + "furniture/" + id + '/dropOfStore',
-            "PATCH",
+            API_BASE_URL + id + '/dropOfStore',
+            "POST",
             userData.token,
             undefined,
         );
@@ -305,10 +305,12 @@ const onOfferedForSale = async () => {
     }
     try {
         await callAPI(
-            API_BASE_URL + "furniture/" + id + '/offeredForSale/' + price,
-            "PATCH",
+            API_BASE_URL + id + '/offeredForSale/',
+            "POST",
             userData.token,
-            undefined,
+            {
+                furniturePrice : price
+            },
         );
     } catch (err) {
         console.error("FurniturePage::offeredForSale", err);
@@ -323,8 +325,8 @@ const onWithdrawSale = async () => {
     console.log(userData.token);
     try {
         await callAPI(
-            API_BASE_URL + "furniture/" + id + '/withdrawSale',
-            "PATCH",
+            API_BASE_URL + id + '/withdrawSale',
+            "POST",
             userData.token,
             undefined,
         );
@@ -348,10 +350,12 @@ const onCancelOption = async () => {
     }
     try {
         await callAPI(
-            API_BASE_URL + "furniture/" + id + "/" + reason + "/cancelOption",
-            "PATCH",
+            API_BASE_URL + id + "/cancelOption",
+            "POST",
             userData.token,
-            undefined,
+            {
+                cancelReason : reason
+            },
         );
     } catch (err) {
         console.error("FurniturePage::onWithdrawSale", err);
@@ -366,10 +370,12 @@ const onIntroduceOption = async () => {
     let optionTerm = document.getElementById("optionTerm").value;
     try {
         await callAPI(
-            API_BASE_URL + "furniture/" + optionTerm + "/" + id_furniture + "/" + id_user + "/introduceOption",
-            "PATCH",
+            API_BASE_URL + "/" + id_furniture + "/" + id_user + "/introduceOption",
+            "POST",
             userData.token,
-            undefined,
+            {
+                duration : optionTerm
+            },
         );
     } catch (err) {
         console.error("FurniturePage::onWithdrawSale", err);

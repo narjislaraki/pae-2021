@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -12,9 +13,10 @@ import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -45,7 +47,7 @@ public class UserResource {
   @Path("unvalidatedList")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
-  public List<UserDTO> getUnvalidatedList(@Context ContainerRequest request) {
+  public List<UserDTO> getListOfUnvalidatedUsers(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
     // TODO retirer password des users de la liste
 
@@ -53,7 +55,6 @@ public class UserResource {
     // try {
     // return jsonMapper.writerWithView(Views.Private.class).writeValueAsString(e);
     // } catch (JsonProcessingException e1) {
-    // // TODO Auto-generated catch block
     // e1.printStackTrace();
     // }
     // return null;
@@ -69,25 +70,27 @@ public class UserResource {
    * @param id the user's id
    * @return true if OK
    */
-  @PATCH
-  @Path("user/{id}/accept/{role}")
+  @POST
+  @Path("{id}/accept")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id,
-      @PathParam("role") String role) {
+      JsonNode json) {
+    String role = json.get("role").asText();
     userUCC.acceptUser(id, role);
     return true;
   }
 
   /**
-   * Delete a user.
+   * Deletion of a user.
    * 
    * @param request the request
    * @param id the id user's id
    * @return true if OK, false if nKO
    */
   @DELETE
-  @Path("user/{id}")
+  @Path("{id}")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {

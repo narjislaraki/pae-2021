@@ -38,7 +38,7 @@ async function FurnitureListPage() {
   else {
     try {
       furnitures = await callAPI(
-        API_BASE_URL + "/public",
+        API_BASE_URL + "public",
         "GET",
         undefined,
         undefined);
