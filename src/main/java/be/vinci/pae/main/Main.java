@@ -3,6 +3,7 @@ package be.vinci.pae.main;
 import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Logger;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -59,8 +60,8 @@ public class Main {
    */
   public static HttpServer startServer() {
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.api")
-        .register(JacksonFeature.class).register(ApplicationBinder.class)
-        .property("jersey.config.server.wadl.disableWadl", true);
+        .packages("be.vinci.pae.exceptions").register(JacksonFeature.class)
+        .register(ApplicationBinder.class).property("jersey.config.server.wadl.disableWadl", true);
     return GrizzlyHttpServerFactory
         .createHttpServer(URI.create(Config.getStringProperty("BaseUri")), rc);
   }

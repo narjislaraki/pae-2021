@@ -1,4 +1,4 @@
-package be.vinci.pae.api.exceptions;
+package be.vinci.pae.exceptions;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -4,9 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 

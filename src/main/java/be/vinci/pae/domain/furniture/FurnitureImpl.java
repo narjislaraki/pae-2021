@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
 import com.fasterxml.jackson.annotation.JsonView;
-import be.vinci.pae.api.exceptions.BusinessException;
+
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.views.Views;
 
 public class FurnitureImpl implements Furniture {

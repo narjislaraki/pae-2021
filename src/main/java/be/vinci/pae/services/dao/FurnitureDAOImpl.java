@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -18,6 +17,7 @@ import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.OptionDTO.State;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.domain.furniture.OptionFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;

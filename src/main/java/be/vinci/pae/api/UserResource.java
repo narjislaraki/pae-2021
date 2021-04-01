@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -12,9 +13,10 @@ import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -68,12 +70,14 @@ public class UserResource {
    * @param id the user's id
    * @return true if OK
    */
-  @PATCH
-  @Path("user/{id}/accept/{role}")
+  @POST
+  @Path("{id}/accept")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
   public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id,
-      @PathParam("role") String role) {
+      JsonNode json) {
+    String role = json.get("role").asText();
     userUCC.acceptUser(id, role);
     return true;
   }
@@ -86,7 +90,7 @@ public class UserResource {
    * @return true if OK, false if nKO
    */
   @DELETE
-  @Path("user/{id}")
+  @Path("{id}")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
   public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {

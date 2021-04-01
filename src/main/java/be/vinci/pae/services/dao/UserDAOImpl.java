@@ -7,10 +7,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.vinci.pae.api.exceptions.FatalException;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 

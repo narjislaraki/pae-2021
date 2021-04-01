@@ -2,7 +2,8 @@ package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonView;
-import be.vinci.pae.api.exceptions.BusinessException;
+
+import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.views.Views;
 
 public class OptionImpl implements OptionDTO {

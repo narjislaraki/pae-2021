@@ -2,8 +2,9 @@ package be.vinci.pae.domain.user;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import be.vinci.pae.api.exceptions.BusinessException;
-import be.vinci.pae.api.exceptions.UnauthorizedException;
+
+import be.vinci.pae.exceptions.BusinessException;
+import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.UserDAO;
@@ -24,7 +25,7 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO connection(String email, String password) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(false);
     User user = (User) userDAO.getUserFromEmail(email);
     dalServices.commitTransaction();
     if (user == null) {
@@ -42,17 +43,15 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public void registration(UserDTO user) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(false);
     boolean alreadyPresent =
         userDAO.existsUserFromEmailOrUsername(user.getEmail(), user.getUsername());
     if (alreadyPresent) {
+      dalServices.rollbackTransaction();
       throw new BusinessException("This email or username is already in use");
     }
-    dalServices.commitTransactionAndContinue();
 
     user.getAddress().setId(addressDAO.addAddress(user.getAddress()));
-
-
     user.setPassword(((User) user).hashPassword(user.getPassword()));
     user.setValidated(false);
     user.setRegistrationDate(LocalDateTime.now());
@@ -61,47 +60,48 @@ public class UserUCCImpl implements UserUCC {
     userDAO.addUser(user);
 
     dalServices.commitTransaction();
-
   }
 
 
   @Override
   public List<UserDTO> getUnvalidatedUsers() {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(true);
     List<UserDTO> list = userDAO.getUnvalidatedUsers();
-    dalServices.commitTransaction();
     return list;
   }
 
   @Override
   public void acceptUser(int id, String role) {
+    if (role == null) {
+      throw new BusinessException("Role is needed");
+    }
     if (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")) {
       throw new BusinessException("Invalid role");
     }
     if (id < 0) {
       throw new BusinessException("Invalid id");
     }
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(true);
     userDAO.accept(id, role);
-    dalServices.commitTransaction();
+    dalServices.stopBizzTransaction();
   }
 
   @Override
   public boolean deleteUser(int id) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(true);
     if (!userDAO.deleteUser(id)) {
-      dalServices.rollbackTransaction();
+      dalServices.stopBizzTransaction();
       throw new BusinessException("Invalid id");
     }
-    dalServices.commitTransaction();
+    dalServices.stopBizzTransaction();
     return true;
   }
 
   @Override
   public UserDTO getUserFromId(int id) {
-    dalServices.getConnection(false);
+    dalServices.getBizzTransaction(true);
     UserDTO user = userDAO.getUserFromId(id);
-    dalServices.commitTransaction();
+    dalServices.stopBizzTransaction();
     return user;
   }
 
