@@ -113,6 +113,14 @@ public class FurnitureResource {
     return true;
   }
 
+  /**
+   * Set a furniture to a sold state.
+   * 
+   * @param request the request
+   * @param id the furniture id
+   * @param json
+   * @return true or an error
+   */
   @AdminAuthorize
   @POST
   @Path("{id}/offeredForSale")
@@ -125,6 +133,13 @@ public class FurnitureResource {
     return true;
   }
 
+  /**
+   * Withdraw a furniture and set its state to a withdrawn state.
+   * 
+   * @param request the request
+   * @param id the furniture id
+   * @return true or an error
+   */
   @AdminAuthorize
   @POST
   @Path("{id}/withdrawSale")
@@ -134,6 +149,14 @@ public class FurnitureResource {
     return true;
   }
 
+  /**
+   * Cancel an option.
+   * 
+   * @param request the request
+   * @param id the option id
+   * @param json
+   * @return true
+   */
   @Authorize
   @POST
   @Path("{id_option}/cancelOption")
