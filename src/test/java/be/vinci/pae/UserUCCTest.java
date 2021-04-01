@@ -2,6 +2,7 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -58,7 +59,6 @@ public class UserUCCTest {
   @BeforeEach
   public void reset() {
     Mockito.reset(userDAO);
-    Mockito.doNothing().when(dalServices).getBizzTransaction(true);
   }
 
   @DisplayName("Test connection with right email and password")

@@ -42,7 +42,7 @@ async function FurniturePage(id) {
                 API_BASE_URL + idFurniture  + "/getSumOfOptionDays",
                 "GET",
                 userData.token,
-                {userId : idUser},
+                undefined,
             );
         } catch (err) {
             console.error("FurniturePage::onNbOfDay", err);
