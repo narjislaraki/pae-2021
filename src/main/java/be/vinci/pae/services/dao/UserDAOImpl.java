@@ -164,8 +164,8 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public boolean acceptUser(int id, String role) {
     try {
-      String sql =
-          "UPDATE pae.users SET is_validated = TRUE, role = ? WHERE id_user = ? AND is_validated = FALSE;";
+      String sql = "UPDATE pae.users SET is_validated = TRUE, role = ? WHERE id_user = ?"
+          + " AND is_validated = FALSE;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, role);
       ps.setInt(2, id);
