@@ -142,9 +142,9 @@ public class Authentication {
       address.setUnitNumber(json.get("unitNumber").asText());
     }
 
-    userUCC.registration(user);
+    return Response.status(Status.CREATED).entity(userUCC.registration(user)).build();
 
-    return createToken((User) user);
+    // return createToken((User) user);
   }
 
   private boolean checkFieldsRegister(JsonNode json) {

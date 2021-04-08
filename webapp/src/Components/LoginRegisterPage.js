@@ -120,7 +120,16 @@ const onUserLogin = async (userData) => {
 
 
 const onRegister = async (e) => {
-  //e.preventDefault();
+  e.preventDefault();
+
+  if (document.getElementById("password-register").value !== document.getElementById("password-confirmation").value){
+    let err = {
+      message: "Les mots de passe ne correspondent pas"
+    }
+    PrintError(err);
+    return;
+  }
+
   let user = {
     username: document.getElementById("username").value,
     firstName: document.getElementById("firstname").value,
@@ -135,7 +144,7 @@ const onRegister = async (e) => {
     password: document.getElementById("password-register").value,
     confirmPassword: document.getElementById("password-confirmation").value,
   };
-
+  
   console.log(user);
   try {
     const userRegistered = await callAPI(
@@ -144,9 +153,14 @@ const onRegister = async (e) => {
       undefined,
       user
     );
+
+    console.log(userRegistered)
   } catch (err) {
-    if (err == "Error: This email or username is already in use") {
-      err.message = "L'email ou le pseudo est déjà utilisé";
+    if (err == "Error: This email is already in use") {
+      err.message = "L'email est déjà utilisé";
+    }
+    else if (err == "Error: This username is already in use") {
+      err.message = "Le nom d'utilisateur est déjà utilisé";
     }
     console.error("LoginRegisterPage::onRegister", err);
     PrintError(err);
