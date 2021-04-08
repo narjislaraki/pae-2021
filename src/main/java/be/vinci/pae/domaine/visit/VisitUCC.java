@@ -1,5 +1,9 @@
 package be.vinci.pae.domaine.visit;
 
-public class VisitUCC {
+import java.util.List;
+
+public interface VisitUCC {
+
+  List<VisitDTO> getNotConfirmedVisits();
 
 }
