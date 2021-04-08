@@ -134,15 +134,17 @@ const onRegister = async (e) => {
     username: document.getElementById("username").value,
     firstName: document.getElementById("firstname").value,
     lastName: document.getElementById("lastname").value,
-    street: document.getElementById("street").value,
-    buildingNumber: document.getElementById("number").value,
-    unitNumber: document.getElementById("unitnumber").value,
-    postcode: document.getElementById("postcode").value,
-    country: document.getElementById("country").value,
-    city: document.getElementById("city").value,
     email: document.getElementById("email-register").value,
     password: document.getElementById("password-register").value,
-    confirmPassword: document.getElementById("password-confirmation").value,
+    passwordVerification: document.getElementById("password-confirmation").value,
+    address: {
+      street: document.getElementById("street").value,
+      buildingNumber: document.getElementById("number").value,
+      unitNumber: document.getElementById("unitnumber").value,
+      postCode: document.getElementById("postcode").value,
+      country: document.getElementById("country").value,
+      city: document.getElementById("city").value,
+    }
   };
   
   console.log(user);

@@ -29,6 +29,8 @@ public class UserImpl implements User {
   private String email;
   @JsonView(Views.Internal.class)
   private String password;
+  @JsonView(Views.Internal.class)
+  private String passwordVerification;
   @JsonView(Views.Public.class)
   private Role role;
   @JsonView(Views.Private.class)
@@ -109,6 +111,15 @@ public class UserImpl implements User {
   }
 
   @Override
+  public String getPasswordVerification() {
+    return passwordVerification;
+  }
+
+  public void setPasswordVerification(String passwordVerification) {
+    this.passwordVerification = passwordVerification;
+  }
+
+  @Override
   public Role getRole() {
     return role;
   }
@@ -165,7 +176,10 @@ public class UserImpl implements User {
 
   @Override
   public String toString() {
-    return "{id:" + id + ", login:" + username + ", password:" + password + "}";
+    return "UserImpl [id=" + id + ", address=" + address + ", username=" + username + ", lastName="
+        + lastName + ", firstName=" + firstName + ", email=" + email + ", password=" + password
+        + ", passwordVerification=" + passwordVerification + ", role=" + role + ", validated="
+        + validated + ", registrationDate=" + registrationDate + "]";
   }
 
   @Override
