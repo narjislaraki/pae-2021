@@ -78,8 +78,7 @@ public class UserResource {
   public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id,
       JsonNode json) {
     String role = json.get("role").asText();
-    userUCC.acceptUser(id, role);
-    return true;
+    return userUCC.acceptUser(id, role);
   }
 
   /**
