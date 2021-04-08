@@ -2,13 +2,12 @@ package be.vinci.pae.services.dao;
 
 import java.sql.ResultSet;
 import java.util.List;
+
 import be.vinci.pae.domain.user.UserDTO;
 
 public interface UserDAO {
 
   UserDTO getUserFromEmail(String email);
-
-  boolean existsUserFromEmailOrUsername(String email, String username);
 
   UserDTO getUserFromUsername(String username);
 
@@ -20,7 +19,7 @@ public interface UserDAO {
 
   boolean deleteUser(int id);
 
-  void accept(int id, String role);
+  boolean acceptUser(int id, String role);
 
   List<UserDTO> getUnvalidatedUsers();
 

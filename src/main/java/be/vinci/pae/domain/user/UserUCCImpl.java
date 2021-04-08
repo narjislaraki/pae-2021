@@ -42,13 +42,17 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public void registration(UserDTO user) {
+  public boolean registration(UserDTO user) {
     dalServices.getBizzTransaction(false);
-    boolean alreadyPresent =
-        userDAO.existsUserFromEmailOrUsername(user.getEmail(), user.getUsername());
-    if (alreadyPresent) {
+    UserDTO u = userDAO.getUserFromEmail(user.getEmail());
+    if (u != null) {
+      dalServices.rollbackTransaction(); // TODO tester et retirer si tout roule
+      throw new BusinessException("This email is already in use");
+    }
+    u = userDAO.getUserFromUsername(user.getUsername());
+    if (u != null) {
       dalServices.rollbackTransaction();
-      throw new BusinessException("This email or username is already in use");
+      throw new BusinessException("This username is already in use");
     }
 
     user.getAddress().setId(addressDAO.addAddress(user.getAddress()));
@@ -60,6 +64,8 @@ public class UserUCCImpl implements UserUCC {
     userDAO.addUser(user);
 
     dalServices.commitTransaction();
+
+    return true;
   }
 
 
@@ -71,30 +77,34 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public void acceptUser(int id, String role) {
+  public boolean acceptUser(int id, String role) {
     if (role == null) {
       throw new BusinessException("Role is needed");
     }
     if (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")) {
       throw new BusinessException("Invalid role");
     }
-    if (id < 0) {
-      throw new BusinessException("Invalid id");
-    }
+
     dalServices.getBizzTransaction(true);
-    userDAO.accept(id, role);
+    boolean result = userDAO.acceptUser(id, role);
     dalServices.stopBizzTransaction();
+
+    if (!result) {
+      throw new BusinessException("Either the id is invalid or the user is already validated");
+    }
+    return result;
   }
 
   @Override
   public boolean deleteUser(int id) {
     dalServices.getBizzTransaction(true);
-    if (!userDAO.deleteUser(id)) {
-      dalServices.stopBizzTransaction();
+    boolean result = userDAO.deleteUser(id);
+    dalServices.stopBizzTransaction();
+
+    if (!result) {
       throw new BusinessException("Invalid id");
     }
-    dalServices.stopBizzTransaction();
-    return true;
+    return result;
   }
 
   @Override
@@ -102,6 +112,9 @@ public class UserUCCImpl implements UserUCC {
     dalServices.getBizzTransaction(true);
     UserDTO user = userDAO.getUserFromId(id);
     dalServices.stopBizzTransaction();
+    if (user == null) {
+      throw new BusinessException("Invalid id");
+    }
     return user;
   }
 

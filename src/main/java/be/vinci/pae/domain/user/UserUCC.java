@@ -6,9 +6,9 @@ public interface UserUCC {
 
   UserDTO connection(String email, String password);
 
-  void registration(UserDTO user);
+  boolean registration(UserDTO user);
 
-  void acceptUser(int id, String role);
+  boolean acceptUser(int id, String role);
 
   boolean deleteUser(int id);
 
