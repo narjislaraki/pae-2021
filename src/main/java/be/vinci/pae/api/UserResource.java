@@ -48,7 +48,7 @@ public class UserResource {
    * Get a list of unvalidated users.
    * 
    * @param request the request
-   * @return a list of unvalidated users
+   * @return a list of unvalidated users wrapped in a Response
    */
   @GET
   @Path("unvalidatedList")

@@ -48,10 +48,10 @@ public class FurnitureResource {
   }
 
   /**
-   * Get a list of furnitures for the unlogged users.
+   * Get a list of furniture for the unlogged users.
    * 
    * @param request the request
-   * @return a list of furnitures
+   * @return a list of furniture wrapped in a Response
    */
   @GET
   @Path("public")
@@ -70,7 +70,8 @@ public class FurnitureResource {
    * Get a list of furnitures for the logged users.
    * 
    * @param request the request
-   * @return a list of furniture adapted if it's the user is a client or an admin
+   * @return a list of furniture adapted if it's the user is a client or an admin, wrapped in a
+   *         Response
    */
   @GET
   @Authorize
@@ -92,10 +93,10 @@ public class FurnitureResource {
   }
 
   /**
-   * Get a specific furniture for logger users by giving its id.
+   * Get a specific furniture for unlogged users by giving its id.
    * 
    * @param id the furniture's id
-   * @return the furniture
+   * @return the furniture wrapped in a Response
    */
   @GET
   @Path("public/{id}")
@@ -116,7 +117,7 @@ public class FurnitureResource {
    * Get a specific furniture for logger users by giving its id.
    * 
    * @param id the furniture's id
-   * @return the furniture
+   * @return the furniture wrapped in a Response
    */
   @GET
   @Authorize
@@ -139,6 +140,13 @@ public class FurnitureResource {
     return responseOkWithEntity(r);
   }
 
+  /**
+   * Getting active option from a specific furniture by giving its id.
+   * 
+   * @param request the request
+   * @param id the furniture's id
+   * @return the option wrapped in a Response
+   */
   @Authorize
   @GET
   @Path("{id}/getOption")
