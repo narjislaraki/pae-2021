@@ -56,6 +56,9 @@ public class UserUCCTest {
     addressDAO = locator.getService(AddressDAO.class);
   }
 
+  /**
+   * Resetting before each test
+   */
   @BeforeEach
   public void reset() {
     Mockito.reset(userDAO);
@@ -185,7 +188,7 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with a valid id and an invalid role and the user is already validated")
+  @DisplayName("Test user's validation with valid id, invalid role and the user is validated")
   @Test
   public void acceptUserTest3() {
     int id = goodUser.getId();
@@ -193,7 +196,7 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with a valid id and a valid role but the user is already validated")
+  @DisplayName("Test user's vaidation with valid id, valid role but the user is validated")
   @Test
   public void acceptUserTest4() {
     int id = goodUser.getId();
@@ -202,7 +205,7 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with a valid id and a valid role and the user is not validated yet")
+  @DisplayName("Test user's vaidation with valid id, valid role and the user is not validated")
   @Test
   public void acceptUserTest5() {
     int id = goodUserNotValidated.getId();
@@ -211,7 +214,7 @@ public class UserUCCTest {
     assertTrue(userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with a valid id and a valid role and the user is not validated yet")
+  @DisplayName("Test user's vaidation with valid id,a valid role and the user is not validated")
   @Test
   public void acceptUserTest6() {
     int id = goodUserNotValidated.getId();
@@ -220,7 +223,7 @@ public class UserUCCTest {
     assertTrue(userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with a valid id and a valid role and the user is not validated yet")
+  @DisplayName("Test user's vaidation with valid id, valid role and the user is not validated")
   @Test
   public void acceptUserTest7() {
     int id = goodUserNotValidated.getId();
@@ -229,7 +232,7 @@ public class UserUCCTest {
     assertTrue(userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with a valid id and an invalid role and the user is not validated yet")
+  @DisplayName("Test user's vaidation with valid id, an invalid role and the user is not validated ")
   @Test
   public void acceptUserTest8() {
     int id = goodUserNotValidated.getId();
