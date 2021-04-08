@@ -1,7 +1,7 @@
 package be.vinci.pae.api;
 
-import static be.vinci.pae.api.ResponseTool.responseOkWithEntity;
-import static be.vinci.pae.api.ResponseTool.responseWithStatus;
+import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
+import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package be.vinci.pae.api;
+package be.vinci.pae.utils;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
