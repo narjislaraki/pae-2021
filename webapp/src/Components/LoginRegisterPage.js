@@ -6,6 +6,7 @@ import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
+import PrintMessage from "./PrintMessage.js"
 const API_BASE_URL = "/api/auths/";
 
 let loginPage = `<div class="register-card">
@@ -155,8 +156,11 @@ const onRegister = async (e) => {
       undefined,
       user
     );
+    if (userRegistered) {
+      RedirectUrl("/");
+      PrintMessage("Votre compte a été créé. Il est maintenant en attente de validation.");
+    }
 
-    console.log(userRegistered)
   } catch (err) {
     if (err == "Error: This email is already in use") {
       err.message = "L'email est déjà utilisé";
