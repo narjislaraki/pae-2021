@@ -101,7 +101,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
 
 
   @Override
-  public void commitTransaction() {
+  public void commitBizzTransaction() {
     Connection connection;
     try {
       connection = commitTransac();

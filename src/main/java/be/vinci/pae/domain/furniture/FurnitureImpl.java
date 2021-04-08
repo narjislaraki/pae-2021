@@ -2,7 +2,9 @@ package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+
 import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import be.vinci.pae.domain.user.UserDTO;
@@ -25,17 +27,17 @@ public class FurnitureImpl implements Furniture {
   private int sellerId;
   @JsonView(Views.Private.class)
   private UserDTO seller;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Public.class)
   private Condition condition;
   @JsonView(Views.Public.class)
   private String description;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private double purchasePrice;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private LocalDateTime pickUpDate;
   @JsonView(Views.Internal.class)
   private boolean storeDeposit;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private LocalDateTime depositDate;
   @JsonView(Views.Public.class)
   private double offeredSellingPrice;

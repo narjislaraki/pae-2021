@@ -6,6 +6,7 @@ import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
+import PrintMessage from "./PrintMessage.js"
 const API_BASE_URL = "/api/auths/";
 
 let loginPage = `<div class="register-card">
@@ -120,22 +121,33 @@ const onUserLogin = async (userData) => {
 
 
 const onRegister = async (e) => {
-  //e.preventDefault();
+  e.preventDefault();
+
+  if (document.getElementById("password-register").value !== document.getElementById("password-confirmation").value){
+    let err = {
+      message: "Les mots de passe ne correspondent pas"
+    }
+    PrintError(err);
+    return;
+  }
+
   let user = {
     username: document.getElementById("username").value,
     firstName: document.getElementById("firstname").value,
     lastName: document.getElementById("lastname").value,
-    street: document.getElementById("street").value,
-    buildingNumber: document.getElementById("number").value,
-    unitNumber: document.getElementById("unitnumber").value,
-    postcode: document.getElementById("postcode").value,
-    country: document.getElementById("country").value,
-    city: document.getElementById("city").value,
     email: document.getElementById("email-register").value,
     password: document.getElementById("password-register").value,
-    confirmPassword: document.getElementById("password-confirmation").value,
+    passwordVerification: document.getElementById("password-confirmation").value,
+    address: {
+      street: document.getElementById("street").value,
+      buildingNumber: document.getElementById("number").value,
+      unitNumber: document.getElementById("unitnumber").value,
+      postCode: document.getElementById("postcode").value,
+      country: document.getElementById("country").value,
+      city: document.getElementById("city").value,
+    }
   };
-
+  
   console.log(user);
   try {
     const userRegistered = await callAPI(
@@ -144,9 +156,17 @@ const onRegister = async (e) => {
       undefined,
       user
     );
+    if (userRegistered) {
+      RedirectUrl("/");
+      PrintMessage("Votre compte a été créé. Il est maintenant en attente de validation.");
+    }
+
   } catch (err) {
-    if (err == "Error: This email or username is already in use") {
-      err.message = "L'email ou le pseudo est déjà utilisé";
+    if (err == "Error: This email is already in use") {
+      err.message = "L'email est déjà utilisé";
+    }
+    else if (err == "Error: This username is already in use") {
+      err.message = "Le nom d'utilisateur est déjà utilisé";
     }
     console.error("LoginRegisterPage::onRegister", err);
     PrintError(err);

@@ -27,7 +27,7 @@ public class UserUCCImpl implements UserUCC {
   public UserDTO connection(String email, String password) {
     dalServices.getBizzTransaction(false);
     User user = (User) userDAO.getUserFromEmail(email);
-    dalServices.commitTransaction();
+    dalServices.commitBizzTransaction();
     if (user == null) {
       throw new UnauthorizedException("Wrong credentials");
     } else if (!user.isValidated()) {
@@ -46,12 +46,10 @@ public class UserUCCImpl implements UserUCC {
     dalServices.getBizzTransaction(false);
     UserDTO u = userDAO.getUserFromEmail(user.getEmail());
     if (u != null) {
-      dalServices.rollbackTransaction(); // TODO tester et retirer si tout roule
       throw new BusinessException("This email is already in use");
     }
     u = userDAO.getUserFromUsername(user.getUsername());
     if (u != null) {
-      dalServices.rollbackTransaction();
       throw new BusinessException("This username is already in use");
     }
 
@@ -63,7 +61,7 @@ public class UserUCCImpl implements UserUCC {
 
     userDAO.addUser(user);
 
-    dalServices.commitTransaction();
+    dalServices.commitBizzTransaction();
 
     return true;
   }
@@ -73,6 +71,7 @@ public class UserUCCImpl implements UserUCC {
   public List<UserDTO> getUnvalidatedUsers() {
     dalServices.getBizzTransaction(true);
     List<UserDTO> list = userDAO.getUnvalidatedUsers();
+    dalServices.stopBizzTransaction();
     return list;
   }
 
