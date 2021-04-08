@@ -16,7 +16,6 @@ import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
-import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
@@ -32,7 +31,6 @@ public class UserUCCTest {
   private static String badPassword;
   private static String goodEmailNotValidated;
   private static UserDAO userDAO;
-  private static DalServices dalServices;
 
   /**
    * Initialisation before every tests.
@@ -54,8 +52,6 @@ public class UserUCCTest {
     userUCC = locator.getService(UserUCC.class);
 
     userDAO = locator.getService(UserDAO.class);
-
-    dalServices = locator.getService(DalServices.class);
   }
 
   @BeforeEach
