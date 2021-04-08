@@ -42,13 +42,17 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public void registration(UserDTO user) {
+  public boolean registration(UserDTO user) {
     dalServices.getBizzTransaction(false);
-    boolean alreadyPresent =
-        userDAO.existsUserFromEmailOrUsername(user.getEmail(), user.getUsername());
-    if (alreadyPresent) {
+    UserDTO u = userDAO.getUserFromEmail(user.getEmail());
+    if (u != null) {
+      dalServices.rollbackTransaction(); // TODO tester et retirer si tout roule
+      throw new BusinessException("This email is already in use");
+    }
+    u = userDAO.getUserFromUsername(user.getUsername());
+    if (u != null) {
       dalServices.rollbackTransaction();
-      throw new BusinessException("This email or username is already in use");
+      throw new BusinessException("This username is already in use");
     }
 
     user.getAddress().setId(addressDAO.addAddress(user.getAddress()));
@@ -60,6 +64,8 @@ public class UserUCCImpl implements UserUCC {
     userDAO.addUser(user);
 
     dalServices.commitTransaction();
+
+    return true;
   }
 
 

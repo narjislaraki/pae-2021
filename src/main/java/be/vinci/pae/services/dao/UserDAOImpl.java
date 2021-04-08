@@ -56,37 +56,6 @@ public class UserDAOImpl implements UserDAO {
     return user;
   }
 
-  /**
-   * Searching through the database for a user, using his email and his username.
-   * 
-   * @param email the email
-   * @return the user if he exists, otherwise null
-   */
-  @Override
-  public boolean existsUserFromEmailOrUsername(String email, String username) {
-    boolean res = false;
-    try {
-      ps = dalBackendService.getPreparedStatement(
-          "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
-              + "u.registration_date, u.is_validated, u.password, u.address "
-              + "FROM pae.users u WHERE u.email = ? OR u.username = ?;");
-
-
-      ps.setString(1, email);
-      ps.setString(2, username);
-
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {
-        res = true;
-      }
-
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return res;
-  }
-
-
 
   /**
    * Searching through the database for the user, using his username.

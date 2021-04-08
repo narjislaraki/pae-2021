@@ -9,8 +9,6 @@ public interface UserDAO {
 
   UserDTO getUserFromEmail(String email);
 
-  boolean existsUserFromEmailOrUsername(String email, String username);
-
   UserDTO getUserFromUsername(String username);
 
   UserDTO getUserFromId(int id);

@@ -21,6 +21,7 @@ import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
+import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
@@ -36,6 +37,7 @@ public class UserUCCTest {
   private static String badPassword;
   private static String goodEmailNotValidated;
   private static UserDAO userDAO;
+  private static AddressDAO addressDAO;
 
   /**
    * Initialisation before every tests.
@@ -43,25 +45,29 @@ public class UserUCCTest {
   @BeforeAll
   public static void init() {
     Config.load();
-    badEmail = "test.test@test.com";
-    badPassword = "5678";
 
-    goodUser = UserDistributor.getGoodValidatedUser();
-    goodPassword = "1234";
-    goodEmail = goodUser.getEmail();
-    goodUserNotValidated = UserDistributor.getGoodNotValidatedUser();
-    goodEmailNotValidated = goodUserNotValidated.getEmail();
 
     ServiceLocator locator =
         ServiceLocatorUtilities.bind(new ApplicationBinder(), new ApplicationBinderTest());
     userUCC = locator.getService(UserUCC.class);
 
     userDAO = locator.getService(UserDAO.class);
+
+    addressDAO = locator.getService(AddressDAO.class);
   }
 
   @BeforeEach
   public void reset() {
     Mockito.reset(userDAO);
+
+    badEmail = UserDistributor.getBadEmail();
+    badPassword = UserDistributor.getBadPassword();
+
+    goodUser = UserDistributor.getGoodValidatedUser();
+    goodPassword = UserDistributor.getGoodPassword();
+    goodEmail = UserDistributor.getGoodEmail();
+    goodUserNotValidated = UserDistributor.getGoodNotValidatedUser();
+    goodEmailNotValidated = UserDistributor.getGoodEmailNotValidated();
   }
 
   @DisplayName("Test connection with right email and password")
@@ -260,6 +266,50 @@ public class UserUCCTest {
     Mockito.when(userDAO.getUnvalidatedUsers()).thenReturn(listA);
     List<UserDTO> listB = userUCC.getUnvalidatedUsers();
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(3, listB.size()));
+  }
+
+  @DisplayName("Test registering with an already used email and an already used username")
+  @Test
+  public void registerTest1() {
+    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    user.setUsername(goodUser.getUsername());
+    user.setEmail(goodUser.getEmail());
+    Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(goodUser);
+    Mockito.when(userDAO.getUserFromUsername(user.getUsername())).thenReturn(goodUser);
+    assertThrows(BusinessException.class, () -> userUCC.registration(user));
+  }
+
+  @DisplayName("Test registering with an already used email and a valid username")
+  @Test
+  public void registerTest2() {
+    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    user.setUsername("James");
+    user.setEmail(goodUser.getEmail());
+    Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(goodUser);
+    Mockito.when(userDAO.getUserFromUsername(user.getUsername())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> userUCC.registration(user));
+  }
+
+  @DisplayName("Test registering with a valid email and an already used username")
+  @Test
+  public void registerTest3() {
+    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    user.setUsername(goodUser.getUsername());
+    user.setEmail("james@bond.uk");
+    Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(null);
+    Mockito.when(userDAO.getUserFromUsername(user.getUsername())).thenReturn(goodUser);
+    assertThrows(BusinessException.class, () -> userUCC.registration(user));
+  }
+
+  @DisplayName("Test registering with a valid email and a valid username")
+  @Test
+  public void registerTest4() {
+
+    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    Mockito.when(addressDAO.addAddress(user.getAddress())).thenReturn(1);
+    Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(null);
+    Mockito.when(userDAO.getUserFromUsername(user.getUsername())).thenReturn(null);
+    assertTrue(userUCC.registration(user));
   }
 
 }
