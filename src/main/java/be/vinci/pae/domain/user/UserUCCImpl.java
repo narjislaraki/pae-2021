@@ -102,6 +102,9 @@ public class UserUCCImpl implements UserUCC {
     dalServices.getBizzTransaction(true);
     UserDTO user = userDAO.getUserFromId(id);
     dalServices.stopBizzTransaction();
+    if (user == null) {
+      throw new BusinessException("Invalid id");
+    }
     return user;
   }
 
