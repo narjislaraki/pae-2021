@@ -1,5 +1,8 @@
 package be.vinci.pae.api;
 
+import static be.vinci.pae.api.ResponseTool.responseOkWithEntity;
+import static be.vinci.pae.api.ResponseTool.responseWithStatus;
+
 import java.util.List;
 
 import org.glassfish.jersey.server.ContainerRequest;
@@ -12,7 +15,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -25,6 +27,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Singleton
 @Path("/users")
@@ -50,16 +54,16 @@ public class UserResource {
   @Path("unvalidatedList")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
-  public String getListOfUnvalidatedUsers(@Context ContainerRequest request) {
+  public Response getListOfUnvalidatedUsers(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
 
     String r = null;
     try {
       r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
     } catch (JsonProcessingException e) {
-      throw new FatalException(e); // TODO Fatal OK ici?
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }
-    return r;
+    return responseOkWithEntity(r);
   }
 
   /**

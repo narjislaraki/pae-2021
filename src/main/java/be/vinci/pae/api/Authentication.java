@@ -1,5 +1,8 @@
 package be.vinci.pae.api;
 
+import static be.vinci.pae.api.ResponseTool.responseOkWithEntity;
+import static be.vinci.pae.api.ResponseTool.responseWithStatus;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -20,7 +23,6 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
@@ -30,7 +32,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -53,18 +54,6 @@ public class Authentication {
   }
 
 
-
-  /**
-   * Quick way to construct HTTP Response with text only.
-   * 
-   * @param status the status
-   * @param message the message
-   * @return a Response containing the status and the message
-   */
-  private Response constructResponse(Status status, String message) {
-    return Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build();
-  }
-
   /**
    * This method is used to attempt to log a client in. Valid email and password are required to be
    * able to send a token and a response 200.
@@ -77,7 +66,7 @@ public class Authentication {
   @Consumes(MediaType.APPLICATION_JSON)
   public Response login(JsonNode json) {
     if (!checkLoginFields(json)) {
-      return constructResponse(Status.PRECONDITION_FAILED, "The input data is invalid");
+      return responseWithStatus(Status.PRECONDITION_FAILED, "The input data is invalid");
     }
 
     String email = json.get("email").asText();
@@ -105,19 +94,15 @@ public class Authentication {
    */
   @POST
   @Path("register")
-  @Consumes(MediaType.APPLICATION_JSON)
   public Response register(UserDTO user) {
     if (!checkFieldsRegister(user)) {
-      return Response.status(Status.UNAUTHORIZED).entity("Missing fields")
-          .type(MediaType.TEXT_PLAIN).build();
+      return responseWithStatus(Status.UNAUTHORIZED, "Missing fields");
     }
 
     if (!user.getPassword().equals(user.getPasswordVerification())) {
-      throw new UnauthorizedException("The passwords don't match");
+      return responseWithStatus(Status.PRECONDITION_FAILED, "The passwords don't match");
     }
-
-    return Response.status(Status.CREATED).entity(userUCC.registration(user)).build();
-
+    return responseWithStatus(Status.CREATED, userUCC.registration(user));
   }
 
   private boolean checkFieldsRegister(UserDTO user) {
@@ -148,14 +133,13 @@ public class Authentication {
       token = JWT.create().withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
           .withIssuer("auth0").withClaim("user", user.getId()).sign(this.jwtAlgorithm);
     } catch (Exception e) {
-      throw new WebApplicationException("Impossible to create a token", e,
-          Status.INTERNAL_SERVER_ERROR);
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Impossible to create a token");
     }
 
     ObjectNode node =
         jsonMapper.createObjectNode().put("token", token).putPOJO("user", user.getId());
     logger.log(Level.INFO, "Connection of user:" + user.getUsername() + " :: " + user.getId());
-    return Response.ok(node, MediaType.APPLICATION_JSON).build();
+    return responseOkWithEntity(node);
   }
 
   /**

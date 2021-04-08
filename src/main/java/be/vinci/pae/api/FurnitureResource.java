@@ -1,5 +1,8 @@
 package be.vinci.pae.api;
 
+import static be.vinci.pae.api.ResponseTool.responseOkWithEntity;
+import static be.vinci.pae.api.ResponseTool.responseWithStatus;
+
 import java.util.List;
 
 import org.glassfish.jersey.server.ContainerRequest;
@@ -16,7 +19,6 @@ import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
-import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -28,6 +30,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Singleton
 @Path("/furnitures")
@@ -51,16 +55,15 @@ public class FurnitureResource {
    */
   @GET
   @Path("public")
-  @Produces(MediaType.APPLICATION_JSON)
-  public String getPublicFurnituresList(@Context ContainerRequest request) {
+  public Response getPublicFurnituresList(@Context ContainerRequest request) {
     List<FurnitureDTO> list = furnitureUCC.getFurnitureList(null);
     String r = null;
     try {
       r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
     } catch (JsonProcessingException e) {
-      throw new FatalException(e);
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }
-    return r;
+    return responseOkWithEntity(r);
   }
 
   /**
@@ -71,8 +74,7 @@ public class FurnitureResource {
    */
   @GET
   @Authorize
-  @Produces(MediaType.APPLICATION_JSON)
-  public String getFurnituresList(@Context ContainerRequest request) {
+  public Response getFurnituresList(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     List<FurnitureDTO> list = furnitureUCC.getFurnitureList(user);
 
@@ -84,42 +86,40 @@ public class FurnitureResource {
         r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
       }
     } catch (JsonProcessingException e) {
-      throw new FatalException(e);
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }
-    return r;
+    return responseOkWithEntity(r);
   }
 
 
   @GET
   @Path("{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public String getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
+  public Response getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
     FurnitureDTO furniture = furnitureUCC.getFurnitureById(id);
 
     String r = null;
     try {
       r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(furniture);
     } catch (JsonProcessingException e) {
-      throw new FatalException(e);
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }
 
-    return r;
+    return responseOkWithEntity(r);
   }
 
   @Authorize
   @GET
   @Path("{id}/getOption")
-  @Produces(MediaType.APPLICATION_JSON)
-  public String getOption(@Context ContainerRequest request, @PathParam("id") int id) {
+  public Response getOption(@Context ContainerRequest request, @PathParam("id") int id) {
     OptionDTO opt = furnitureUCC.getOption(id);
     String r = null;
     try {
       r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(opt);
     } catch (JsonProcessingException e) {
-      throw new FatalException(e);
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }
 
-    return r;
+    return responseOkWithEntity(r);
   }
 
   @Authorize
