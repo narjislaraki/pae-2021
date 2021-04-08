@@ -1,8 +1,12 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -13,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
@@ -226,5 +231,35 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
+  @DisplayName("Test getting list of not yet validated users when there are no unvalidated user")
+  @Test
+  public void getUnvalidatedUsersTest1() {
+    List<UserDTO> listA = new ArrayList<UserDTO>();
+    Mockito.when(userDAO.getUnvalidatedUsers()).thenReturn(listA);
+    List<UserDTO> listB = userUCC.getUnvalidatedUsers();
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(0, listB.size()));
+  }
+
+  @DisplayName("Test getting list of not yet validated users when there is one unvalidated user")
+  @Test
+  public void getUnvalidatedUsersTest2() {
+    List<UserDTO> listA = new ArrayList<UserDTO>();
+    listA.add(goodUserNotValidated);
+    Mockito.when(userDAO.getUnvalidatedUsers()).thenReturn(listA);
+    List<UserDTO> listB = userUCC.getUnvalidatedUsers();
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(1, listB.size()));
+  }
+
+  @DisplayName("Test getting list of not yet validated users when there is three unvalidated user")
+  @Test
+  public void getUnvalidatedUsersTest3() {
+    List<UserDTO> listA = new ArrayList<UserDTO>();
+    listA.add(goodUserNotValidated);
+    listA.add(goodUserNotValidated);
+    listA.add(goodUserNotValidated);
+    Mockito.when(userDAO.getUnvalidatedUsers()).thenReturn(listA);
+    List<UserDTO> listB = userUCC.getUnvalidatedUsers();
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(3, listB.size()));
+  }
 
 }
