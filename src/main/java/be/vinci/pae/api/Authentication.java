@@ -17,10 +17,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.utils.Config;
@@ -44,6 +42,8 @@ public class Authentication {
 
   @Inject
   private Logger logger;
+  @Inject
+  private UserUCC userUCC;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getStringProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -52,14 +52,6 @@ public class Authentication {
     jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
   }
 
-  @Inject
-  private UserUCC userUCC;
-
-  @Inject
-  private UserFactory userFactory;
-
-  @Inject
-  private AddressFactory addressFactory;
 
 
   /**
@@ -106,9 +98,9 @@ public class Authentication {
 
 
   /**
-   * This method is used for registering a user. It also adds the address into the database
+   * This method is used for registering a user. It also adds the address into the database.
    * 
-   * @param json post received from the client
+   * @param user the user converted from json
    * @return Response 401 Or 409 if KO; token if OK
    */
   @POST
