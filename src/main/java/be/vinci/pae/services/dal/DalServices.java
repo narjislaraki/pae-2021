@@ -12,4 +12,6 @@ public interface DalServices {
 
   void stopBizzTransaction();
 
+  boolean hasTransaction();
+
 }
