@@ -71,30 +71,34 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
-  public void acceptUser(int id, String role) {
+  public boolean acceptUser(int id, String role) {
     if (role == null) {
       throw new BusinessException("Role is needed");
     }
     if (!role.equals("admin") && !role.equals("client") && !role.equals("antiquaire")) {
       throw new BusinessException("Invalid role");
     }
-    if (id < 0) {
-      throw new BusinessException("Invalid id");
-    }
+
     dalServices.getBizzTransaction(true);
-    userDAO.accept(id, role);
+    boolean result = userDAO.acceptUser(id, role);
     dalServices.stopBizzTransaction();
+
+    if (!result) {
+      throw new BusinessException("Either the id is invalid or the user is already validated");
+    }
+    return result;
   }
 
   @Override
   public boolean deleteUser(int id) {
     dalServices.getBizzTransaction(true);
-    if (!userDAO.deleteUser(id)) {
-      dalServices.stopBizzTransaction();
+    boolean result = userDAO.deleteUser(id);
+    dalServices.stopBizzTransaction();
+
+    if (!result) {
       throw new BusinessException("Invalid id");
     }
-    dalServices.stopBizzTransaction();
-    return true;
+    return result;
   }
 
   @Override

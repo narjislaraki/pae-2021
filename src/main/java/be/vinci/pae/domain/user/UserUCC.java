@@ -8,7 +8,7 @@ public interface UserUCC {
 
   void registration(UserDTO user);
 
-  void acceptUser(int id, String role);
+  boolean acceptUser(int id, String role);
 
   boolean deleteUser(int id);
 

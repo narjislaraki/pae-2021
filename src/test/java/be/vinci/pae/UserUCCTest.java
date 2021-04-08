@@ -113,14 +113,15 @@ public class UserUCCTest {
         () -> userUCC.connection(goodEmailNotValidated, goodPassword));
   }
 
-  @DisplayName("Test getting user from id with invalid id")
+  @DisplayName("Test getting user from id with an invalid id")
   @Test
   public void getUserFromIdTest1() {
     int id = -5;
+    Mockito.when(userDAO.getUserFromId(id)).thenReturn(null);
     assertThrows(BusinessException.class, () -> userUCC.getUserFromId(id));
   }
 
-  @DisplayName("Test getting user from id with valid id but no user has this id")
+  @DisplayName("Test getting user from id with a valid id but no user has this id")
   @Test
   public void getUserFromIdTest2() {
     int id = 55;
@@ -128,22 +129,23 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.getUserFromId(id));
   }
 
-  @DisplayName("Test getting user from id with valid id")
+  @DisplayName("Test getting user from id with a valid id")
   @Test
   public void getUserFromIdTest3() {
-    int id = 1;
+    int id = goodUser.getId();
     Mockito.when(userDAO.getUserFromId(id)).thenReturn(goodUser);
     assertEquals(goodUser, userUCC.getUserFromId(id));
   }
 
-  @DisplayName("Test deleting user from id with invalid id")
+  @DisplayName("Test deleting user from id with an invalid id")
   @Test
   public void deleteUserTest1() {
     int id = -5;
+    Mockito.when(userDAO.deleteUser(id)).thenReturn(false);
     assertThrows(BusinessException.class, () -> userUCC.deleteUser(id));
   }
 
-  @DisplayName("Test deleting user from id with valid id but no user has this id")
+  @DisplayName("Test deleting user from id with a valid id but no user has this id")
   @Test
   public void deleteUserTest2() {
     int id = 55;
@@ -151,12 +153,81 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.deleteUser(id));
   }
 
-  @DisplayName("Test deleting user from id with valid id")
+  @DisplayName("Test deleting user from id with a valid id")
   @Test
   public void deleteUserTest3() {
     int id = 1;
     Mockito.when(userDAO.deleteUser(id)).thenReturn(true);
     assertTrue(userUCC.deleteUser(id));
+  }
+
+  @DisplayName("Test user's vaidation with an invalid id and a valid role")
+  @Test
+  public void acceptUserTest1() {
+    int id = -5;
+    String role = "client";
+    Mockito.when(userDAO.acceptUser(id, role)).thenReturn(false);
+    assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's vaidation with an invalid id and an invalid role")
+  @Test
+  public void acceptUserTest2() {
+    int id = -5;
+    String role = "wrong";
+    assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's vaidation with a valid id and an invalid role and the user is already validated")
+  @Test
+  public void acceptUserTest3() {
+    int id = goodUser.getId();
+    String role = "wrong";
+    assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's vaidation with a valid id and a valid role but the user is already validated")
+  @Test
+  public void acceptUserTest4() {
+    int id = goodUser.getId();
+    String role = "antiquaire";
+    Mockito.when(userDAO.acceptUser(id, role)).thenReturn(false);
+    assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's vaidation with a valid id and a valid role and the user is not validated yet")
+  @Test
+  public void acceptUserTest5() {
+    int id = goodUserNotValidated.getId();
+    String role = "antiquaire";
+    Mockito.when(userDAO.acceptUser(id, role)).thenReturn(true);
+    assertTrue(userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's vaidation with a valid id and a valid role and the user is not validated yet")
+  @Test
+  public void acceptUserTest6() {
+    int id = goodUserNotValidated.getId();
+    String role = "client";
+    Mockito.when(userDAO.acceptUser(id, role)).thenReturn(true);
+    assertTrue(userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's vaidation with a valid id and a valid role and the user is not validated yet")
+  @Test
+  public void acceptUserTest7() {
+    int id = goodUserNotValidated.getId();
+    String role = "admin";
+    Mockito.when(userDAO.acceptUser(id, role)).thenReturn(true);
+    assertTrue(userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's vaidation with a valid id and an invalid role and the user is not validated yet")
+  @Test
+  public void acceptUserTest8() {
+    int id = goodUserNotValidated.getId();
+    String role = "wrong";
+    assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
 

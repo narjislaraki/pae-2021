@@ -2,6 +2,7 @@ package be.vinci.pae.services.dao;
 
 import java.sql.ResultSet;
 import java.util.List;
+
 import be.vinci.pae.domain.user.UserDTO;
 
 public interface UserDAO {
@@ -20,7 +21,7 @@ public interface UserDAO {
 
   boolean deleteUser(int id);
 
-  void accept(int id, String role);
+  boolean acceptUser(int id, String role);
 
   List<UserDTO> getUnvalidatedUsers();
 
