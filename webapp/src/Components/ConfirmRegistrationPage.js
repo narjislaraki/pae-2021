@@ -52,7 +52,7 @@ const onUnregisteredUsersList = (data) => {
        
         
     `;
-  console.log("ici")
+  console.log(data)
 
   //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
   onUnregisteredUsersListPage += data

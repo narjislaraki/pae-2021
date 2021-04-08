@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -14,6 +15,9 @@ import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserDTO.Role;
+import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -48,9 +52,15 @@ public class FurnitureResource {
   @GET
   @Path("public")
   @Produces(MediaType.APPLICATION_JSON)
-  public List<FurnitureDTO> getPublicFurnituresList(@Context ContainerRequest request) {
+  public String getPublicFurnituresList(@Context ContainerRequest request) {
     List<FurnitureDTO> list = furnitureUCC.getFurnitureList(null);
-    return list;
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      throw new FatalException(e);
+    }
+    return r;
   }
 
   /**
@@ -62,27 +72,54 @@ public class FurnitureResource {
   @GET
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public List<FurnitureDTO> getFurnituresList(@Context ContainerRequest request) {
+  public String getFurnituresList(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     List<FurnitureDTO> list = furnitureUCC.getFurnitureList(user);
 
-    return list;
+    String r = null;
+    try {
+      if (user.getRole().equals(Role.ADMIN)) {
+        r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+      } else {
+        r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+      }
+    } catch (JsonProcessingException e) {
+      throw new FatalException(e);
+    }
+    return r;
   }
+
 
   @GET
   @Path("{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public FurnitureDTO getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
-    return furnitureUCC.getFurnitureById(id);
+  public String getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
+    FurnitureDTO furniture = furnitureUCC.getFurnitureById(id);
+
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(furniture);
+    } catch (JsonProcessingException e) {
+      throw new FatalException(e);
+    }
+
+    return r;
   }
 
   @Authorize
   @GET
   @Path("{id}/getOption")
   @Produces(MediaType.APPLICATION_JSON)
-  public OptionDTO getOption(@Context ContainerRequest request, @PathParam("id") int id) {
+  public String getOption(@Context ContainerRequest request, @PathParam("id") int id) {
     OptionDTO opt = furnitureUCC.getOption(id);
-    return opt;
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(opt);
+    } catch (JsonProcessingException e) {
+      throw new FatalException(e);
+    }
+
+    return r;
   }
 
   @Authorize
