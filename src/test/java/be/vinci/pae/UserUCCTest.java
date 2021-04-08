@@ -57,7 +57,7 @@ public class UserUCCTest {
   }
 
   /**
-   * Resetting before each test
+   * Resetting before each test.
    */
   @BeforeEach
   public void reset() {
@@ -232,7 +232,7 @@ public class UserUCCTest {
     assertTrue(userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with valid id, an invalid role and the user is not validated ")
+  @DisplayName("Test user's vaidation with valid id, invalid role and the user is not validated")
   @Test
   public void acceptUserTest8() {
     int id = goodUserNotValidated.getId();
