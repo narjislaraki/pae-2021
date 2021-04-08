@@ -53,7 +53,6 @@ public class UserResource {
   @GET
   @Path("unvalidatedList")
   @AdminAuthorize
-  @Produces(MediaType.APPLICATION_JSON)
   public Response getListOfUnvalidatedUsers(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
 
