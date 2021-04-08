@@ -2,6 +2,7 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -115,7 +116,8 @@ public class UserUCCTest {
   @DisplayName("Test getting user from id with invalid id")
   @Test
   public void getUserFromIdTest1() {
-    assertThrows(BusinessException.class, () -> userUCC.getUserFromId(-5));
+    int id = -5;
+    assertThrows(BusinessException.class, () -> userUCC.getUserFromId(id));
   }
 
   @DisplayName("Test getting user from id with valid id but no user has this id")
@@ -132,6 +134,29 @@ public class UserUCCTest {
     int id = 1;
     Mockito.when(userDAO.getUserFromId(id)).thenReturn(goodUser);
     assertEquals(goodUser, userUCC.getUserFromId(id));
+  }
+
+  @DisplayName("Test deleting user from id with invalid id")
+  @Test
+  public void deleteUserTest1() {
+    int id = -5;
+    assertThrows(BusinessException.class, () -> userUCC.deleteUser(id));
+  }
+
+  @DisplayName("Test deleting user from id with valid id but no user has this id")
+  @Test
+  public void deleteUserTest2() {
+    int id = 55;
+    Mockito.when(userDAO.deleteUser(id)).thenReturn(false);
+    assertThrows(BusinessException.class, () -> userUCC.deleteUser(id));
+  }
+
+  @DisplayName("Test deleting user from id with valid id")
+  @Test
+  public void deleteUserTest3() {
+    int id = 1;
+    Mockito.when(userDAO.deleteUser(id)).thenReturn(true);
+    assertTrue(userUCC.deleteUser(id));
   }
 
 
