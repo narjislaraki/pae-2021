@@ -17,11 +17,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.address.Address;
-import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.utils.Config;
@@ -45,6 +42,8 @@ public class Authentication {
 
   @Inject
   private Logger logger;
+  @Inject
+  private UserUCC userUCC;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getStringProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -53,14 +52,6 @@ public class Authentication {
     jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
   }
 
-  @Inject
-  private UserUCC userUCC;
-
-  @Inject
-  private UserFactory userFactory;
-
-  @Inject
-  private AddressFactory addressFactory;
 
 
   /**
@@ -107,58 +98,39 @@ public class Authentication {
 
 
   /**
-   * This method is used for registering a user. It also adds the address into the database
+   * This method is used for registering a user. It also adds the address into the database.
    * 
-   * @param json post received from the client
+   * @param user the user converted from json
    * @return Response 401 Or 409 if KO; token if OK
    */
   @POST
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response register(JsonNode json) {
-    if (!checkFieldsRegister(json)) {
+  public Response register(UserDTO user) {
+    if (!checkFieldsRegister(user)) {
       return Response.status(Status.UNAUTHORIZED).entity("Missing fields")
           .type(MediaType.TEXT_PLAIN).build();
     }
 
-    if (!json.get("password").asText().equals(json.get("confirmPassword").asText())) {
+    if (!user.getPassword().equals(user.getPasswordVerification())) {
       throw new UnauthorizedException("The passwords don't match");
     }
 
-    UserDTO user = userFactory.getUserDTO();
-    user.setEmail(json.get("email").asText());
-    user.setUsername(json.get("username").asText());
-    user.setPassword(json.get("password").asText());
-    user.setFirstName(json.get("firstName").asText());
-    user.setLastName(json.get("lastName").asText());
-    Address address = addressFactory.getAddress();
-    user.setAddress(address);
-    address.setStreet(json.get("street").asText());
-    address.setBuildingNumber(json.get("buildingNumber").asText());
-    address.setCity(json.get("city").asText());
-    address.setPostCode(json.get("postcode").asText());
-    address.setCountry(json.get("country").asText());
-    if (json.hasNonNull("unitNumber") && !json.get("unitNumber").asText().isEmpty()) {
-      address.setUnitNumber(json.get("unitNumber").asText());
-    }
+    return Response.status(Status.CREATED).entity(userUCC.registration(user)).build();
 
-    userUCC.registration(user);
-
-    return createToken((User) user);
   }
 
-  private boolean checkFieldsRegister(JsonNode json) {
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")
-        || !json.hasNonNull("confirmPassword") || !json.hasNonNull("firstName")
-        || !json.hasNonNull("lastName") || !json.hasNonNull("street")
-        || !json.hasNonNull("buildingNumber") || !json.hasNonNull("city")
-        || !json.hasNonNull("postcode") || !json.hasNonNull("country")
-        || json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()
-        || json.get("confirmPassword").asText().isEmpty()
-        || json.get("firstName").asText().isEmpty() || json.get("lastName").asText().isEmpty()
-        || json.get("street").asText().isEmpty() || json.get("buildingNumber").asText().isEmpty()
-        || json.get("city").asText().isEmpty() || json.get("postcode").asText().isEmpty()
-        || json.get("country").asText().isEmpty()) {
+  private boolean checkFieldsRegister(UserDTO user) {
+    if (user.getEmail() == null || user.getPassword() == null
+        || user.getPasswordVerification() == null || user.getFirstName() == null
+        || user.getLastName() == null || user.getAddress().getStreet() == null
+        || user.getAddress().getBuildingNumber() == null || user.getAddress().getCity() == null
+        || user.getAddress().getPostCode() == null || user.getAddress().getCountry() == null
+        || user.getEmail().isEmpty() || user.getPassword().isEmpty()
+        || user.getPasswordVerification().isEmpty() || user.getFirstName().isEmpty()
+        || user.getLastName().isEmpty() || user.getAddress().getStreet().isEmpty()
+        || user.getAddress().getBuildingNumber().isEmpty() || user.getAddress().getCity().isEmpty()
+        || user.getAddress().getPostCode().isEmpty() || user.getAddress().getCountry().isEmpty()) {
       return false;
     }
     return true;
