@@ -50,9 +50,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateSentToWorkshop(id);
-      dalServices.commitTransaction();
+      dalServices.commitBizzTransaction();
     } else {
-      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
@@ -64,9 +63,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     if (furniture.getCondition().equals(Condition.EN_RESTAURATION)
         || furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateDropInStore(id);
-      dalServices.commitTransaction();
+      dalServices.commitBizzTransaction();
     } else {
-      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
@@ -77,9 +75,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
     if (price > 0 && furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.indicateOfferedForSale(furniture, price);
-      dalServices.commitTransaction();
+      dalServices.commitBizzTransaction();
     } else {
-      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
@@ -91,9 +88,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     if (furniture.getCondition().equals(Condition.EN_VENTE)
         || furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.withdrawSale(id);
-      dalServices.commitTransaction();
+      dalServices.commitBizzTransaction();
     } else {
-      dalServices.rollbackTransaction();
       throw new BusinessException("State error");
     }
   }
@@ -107,16 +103,14 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     int nbrDaysActually =
         furnitureDao.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
     if (nbrDaysActually == 5) {
-      dalServices.rollbackTransaction();
       throw new UnauthorizedException("You have already reached the maximum number of days");
     } else if (nbrDaysActually + optionTerm > 5) {
-      dalServices.rollbackTransaction();
       int daysLeft = 5 - nbrDaysActually;
       throw new UnauthorizedException("You can't book more than : " + daysLeft + " days");
     } else {
       furnitureDao.introduceOption(optionTerm, idUser, idFurniture);
       furnitureDao.indicateFurnitureUnderOption(idFurniture);
-      dalServices.commitTransaction();
+      dalServices.commitBizzTransaction();
     }
   }
 
@@ -131,9 +125,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
       int idFurniture = furnitureDao.cancelOption(cancellationReason, opt.getId());
       Furniture furniture = (Furniture) furnitureDao.getFurnitureById(idFurniture);
       furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
-      dalServices.commitTransaction();
+      dalServices.commitBizzTransaction();
     } else {
-      dalServices.rollbackTransaction();
       throw new BusinessException("You have no right to delete this option");
     }
   }

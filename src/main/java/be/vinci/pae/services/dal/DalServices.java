@@ -4,7 +4,7 @@ public interface DalServices {
 
   void getBizzTransaction(boolean autoCommit);
 
-  void commitTransaction();
+  void commitBizzTransaction();
 
   void commitTransactionAndContinue();
 

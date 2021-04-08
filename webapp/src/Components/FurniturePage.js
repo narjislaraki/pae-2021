@@ -22,24 +22,38 @@ async function FurniturePage(id) {
 
     userData = getUserSessionData();
     /****** Furniture ******/
-    try {
-        furniture = await callAPI(
-            API_BASE_URL + id,
-            "GET",
-            undefined,
-            undefined);
-    } catch (err) {
-        console.error("FurniturePage::get furniture", err);
-        PrintError(err);
+    if (currentUser) {
+        try {
+            furniture = await callAPI(
+                API_BASE_URL + id,
+                "GET",
+                userData.token,
+                undefined);
+        } catch (err) {
+            console.error("FurniturePage::get furniture", err);
+            PrintError(err);
+        }
+    } 
+    else {
+        try {
+            furniture = await callAPI(
+                API_BASE_URL + "public/" + id,
+                "GET",
+                undefined,
+                undefined);
+        } catch (err) {
+            console.error("FurniturePage::get furniture", err);
+            PrintError(err);
+        }
     }
 
     /****** nbOfDays ******/
-    let idFurniture = furniture.id;
+    
     if (currentUser) {
-        let idUser = currentUser.id;
+        let idFurniture = furniture.id;
         try {
             nbOfDay = await callAPI(
-                API_BASE_URL + idFurniture  + "/getSumOfOptionDays",
+                API_BASE_URL + idFurniture + "/getSumOfOptionDays",
                 "GET",
                 userData.token,
                 undefined,
@@ -309,7 +323,7 @@ const onOfferedForSale = async () => {
             "POST",
             userData.token,
             {
-                furniturePrice : price
+                furniturePrice: price
             },
         );
     } catch (err) {
@@ -354,7 +368,7 @@ const onCancelOption = async () => {
             "POST",
             userData.token,
             {
-                cancelReason : reason
+                cancelReason: reason
             },
         );
     } catch (err) {
@@ -374,7 +388,7 @@ const onIntroduceOption = async () => {
             "POST",
             userData.token,
             {
-                duration : optionTerm
+                duration: optionTerm
             },
         );
     } catch (err) {

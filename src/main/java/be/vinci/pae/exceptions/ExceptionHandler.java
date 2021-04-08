@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.util.logging.Logger;
 
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.utils.APILogger;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -16,7 +15,8 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 public class ExceptionHandler implements ExceptionMapper<Exception> {
 
-  private Logger logger = APILogger.getLogger();
+  @Inject
+  private Logger logger;
   private static final String OHNO = "Oh no, something wrong happened! Don't worry, we're on it!";
   @Inject
   DalServices dalServices;

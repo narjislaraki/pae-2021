@@ -1,9 +1,13 @@
 package be.vinci.pae.api;
 
+import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
+import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
+
 import java.util.List;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -14,6 +18,8 @@ import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserDTO.Role;
+import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -24,6 +30,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Singleton
 @Path("/furnitures")
@@ -40,49 +48,118 @@ public class FurnitureResource {
   }
 
   /**
-   * Get a list of furnitures for the unlogged users.
+   * Get a list of furniture for the unlogged users.
    * 
    * @param request the request
-   * @return a list of furnitures
+   * @return a list of furniture wrapped in a Response
    */
   @GET
   @Path("public")
-  @Produces(MediaType.APPLICATION_JSON)
-  public List<FurnitureDTO> getPublicFurnituresList(@Context ContainerRequest request) {
+  public Response getPublicFurnituresList(@Context ContainerRequest request) {
     List<FurnitureDTO> list = furnitureUCC.getFurnitureList(null);
-    return list;
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
   }
 
   /**
    * Get a list of furnitures for the logged users.
    * 
    * @param request the request
-   * @return a list of furniture adapted if it's the user is a client or an admin
+   * @return a list of furniture adapted if it's the user is a client or an admin, wrapped in a
+   *         Response
    */
   @GET
   @Authorize
-  @Produces(MediaType.APPLICATION_JSON)
-  public List<FurnitureDTO> getFurnituresList(@Context ContainerRequest request) {
+  public Response getFurnituresList(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     List<FurnitureDTO> list = furnitureUCC.getFurnitureList(user);
 
-    return list;
+    String r = null;
+    try {
+      if (user.getRole().equals(Role.ADMIN)) {
+        r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+      } else {
+        r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+      }
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
   }
 
+  /**
+   * Get a specific furniture for unlogged users by giving its id.
+   * 
+   * @param id the furniture's id
+   * @return the furniture wrapped in a Response
+   */
   @GET
-  @Path("{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public FurnitureDTO getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
-    return furnitureUCC.getFurnitureById(id);
+  @Path("public/{id}")
+  public Response getPublicFurniture(@PathParam("id") int id) {
+    FurnitureDTO furniture = furnitureUCC.getFurnitureById(id);
+
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(furniture);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+
+    return responseOkWithEntity(r);
   }
 
+  /**
+   * Get a specific furniture for logger users by giving its id.
+   * 
+   * @param id the furniture's id
+   * @return the furniture wrapped in a Response
+   */
+  @GET
+  @Authorize
+  @Path("{id}")
+  public Response getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+    FurnitureDTO furniture = furnitureUCC.getFurnitureById(id);
+
+    String r = null;
+    try {
+      if (user.getRole().equals(Role.ADMIN)) {
+        r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(furniture);
+      } else {
+        r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(furniture);
+      }
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+
+    return responseOkWithEntity(r);
+  }
+
+  /**
+   * Getting active option from a specific furniture by giving its id.
+   * 
+   * @param request the request
+   * @param id the furniture's id
+   * @return the option wrapped in a Response
+   */
   @Authorize
   @GET
   @Path("{id}/getOption")
-  @Produces(MediaType.APPLICATION_JSON)
-  public OptionDTO getOption(@Context ContainerRequest request, @PathParam("id") int id) {
+  public Response getOption(@Context ContainerRequest request, @PathParam("id") int id) {
     OptionDTO opt = furnitureUCC.getOption(id);
-    return opt;
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(opt);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+
+    return responseOkWithEntity(r);
   }
 
   @Authorize
