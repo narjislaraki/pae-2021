@@ -91,15 +91,47 @@ public class FurnitureResource {
     return responseOkWithEntity(r);
   }
 
-
+  /**
+   * Get a specific furniture for logger users by giving its id.
+   * 
+   * @param id the furniture's id
+   * @return the furniture
+   */
   @GET
-  @Path("{id}")
-  public Response getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
+  @Path("public/{id}")
+  public Response getPublicFurniture(@PathParam("id") int id) {
     FurnitureDTO furniture = furnitureUCC.getFurnitureById(id);
 
     String r = null;
     try {
       r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(furniture);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+
+    return responseOkWithEntity(r);
+  }
+
+  /**
+   * Get a specific furniture for logger users by giving its id.
+   * 
+   * @param id the furniture's id
+   * @return the furniture
+   */
+  @GET
+  @Authorize
+  @Path("{id}")
+  public Response getFurniture(@Context ContainerRequest request, @PathParam("id") int id) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+    FurnitureDTO furniture = furnitureUCC.getFurnitureById(id);
+
+    String r = null;
+    try {
+      if (user.getRole().equals(Role.ADMIN)) {
+        r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(furniture);
+      } else {
+        r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(furniture);
+      }
     } catch (JsonProcessingException e) {
       responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }

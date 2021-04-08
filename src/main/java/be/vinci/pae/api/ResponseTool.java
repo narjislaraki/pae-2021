@@ -9,7 +9,7 @@ public class ResponseTool {
    * Quick way to construct HTTP Response with status and entity.
    * 
    * @param status the status
-   * @param message the message
+   * @param obj the entity
    * @return a Response containing the status and the message
    */
   public static Response responseWithStatus(Status status, Object obj) {
