@@ -29,6 +29,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
         dalServices.rollbackTransaction();
       } catch (Exception ignore) {
         // TODO à méditer
+        System.out.println(ignore);
       }
     }
 

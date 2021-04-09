@@ -38,6 +38,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     scheduledTasksInit();
   }
 
+  /**
+   * Tasks to manage Options and Reservations overtime.
+   */
   private void scheduledTasks() {
     dalServices.getBizzTransaction(true);
     furnitureDao.cancelOvertimedOptions();
@@ -46,7 +49,12 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.stopBizzTransaction();
   }
 
-  public void scheduledTasksInit() {
+  /**
+   * Initiation of the Options and Reservations management.
+   * 
+   * The scheduledTask will be launched 1 sec after the loading and then once a day at 00:05.
+   */
+  private void scheduledTasksInit() {
     TimerTask task = new TimerTask() {
       public void run() {
         scheduledTasks();
