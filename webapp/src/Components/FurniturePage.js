@@ -18,7 +18,6 @@ let option;
 let menuDeroulant = '';
 let page = document.querySelector("#page");
 async function FurniturePage(id) {
-    console.log(currentUser);
 
     userData = getUserSessionData();
     /****** Furniture ******/
@@ -80,7 +79,6 @@ async function FurniturePage(id) {
         }
     }
 
-    console.log(furniture);
     page.innerHTML = `
         <div class="furniture-container">
                     <div class="furniture-pictures">
@@ -107,11 +105,8 @@ async function FurniturePage(id) {
         `;
     if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
         if (furniture.condition == "SOUS_OPTION") {
-            console.log(option);
-            console.log("pouet")
-            console.log(currentUser)
+         
             if (option.idUser != currentUser.id) {
-                console.log("je passe ici")
                 page.innerHTML += `<div class="option-days condensed small-caps">Ce meuble est sous option, repassez plus tard</div>`;
             } else {
                 page.innerHTML += `
@@ -213,9 +208,6 @@ async function FurniturePage(id) {
             </div>
         `;
         } else if (furniture.condition == "SOUS_OPTION") {
-            console.log(option);
-            console.log("pouet")
-            console.log(currentUser)
             page.innerHTML += `
                 <div class="option-days-below">
                 <p>Raison de l'annulation</p>
@@ -291,7 +283,6 @@ const onWorkShop = async () => {
 
 const onDropOfStore = async () => {
     let id = furniture.id;
-    console.log(userData.token);
     try {
         await callAPI(
             API_BASE_URL + id + '/dropOfStore',
@@ -309,11 +300,11 @@ const onDropOfStore = async () => {
 const onOfferedForSale = async () => {
     let id = furniture.id;
     let price = document.getElementById("price").value;
-    console.log(price);
     if (price == "") {
         let error = {
             message: "Veuillez d'abord entrer un prix de vente",
         }
+        console.error(error);
         PrintError(error);
         return;
     }
@@ -336,7 +327,6 @@ const onOfferedForSale = async () => {
 
 const onWithdrawSale = async () => {
     let id = furniture.id;
-    console.log(userData.token);
     try {
         await callAPI(
             API_BASE_URL + id + '/withdrawSale',
@@ -352,13 +342,13 @@ const onWithdrawSale = async () => {
 };
 
 const onCancelOption = async () => {
-    console.log("ceci n'est pas un test")
     let id = furniture.id;
     let reason = document.getElementById("cancelOption").value;
     if (reason == "") {
         let error = {
             message: "Veuillez d'abord entrer une raison d'annulation",
         }
+        console.error(error);
         PrintError(error);
         return;
     }
@@ -414,7 +404,6 @@ smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
 let valueCount;
 
 const incrementCounter = () => {
-    console.log("increment")
     valueCount = document.getElementById("optionTerm").value;
     valueCount++;
     document.getElementById("optionTerm").value = valueCount;
@@ -428,7 +417,6 @@ const incrementCounter = () => {
 }
 
 const decrementCounter = () => {
-    console.log("decrement")
     valueCount = document.getElementById("optionTerm").value;
     valueCount--;
     document.getElementById("optionTerm").value = valueCount;

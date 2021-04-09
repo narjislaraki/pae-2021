@@ -1,12 +1,16 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
-import { getUserSessionData } from "../utils/session.js";
+import { getUserSessionData, currentUser } from "../utils/session.js";
+import { RedirectUrl } from "./Router";
 let userData;
 let adresse = ``;
 const API_BASE_URL = "/api/users/";
 let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer l'inscription</div>`;
 
 const ConfirmRegistrationPage = async () => {
+  if (currentUser == null || currentUser.role != "ADMIN") {
+    RedirectUrl("/");
+  }
   userData = getUserSessionData();
   let page = document.querySelector("#page");
   page.innerHTML = confirmRegistrationPage;

@@ -53,10 +53,10 @@ let loginPage = `<div class="register-card">
     
     <!-- the "require" from the two next fields are momentally disabled to avoid problems with the functional tests -->
     <div class="mb-3">
-      <input type="email" class="form-control input-card-login" id="email-login" aria-describedby="emailHelp" placeholder="Email"> <!-- required="" pattern="^\\w+([.-]?\\w+)*@\\w+([\.-]?\\w+)*(\\.\\w{2,4})+\$" -->
+      <input type="email" class="form-control input-card-login" id="email-login" aria-describedby="emailHelp" placeholder="Email" required pattern="^\\w+([.-]?\\w+)*@\\w+([\.-]?\\w+)*(\\.\\w{2,4})+\$">
     </div>
     <div class="mb-3">
-      <input type="password" class="form-control input-card input-card-login" id="password-login" placeholder="Mot de passe"> <!--  required="" -->
+      <input type="password" class="form-control input-card input-card-login" id="password-login" placeholder="Mot de passe" required>
     </div>
     <div class="mb-3  stayconnected">
       <input type="checkbox" id="stayconnected">
@@ -84,7 +84,6 @@ const onLogin = async (e) => {
   e.preventDefault();
   let login = document.getElementById("email-login");
   let password = document.getElementById("password-login");
-  console.log(login.value);
 
   try {
     const userLogged = await callAPI(
@@ -98,7 +97,6 @@ const onLogin = async (e) => {
     );
     onUserLogin(userLogged);
   } catch (err) {
-    console.log(err);
     if (err == "Error: Wrong credentials") {
       err.message = "Email ou mot de passe invalide ! ";
     } else if (err == "Error: User is not validated") {
@@ -110,7 +108,6 @@ const onLogin = async (e) => {
 };
 
 const onUserLogin = async (userData) => {
-  console.log("onUserLogin:", userData);
   const user = { ...userData, isAutenticated: true };
   setUserSessionData(user);
   await getCurrentUser();
@@ -141,14 +138,16 @@ const onRegister = async (e) => {
     address: {
       street: document.getElementById("street").value,
       buildingNumber: document.getElementById("number").value,
-      unitNumber: document.getElementById("unitnumber").value,
       postCode: document.getElementById("postcode").value,
       country: document.getElementById("country").value,
       city: document.getElementById("city").value,
     }
   };
+
+  if (document.getElementById("unitnumber").value != "") {
+    user.address.unitNumber = document.getElementById("unitnumber").value;
+  }
   
-  console.log(user);
   try {
     const userRegistered = await callAPI(
       API_BASE_URL + "register",
