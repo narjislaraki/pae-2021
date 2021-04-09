@@ -39,4 +39,6 @@ public interface FurnitureUCC {
   OptionDTO getOption(int idFurniture);
 
   int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser);
+
+  void cancelOvertimedOptions();
 }
