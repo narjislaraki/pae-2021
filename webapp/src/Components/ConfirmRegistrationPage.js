@@ -1,14 +1,17 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
-import { getUserSessionData } from "../utils/session.js";
+import { getUserSessionData, currentUser } from "../utils/session.js";
+import { RedirectUrl } from "./Router";
 let userData;
 let adresse = ``;
 const API_BASE_URL = "/api/users/";
 let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer l'inscription</div>`;
 
 const ConfirmRegistrationPage = async () => {
+  if (currentUser == null || currentUser.role != "ADMIN") {
+    RedirectUrl("/");
+  }
   userData = getUserSessionData();
-  console.log(userData)
   let page = document.querySelector("#page");
   page.innerHTML = confirmRegistrationPage;
   try {
@@ -52,9 +55,6 @@ const onUnregisteredUsersList = (data) => {
        
         
     `;
-  console.log(data)
-
-  //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
   onUnregisteredUsersListPage += data
     .map((user) =>
       `<tr data-id="${user.id}">
@@ -64,25 +64,41 @@ const onUnregisteredUsersList = (data) => {
                             <td><p class="block-display">${user.address.street}, ${user.address.buildingNumber}${(user.address.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
                             ${user.address.postCode} - ${user.address.city} <br>
                             ${user.address.country}</p>
-                            <button class="btn btn-dark condensed small-caps block-display" id="btn-map" data-id="${user.id}">Voir sur la carte</button></td>
+                            <button class="btn btn-dark condensed small-caps block-display btn-map" data-id="${user.id}">Voir sur la carte</button>
+                            <div class="map" data-id="${user.id}"><br><iframe width="400" height="300" id="gmap_canvas" src="https://maps.google.com/maps?q=${user.address.buildingNumber}%20${user.address.street},%20${user.address.city}&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></td></div></td>
                             <td><input type="radio" id="nephew${user.id}" name="role${user.id}" data-id="${user.id}" value="nephew">
                             <label for="nephew${user.id}" data-id="${user.id}">Neveu</label><br>
                             <input type="radio" id="antique_dealer${user.id}" data-id="${user.id}" name="role${user.id}" value="antique_dealer">
-                            <label for="antique_dealer${user.id}">Antiquaire</label><br></td>
+                            <label for="antique_dealer${user.id}">Antiquaire</label><br>
+                            <input type="radio" id="client${user.id}" name="role${user.id}" data-id="${user.id}" value="client" checked="checked">
+                            <label for="client${user.id}" data-id="${user.id}">Client</label><br></td>
                             <td><button name="accept" class="btn btn-dark condensed small-caps block-display btn-accept" data-id="${user.id}" type="submit">Accepter</button><br>
                             <button name="refuse" class="btn btn-dark condensed small-caps block-display btn-refuse" data-id="${user.id}" type="submit">Refuser</button></td>
                             </tr>
+                           
                             `)
+                            
     .join("");
   page.innerHTML += onUnregisteredUsersListPage;
   page.innerHTML += `</tbody></table>`;
-  //<div class="white-space"></div>
-
+  let mapBtn = document.getElementsByClassName("btn-map");
+  Array.from(mapBtn).forEach((e) => {
+    e.addEventListener("click", onShowMap);
+  });
   return page;
 }
 
+const onShowMap = async (e) => {
+  let divMap = document.getElementsByClassName("map");
+  let id = e.srcElement.dataset.id;
+  Array.from(divMap).forEach(element => {
+    if(element.dataset.id == id) {
+      if (element.style.display == "block") element.style.display = "none";
+      else element.style.display = "block";
+    }
+  });
+}
 const onAccept = async (e) => {
-  console.log(e);
   let id = e.srcElement.dataset.id;
   let userRole = "client";
 
@@ -111,7 +127,6 @@ const onAccept = async (e) => {
 
 const onRefuse = async (e) => {
   let id = e.srcElement.dataset.id;
-  console.log(id);
   try {
     await callAPI(
       API_BASE_URL + id,

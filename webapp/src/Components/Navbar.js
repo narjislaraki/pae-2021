@@ -55,7 +55,6 @@ const Navbar = () => {
     }
     else{
       let userMenu = document.querySelector(".user-menu");
-      console.log("change grid col")
       userMenu.style.gridTemplateColumns = "25% 25% 25% 25%";
     }
   } else {

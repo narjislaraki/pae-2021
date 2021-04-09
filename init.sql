@@ -67,7 +67,7 @@ CREATE TABLE pae.options(
 
 CREATE TABLE pae.photos(
 	id_photo SERIAL PRIMARY KEY,
-	photo TEXT NOT NULL,
+	photo varchar(250) NOT NULL,
 	is_visible BOOLEAN NOT NULL,
 	--description VARCHAR(200),
 	is_a_client_photo BOOLEAN NOT NULL, 
