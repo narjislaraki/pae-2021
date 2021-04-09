@@ -17,8 +17,8 @@ import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.OptionDTO.State;
-import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.domain.furniture.OptionFactory;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
@@ -333,6 +333,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    * 
    * @param id the id of the photo
    */
+  @Override
   public String getFavouritePhotoById(int id) {
     String favouritePhoto = "";
     try {
@@ -348,4 +349,56 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
     return favouritePhoto;
   }
+
+  @Override
+  public void cancelOvertimedOptions() {
+    try {
+      String sql =
+          "UPDATE pae.options" + " SET condition = ?, cancellation_reason = 'Temps dépassé'"
+              + " WHERE (date + interval '1' day * option_term) < NOW();";
+
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, State.ANNULEE.toString());
+      int val = ps.executeUpdate();
+      if (val > 0) {
+        sql = "UPDATE pae.furnitures" + " SET condition = ?"
+            + " WHERE condition = ? AND id_furniture NOT IN "
+            + " (SELECT o.id_furniture FROM pae.options o WHERE o.condition = ?);";
+
+        ps = dalBackendService.getPreparedStatement(sql);
+        ps.setString(1, Condition.EN_VENTE.toString());
+        ps.setString(2, Condition.SOUS_OPTION.toString());
+        ps.setString(3, State.EN_COURS.toString());
+        ps.executeUpdate();
+        System.out.println(ps.executeUpdate() + " / =?= / " + val);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public void cancelOvertimedReservations() {
+    try {
+      String sql = "UPDATE pae.sales SET condition = 'annulé'" + " WHERE condition = 'en cours'"
+          + " AND (date_of_sale + interval '1' day + interval '1' year) < NOW();";
+
+      ps = dalBackendService.getPreparedStatement(sql);
+      int val = ps.executeUpdate();
+      if (val > 0) {
+        sql = "UPDATE pae.furnitures" + " SET condition = ?"
+            + " WHERE condition = ? AND id_furniture NOT IN "
+            + " (SELECT s.id_furniture FROM pae.sales s WHERE s.condition = 'en cours');";
+
+        ps = dalBackendService.getPreparedStatement(sql);
+        ps.setString(1, Condition.EN_VENTE.toString());
+        ps.setString(2, Condition.RESERVE.toString());
+        ps.executeUpdate();
+        System.out.println(ps.executeUpdate() + " / =?= / " + val);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
 }

@@ -25,7 +25,12 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
   @Override
   public Response toResponse(Exception exception) {
     if (dalServices.hasTransaction()) {
-      dalServices.rollbackTransaction();
+      try {
+        dalServices.rollbackTransaction();
+      } catch (Exception ignore) {
+        // TODO à méditer
+        System.out.println(ignore);
+      }
     }
 
     if (exception instanceof BusinessException == false) {
