@@ -8,7 +8,6 @@ let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer 
 
 const ConfirmRegistrationPage = async () => {
   userData = getUserSessionData();
-  console.log(userData)
   let page = document.querySelector("#page");
   page.innerHTML = confirmRegistrationPage;
   try {
@@ -52,7 +51,6 @@ const onUnregisteredUsersList = (data) => {
        
         
     `;
-  console.log(data)
 
   //{"id":6,"unitNumber":0,"street":"La rue","buildingNumber":"42","city":"bac","postCode":"4000","country":"street"}
   onUnregisteredUsersListPage += data
@@ -68,7 +66,9 @@ const onUnregisteredUsersList = (data) => {
                             <td><input type="radio" id="nephew${user.id}" name="role${user.id}" data-id="${user.id}" value="nephew">
                             <label for="nephew${user.id}" data-id="${user.id}">Neveu</label><br>
                             <input type="radio" id="antique_dealer${user.id}" data-id="${user.id}" name="role${user.id}" value="antique_dealer">
-                            <label for="antique_dealer${user.id}">Antiquaire</label><br></td>
+                            <label for="antique_dealer${user.id}">Antiquaire</label><br>
+                            <input type="radio" id="client${user.id}" name="role${user.id}" data-id="${user.id}" value="client" checked="checked">
+                            <label for="client${user.id}" data-id="${user.id}">Client</label><br></td>
                             <td><button name="accept" class="btn btn-dark condensed small-caps block-display btn-accept" data-id="${user.id}" type="submit">Accepter</button><br>
                             <button name="refuse" class="btn btn-dark condensed small-caps block-display btn-refuse" data-id="${user.id}" type="submit">Refuser</button></td>
                             </tr>
@@ -82,7 +82,6 @@ const onUnregisteredUsersList = (data) => {
 }
 
 const onAccept = async (e) => {
-  console.log(e);
   let id = e.srcElement.dataset.id;
   let userRole = "client";
 
@@ -111,7 +110,6 @@ const onAccept = async (e) => {
 
 const onRefuse = async (e) => {
   let id = e.srcElement.dataset.id;
-  console.log(id);
   try {
     await callAPI(
       API_BASE_URL + id,
