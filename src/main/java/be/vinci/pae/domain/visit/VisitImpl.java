@@ -1,4 +1,4 @@
-package be.vinci.pae.domaine.visit;
+package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonView;
