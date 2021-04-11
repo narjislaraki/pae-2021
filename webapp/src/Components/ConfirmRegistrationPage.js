@@ -1,16 +1,24 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
+import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
 let userData;
 let adresse = ``;
 const API_BASE_URL = "/api/users/";
+let menu = `
+    <div class="menuAdmin">
+        <button  id="visits">Visites</button>
+        <button id="advancedSearches">Recherche avancées</button>
+        <button class="menuAdminOn" id="confirmRegister">Confirmation des inscriptions</button>
+    </div>
+    `;
 let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer l'inscription</div>`;
 
 const ConfirmRegistrationPage = async () => {
   userData = getUserSessionData();
   console.log(userData)
   let page = document.querySelector("#page");
-  page.innerHTML = confirmRegistrationPage;
+  page.innerHTML = menu + confirmRegistrationPage;
   try {
     const unregisteredUsers = await callAPI(
       API_BASE_URL + "unvalidatedList",
@@ -25,6 +33,16 @@ const ConfirmRegistrationPage = async () => {
     console.error("ConfirmRegistrationPage::onUnregisteredUsersList", err);
     PrintError(err);
   }
+
+  let visits = document.getElementById("visits");
+  visits.addEventListener("click", onVisits);
+
+  let advancedSearches = document.getElementById("advancedSearches");
+  advancedSearches.addEventListener("click", onAdanvancedSearches);
+
+  let confirmRegister = document.getElementById("confirmRegister");
+  confirmRegister.addEventListener("click", onConfirmRegister);
+
   let validateBtn = document.getElementsByClassName("btn-accept");
   let refuseBtn = document.getElementsByClassName("btn-refuse");
   Array.from(validateBtn).forEach((e) => {
@@ -126,6 +144,20 @@ const onRefuse = async (e) => {
   ConfirmRegistrationPage();
 };
 
+const onVisits = (e) => {
+  e.preventDefault();
+  RedirectUrl("/visits");
+};
+
+const onAdanvancedSearches = (e) => {
+  e.preventDefault();
+  RedirectUrl("/advancedSearches");
+};
+
+const onConfirmRegister = (e) => {
+  e.preventDefault();
+  RedirectUrl("/confirmRegistration");
+};
 
 const onError = (err) => {
   console.error("ConfirmRegistrationPage::onError:", err);

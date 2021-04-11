@@ -889,3 +889,63 @@ footer{
     height: 193px;
     display: block;
 }
+
+/*Menu Admin**************************************************************/
+
+.menuAdmin{
+    position: absolute;
+    left: 0%;
+    width: 20%;
+    height: 40%;
+    margin-bottom: 50%;
+}
+
+.menuAdmin button{
+    border-radius:  12px 12px 12px;
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1rem;
+    align-content: left;
+    display: block;
+    margin-bottom: 1%;
+    width: 100%;
+    
+}
+
+.menuAdminOn{
+    background: #4A5761;
+}
+
+.visit{
+    margin-left: 25%;
+}
+
+.visits-title{
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 2rem;
+    line-height: 42px;
+    text-align: center;
+    letter-spacing: 0.245em;
+    margin-top: 1%;
+}
+
+.buttonsVisits{
+    text-align: center;
+    font-family: Roboto;
+    font-style: italic;
+    border-color: transparent;
+    background-color: transparent;
+    
+}
+
+.buttonsVisits:hover{
+    background-color: gray;
+    color: white;
+}
+
+.buttonsVisits:disabled{
+    color: #D3D3D3;
+}

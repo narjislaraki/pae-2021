@@ -116,7 +116,7 @@ const onLogout = (e) =>{
 
 const onClickTools = (e) => {
   e.preventDefault();
-  RedirectUrl("/confirmRegistration")
+  RedirectUrl("/visits")
 }
 
 export default Navbar;
