@@ -143,7 +143,16 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   @Override
   public boolean hasTransaction() {
     Connection connection = td.get();
-    return connection == null ? false : true;
+    if (connection == null) {
+      return false;
+    }
+    boolean autoCommit = false;
+    try {
+      autoCommit = connection.getAutoCommit();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return !autoCommit;
   }
 
 
