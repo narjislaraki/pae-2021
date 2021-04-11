@@ -195,7 +195,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public List<FurnitureDTO> getFurnitureList(UserDTO user) {
     dalServices.getBizzTransaction(true);
-    List<FurnitureDTO> list;
+    List<FurnitureDTO> list = null;
+    list.add(null);
     if (user != null && user.getRole() == Role.ADMIN) {
       list = furnitureDao.getFurnitureList();
     } else {
