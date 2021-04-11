@@ -48,4 +48,8 @@ public interface FurnitureDAO {
   String getFavouritePhotoById(int id);
 
   OptionDTO getOption(int id);
+
+  void cancelOvertimedOptions();
+
+  void cancelOvertimedReservations();
 }

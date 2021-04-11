@@ -67,7 +67,7 @@ CREATE TABLE pae.options(
 
 CREATE TABLE pae.photos(
 	id_photo SERIAL PRIMARY KEY,
-	photo TEXT NOT NULL,
+	photo varchar(250) NOT NULL,
 	is_visible BOOLEAN NOT NULL,
 	--description VARCHAR(200),
 	is_a_client_photo BOOLEAN NOT NULL, 
@@ -77,6 +77,14 @@ CREATE TABLE pae.photos(
 ALTER TABLE pae.furnitures
 ADD favorite_photo INTEGER REFERENCES pae.photos(id_photo);
 
+CREATE TABLE pae.sales(
+	id_sales SERIAL PRIMARY KEY,
+	selling_price DOUBLE PRECISION NOT NULL,
+	id_furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL,
+	buyer INTEGER REFERENCES pae.users(id_user) NOT NULL,
+	date_of_sale TIMESTAMP NOT NULL,
+	condition VARCHAR(8) NOT NULL
+);
 --INSERT INTO pae.addresses VALUES(default, 'rue des sentiers', '7', 1, 'Bruxelles', '1300', 'Belgique');
 -- the mdp of the 2 users is 1234 --
 --INSERT INTO pae.users VALUES

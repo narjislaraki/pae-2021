@@ -610,6 +610,9 @@ footer{
     z-index: 100;
 }
 
+.map{
+    display: none;
+}
 /*
 * === 6.0 FURNITURE LIST PAGE ===
 */

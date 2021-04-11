@@ -1,7 +1,13 @@
 package be.vinci.pae.domain.furniture;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Logger;
 
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -24,6 +30,61 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Inject
   private DalServices dalServices;
+
+  @Inject
+  private Logger logger;
+
+  public FurnitureUCCImpl() {
+    scheduledTasksInit();
+  }
+
+  /**
+   * Tasks to manage Options and Reservations overtime.
+   */
+  private void scheduledTasks() {
+    dalServices.getBizzTransaction(true);
+    furnitureDao.cancelOvertimedOptions();
+    furnitureDao.cancelOvertimedReservations();
+    logger.info("Scheduled management of overtimed Options and Reservations just happend");
+    dalServices.stopBizzTransaction();
+  }
+
+  /**
+   * Initiation of the Options and Reservations management. The scheduledTask will be launched 1 sec
+   * after the loading and then once a day at 00:05.
+   */
+  private void scheduledTasksInit() {
+    TimerTask task = new TimerTask() {
+      public void run() {
+        scheduledTasks();
+      }
+    };
+    TimerTask repeatedTask = new TimerTask() {
+      public void run() {
+        scheduledTasks();
+      }
+    };
+
+    Timer timer1 = new Timer("Timer1");
+    Timer timer2 = new Timer("Timer2");
+
+    // time calculation
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+    String dateTime = tomorrow.getYear() + "-" + String.format("%02d", tomorrow.getMonthValue())
+        + "-" + String.format("%02d", tomorrow.getDayOfMonth()) + " 00:05:00";
+    LocalDateTime tomorrowRighHour = LocalDateTime.parse(dateTime, formatter);
+    long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), tomorrowRighHour);
+
+    long delay = 1000L * 60L * minutes; // tomorrow 00:05
+    long period = 1000L * 60L * 60L * 24L; // 1 day
+    // delay = 1 second, launched once
+    timer1.schedule(task, 1000L);
+    // delay = until tomorrow 00:05, launched every 24 hours
+    timer2.scheduleAtFixedRate(repeatedTask, delay, period);
+
+  }
 
 
   @Override
@@ -134,7 +195,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public List<FurnitureDTO> getFurnitureList(UserDTO user) {
     dalServices.getBizzTransaction(true);
-    List<FurnitureDTO> list;
+    List<FurnitureDTO> list = null;
+    list.add(null);
     if (user != null && user.getRole() == Role.ADMIN) {
       list = furnitureDao.getFurnitureList();
     } else {
@@ -169,6 +231,13 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     furniture.setType(furnitureDao.getFurnitureTypeById(furniture.getTypeId()));
     dalServices.stopBizzTransaction();
     return furniture;
+  }
+
+  @Override
+  public void cancelOvertimedOptions() {
+    dalServices.getBizzTransaction(true);
+    furnitureDao.cancelOvertimedOptions();
+    dalServices.stopBizzTransaction();
   }
 
 

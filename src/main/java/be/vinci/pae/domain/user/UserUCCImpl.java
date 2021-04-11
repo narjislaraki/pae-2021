@@ -25,9 +25,9 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO connection(String email, String password) {
-    dalServices.getBizzTransaction(false);
+    dalServices.getBizzTransaction(true);
     User user = (User) userDAO.getUserFromEmail(email);
-    dalServices.commitBizzTransaction();
+    dalServices.stopBizzTransaction();
     if (user == null) {
       throw new UnauthorizedException("Wrong credentials");
     } else if (!user.isValidated()) {
