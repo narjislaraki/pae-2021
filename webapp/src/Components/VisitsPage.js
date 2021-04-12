@@ -83,6 +83,7 @@ const onVisitsWainting = async () => {
                     <th scope="col">Client</th>
                     <th scope="col">Nombres de meubles</th>
                     <th scope="col">Adresse</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
         <tbody class="eachVisit">
@@ -96,10 +97,52 @@ const onVisitsWainting = async () => {
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
+                <td><button name="onVisit" class="btn btn-dark condensed small-caps block-display" data-id="${visit.idRequest}" type="submit">Consulter la demande de visite</button></td>
             </tr>`
         ).join("");
     page.innerHTML += visitsWaiting;
     page.innerHTML += `</tbody></table>`;
+    let listVisit = document.getElementsByName("onVisit");
+    Array.from(listVisit).forEach((e) => {
+        e.addEventListener("click", onClickVisit);
+    });
+}
+
+const onClickVisit = e => {
+    let idVisit = e.srcElement.dataset.id;
+    let visit;
+    
+    try {
+        visit = callAPI(
+            API_BASE_URL + idVisit,
+            "GET",
+            userData.token,
+            undefined);
+    } catch (err) {
+        console.error("FurniturePage::get furniture", err);
+        PrintError(err);
+    }console.log(visit);
+    console.log(visit.client);
+    page.innerHTML += `
+        <div class="overlay">
+            <div class="popupVisit">
+                <h2>Confirmer la visite ?</h2>
+                <div>
+                    <h4>Plage horaire : </h4> ${visit.timeSlot}<br>
+                    <h4>Adresse : </h4> <div>${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
+                    ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
+                    ${visit.warehouseAddress.country} </div><br>
+                <h4>Meuble(s) : </h4><br>
+                <h4>Date de la visite</h4><input type="time" id="time" min="00:00" max="23:59">, le <input type="date" id="date" min="${Date.now}" max="31-12-9999">
+                <h4>Motif du refus : </h4><input type="text" id="explanatoryNote"><br>
+                <button id="confirmVisitBtn" name="confirmBtn" data-id="${visit.idRequest} type="submit">Confirmer</button>
+                <button id="cancelVisitBtn" name="cancelBtn" data-id="${visit.idRequest} type="submit">Refuser</button></div>
+                <span class="btnClose"></span>
+            </div>
+        </div>
+    `;
+    let overlay = document.getElementsByClassName("overlay");
+
 }
 
 const onVisitsToTreat = (e) => {

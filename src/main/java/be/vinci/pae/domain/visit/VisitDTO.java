@@ -28,6 +28,10 @@ public interface VisitDTO {
 
   void setTimeSlot(String timeSlot);
 
+  int getWarehouseAddressId();
+
+  void setWarehouseAddressId(int id);
+
   Address getWarehouseAddress();
 
   void setWarehouseAddress(Address address);

@@ -13,6 +13,8 @@ public class VisitImpl implements Visit {
   @JsonView(Views.Public.class)
   private String timeSlot;
   @JsonView(Views.Public.class)
+  private int warehouseAddressId;
+  @JsonView(Views.Public.class)
   private Address warehouseAddress;
   @JsonView(Views.Public.class)
   private VisitCondition visitCondition;
@@ -116,6 +118,16 @@ public class VisitImpl implements Visit {
   @Override
   public void setScheduledDateTime(LocalDateTime scheduledDateTime) {
     this.scheduledDateTime = scheduledDateTime;
+  }
+
+  @Override
+  public int getWarehouseAddressId() {
+    return this.warehouseAddressId;
+  }
+
+  @Override
+  public void setWarehouseAddressId(int id) {
+    this.warehouseAddressId = id;
   }
 
 }

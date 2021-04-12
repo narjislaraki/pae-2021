@@ -14,6 +14,6 @@ public interface VisitDAO {
 
   boolean cancelVisit(int idVisit, String explanatoryNote);
 
-  VisitDTO geVisitById(int idVisit);
+  VisitDTO getVisitById(int idVisit);
 
 }

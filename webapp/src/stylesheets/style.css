@@ -965,9 +965,46 @@ footer{
     border-radius:  12px 12px 12px 12px;
 }
 
+.eachVisit tr:hover{
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+}
 
+.overlay{
+    background-color: rgba(0,0 ,0 , 0.5);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 1;
+}
 
+.popupVisit{
+    width: 80%;
+    height: 80%;
+    background-color: white;
 
+}
+
+.btnClose{
+    cursor: pointer;
+}
+
+#explanatoryNote{
+    height: 8%;
+    width: 8%;
+}
+
+#confirmVisitBtn{
+    background-color:green;
+    border-radius:  12px 12px 12px 12px;
+}
+
+#cancelVisitBtn{
+    background-color:red;
+    border-radius:  12px 12px 12px 12px;
+}
 
 /*Confirm Registration**************************************************************/
 

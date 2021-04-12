@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitUCC;
 import be.vinci.pae.views.Views;
@@ -98,6 +99,26 @@ public class VisitResource {
       JsonNode json) {
     String explanatoryNote = json.get("explanatoryNote").asText();
     return visitUCC.cancelVisit(idVisit, explanatoryNote);
+  }
+
+  /**
+   * Get a specific furniture for logger users by giving its id.
+   * 
+   * @param id the furniture's id
+   * @return the furniture wrapped in a Response
+   */
+  @GET
+  @Authorize
+  @Path("{id}")
+  public Response getVisit(@Context ContainerRequest request, @PathParam("id") int id) {
+    VisitDTO visit = visitUCC.getVisitById(id);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(visit);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
   }
 
 }

@@ -2,9 +2,11 @@ package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import be.vinci.pae.domain.user.User;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.AddressDAO;
+import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.dao.VisitDAO;
 import jakarta.inject.Inject;
 
@@ -18,6 +20,9 @@ public class VisitUCCImpl implements VisitUCC {
 
   @Inject
   private AddressDAO addressDAO;
+
+  @Inject
+  private UserDAO userDAO;
 
   @Override
   public List<VisitDTO> getNotConfirmedVisits() {
@@ -62,6 +67,25 @@ public class VisitUCCImpl implements VisitUCC {
       throw new BusinessException("The id is invalid");
     }
     return result;
+  }
+
+  @Override
+  public VisitDTO getVisitById(int id) {
+    dalServices.getBizzTransaction(true);
+    VisitDTO visit = visitDAO.getVisitById(id);
+    if (visit == null) {
+      throw new BusinessException("There are no request for visit for the given id");
+    }
+    int idAddress = visit.getWarehouseAddressId();
+    if (idAddress != 0) {
+      visit.setWarehouseAddress(addressDAO.getAddress(idAddress));
+    }
+    int idClient = visit.getIdClient();
+    if (idClient != 0) {
+      visit.setClient((User) userDAO.getUserFromId(idClient));
+    }
+    dalServices.stopBizzTransaction();
+    return visit;
   }
 
 

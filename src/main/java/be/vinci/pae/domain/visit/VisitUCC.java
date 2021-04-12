@@ -13,6 +13,7 @@ public interface VisitUCC {
 
   boolean cancelVisit(int idVisit, String explanatoryNote);
 
+  VisitDTO getVisitById(int id);
 
 
 }

@@ -122,7 +122,7 @@ public class VisitDAOImpl implements VisitDAO {
   }
 
   @Override
-  public VisitDTO geVisitById(int idVisit) {
+  public VisitDTO getVisitById(int idVisit) {
     VisitDTO visit = null;
     try {
       ps = dalBackendServices.getPreparedStatement(
