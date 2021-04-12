@@ -10,6 +10,8 @@ import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.FurnitureUCCImpl;
 import be.vinci.pae.domain.furniture.OptionFactory;
 import be.vinci.pae.domain.furniture.OptionFactoryImpl;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureFactoryImpl;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
 import be.vinci.pae.domain.user.UserUCC;
@@ -48,6 +50,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(FurnitureUCCImpl.class).to(FurnitureUCC.class).in(Singleton.class);
     bind(FurnitureFactoryImpl.class).to(FurnitureFactory.class).in(Singleton.class);
     bind(OptionFactoryImpl.class).to(OptionFactory.class).in(Singleton.class);
+    bind(TypeOfFurnitureFactoryImpl.class).to(TypeOfFurnitureFactory.class).in(Singleton.class);
     bind(VisitFactoryImpl.class).to(VisitFactory.class).in(Singleton.class);
     bind(VisitDAOImpl.class).to(VisitDAO.class).in(Singleton.class);
     bind(VisitUCCImpl.class).to(VisitUCC.class).in(Singleton.class);

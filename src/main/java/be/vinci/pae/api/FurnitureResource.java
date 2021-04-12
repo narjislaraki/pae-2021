@@ -271,6 +271,7 @@ public class FurnitureResource {
    * @return a list of types of furniture
    */
   @GET
+  @Path("typeOfFurnitureList/")
   public Response getTypeOfFurnitureList(@Context ContainerRequest request) {
     List<TypeOfFurnitureDTO> list = furnitureUCC.getTypesOfFurnitureList();
 

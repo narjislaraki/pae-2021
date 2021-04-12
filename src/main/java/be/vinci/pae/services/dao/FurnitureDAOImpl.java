@@ -431,7 +431,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       throw new FatalException(e);
     }
     return type;
-
   }
 
 }

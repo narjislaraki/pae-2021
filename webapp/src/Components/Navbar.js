@@ -127,7 +127,7 @@ const onClickTools = (e) => {
   RedirectUrl("/visits")
 }
 
-const onIntroduceVisit = (e) => {
+const onIntroduceVisit = async (e) => {
   e.preventDefault();
   page.innerHTML += `
     <div class="popupRequestVisit">
@@ -153,17 +153,50 @@ const onIntroduceVisit = (e) => {
       </div><br>
         <h4>Meuble(s) : </h4><br>
         <button id="introduceBtn" name="introduceBtn" type="submit">Confirmer</button>
-        <button id="cancelBtn" name="cancelBtn"  type="submit">Annuler</button>
+        <button id="cancelBtn" name="cancelBtn" type="submit">Annuler</button>
       </div>
+      <div id="typeFurniture" class="dropdown">
+      <label for="type">Type du meuble : </label>
+      <div id="tousLesTypes"><div>
+    </div>
       </form>
                 <span class="btnClose"></span>
     </div>
   `;
+
+  try {
+    const typesOfFurniture =  await callAPI(
+      "/api/furnitures/typeOfFurnitureList",
+      "GET",
+      undefined,
+      undefined);
+      onTypesOfFurniture(typesOfFurniture);
+  } catch (err) {
+    console.error("Navbar::onIntroduceVisit", err);
+    PrintError(err);
+  }
+
+
   let introduceBtn = document.getElementById("introduceBtn");
   introduceBtn.addEventListener("click", onIntroduceRequest);
   let cancelBtn = document.getElementById("cancelBtn");
   cancelBtn.addEventListener("click", onCancelRequest);
+
 }
+
+const onTypesOfFurniture = (data) => {
+  let eachType = '<select name="type" id="type">';
+  eachType += data
+    .map((type)=>
+      `<option value="${type.id}">${type.label}</option>`
+    ).join("");
+  let tousLesTypes = document.getElementById("tousLesTypes");
+  tousLesTypes.innerHTML = eachType;
+  tousLesTypes.innerHTML += `</select>`
+}
+
+
+
 
 const onIntroduceRequest = async(e) =>{
   e.preventDefault();
