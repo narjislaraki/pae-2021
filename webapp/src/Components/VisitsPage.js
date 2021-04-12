@@ -33,22 +33,25 @@ let VisitsPage = () => {
 
     let btnToTreat = document.getElementById("btnToTreat");
     btnToTreat.addEventListener("click", onVisitsToTreat);
-    
+    onVisitsWainting();
 
 };
 
 const onVisits = (e) => {
     e.preventDefault();
+    console.log("to visits");
     RedirectUrl("/visits");
 };
 
 const onAdanvancedSearches = (e) => {
     e.preventDefault();
+    console.log("to advancedSearches")
     RedirectUrl("/advancedSearches");
 };
 
 const onConfirmRegister = (e) => {
     e.preventDefault();
+    console.log("toConfirmRegistration");
     RedirectUrl("/confirmRegistration");
 };
 
@@ -56,8 +59,9 @@ const onVisitsWainting = async () => {
     //todo
     //btnToTreat.disabled = true;
     //btnWaiting.disabled = false;
+    let listVisitsWaiting;
     try{
-        const listVisitsWaiting = await callAPI(
+        listVisitsWaiting = await callAPI(
             API_BASE_URL + "notConfirmedVisits",
             "GET",
             userData.token,
@@ -81,10 +85,9 @@ const onVisitsWainting = async () => {
                     <th scope="col">Adresse</th>
                 </tr>
             </thead>
-        <tbody>
+        <tbody class="eachVisit">
     </div
     `;
-
     visitsWaiting += listVisitsWaiting
         .map((visit) =>
             `<tr>

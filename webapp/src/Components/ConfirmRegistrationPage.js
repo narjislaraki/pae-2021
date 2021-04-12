@@ -1,7 +1,7 @@
 import callAPI from "../utils/api";
 import PrintError from "./PrintError.js";
 import { RedirectUrl } from "./Router";
-import { getUserSessionData } from "../utils/session.js";
+import { getUserSessionData , currentUser } from "../utils/session.js";
 let userData;
 let adresse = ``;
 const API_BASE_URL = "/api/users/";
@@ -57,7 +57,7 @@ const ConfirmRegistrationPage = async () => {
 
 const onUnregisteredUsersList = (data) => {
   let onUnregisteredUsersListPage =
-    `<table class="table table-light">
+    `<table class="table table-light tableConfirmRegistration">
       <thead>
         <tr>
           <th scope="col">Pseudo</th>

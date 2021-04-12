@@ -920,6 +920,9 @@ footer{
     background: #4A5761;
 }
 
+/*Visits Page**************************************************************/
+
+
 .visit{
     margin-left: 25%;
 }
@@ -951,4 +954,23 @@ footer{
 
 .buttonsVisits:disabled{
     color: #D3D3D3;
+}
+
+.visitsWaiting{
+    margin-left: 20%;
+}
+
+.eachVisit tr{
+    background-color: #4A5761;
+    border-radius:  12px 12px 12px 12px;
+}
+
+
+
+
+
+/*Confirm Registration**************************************************************/
+
+.tableConfirmRegistration{
+    margin-left: 20%;
 }

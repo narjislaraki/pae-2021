@@ -3,6 +3,7 @@ package be.vinci.pae.domain.visit;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonView;
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.user.User;
 import be.vinci.pae.views.Views;
 
 public class VisitImpl implements Visit {
@@ -17,6 +18,8 @@ public class VisitImpl implements Visit {
   private VisitCondition visitCondition;
   @JsonView(Views.Public.class)
   private int idClient;
+  @JsonView(Views.Public.class)
+  private User client;
   @JsonView(Views.Public.class)
   private String explanatoryNote;
   @JsonView(Views.Public.class)
@@ -83,6 +86,16 @@ public class VisitImpl implements Visit {
   @Override
   public void setIdClient(int idClient) {
     this.idClient = idClient;
+  }
+
+  @Override
+  public User getClient() {
+    return this.client;
+  }
+
+  @Override
+  public void setClient(User client) {
+    this.client = client;
   }
 
   @Override

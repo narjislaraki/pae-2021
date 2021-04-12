@@ -2,6 +2,7 @@ package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.user.User;
 
 public interface VisitDTO {
 
@@ -34,6 +35,10 @@ public interface VisitDTO {
   VisitCondition getVisitCondition();
 
   void setVisitCondition(String visitCondition);
+
+  User getClient();
+
+  void setClient(User client);
 
   int getIdClient();
 

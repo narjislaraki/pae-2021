@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
 import be.vinci.pae.domain.visit.VisitFactory;
@@ -28,14 +29,23 @@ public class VisitDAOImpl implements VisitDAO {
   @Inject
   private AddressDAO addressDAO;
 
+  @Inject
+  private UserDAO userDAO;
+
   public VisitDTO setVisit(ResultSet rs, VisitDTO visit) {
     try {
       visit = visitFactory.getVisitDTO();
       visit.setIdRequest(rs.getInt(1));
       visit.setTimeSlot(rs.getString(2));
       visit.setVisitCondition(rs.getString(3));
-      visit.setExplanatoryNote(rs.getString(4));
-      visit.setScheduledDateTime(rs.getTimestamp(5).toLocalDateTime());
+      if (rs.getString(4) != null) {
+        visit.setExplanatoryNote(rs.getString(4));
+      }
+      if (rs.getTimestamp(5) != null) {
+        visit.setScheduledDateTime(rs.getTimestamp(5).toLocalDateTime());
+      }
+      User client = (User) userDAO.getUserFromId(rs.getInt(7));
+      visit.setClient(client);
       Address address = addressDAO.getAddress(rs.getInt(6));
       visit.setWarehouseAddress(address);
       visit.setIdClient(rs.getInt(7));
@@ -52,6 +62,7 @@ public class VisitDAOImpl implements VisitDAO {
       String sql =
           "SELECT id_request, time_slot, condition, explanatory_note, scheduled_date_time, warehouse_address, client FROM pae.requests_for_visits WHERE condition = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
+      ps.setString(1, VisitCondition.EN_ATTENTE.toString());
       ResultSet rs = ps.executeQuery();
       VisitDTO visit = null;
       while (rs.next()) {

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserFactory;
@@ -140,6 +139,8 @@ public class UserDAOImpl implements UserDAO {
     }
     return user;
   }
+
+
 
   @Override
   public List<UserDTO> getUnvalidatedUsers() {
