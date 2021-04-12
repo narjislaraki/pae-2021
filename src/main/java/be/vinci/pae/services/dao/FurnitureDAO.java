@@ -2,12 +2,12 @@ package be.vinci.pae.services.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.OptionDTO;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
 
 public interface FurnitureDAO {
 
@@ -52,4 +52,6 @@ public interface FurnitureDAO {
   void cancelOvertimedOptions();
 
   void cancelOvertimedReservations();
+
+  List<TypeOfFurnitureDTO> getTypesOfFurnitureList();
 }

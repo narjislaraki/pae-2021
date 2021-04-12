@@ -2,7 +2,6 @@ package be.vinci.pae.domain.furniture;
 
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.UserDTO;
 
@@ -41,4 +40,6 @@ public interface FurnitureUCC {
   int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser);
 
   void cancelOvertimedOptions();
+
+  List<TypeOfFurnitureDTO> getTypesOfFurnitureList();
 }
