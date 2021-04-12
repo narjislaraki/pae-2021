@@ -1,6 +1,11 @@
 let navBar = document.querySelector(".navigationbar");
-import {removeSessionData, currentUser, resetCurrentUser} from "../utils/session.js";
+import callAPI from "../utils/api.js";
+import {removeSessionData, currentUser, resetCurrentUser, getUserSessionData} from "../utils/session.js";
+import PrintError from "./PrintError.js";
+import PrintMessage from "./PrintMessage.js";
 import { RedirectUrl } from "./Router.js";
+let userData = getUserSessionData;
+
 // destructuring assignment
 const Navbar = () => {
   let nb;
@@ -28,6 +33,9 @@ const Navbar = () => {
             <li><a class="dropdown-toggle-item" href="#">Type3</a></li>
           </ul>
         </div>
+        <button id="btnIntroduceVisit" class="btn btn-dark btn-navbar condensed small-caps">
+          Demander une visite
+        </button>
 
         <div class="user-menu">
         
@@ -93,7 +101,8 @@ const Navbar = () => {
   let home = document.getElementById("home");
   home.addEventListener("click", onHomePage);
 
-
+  let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
+  btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
 };
 
 const onFurnitureListPage = (e) => {
@@ -116,6 +125,82 @@ const onLogout = (e) =>{
 const onClickTools = (e) => {
   e.preventDefault();
   RedirectUrl("/visits")
+}
+
+const onIntroduceVisit = (e) => {
+  e.preventDefault();
+  page.innerHTML += `
+    <div class="popupRequestVisit">
+      <h2>Introduire une demande de visite</h2>
+      <form class="RequestVisitForm">
+      <div>
+        <h4>Plage horaire : </h4><input type="text" id="timeSlot" placeholder="exemple : le lundi de 18h à 22h" required><br>
+        <h4>Adresse : (uniquement si elle est différente de votre addresse)</h4>
+      </div>
+      <div>
+        <input type="text" class="form-control input-card" id="street" placeholder="Rue" required>
+
+        <input type="text" class="form-control input-card" id="number" placeholder="Numéro" required>
+              
+        <input type="text" class="form-control input-card" id="unitnumber" placeholder="Boite">
+              
+        <input type="text" class="form-control input-card" id="postcode" placeholder="Code Postal" required>
+              
+        <input type="text" class="form-control input-card" id="city" placeholder="Commune" required>
+              
+        <input type="text" class="form-control input-card" id="country" placeholder="Pays" required>
+          
+      </div><br>
+        <h4>Meuble(s) : </h4><br>
+        <button id="introduceBtn" name="introduceBtn" type="submit">Confirmer</button>
+        <button id="cancelBtn" name="cancelBtn"  type="submit">Annuler</button>
+      </div>
+      </form>
+                <span class="btnClose"></span>
+    </div>
+  `;
+  let introduceBtn = document.getElementById("introduceBtn");
+  introduceBtn.addEventListener("click", onIntroduceRequest);
+  let cancelBtn = document.getElementById("cancelBtn");
+  cancelBtn.addEventListener("click", onCancelRequest);
+}
+
+const onIntroduceRequest = async(e) =>{
+  e.preventDefault();
+  let request = {
+    timeSlot: document.getElementById("timeSlot").value,
+    warehouseAddress: {
+      street: document.getElementById("street").value,
+      buildingNumber: document.getElementById("number").value,
+      postCode: document.getElementById("postcode").value,
+      country: document.getElementById("country").value,
+      city: document.getElementById("city").value
+    }
+  };
+  if(document.getElementById("unitnumber").value != ""){
+    request.warehouseAddress.unitNumber = document.getElementById("unitNumber").value;
+  }
+  try{
+    const requestVisit = await callAPI(
+      "/api/visits/introduce",
+      "POST",
+      userData.token,
+      request
+    );
+    if(requestVisit){
+      RedirectUrl("/");
+      PrintMessage("Votre demande de visite a bien été enregistrée. Elle est maintenant en attente de confirmation.");
+    }
+    
+  }catch(err){
+    console.error("Navbar :: onIntroduceRequest", err);
+    PrintError(err);
+  }
+}
+
+const onCancelRequest = (e) =>{
+  e.preventDefault();
+  RedirectUrl("/");
 }
 
 export default Navbar;
