@@ -3,7 +3,6 @@ package be.vinci.pae.api;
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.glassfish.jersey.server.ContainerRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -77,9 +76,8 @@ public class VisitResource {
   @Consumes(MediaType.APPLICATION_JSON)
   public boolean acceptVisit(@Context ContainerRequest request, @PathParam("id") int idVisit,
       JsonNode json) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy HH:mm:ss");
-    LocalDateTime scheduledDateTime =
-        LocalDateTime.parse(json.get("scheduledDateTime").asText(), formatter);
+    System.out.println("acceptVisit resource");
+    LocalDateTime scheduledDateTime = LocalDateTime.parse(json.get("scheduledDateTime").asText());
     return visitUCC.acceptVisit(idVisit, scheduledDateTime);
   }
 

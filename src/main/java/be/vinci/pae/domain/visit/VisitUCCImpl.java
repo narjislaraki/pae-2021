@@ -43,6 +43,7 @@ public class VisitUCCImpl implements VisitUCC {
 
   @Override
   public boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime) {
+    System.out.println("acceptVisit ucc");
     if (scheduledDateTime == null) {
       throw new BusinessException("Scheduled date time is needed");
     }

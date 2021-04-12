@@ -108,23 +108,24 @@ const onVisitsWainting = async () => {
     });
 }
 
-const onClickVisit = e => {
+async function onClickVisit (e)  {
     let idVisit = e.srcElement.dataset.id;
     let visit;
     
     try {
-        visit = callAPI(
+        visit = await callAPI(
             API_BASE_URL + idVisit,
             "GET",
             userData.token,
             undefined);
     } catch (err) {
-        console.error("FurniturePage::get furniture", err);
+        console.error("VisitsPage::onClickVisit", err);
         PrintError(err);
     }console.log(visit);
-    console.log(visit.client);
+    console.log(visit.warehouseAddress);
+    console.log(visit.timeSlot);
+    console.log(visit.warehouseAddress.street);
     page.innerHTML += `
-        <div class="overlay">
             <div class="popupVisit">
                 <h2>Confirmer la visite ?</h2>
                 <div>
@@ -133,35 +134,22 @@ const onClickVisit = e => {
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country} </div><br>
                 <h4>Meuble(s) : </h4><br>
-                <h4>Date de la visite</h4><input type="time" id="time" min="00:00" max="23:59">, le <input type="date" id="date" min="${Date.now}" max="31-12-9999">
-                <h4>Motif du refus : </h4><input type="text" id="explanatoryNote"><br>
-                <button id="confirmVisitBtn" name="confirmBtn" data-id="${visit.idRequest} type="submit">Confirmer</button>
-                <button id="cancelVisitBtn" name="cancelBtn" data-id="${visit.idRequest} type="submit">Refuser</button></div>
+                <h4>Date de la visite</h4><input type="datetime-local" id="scheduledDateTime" min="${Date.now}" max="9999-31-12T23:59" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}">
+                <h4>Motif du refus : </h4><textarea id="explanatoryNote"></textarea><br>
+                <button id="confirmVisitBtn" name="confirmBtn" data-id="${visit.idRequest}" type="submit">Confirmer</button>
+                <button id="cancelVisitBtn" name="cancelBtn" data-id="${visit.idRequest}" type="submit">Refuser</button></div>
                 <span class="btnClose"></span>
             </div>
-        </div>
     `;
-    let overlay = document.getElementsByClassName("overlay");
-
+    let popupVisit = document.getElementsByClassName("popupVisit");
+    let btnConfirm = document.getElementById("confirmVisitBtn");
+    btnConfirm.addEventListener("click", onConfirm);
+    let btnCancel = document.getElementById("cancelVisitBtn");
+    btnCancel.addEventListener("click", onCancel);
 }
 
 const onVisitsToTreat = (e) => {
-    //todo
-    //btnWaiting.disabled = true;
-    //btnToTreat.disabled = false;
-    /*page.innerHTML += `
-        <div class="visitsOnTreat">
-            <table class="table table-light">
-                <thead>
-                    <tr>
-                        <th scope="col">Client</th>
-                        <th scope="col">Nombres de meubles</th>
-                        <th scope="col">Adresse</th>
-                    </tr>
-                </thead>
-                <tbody>
-        </div
-    `;*/
+
 }
 
 

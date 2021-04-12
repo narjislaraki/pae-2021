@@ -92,6 +92,7 @@ public class VisitDAOImpl implements VisitDAO {
 
   @Override
   public boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime) {
+    System.out.println("acceptVisit dao");
     try {
       String sql =
           "UPDATE pae.requests_for_visits SET condition = ?, scheduled_date_time = ? WHERE id_request = ?;";
@@ -110,7 +111,7 @@ public class VisitDAOImpl implements VisitDAO {
   public boolean cancelVisit(int idVisit, String explanatoryNote) {
     try {
       String sql =
-          "UPDATE pae.requests_for_visits SET condition = ?, explanatoryNote = ? WHERE id_request = ?;";
+          "UPDATE pae.requests_for_visits SET condition = ?, explanatory_note = ? WHERE id_request = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.ANNULEE.toString());
       ps.setString(2, explanatoryNote);
