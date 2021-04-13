@@ -72,8 +72,6 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     return ps;
   }
 
-
-
   @Override
   public void getBizzTransaction(boolean autoCommit) {
     try {
@@ -91,20 +89,7 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   @Override
   public void stopBizzTransaction() {
     Connection connection = td.get();
-    td.remove();
     try {
-      connection.close();
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
-
-  @Override
-  public void commitBizzTransaction() {
-    Connection connection;
-    try {
-      connection = commitTransac();
       td.remove();
       connection.close();
     } catch (SQLException e) {
@@ -112,24 +97,20 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
     }
   }
 
-
-  private Connection commitTransac() {
+  @Override
+  public void commitBizzTransaction() {
     Connection connection = td.get();
     try {
       connection.commit();
+      td.remove();
+      connection.close();
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return connection;
   }
 
   @Override
-  public void commitTransactionAndContinue() {
-    commitTransac();
-  }
-
-  @Override
-  public void rollbackTransaction() {
+  public void rollbackBizzTransaction() {
     try {
       Connection connection = td.get();
       connection.rollback();
@@ -141,19 +122,20 @@ public class DalServicesImpl implements DalServices, DalBackendServices {
   }
 
   @Override
-  public boolean hasTransaction() {
+  public boolean hasBizzTransaction() {
+    return td.get() == null ? false : true;
+  }
+
+  @Override
+  public boolean isBizzTransactionInAutoCommit() {
     Connection connection = td.get();
-    if (connection == null) {
-      return false;
-    }
     boolean autoCommit = false;
     try {
       autoCommit = connection.getAutoCommit();
     } catch (SQLException e) {
-      throw new FatalException(e);
+      return false;
     }
-    return !autoCommit;
+    return autoCommit;
   }
-
 
 }
