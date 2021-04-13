@@ -422,6 +422,13 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return list;
   }
 
+  /**
+   * Method to set a type of furniture from a resultset.
+   * 
+   * @param rs the resultset
+   * @param type a null typeOfFurniture
+   * @return a typeOfFurnitureDTO
+   */
   public TypeOfFurnitureDTO setTypeOfFurniture(ResultSet rs, TypeOfFurnitureDTO type) {
     try {
       type = typeOfFurnitureFactory.getTypeOfFurnitureDTO();

@@ -32,6 +32,13 @@ public class VisitDAOImpl implements VisitDAO {
   @Inject
   private UserDAO userDAO;
 
+  /**
+   * Method to set a visit from a resultset.
+   * 
+   * @param rs the resultset
+   * @param visit a null visit
+   * @return a visitDTO
+   */
   public VisitDTO setVisit(ResultSet rs, VisitDTO visit) {
     try {
       visit = visitFactory.getVisitDTO();
@@ -59,8 +66,9 @@ public class VisitDAOImpl implements VisitDAO {
   public List<VisitDTO> getNotConfirmedVisits() {
     List<VisitDTO> list = new ArrayList<VisitDTO>();
     try {
-      String sql =
-          "SELECT id_request, time_slot, condition, explanatory_note, scheduled_date_time, warehouse_address, client FROM pae.requests_for_visits WHERE condition = ?;";
+      String sql = "SELECT id_request, time_slot, condition, "
+          + "explanatory_note, scheduled_date_time, warehouse_address, client "
+          + "FROM pae.requests_for_visits WHERE condition = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.EN_ATTENTE.toString());
       ResultSet rs = ps.executeQuery();
@@ -94,8 +102,8 @@ public class VisitDAOImpl implements VisitDAO {
   public boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime) {
     System.out.println("acceptVisit dao");
     try {
-      String sql =
-          "UPDATE pae.requests_for_visits SET condition = ?, scheduled_date_time = ? WHERE id_request = ?;";
+      String sql = "UPDATE pae.requests_for_visits SET condition = ?, scheduled_date_time = ? "
+          + "WHERE id_request = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.ACCEPTEE.toString());
       Timestamp timeStampScheduledDateTime = Timestamp.valueOf(scheduledDateTime);
@@ -110,8 +118,8 @@ public class VisitDAOImpl implements VisitDAO {
   @Override
   public boolean cancelVisit(int idVisit, String explanatoryNote) {
     try {
-      String sql =
-          "UPDATE pae.requests_for_visits SET condition = ?, explanatory_note = ? WHERE id_request = ?;";
+      String sql = "UPDATE pae.requests_for_visits SET condition = ?, explanatory_note = ? "
+          + "WHERE id_request = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.ANNULEE.toString());
       ps.setString(2, explanatoryNote);

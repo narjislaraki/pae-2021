@@ -54,4 +54,5 @@ public interface FurnitureDAO {
   void cancelOvertimedReservations();
 
   List<TypeOfFurnitureDTO> getTypesOfFurnitureList();
+
 }
