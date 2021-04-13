@@ -1,6 +1,6 @@
 import callAPI from "../utils/api";
-import { RedirectUrl } from "./Router";
-import { getUserSessionData } from "../utils/session.js";
+import {RedirectUrl} from "./Router";
+import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError";
 
 const API_BASE_URL = "/api/visits/";
@@ -60,22 +60,22 @@ const onVisitsWainting = async () => {
     //btnToTreat.disabled = true;
     //btnWaiting.disabled = false;
     let listVisitsWaiting;
-    try{
+    try {
         listVisitsWaiting = await callAPI(
             API_BASE_URL + "notConfirmedVisits",
             "GET",
             userData.token,
             undefined,
         );
-        
-    } catch(err){
+
+    } catch (err) {
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-          }
-          console.error("VisitsPage::onVisitsWainting", err);
-          PrintError(err);
+        }
+        console.error("VisitsPage::onVisitsWainting", err);
+        PrintError(err);
     }
-    let visitsWaiting =  `
+    let visitsWaiting = `
     <div class="visitsWaiting">
         <table class="table table-light">
             <thead>
@@ -97,55 +97,72 @@ const onVisitsWainting = async () => {
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
-                <td><button name="onVisit" class="btn btn-dark condensed small-caps block-display" data-id="${visit.idRequest}" type="submit">Consulter la demande de visite</button></td>
-            </tr>`
-        ).join("");
-    page.innerHTML += visitsWaiting;
-    page.innerHTML += `</tbody></table>`;
-    let listVisit = document.getElementsByName("onVisit");
-    Array.from(listVisit).forEach((e) => {
-        e.addEventListener("click", onClickVisit);
-    });
-}
+                <td><button name="trigger_popup_fricc" class="btn btn-dark condensed small-caps block-display" data-id="${visit.idRequest}" type="submit">Consulter la demande de visite</button></td>
+            </tr>
 
-async function onClickVisit (e)  {
-    let idVisit = e.srcElement.dataset.id;
-    let visit;
-    
-    try {
-        visit = await callAPI(
-            API_BASE_URL + idVisit,
-            "GET",
-            userData.token,
-            undefined);
-    } catch (err) {
-        console.error("VisitsPage::onClickVisit", err);
-        PrintError(err);
-    }console.log(visit);
-    console.log(visit.warehouseAddress);
-    console.log(visit.timeSlot);
-    console.log(visit.warehouseAddress.street);
-    page.innerHTML += `
-            <div class="popupVisit">
-                <h2>Confirmer la visite ?</h2>
-                <div>
-                    <h4>Plage horaire : </h4> ${visit.timeSlot}<br>
-                    <h4>Adresse : </h4> <div>${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
+    <div class="hover_bkgr_fricc" data-id="${visit.idRequest}">
+        <span class="helper"></span>
+        <div>
+            <div class="popupCloseButton" data-id="${visit.idRequest}">&times;</div>
+            <h2>Confirmer la visite ?</h2>
+            <div>
+                <span class="titre">Plage horaire : </span> ${visit.timeSlot}<br>
+                <h4>Adresse : </h4>
+                <div>${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country} </div><br>
                 <h4>Meuble(s) : </h4><br>
-                <h4>Date de la visite</h4><input type="datetime-local" id="scheduledDateTime" min="${Date.now}" max="9999-31-12T23:59" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}">
-                <h4>Motif du refus : </h4><textarea id="explanatoryNote"></textarea><br>
-                <button id="confirmVisitBtn" name="confirmBtn" data-id="${visit.idRequest}" type="submit">Confirmer</button>
-                <button id="cancelVisitBtn" name="cancelBtn" data-id="${visit.idRequest}" type="submit">Refuser</button></div>
-                <span class="btnClose"></span>
+                <h4>Date de la visite</h4><input type="datetime-local" class="scheduledDateTime" id="scheduledDateTime${visit.idRequest}" min="${Date.now}" max="9999-31-12T23:59" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}">
+                <h4>Motif du refus : </h4><textarea class="explanatoryNote" id="explanatoryNote${visit.idRequest}"></textarea><br>
+                <div class="container">
+                    <div class="row">
+                        <button class="btn btn-outline-success col-6 confirmVisitBtn" name="confirmBtn" data-id="${visit.idRequest}" type="submit">Confirmer</button>
+                        <button class="btn btn-outline-danger col-6 cancelVisitBtn" name="cancelBtn" data-id="${visit.idRequest}" type="submit">Refuser</button>
+                    </div>
+                </div>
             </div>
-    `;
-    let popupVisit = document.getElementsByClassName("popupVisit");
-    let btnConfirm = document.getElementById("confirmVisitBtn");
-    btnConfirm.addEventListener("click", onConfirm);
-    let btnCancel = document.getElementById("cancelVisitBtn");
-    btnCancel.addEventListener("click", onCancel);
+        </div>
+    </div>`
+        ).join("");
+    page.innerHTML += visitsWaiting;
+    page.innerHTML += `</tbody></table>`;
+    let listVisit = document.getElementsByName("trigger_popup_fricc");
+    Array.from(listVisit).forEach((e) => {
+        e.addEventListener("click", onClickVisit);
+    });
+    Array.from(document.getElementsByClassName("popupCloseButton")).forEach((e) => {
+        e.addEventListener("click", onClose);
+    })
+
+    Array.from(document.getElementsByClassName("confirmVisitBtn")).forEach((e) => {
+        e.addEventListener("click", onConfirm);
+    })
+    Array.from(document.getElementsByClassName("cancelVisitBtn")).forEach((e) => {
+        e.addEventListener("click", onCancel);
+    })
+}
+
+const onClose = (e) => {
+    e.preventDefault();
+    let idVisit = e.srcElement.dataset.id;
+
+    Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
+        if (element.dataset.id == idVisit) {
+            element.style.display = "none";
+            return;
+        }
+    });
+}
+
+function onClickVisit(e) {
+    let idVisit = e.srcElement.dataset.id;
+
+    Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
+        if (element.dataset.id == idVisit) {
+            element.style.display = "block";
+            return;
+        }
+    });
 }
 
 const onVisitsToTreat = (e) => {
@@ -155,15 +172,15 @@ const onVisitsToTreat = (e) => {
 
 const onConfirm = async (e) => {
     let id = e.srcElement.dataset.id;
-    let scheduledDateTime = document.getElementById('scheduledDateTime').value;
-    if (scheduledDateTime == ""){
+    let scheduledDateTime = document.getElementById('scheduledDateTime'+id).value;
+    if (scheduledDateTime == "") {
         let error = {
             message: "Veuillez d'abord entrer une date et heure de visite",
         }
         PrintError(error);
         return;
     }
-    try{
+    try {
         await callAPI(
             API_BASE_URL + id + "/accept",
             "POST",
@@ -172,7 +189,7 @@ const onConfirm = async (e) => {
                 scheduledDateTime: scheduledDateTime,
             },
         );
-    }catch(err){
+    } catch (err) {
         console.log("VisitsPage::onConfirm", err);
         PrintError(err);
     }
@@ -181,24 +198,24 @@ const onConfirm = async (e) => {
 
 const onCancel = async (e) => {
     let id = e.srcElement.dataset.id;
-    let explanatoryNote = document.getElementById("explanatoryNote").value;
-    if (explanatoryNote == ""){
+    let explanatoryNote = document.getElementById("explanatoryNote"+id).value;
+    if (explanatoryNote == "") {
         let error = {
             message: "Veuillez d'abord entrer un motif expliquant la raison du refus",
         }
         PrintError(error);
         return;
     }
-    try{
+    try {
         await callAPI(
             API_BASE_URL + id + "/cancel",
             "POST",
             userData.token,
             {
-                explanatoryNote : explanatoryNote,
+                explanatoryNote: explanatoryNote,
             },
         );
-    }catch (err){
+    } catch (err) {
         console.log("VisitsPage::onCancel", err);
         PrintError(err);
     }
