@@ -94,6 +94,9 @@ const Navbar = () => {
   if (user){
     let logout = document.querySelector("#logout");
     logout.addEventListener("click", onLogout);
+
+    let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
+  btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
   }
   let voir = document.getElementById("all-furnitures-navbar");
   voir.addEventListener("click", onFurnitureListPage);
@@ -101,8 +104,6 @@ const Navbar = () => {
   let home = document.getElementById("home");
   home.addEventListener("click", onHomePage);
 
-  let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
-  btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
 };
 
 const onFurnitureListPage = (e) => {
