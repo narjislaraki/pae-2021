@@ -5,13 +5,16 @@ import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
 import { RedirectUrl } from "./Router.js";
 let userData = getUserSessionData;
-
+let idFurniture = 1;
+let listPhotos = [];
+let typesOfFurniture;
 // destructuring assignment
 const Navbar = async () => {
   let nb;
   let user = currentUser;
 
   if (user) {
+    
     nb = `
     <h1 class="lines" ></h1>
         <div class= "title">
@@ -53,10 +56,10 @@ const Navbar = async () => {
             </div>
         </div>
 
-        <div class="hover_bkgr_fricc"">
+        <div class="hover_bkgr_fricc" id="hover_bkgr_friccNavbar">
         <span class="helper"></span>
         <div>
-            <div class="popupCloseButton"">&times;</div>
+            <div class="popupCloseButton" id="popupCloseButtonNavbar">&times;</div>
             <h2>Introduire une demande de visite</h2>
           <form class="RequestVisitForm">
           <div>
@@ -78,10 +81,19 @@ const Navbar = async () => {
               
           </div><br>
           <h4>Meuble(s) : </h4><br>
-          <div id="typeFurniture" class="dropdown">
-            <label for="type">Type du meuble : </label>
-            <div id="tousLesTypes"></div>
-          </div>
+            <div id="eachFurniture">
+              ${idFurniture}. <textarea class="description" id="furniture${idFurniture}"></textarea> 
+              <label for="files${idFurniture}" class="bi bi-upload"></label>
+              <input id="files${idFurniture}" class="images" type="file" multiple>
+              <div id="typeFurniture" class="dropdown">
+                <label for="type">Type du meuble : </label>
+                <div id="tousLesTypes${idFurniture}"></div>
+              </div>
+            </div>
+         
+          <br>
+          <button class="bi bi-plus-circle" id="btnPlus" type="button"></button>
+          
           <br>
           <button class="btn btn-outline-success" id="introduceBtn" name="introduceBtn" type="submit">Confirmer</button>
           <button class="btn btn-outline-danger" id="cancelBtn" name="cancelBtn" type="submit">Annuler</button>
@@ -97,16 +109,14 @@ const Navbar = async () => {
     introduceBtn.addEventListener("click", onIntroduceRequest);
     let cancelBtn = document.getElementById("cancelBtn");
     cancelBtn.addEventListener("click", onCloseVisit);
-
-    Array.from(document.getElementsByName("trigger_popup_fricc")).forEach((e) => {
-      e.addEventListener("click", onIntroduceVisit);
-    });
-    Array.from(document.getElementsByClassName("popupCloseButton")).forEach((e) => {
-      e.addEventListener("click", onCloseVisit);
-    })
+    document.getElementById("popupCloseButtonNavbar").addEventListener("click", onCloseVisit);
+    let inputImage = document.getElementById("files"+idFurniture);
+    inputImage.addEventListener("change", encodeImagetoBase64);
+    let btnPlus = document.getElementById("btnPlus");
+    btnPlus.addEventListener("click", onAddFurniture);
 
     try {
-      const typesOfFurniture = await callAPI(
+      typesOfFurniture = await callAPI(
         "/api/furnitures/typeOfFurnitureList",
         "GET",
         undefined,
@@ -193,35 +203,54 @@ const onClickTools = (e) => {
 
 const onIntroduceVisit = (e) => {
   e.preventDefault();
-  Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
-    element.style.display = "block";
-  });
+  document.getElementById("hover_bkgr_friccNavbar").style.display = "block";
 }
 
 const onCloseVisit = (e) => {
   e.preventDefault();
-  Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
-    element.style.display = "none";
-  });
+  document.getElementById("hover_bkgr_friccNavbar").style.display = "none";
 }
 
 
 const onTypesOfFurniture = (data) => {
-  let eachType = '<select name="type" id="type">';
+  let eachType = `<select name="type" id="type+${idFurniture}">`;
   eachType += data
     .map((type) =>
       `<option value="${type.id}">${type.label}</option>`
     ).join("");
-  let tousLesTypes = document.getElementById("tousLesTypes");
+  let tousLesTypes = document.getElementById("tousLesTypes"+idFurniture);
   tousLesTypes.innerHTML = eachType;
   tousLesTypes.innerHTML += `</select>`
 }
 
 
+function encodeImagetoBase64(element) {
+  var file = element.files[0];
+  var reader = new FileReader();
+  reader.onloadend = function () {
+      listPhotos.push(reader.result);
+  }
+  reader.readAsDataURL(file);
+}
 
+const onAddFurniture = (e) => {
+  idFurniture++;
+  let eachFurniture = document.getElementById("eachFurniture");
+  eachFurniture.innerHTML += `<br><br>
+    ${idFurniture}. <textarea class="description" id="furniture${idFurniture}"></textarea> 
+    <label for="files${idFurniture}" class="bi bi-upload"></label>
+    <input id="files${idFurniture}" class="images" type="file" multiple>
+    <div id="typeFurniture${idFurniture}" class="dropdown">
+      <label for="type">Type du meuble : </label>
+      <div id="tousLesTypes${idFurniture}"></div>
+    </div>
+  `;
+  onTypesOfFurniture(typesOfFurniture);
+}
 
 const onIntroduceRequest = async (e) => {
   e.preventDefault();
+  
   let request = {
     timeSlot: document.getElementById("timeSlot").value,
     warehouseAddress: {
@@ -232,6 +261,16 @@ const onIntroduceRequest = async (e) => {
       city: document.getElementById("city").value
     }
   };
+  
+  for (let i = 1; i <= idFurniture; i++){
+   
+    let furniture = {
+      id: document.getElementById("furniture"+i).value,
+      idTypeOfFurniture: document.getElementById("type"+i).value,
+      listPhotos: listPhotos,
+    }
+  }
+  
   if (document.getElementById("unitnumber").value != "") {
     request.warehouseAddress.unitNumber = document.getElementById("unitNumber").value;
   }

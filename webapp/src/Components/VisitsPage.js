@@ -15,25 +15,11 @@ let VisitsPage = () => {
     </div>
     `;
     let visitPage = `<div class="visits-title small-caps">
-        <button class="buttonsVisits" id="btnWaiting">En attente</button>
-        <button class="buttonsVisits" id="btnToTreat">À traiter</button>
+    <div class="all-furn-title small-caps">Visites en attente</div>
     </div>`;
     page.innerHTML = menu + visitPage;
-    let visits = document.getElementById("visits");
-    visits.addEventListener("click", onVisits);
 
-    let advancedSearches = document.getElementById("advancedSearches");
-    advancedSearches.addEventListener("click", onAdanvancedSearches);
-
-    let confirmRegister = document.getElementById("confirmRegister");
-    confirmRegister.addEventListener("click", onConfirmRegister);
-
-    let btnWaiting = document.getElementById("btnWaiting");
-    btnWaiting.addEventListener("click", onVisitsWainting);
-
-    let btnToTreat = document.getElementById("btnToTreat");
-    btnToTreat.addEventListener("click", onVisitsToTreat);
-    onVisitsWainting();
+    onVisitsWaiting();
 
 };
 
@@ -55,10 +41,11 @@ const onConfirmRegister = (e) => {
     RedirectUrl("/confirmRegistration");
 };
 
-const onVisitsWainting = async () => {
+const onVisitsWaiting = async () => {
     //todo
     //btnToTreat.disabled = true;
     //btnWaiting.disabled = false;
+
     let listVisitsWaiting;
     try {
         listVisitsWaiting = await callAPI(
@@ -72,7 +59,7 @@ const onVisitsWainting = async () => {
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
         }
-        console.error("VisitsPage::onVisitsWainting", err);
+        console.error("VisitsPage::onVisitsWaiting", err);
         PrintError(err);
     }
     let visitsWaiting = `
@@ -87,7 +74,6 @@ const onVisitsWainting = async () => {
                 </tr>
             </thead>
         <tbody class="eachVisit">
-    </div
     `;
     visitsWaiting += listVisitsWaiting
         .map((visit) =>
@@ -103,16 +89,19 @@ const onVisitsWainting = async () => {
     <div class="hover_bkgr_fricc" data-id="${visit.idRequest}">
         <span class="helper"></span>
         <div>
-            <div class="popupCloseButton" data-id="${visit.idRequest}">&times;</div>
+            <div class="popupCloseButton" data-id="${visit.idRequest}">
+                &times;
+            </div>
             <h2>Confirmer la visite ?</h2>
             <div>
                 <span class="titre">Plage horaire : </span> ${visit.timeSlot}<br>
                 <h4>Adresse : </h4>
                 <div>${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
-                    ${visit.warehouseAddress.country} </div><br>
+                    ${visit.warehouseAddress.country} 
+                </div><br>
                 <h4>Meuble(s) : </h4><br>
-                <h4>Date de la visite</h4><input type="datetime-local" class="scheduledDateTime" id="scheduledDateTime${visit.idRequest}" min="${Date.now}" max="9999-31-12T23:59" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}">
+                <h4>Date de la visite</h4><input type="datetime-local" class="scheduledDateTime" id="scheduledDateTime${visit.idRequest}" min="${Date.now}" max="9999-31-12T23:59">
                 <h4>Motif du refus : </h4><textarea class="explanatoryNote" id="explanatoryNote${visit.idRequest}"></textarea><br>
                 <div class="container">
                     <div class="row">
@@ -125,7 +114,7 @@ const onVisitsWainting = async () => {
     </div>`
         ).join("");
     page.innerHTML += visitsWaiting;
-    page.innerHTML += `</tbody></table>`;
+    page.innerHTML += `</tbody></table></div>`;
     let listVisit = document.getElementsByName("trigger_popup_fricc");
     Array.from(listVisit).forEach((e) => {
         e.addEventListener("click", onClickVisit);
@@ -140,6 +129,15 @@ const onVisitsWainting = async () => {
     Array.from(document.getElementsByClassName("cancelVisitBtn")).forEach((e) => {
         e.addEventListener("click", onCancel);
     })
+
+    let visits = document.getElementById("visits");
+    visits.addEventListener("click", onVisits);
+
+    let advancedSearches = document.getElementById("advancedSearches");
+    advancedSearches.addEventListener("click", onAdanvancedSearches);
+    
+    let confirmRegister = document.getElementById("confirmRegister");
+    confirmRegister.addEventListener("click", onConfirmRegister);
 }
 
 const onClose = (e) => {
@@ -163,10 +161,6 @@ function onClickVisit(e) {
             return;
         }
     });
-}
-
-const onVisitsToTreat = (e) => {
-
 }
 
 
