@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -18,6 +17,8 @@ import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.OptionDTO.State;
 import be.vinci.pae.domain.furniture.OptionFactory;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
 import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
@@ -31,6 +32,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   private FurnitureFactory furnitureFactory;
   @Inject
   private OptionFactory optionFactory;
+  @Inject
+  private TypeOfFurnitureFactory typeOfFurnitureFactory;
 
   PreparedStatement ps;
 
@@ -399,6 +402,42 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+  }
+
+  @Override
+  public List<TypeOfFurnitureDTO> getTypesOfFurnitureList() {
+    List<TypeOfFurnitureDTO> list = new ArrayList<TypeOfFurnitureDTO>();
+    try {
+      String sql = "SELECT id_type, label FROM pae.types_of_furnitures;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ResultSet rs = ps.executeQuery();
+      TypeOfFurnitureDTO type = null;
+      while (rs.next()) {
+        TypeOfFurnitureDTO typeDTO = setTypeOfFurniture(rs, type);
+        list.add(typeDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
+  /**
+   * Method to set a type of furniture from a resultset.
+   * 
+   * @param rs the resultset
+   * @param type a null typeOfFurniture
+   * @return a typeOfFurnitureDTO
+   */
+  public TypeOfFurnitureDTO setTypeOfFurniture(ResultSet rs, TypeOfFurnitureDTO type) {
+    try {
+      type = typeOfFurnitureFactory.getTypeOfFurnitureDTO();
+      type.setId(rs.getInt(1));
+      type.setLabel(rs.getString(2));
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return type;
   }
 
 }

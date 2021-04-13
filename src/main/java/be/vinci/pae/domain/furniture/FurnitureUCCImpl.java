@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.user.UserDTO;
@@ -196,7 +195,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public List<FurnitureDTO> getFurnitureList(UserDTO user) {
     dalServices.getBizzTransaction(true);
     List<FurnitureDTO> list = null;
-    list.add(null);
     if (user != null && user.getRole() == Role.ADMIN) {
       list = furnitureDao.getFurnitureList();
     } else {
@@ -238,6 +236,15 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.getBizzTransaction(true);
     furnitureDao.cancelOvertimedOptions();
     dalServices.stopBizzTransaction();
+  }
+
+  @Override
+  public List<TypeOfFurnitureDTO> getTypesOfFurnitureList() {
+    dalServices.getBizzTransaction(true);
+    List<TypeOfFurnitureDTO> list = null;
+    list = furnitureDao.getTypesOfFurnitureList();
+    dalServices.stopBizzTransaction();
+    return list;
   }
 
 

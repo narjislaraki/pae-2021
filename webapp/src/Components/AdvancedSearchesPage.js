@@ -1,0 +1,3 @@
+let AdvancedSearchesPage = ``;
+
+export {AdvancedSearchesPage};
