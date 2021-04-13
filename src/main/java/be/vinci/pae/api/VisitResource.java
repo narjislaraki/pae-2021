@@ -66,7 +66,7 @@ public class VisitResource {
    * Acceptation of a request for visit.
    * 
    * @param request the request
-   * @param id the visit's id
+   * @param idVisit the visit's id
    * @return true if OK
    */
   @POST
@@ -85,7 +85,7 @@ public class VisitResource {
    * Cancellation of a request for visit.
    * 
    * @param request the request
-   * @param id the request visit's id
+   * @param idVisit the request visit's id
    * @return true if OK
    */
   @POST
