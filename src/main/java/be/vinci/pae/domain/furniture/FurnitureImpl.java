@@ -2,16 +2,13 @@ package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-
 import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
-
 import com.fasterxml.jackson.annotation.JsonView;
-
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.views.Views;
 
-public class FurnitureImpl implements Furniture {
+public class FurnitureImpl implements FurnitureDTO {
 
   @JsonView(Views.Public.class)
   private int id;
@@ -45,7 +42,6 @@ public class FurnitureImpl implements Furniture {
   private int favouritePhotoId;
   @JsonView(Views.Public.class)
   private byte[] favouritePhoto;
-
 
   public int getId() {
     return id;
@@ -131,12 +127,6 @@ public class FurnitureImpl implements Furniture {
       case "vendu":
         this.condition = Condition.VENDU;
         break;
-      case "emporté":
-        this.condition = Condition.EMPORTE;
-        break;
-      case "livré":
-        this.condition = Condition.LIVRE;
-        break;
       case "réservé":
         this.condition = Condition.RESERVE;
         break;
@@ -152,25 +142,17 @@ public class FurnitureImpl implements Furniture {
     return description;
   }
 
-
-
   public void setDescription(String description) {
     this.description = description;
   }
-
-
 
   public double getPurchasePrice() {
     return purchasePrice;
   }
 
-
-
   public void setPurchasePrice(double purchasePrice) {
     this.purchasePrice = purchasePrice;
   }
-
-
 
   public LocalDateTime getPickUpDate() {
     return pickUpDate;
@@ -234,7 +216,5 @@ public class FurnitureImpl implements Furniture {
         + ", favouritePhotoId=" + favouritePhotoId + ", favouritePhoto="
         + Arrays.toString(favouritePhoto) + "]";
   }
-
-
 
 }

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import be.vinci.pae.domain.address.Address;
-import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -24,7 +23,6 @@ import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
 public class FurnitureDAOImpl implements FurnitureDAO {
-
 
   @Inject
   private DalBackendServices dalBackendService;
@@ -127,9 +125,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return option;
   }
 
-
   @Override
-  public void setFurnitureCondition(Furniture furniture, Condition condition) {
+  public void setFurnitureCondition(FurnitureDTO furniture, Condition condition) {
     try {
       String sql = "UPDATE pae.furnitures SET condition = ? WHERE id_furniture = ? ;";
       ps = dalBackendService.getPreparedStatement(sql);
@@ -140,7 +137,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       throw new FatalException(e);
     }
   }
-
 
   @Override
   public void introduceOption(int optionTerm, int idUser, int idFurniture) {
@@ -162,7 +158,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   @Override
   public void indicateFurnitureUnderOption(int id) {
-    Furniture furniture = (Furniture) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     setFurnitureCondition(furniture, Condition.SOUS_OPTION);
   }
 
@@ -207,17 +203,16 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return option;
   }
 
-
   @Override
   public void indicateSentToWorkshop(int id) {
-    Furniture furniture = (Furniture) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     setFurnitureCondition(furniture, Condition.EN_RESTAURATION);
 
   }
 
   @Override
   public void indicateDropInStore(int id) {
-    Furniture furniture = (Furniture) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     try {
       String sql = "UPDATE pae.furnitures SET condition = ?, store_deposit = ?, "
           + "deposit_date = ? WHERE id_furniture = ? ;";
@@ -236,7 +231,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void indicateOfferedForSale(Furniture furniture, double price) {
+  public void indicateOfferedForSale(FurnitureDTO furniture, double price) {
     try {
       String sql = "UPDATE pae.furnitures SET condition = ?, offered_selling_price = ? "
           + "WHERE id_furniture = ? ;";
@@ -252,7 +247,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   @Override
   public void withdrawSale(int id) {
-    Furniture furniture = (Furniture) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     setFurnitureCondition(furniture, Condition.RETIRE);
 
   }
@@ -300,7 +295,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
     return list;
   }
-
 
   @Override
   public void introduceRequestForVisite(String timeSlot, Address address,
@@ -372,30 +366,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
         ps.setString(1, Condition.EN_VENTE.toString());
         ps.setString(2, Condition.SOUS_OPTION.toString());
         ps.setString(3, State.EN_COURS.toString());
-        ps.executeUpdate();
-        System.out.println(ps.executeUpdate() + " / =?= / " + val);
-      }
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
-  @Override
-  public void cancelOvertimedReservations() {
-    try {
-      String sql = "UPDATE pae.sales SET condition = 'annulé'" + " WHERE condition = 'en cours'"
-          + " AND (date_of_sale + interval '1' day + interval '1' year) < NOW();";
-
-      ps = dalBackendService.getPreparedStatement(sql);
-      int val = ps.executeUpdate();
-      if (val > 0) {
-        sql = "UPDATE pae.furnitures" + " SET condition = ?"
-            + " WHERE condition = ? AND id_furniture NOT IN "
-            + " (SELECT s.id_furniture FROM pae.sales s WHERE s.condition = 'en cours');";
-
-        ps = dalBackendService.getPreparedStatement(sql);
-        ps.setString(1, Condition.EN_VENTE.toString());
-        ps.setString(2, Condition.RESERVE.toString());
         ps.executeUpdate();
         System.out.println(ps.executeUpdate() + " / =?= / " + val);
       }
