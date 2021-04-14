@@ -68,7 +68,8 @@ public class FurnitureResource {
    * Get a list of furnitures for the logged users.
    * 
    * @param request the request
-   * @return a list of furniture adapted if it's the user is a client or an admin, wrapped in a Response
+   * @return a list of furniture adapted if it's the user is a client or an admin, wrapped in a
+   *         Response
    */
   @GET
   @Authorize

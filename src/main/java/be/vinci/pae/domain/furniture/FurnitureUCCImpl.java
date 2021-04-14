@@ -53,8 +53,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   /**
-   * Initiation of the Options and Reservations management. The scheduledTask will be launched 1 sec after the loading and then once a day at 00:05.
+   * Initiation of the Options and Reservations management. The scheduledTask will be launched 1 sec
+   * after the loading and then once a day at 00:05.
    */
+
   private void scheduledTasksInit() {
     TimerTask task = new TimerTask() {
       public void run() {

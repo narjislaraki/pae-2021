@@ -51,8 +51,8 @@ public class Authentication {
 
 
   /**
-   * This method is used to attempt to log a client in. Valid email and password are required to be able to send a token and a response 200.
-   * 
+   * This method is used to attempt to log a client in. 
+   * Valid email and password are required to be able to send a token and a response 200.
    * @param json post received from the client
    * @return Response 401, 412 if KO; 200 and credentials + token if OK
    */
