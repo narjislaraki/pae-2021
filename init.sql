@@ -1,4 +1,4 @@
--- Last modification date : 04/03/2021 --
+-- Last modification date : 14/04/2021 --
 DROP SCHEMA IF EXISTS pae CASCADE;
 CREATE SCHEMA pae;
 
@@ -81,9 +81,8 @@ CREATE TABLE pae.sales(
 	id_sales SERIAL PRIMARY KEY,
 	selling_price DOUBLE PRECISION NOT NULL,
 	id_furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL,
-	buyer INTEGER REFERENCES pae.users(id_user) NOT NULL,
-	date_of_sale TIMESTAMP NOT NULL,
-	condition VARCHAR(8) NOT NULL
+	id_buyer INTEGER REFERENCES pae.users(id_user),
+	date_of_sale TIMESTAMP NOT NULL
 );
 --INSERT INTO pae.addresses VALUES(default, 'rue des sentiers', '7', 1, 'Bruxelles', '1300', 'Belgique');
 -- the mdp of the 2 users is 1234 --

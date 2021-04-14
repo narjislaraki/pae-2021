@@ -3,6 +3,7 @@ import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
+import PrintMessage from "./PrintMessage.js";
 const API_BASE_URL = "api/furnitures/";
 
 let smallImg1 = document.getElementById("small-img1");
@@ -32,7 +33,7 @@ async function FurniturePage(id) {
             console.error("FurniturePage::get furniture", err);
             PrintError(err);
         }
-    } 
+    }
     else {
         try {
             furniture = await callAPI(
@@ -47,7 +48,7 @@ async function FurniturePage(id) {
     }
 
     /****** nbOfDays ******/
-    
+
     if (currentUser) {
         let idFurniture = furniture.id;
         try {
@@ -101,11 +102,12 @@ async function FurniturePage(id) {
                         <div id="furniture-price">${furniture.offeredSellingPrice == 0 ? "N/A" : furniture.offeredSellingPrice}</div>
                         <div class="currency">euro</div>
                     </div>
+                    <div id="selling"></div>
                 </div>
         `;
     if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
         if (furniture.condition == "SOUS_OPTION") {
-         
+
             if (option.idUser != currentUser.id) {
                 page.innerHTML += `<div class="option-days condensed small-caps">Ce meuble est sous option, repassez plus tard</div>`;
             } else {
@@ -160,6 +162,7 @@ async function FurniturePage(id) {
                     <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
                     <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
                     <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
                 </div>
             </div>
         `;
@@ -174,6 +177,7 @@ async function FurniturePage(id) {
                     <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
                     <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
                     <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
                 </div>
             </div>
         `;
@@ -190,10 +194,56 @@ async function FurniturePage(id) {
                     <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
                     <button id="buttonEnVente" class="dropdown-item" type="button">En vente</button>
                     <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
                 </div>
             </div>
         `;
         } else if (furniture.condition == "EN_VENTE") {
+            let divSelling = document.getElementById("selling");
+            let clients;
+            try {
+                clients = await callAPI(
+                    "/api/users/validatedList",
+                    "GET",
+                    userData.token,
+                    undefined);
+            } catch (err) {
+                console.error("FurniturePage::get listClients", err);
+                PrintError(err);
+            }
+
+            divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn-dark" id="sell" type="button">Vendre</button>
+            <div class="hover_bkgr_fricc" id="popupSell" >
+                <span class="helper"></span>
+                <div>
+                    <div class="popupCloseButton" id="closeBtnPop">
+                        &times;
+                    </div>
+                    <h2>Vendre</h2>
+                    <div>
+                        <span class="titre">Prix indiqué: </span> ${furniture.offeredSellingPrice}<br>
+                        <div id="sellingPrice" style="display: none;" contenteditable="true"> ${furniture.offeredSellingPrice} </div>
+                        <h4>Client: </h4>
+                        <datalist id="clients-list">
+                        </datalist>
+                        <input id="input-client" list="clients-list">
+                        <h4>Vente anonyme ? <input type="checkbox" id="unknownBuyerSell"> </h4><br>
+                        <div class="container">
+                            <div class="row">
+                                <button class="btn btn-outline-success col-6 confirmSellBtn" id="confirmSellBtn" " type="submit">Confirmer</button>
+                                <button class="btn btn-outline-danger col-6 cancelSellBtn" id="cancelSellBtn" type="submit">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            let dataListClient = document.getElementById("clients-list");
+            clients.map((element) => {
+                dataListClient.innerHTML +=
+                    `<option data-role="${element.role}" data-userId="${element.id}" value="${element.username}">${element.role}</option>`;
+            })
+
             menuDeroulant = `
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -204,6 +254,7 @@ async function FurniturePage(id) {
                     <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
                     <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
                     <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
                 </div>
             </div>
         `;
@@ -225,6 +276,7 @@ async function FurniturePage(id) {
                     <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
                     <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
                     <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
                 </div>
             </div>
         `;
@@ -239,9 +291,25 @@ async function FurniturePage(id) {
                     <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
                     <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
                     <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
                 </div>
             </div>
         `;
+        } else if (furniture.condition == "VENDU") {
+            menuDeroulant = `
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ${furniture.condition}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                    <button id="buttonVendu" class="dropdown-item" type="button">Vendu</button>
+                </div>
+            </div>
+         `;
         }
         page.innerHTML += menuDeroulant;
         let buttonEnRestauration = document.getElementById("buttonEnRestauration");
@@ -258,11 +326,108 @@ async function FurniturePage(id) {
         } catch (err) {
 
         }
+        if (furniture.condition == "EN_VENTE") {
+            let sellingBtn = document.getElementById("sell");
+            let btnPopup = document.getElementById("closeBtnPop");
+            let inputClient = document.getElementById("input-client");
+            let cancelSellBtn = document.getElementById("cancelSellBtn");
+            let confirmSellBtn = document.getElementById("confirmSellBtn");
+            let sellingAnonCheck = document.getElementById("unknownBuyerSell");
+            sellingBtn.addEventListener("click", onClickSell);
+            inputClient.addEventListener("input", onClientSelection);
+            btnPopup.addEventListener("click", onCloseSell);
+            cancelSellBtn.addEventListener("click", onCloseSell);
+            confirmSellBtn.addEventListener("click", onSell);
+            sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
+        }
     }
 };
 
 
+const onCheckBtnAnon = () => {
+    let btnAnon = document.getElementById("input-client");
 
+    if (btnAnon.disabled == true) {
+        btnAnon.disabled = false;
+    }
+    else {
+        btnAnon.disabled = true;
+    }
+}
+
+const onClickSell = () => {
+    document.getElementById("popupSell").style.display = "block";
+}
+
+const onCloseSell = () => {
+    document.getElementById("popupSell").style.display = "none";
+}
+
+const onSell = async () => {
+    let inputClient = document.getElementById("input-client").value;
+    let data = document.querySelector("#clients-list option[value='" + inputClient + "']");
+
+    let sale = {
+        idFurniture: furniture.id,
+        sellingPrice: furniture.offeredSellingPrice
+    }
+    // si c'est pas disabled, et qu'il y a autre chose dans le truc de client -> KO
+    // sinon si c'est disabled, on gère client anon
+    //sinon client
+
+    if (document.getElementById("input-client").disabled == false && !data) {
+        let err = {
+            message: "L'utilisateur est invalide"
+        }
+        PrintError(err);
+        return;
+    }
+    else if (document.getElementById("input-client").disabled == false) {
+        if (data.dataset.role == "ANTIQUAIRE") {
+            sale.sellingPrice = parseFloat(document.getElementById("sellingPrice").textContent);
+        }
+        sale.idBuyer = parseInt(data.dataset.userid);
+    }
+
+    console.log(sale.sellingPrice)
+    if (isNaN(sale.sellingPrice)) {
+        let err = {
+            message: "Le prix est invalide"
+        }
+        PrintError(err);
+        return;
+    }
+
+    try {
+        const registeredSale = await callAPI(
+            API_BASE_URL + "sale",
+            "POST",
+            userData.token,
+            sale
+        );
+    } catch (err) {
+        console.error("FurniturePage::onSell", err);
+        PrintError(err);
+    }
+    await FurniturePage(furniture.id);
+    PrintMessage("L'opération s'est déroulée avec succès");
+}
+
+
+
+const onClientSelection = () => {
+    let inputClient = document.getElementById("input-client").value;
+    if (!document.querySelector("#clients-list option[value='" + inputClient + "']")) return;
+    let roleClient = document.querySelector("#clients-list option[value='" + inputClient + "']").dataset.role;
+    let divPrice = document.getElementById("sellingPrice");
+
+    if (roleClient == "ANTIQUAIRE") {
+        divPrice.style.display = "block";
+    }
+    else {
+        divPrice.style.display = "none";
+    }
+}
 
 const onWorkShop = async () => {
     let id = furniture.id;

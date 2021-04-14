@@ -34,68 +34,88 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/users")
 public class UserResource {
 
-  private final ObjectMapper jsonMapper = new ObjectMapper();
+	private final ObjectMapper jsonMapper = new ObjectMapper();
 
-  @Inject
-  private UserUCC userUCC;
+	@Inject
+	private UserUCC userUCC;
 
-  public UserResource() {
-    jsonMapper.findAndRegisterModules();
-    jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-  }
+	public UserResource() {
+		jsonMapper.findAndRegisterModules();
+		jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+	}
 
-  /**
-   * Get a list of unvalidated users.
-   * 
-   * @param request the request
-   * @return a list of unvalidated users wrapped in a Response
-   */
-  @GET
-  @Path("unvalidatedList")
-  @AdminAuthorize
-  public Response getListOfUnvalidatedUsers(@Context ContainerRequest request) {
-    List<UserDTO> list = userUCC.getUnvalidatedUsers();
+	/**
+	 * Get a list of unvalidated users.
+	 * 
+	 * @param request the request
+	 * @return a list of unvalidated users wrapped in a Response
+	 */
+	@GET
+	@Path("unvalidatedList")
+	@AdminAuthorize
+	public Response getListOfUnvalidatedUsers(@Context ContainerRequest request) {
+		List<UserDTO> list = userUCC.getUnvalidatedUsers();
 
-    String r = null;
-    try {
-      r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
-    } catch (JsonProcessingException e) {
-      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
-    }
-    return responseOkWithEntity(r);
-  }
+		String r = null;
+		try {
+			r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+		} catch (JsonProcessingException e) {
+			return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+		}
+		return responseOkWithEntity(r);
+	}
 
-  /**
-   * Validation of a user.
-   * 
-   * @param request the request
-   * @param id the user's id
-   * @return true if OK
-   */
-  @POST
-  @Path("{id}/accept")
-  @AdminAuthorize
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id,
-      JsonNode json) {
-    String role = json.get("role").asText();
-    return userUCC.acceptUser(id, role);
-  }
+	/**
+	 * Get a list of validated users.
+	 * 
+	 * @param request the request
+	 * @return a list of validated users wrapped in a Response
+	 */
+	@GET
+	@Path("validatedList")
+	@AdminAuthorize
+	public Response getListOfUsers(@Context ContainerRequest request) {
+		List<UserDTO> list = userUCC.getValidatedUsers();
 
-  /**
-   * Deletion of a user.
-   * 
-   * @param request the request
-   * @param id the id user's id
-   * @return true if OK, false if nKO
-   */
-  @DELETE
-  @Path("{id}")
-  @AdminAuthorize
-  @Produces(MediaType.APPLICATION_JSON)
-  public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
-    return userUCC.deleteUser(id);
-  }
+		String r = null;
+		try {
+			r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+		} catch (JsonProcessingException e) {
+			return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+		}
+		return responseOkWithEntity(r);
+	}
+
+	/**
+	 * Validation of a user.
+	 * 
+	 * @param request the request
+	 * @param id      the user's id
+	 * @return true if OK
+	 */
+	@POST
+	@Path("{id}/accept")
+	@AdminAuthorize
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean acceptUser(@Context ContainerRequest request, @PathParam("id") int id, JsonNode json) {
+		String role = json.get("role").asText();
+		return userUCC.acceptUser(id, role);
+	}
+
+	/**
+	 * Deletion of a user.
+	 * 
+	 * @param request the request
+	 * @param id      the id user's id
+	 * @return true if OK, false if nKO
+	 */
+	@DELETE
+	@Path("{id}")
+	@AdminAuthorize
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
+		return userUCC.deleteUser(id);
+	}
 
 }

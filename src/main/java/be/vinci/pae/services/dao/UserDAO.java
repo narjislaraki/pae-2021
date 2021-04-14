@@ -7,28 +7,30 @@ import be.vinci.pae.domain.user.UserDTO;
 
 public interface UserDAO {
 
-  UserDTO getUserFromEmail(String email);
+	UserDTO getUserFromEmail(String email);
 
-  UserDTO getUserFromUsername(String username);
+	UserDTO getUserFromUsername(String username);
 
-  UserDTO getUserFromId(int id);
+	UserDTO getUserFromId(int id);
 
-  void addUser(UserDTO user);
+	void addUser(UserDTO user);
 
-  void setRole(int id, String role);
+	void setRole(int id, String role);
 
-  boolean deleteUser(int id);
+	boolean deleteUser(int id);
 
-  boolean acceptUser(int id, String role);
+	boolean acceptUser(int id, String role);
 
-  List<UserDTO> getUnvalidatedUsers();
+	List<UserDTO> getUnvalidatedUsers();
 
-  /**
-   * Method to set a user from a resultset.
-   * 
-   * @param rs the resultset
-   * @param user a null user
-   * @return a userDTO
-   */
-  UserDTO setUser(ResultSet rs, UserDTO user);
+	/**
+	 * Method to set a user from a resultset.
+	 * 
+	 * @param rs   the resultset
+	 * @param user a null user
+	 * @return a userDTO
+	 */
+	UserDTO setUser(ResultSet rs, UserDTO user);
+
+	List<UserDTO> getValidatedUsers();
 }
