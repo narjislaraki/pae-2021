@@ -4,17 +4,17 @@ import java.util.List;
 
 public interface UserUCC {
 
-	UserDTO connection(String email, String password);
+  UserDTO connection(String email, String password);
 
-	boolean registration(UserDTO user);
+  boolean registration(UserDTO user);
 
-	boolean acceptUser(int id, String role);
+  boolean acceptUser(int id, String role);
 
-	boolean deleteUser(int id);
+  boolean deleteUser(int id);
 
-	List<UserDTO> getUnvalidatedUsers();
+  List<UserDTO> getUnvalidatedUsers();
 
-	UserDTO getUserFromId(int id);
+  UserDTO getUserFromId(int id);
 
-	List<UserDTO> getValidatedUsers();
+  List<UserDTO> getValidatedUsers();
 }
