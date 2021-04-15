@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -69,7 +70,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    */
   @Override
   public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
-    int number = -1;
+    // TODO on avait -1 mais 0 semble logique si aucune option n'existe.
+    // sinon, un user valide sur un meuble valide sans aucune option aura -1 comme réponse.
+    int number = 0;
     try {
       String sql =
           "SELECT SUM(option_term) FROM pae.options WHERE id_furniture = ? AND id_user = ?";
