@@ -143,7 +143,6 @@ public class ObjectDistributor {
     furniture.setDepositDate(LocalDateTime.now());
     furniture.setDescription("meuble");
     furniture.setId(1);
-    furniture.setPurchasePrice(200);
     // TODO to complete with the tests
     return furniture;
   }
