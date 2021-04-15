@@ -693,13 +693,12 @@ footer{
     font-size: 24px;
 }
 
-/*
 .furniture-container{
     margin-left: 10%;
 }
 .furniture-options{
     margin-left: 10%;
-}*/
+}
 
 
 
@@ -986,7 +985,6 @@ footer{
     width:100%;
     z-index:10000;
     overflow-y: scroll;
-    
 }
 .hover_bkgr_fricc .helper{
     display:inline-block;

@@ -101,8 +101,9 @@ async function FurniturePage(id) {
                     <div class="furniture-price-inline">
                         <div id="furniture-price">${furniture.offeredSellingPrice == 0 ? "N/A" : furniture.offeredSellingPrice}</div>
                         <div class="currency">euro</div>
-                    </div>
-                    <div id="selling"></div>
+                        <br>
+                        <div id="sellingDiv"></div>
+                    </div> 
                 </div>
         `;
     if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
@@ -114,9 +115,9 @@ async function FurniturePage(id) {
                 page.innerHTML += `
                 <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
                 <div class="option-days-below">
-                <p>Raison de l'annulation</p>
-                <input type="text" id="cancelOption">
-                <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+                    <p>Raison de l'annulation</p>
+                    <input type="text" id="cancelOption">
+                    <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
                 </div>
                 `;
                 let cancelOptionBtn = document.getElementById("cancelOptionBtn");
@@ -131,14 +132,14 @@ async function FurniturePage(id) {
                     page.innerHTML += `
                     <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>`;
                 }
-                page.innerHTML += `<div>
-                <p>Durée de l'option</p>
-                <div class="plus-minus">
+                page.innerHTML += `
+                <div>
+                    <p>Durée de l'option</p>
+                    <div class="plus-minus">
                             <button class="btn minus-btn disabled" type="button">-</button>
                             <input type="text" id="optionTerm" value="1" readonly="readonly">
                             <button class="btn plus-btn" type="button">+</button>
-                        </div>
-
+                    </div>
                 <button class="btn-dark" id="introduceOptionBtn">Introduire une option</button>
                 </div>`;
                 //option counter
@@ -199,7 +200,7 @@ async function FurniturePage(id) {
             </div>
         `;
         } else if (furniture.condition == "EN_VENTE") {
-            let divSelling = document.getElementById("selling");
+            let divSelling = document.getElementById("sellingDiv");
             let clients;
             try {
                 clients = await callAPI(
@@ -212,7 +213,8 @@ async function FurniturePage(id) {
                 PrintError(err);
             }
 
-            divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn-dark" id="sell" type="button">Vendre</button>
+            divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      Vendre      </button>`
+            document.getElementById("popups").innerHTML =`
             <div class="hover_bkgr_fricc" id="popupSell" >
                 <span class="helper"></span>
                 <div>
