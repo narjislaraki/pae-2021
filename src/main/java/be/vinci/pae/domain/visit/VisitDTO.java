@@ -1,7 +1,9 @@
 package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.furniture.Furniture;
 import be.vinci.pae.domain.user.User;
 
 public interface VisitDTO {
@@ -55,5 +57,9 @@ public interface VisitDTO {
   LocalDateTime getScheduledDateTime();
 
   void setScheduledDateTime(LocalDateTime scheduledDateTime);
+
+  ArrayList<Furniture> getFurnitureList();
+
+  void setFurnitureList(ArrayList<Furniture> furnitureList);
 
 }

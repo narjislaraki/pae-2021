@@ -33,10 +33,11 @@ public class VisitUCCImpl implements VisitUCC {
   }
 
   @Override
-  public boolean submitRequestOfVisit(VisitDTO visit, int idClient, int idWarehouseAddress) {
+  public boolean submitRequestOfVisit(VisitDTO visit) {
     dalServices.getBizzTransaction(false);
     visit.getWarehouseAddress().setId(addressDAO.addAddress(visit.getWarehouseAddress()));
-    visitDAO.submitRequestOfVisit(visit, idClient, idWarehouseAddress);
+    visit.setVisitCondition("en attente");
+    visitDAO.submitRequestOfVisit(visit);
     dalServices.commitBizzTransaction();
     return true;
   }

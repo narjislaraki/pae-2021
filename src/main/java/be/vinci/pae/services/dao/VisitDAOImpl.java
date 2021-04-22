@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.visit.PhotoDTO;
+import be.vinci.pae.domain.visit.PhotoFactory;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
 import be.vinci.pae.domain.visit.VisitFactory;
@@ -28,6 +30,9 @@ public class VisitDAOImpl implements VisitDAO {
 
   @Inject
   private AddressDAO addressDAO;
+
+  @Inject
+  private PhotoFactory photoFactory;
 
   @Inject
   private UserDAO userDAO;
@@ -84,14 +89,14 @@ public class VisitDAOImpl implements VisitDAO {
   }
 
   @Override
-  public void submitRequestOfVisit(VisitDTO visit, int idClient, int idWarehouseAddress) {
+  public void submitRequestOfVisit(VisitDTO visit) {
     try {
       String sql = "INSERT INTO pae.requests_for_visits VALUES (default, ?, ?, null, null, ?, ?);";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, visit.getTimeSlot());
       ps.setString(2, VisitCondition.EN_ATTENTE.toString());
-      ps.setInt(3, idWarehouseAddress);
-      ps.setInt(4, idClient);
+      ps.setInt(3, visit.getWarehouseAddressId());
+      ps.setInt(4, visit.getIdClient());
       ps.execute();
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -147,6 +152,26 @@ public class VisitDAOImpl implements VisitDAO {
       throw new FatalException(e);
     }
     return visit;
+  }
+
+  private int addPhoto(PhotoDTO photo) {
+    int key = 0;
+    try {
+      String sql = "INSERT INTO pae.photos VALUES (default, ?, ?, ?, ?);";
+      ps = dalBackendServices.getPreparedStatement(sql);
+      ps.setBytes(1, photo.getPhoto());
+      ps.setBoolean(2, photo.isVisible());
+      ps.setBoolean(3, photo.isAClientPhoto());
+      ps.setInt(4, photo.getIdFurniture());
+      ps.execute();
+      ResultSet rs = ps.getGeneratedKeys();
+      if (rs.next()) {
+        key = rs.getInt(1);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return key;
   }
 
 

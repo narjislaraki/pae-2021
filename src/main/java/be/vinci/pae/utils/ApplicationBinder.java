@@ -18,6 +18,8 @@ import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.domain.user.UserUCCImpl;
+import be.vinci.pae.domain.visit.PhotoFactory;
+import be.vinci.pae.domain.visit.PhotoFactoryImpl;
 import be.vinci.pae.domain.visit.VisitFactory;
 import be.vinci.pae.domain.visit.VisitFactoryImpl;
 import be.vinci.pae.domain.visit.VisitUCC;
@@ -55,6 +57,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(FurnitureFactoryImpl.class).to(FurnitureFactory.class).in(Singleton.class);
     bind(OptionFactoryImpl.class).to(OptionFactory.class).in(Singleton.class);
     bind(TypeOfFurnitureFactoryImpl.class).to(TypeOfFurnitureFactory.class).in(Singleton.class);
+    bind(PhotoFactoryImpl.class).to(PhotoFactory.class).in(Singleton.class);
     bind(VisitFactoryImpl.class).to(VisitFactory.class).in(Singleton.class);
     bind(VisitDAOImpl.class).to(VisitDAO.class).in(Singleton.class);
     bind(VisitUCCImpl.class).to(VisitUCC.class).in(Singleton.class);

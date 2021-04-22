@@ -6,7 +6,7 @@ import PrintMessage from "./PrintMessage.js";
 import { RedirectUrl } from "./Router.js";
 let userData = getUserSessionData;
 let idFurniture = 1;
-let listPhotos = [];
+let mapPhotos = new Map();
 let typesOfFurniture;
 // destructuring assignment
 const Navbar = async () => {
@@ -61,33 +61,35 @@ const Navbar = async () => {
         <div>
             <div class="popupCloseButton" id="popupCloseButtonNavbar">&times;</div>
             <h2>Introduire une demande de visite</h2>
-          <form class="RequestVisitForm">
+          <form id="formRequest" class="RequestVisitForm">
           <div>
-            <h4>Plage horaire : </h4><input type="text" id="timeSlot" placeholder="exemple : le lundi de 18h à 22h" required><br>
+            <h4>Plage horaire *: </h4><input type="text" id="timeSlot" name="timeSlot" placeholder="exemple : le lundi de 18h à 22h" required><br>
             <h4>Adresse : (uniquement si elle est différente de votre addresse)</h4>
           </div>
           <div>
-            <input type="text" class="form-control input-card" id="street" placeholder="Rue" required>
+            <input type="text" class="form-control input-card" id="street" name="street" placeholder="Rue">
 
-            <input type="text" class="form-control input-card" id="number" placeholder="Numéro" required>
+            <input type="text" class="form-control input-card" id="number" name="number" placeholder="Numéro">
                   
-            <input type="text" class="form-control input-card" id="unitnumber" placeholder="Boite">
+            <input type="text" class="form-control input-card" id="unitnumber" name="unitnumber" placeholder="Boite">
                   
-            <input type="text" class="form-control input-card" id="postcode" placeholder="Code Postal" required>
+            <input type="text" class="form-control input-card" id="postcode" name="postcode" placeholder="Code Postal">
                   
-            <input type="text" class="form-control input-card" id="city" placeholder="Commune" required>
+            <input type="text" class="form-control input-card" id="city" name="city" placeholder="Commune">
                   
-            <input type="text" class="form-control input-card" id="country" placeholder="Pays" required>
+            <input type="text" class="form-control input-card" id="country" name="country" placeholder="Pays">
               
           </div><br>
-          <h4>Meuble(s) : </h4><br>
+          <h4>Meuble(s) *: </h4><br>
             <div id="eachFurniture">
-              ${idFurniture}. <textarea class="description" id="furniture${idFurniture}"></textarea> 
-              <label for="files${idFurniture}" class="bi bi-upload"></label>
-              <input id="files${idFurniture}" class="images" type="file" multiple>
-              <div id="typeFurniture" class="dropdown">
-                <label for="type">Type du meuble : </label>
-                <div id="tousLesTypes${idFurniture}"></div>
+              <div>
+                ${idFurniture}. <textarea class="description" id="furniture${idFurniture}" name="furniture${idFurniture}" required></textarea> 
+                <label for="files${idFurniture}" class="bi bi-upload"></label>
+                <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" multiple required>
+                <div id="typeFurniture" class="dropdown">
+                  <label for="type">Type du meuble : </label>
+                  <div id="tousLesTypes${idFurniture}"></div>
+                </div>
               </div>
             </div>
          
@@ -96,7 +98,7 @@ const Navbar = async () => {
           
           <br>
           <button class="btn btn-outline-success" id="introduceBtn" name="introduceBtn" type="submit">Confirmer</button>
-          <button class="btn btn-outline-danger" id="cancelBtn" name="cancelBtn" type="submit">Annuler</button>
+          <button class="btn btn-outline-danger" id="cancelBtn" name="cancelBtn" type="button">Annuler</button>
           </form>
 
           <span class="btnClose"></span>
@@ -106,12 +108,17 @@ const Navbar = async () => {
     navBar.innerHTML = nb;
 
     let introduceBtn = document.getElementById("introduceBtn");
-    introduceBtn.addEventListener("click", onIntroduceRequest);
+    //introduceBtn.addEventListener("click", onIntroduceRequest);
+    let formRequest = document.getElementById("formRequest");
+    formRequest.addEventListener("submit", onIntroduceRequest);
     let cancelBtn = document.getElementById("cancelBtn");
     cancelBtn.addEventListener("click", onCloseVisit);
     document.getElementById("popupCloseButtonNavbar").addEventListener("click", onCloseVisit);
-    let inputImage = document.getElementById("files"+idFurniture);
-    inputImage.addEventListener("change", encodeImagetoBase64);
+    
+    //inputImage = document.getElementById("files"+idFurniture);
+    //console.log(document.getElementById("files"+idFurniture).files);
+    //inputImage.addEventListener("change", encodeImagetoBase64(document.getElementById("files"+idFurniture).files));
+
     let btnPlus = document.getElementById("btnPlus");
     btnPlus.addEventListener("click", onAddFurniture);
 
@@ -179,6 +186,7 @@ const Navbar = async () => {
 
 };
 
+
 const onFurnitureListPage = (e) => {
   e.preventDefault();
   RedirectUrl("/furnitures");
@@ -213,7 +221,7 @@ const onCloseVisit = (e) => {
 
 
 const onTypesOfFurniture = (data) => {
-  let eachType = `<select name="type" id="type+${idFurniture}">`;
+  let eachType = `<select name="type${idFurniture}" id="type${idFurniture}" required>`;
   eachType += data
     .map((type) =>
       `<option value="${type.id}">${type.label}</option>`
@@ -224,56 +232,83 @@ const onTypesOfFurniture = (data) => {
 }
 
 
-function encodeImagetoBase64(element) {
-  var file = element.files[0];
-  var reader = new FileReader();
-  reader.onloadend = function () {
-      listPhotos.push(reader.result);
+function encodeFile(file) {
+  return new Promise((resolve, reject) => {
+    var fileReader = new FileReader();
+    fileReader.onload = function(fileLoadedEvent) {
+      let base64 = fileLoadedEvent.target.result;
+      resolve(base64);
+    }
+    fileReader.readAsDataURL(file)
+  });
+}
+
+async function encodeFiles(files) { 
+  const returnedFiles = {}
+  if (files.length > 0) {
+    for(let i = 0; i < files.length; i++) {
+      returnedFiles[i] = await encodeFile(files[i])
+    }
   }
-  reader.readAsDataURL(file);
+  return returnedFiles; 
 }
 
 const onAddFurniture = (e) => {
   idFurniture++;
+  console.log(idFurniture-1);
   let eachFurniture = document.getElementById("eachFurniture");
-  eachFurniture.innerHTML += `<br><br>
-    ${idFurniture}. <textarea class="description" id="furniture${idFurniture}"></textarea> 
-    <label for="files${idFurniture}" class="bi bi-upload"></label>
-    <input id="files${idFurniture}" class="images" type="file" multiple>
-    <div id="typeFurniture${idFurniture}" class="dropdown">
-      <label for="type">Type du meuble : </label>
-      <div id="tousLesTypes${idFurniture}"></div>
-    </div>
+  let newFurniture= document.createElement('div');
+  newFurniture.innerHTML = 
+  `<br><br>
+    <div>
+      ${idFurniture}. <textarea class="description" id="furniture${idFurniture}" name="furniture${idFurniture}"></textarea> 
+      <label for="files${idFurniture}" class="bi bi-upload"></label>
+      <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" multiple>
+      <div id="typeFurniture${idFurniture}" class="dropdown">
+        <label for="type">Type du meuble : </label>
+        <div id="tousLesTypes${idFurniture}"></div>
+      </div>
+    <div>
   `;
+  eachFurniture.appendChild(newFurniture);
   onTypesOfFurniture(typesOfFurniture);
 }
 
 const onIntroduceRequest = async (e) => {
   e.preventDefault();
   
+  /*for (let i = 1; i<= idFurniture; i++){
+    let files = document.getElementById("files"+idFurniture);
+    console.log(files.value);
+    encodeImagetoBase64(files.value, idFurniture)
+  }*/
+  
   let request = {
-    timeSlot: document.getElementById("timeSlot").value,
+    timeSlot: e.target.elements.timeSlot.value,
     warehouseAddress: {
-      street: document.getElementById("street").value,
-      buildingNumber: document.getElementById("number").value,
-      postCode: document.getElementById("postcode").value,
-      country: document.getElementById("country").value,
-      city: document.getElementById("city").value
-    }
+      street: e.target.elements.street.value,
+      buildingNumber: e.target.elements.number.value,
+      postCode: e.target.elements.postcode.value,
+      country: e.target.elements.country.value,
+      city: e.target.elements.city.value,
+      unitNumber: e.target.elements.unitnumber?.value,
+    },
+    furnitures:{},
+
   };
-  
+  console.log(mapPhotos);
   for (let i = 1; i <= idFurniture; i++){
-   
     let furniture = {
-      id: document.getElementById("furniture"+i).value,
-      idTypeOfFurniture: document.getElementById("type"+i).value,
-      listPhotos: listPhotos,
+      id: i,
+      description : e.target.elements['furniture'+i].value,
+      idTypeOfFurniture: e.target.elements['type'+i].value,
+      listPhotos: await encodeFiles(e.target.elements['files'+i].files),
     }
+    request.furnitures[i] = furniture;
   }
+  console.log(request);
   
-  if (document.getElementById("unitnumber").value != "") {
-    request.warehouseAddress.unitNumber = document.getElementById("unitNumber").value;
-  }
+  //en commentaire pour les tests
   try {
     const requestVisit = await callAPI(
       "/api/visits/introduce",
@@ -285,7 +320,6 @@ const onIntroduceRequest = async (e) => {
       RedirectUrl("/");
       PrintMessage("Votre demande de visite a bien été enregistrée. Elle est maintenant en attente de confirmation.");
     }
-
   } catch (err) {
     console.error("Navbar :: onIntroduceRequest", err);
     PrintError(err);
