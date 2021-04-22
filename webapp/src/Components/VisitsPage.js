@@ -5,8 +5,10 @@ import PrintError from "./PrintError";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
-let userData = getUserSessionData();
+let userData;
+
 let VisitsPage = () => {
+    userData = getUserSessionData();
     let menu = `
     <div class="menuAdmin">
         <button class="menuAdminOn" id="visits">Visites</button>
@@ -29,7 +31,7 @@ const onVisits = (e) => {
     RedirectUrl("/visits");
 };
 
-const onAdanvancedSearches = (e) => {
+const onAdvancedSearches = (e) => {
     e.preventDefault();
     console.log("to advancedSearches")
     RedirectUrl("/advancedSearches");
@@ -134,7 +136,7 @@ const onVisitsWaiting = async () => {
     visits.addEventListener("click", onVisits);
 
     let advancedSearches = document.getElementById("advancedSearches");
-    advancedSearches.addEventListener("click", onAdanvancedSearches);
+    advancedSearches.addEventListener("click", onAdvancedSearches);
     
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);

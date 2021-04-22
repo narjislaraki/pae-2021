@@ -693,7 +693,7 @@ footer{
     font-size: 24px;
 }
 
-.furniture-container{
+#furniture-container{
     margin-left: 10%;
 }
 .furniture-options{
@@ -743,9 +743,15 @@ footer{
     text-align: left;
 
     position: absolute;
-    top: 10%;;
+    top: 10%;
     left: 50%;
 }
+#editImage{
+    position: absolute;
+    top: 9.5%;
+    right: 10%;
+}
+
 #furniture-description{
     font-style: normal;
     font-weight: 300;
@@ -768,6 +774,21 @@ footer{
     top: 40%;
     left: 50%;
 }
+#furniture-price{
+    display: inline;
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 56px;
+}
+
+#furniture-edit-buttons {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+}
+
 #furniture-price{
     display: inline;
     font-family: Roboto;

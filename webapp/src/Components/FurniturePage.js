@@ -17,6 +17,14 @@ let userData;
 let nbOfDay;
 let option;
 let menuDeroulant = '';
+
+let typeElem;
+let descElem;
+let priceElem;
+let type;
+let desc;
+let price;
+
 let page = document.querySelector("#page");
 async function FurniturePage(id) {
 
@@ -81,7 +89,7 @@ async function FurniturePage(id) {
     }
 
     page.innerHTML = `
-        <div class="furniture-container">
+        <div id="furniture-container">
                     <div class="furniture-pictures">
                         <div class="furniture-small-images">
                             <img id="small-img1" src="" alt="">
@@ -95,6 +103,7 @@ async function FurniturePage(id) {
                     <div class="condensed small-caps" id="furniture-type">
                         ${furniture.type}
                     </div>
+                    <div id="editImage"></div>
                     <div class="condensed" id="furniture-description">
                         ${furniture.description}
                     </div>
@@ -103,7 +112,8 @@ async function FurniturePage(id) {
                         <div class="currency">euro</div>
                         <br>
                         <div id="sellingDiv"></div>
-                    </div> 
+                    </div>
+                    
                 </div>
         `;
     if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
@@ -152,6 +162,13 @@ async function FurniturePage(id) {
             }
         }
     } else if (currentUser != null && currentUser.role == "ADMIN") {
+        let editIcon = document.createElement("img");
+        editIcon.width = 40;
+        editIcon.height = 40;
+        editIcon.alt = "Edit icon";
+        editIcon.src = "../assets/edit_icon.png";
+        editIcon.id = "editIcon";
+        document.getElementById("editImage").appendChild(editIcon);
         if (furniture.condition == "ACHETE") {
             menuDeroulant = `
             <div class="dropdown">
@@ -314,6 +331,7 @@ async function FurniturePage(id) {
          `;
         }
         page.innerHTML += menuDeroulant;
+
         let buttonEnRestauration = document.getElementById("buttonEnRestauration");
         let buttonMagasin = document.getElementById("buttonMagasin");
         let buttonEnVente = document.getElementById("buttonEnVente");
@@ -322,6 +340,7 @@ async function FurniturePage(id) {
         buttonMagasin.addEventListener("click", onDropOfStore);
         buttonEnVente.addEventListener("click", onOfferedForSale);
         buttonRetire.addEventListener("click", onWithdrawSale)
+        document.getElementById("editIcon").addEventListener("click", onEdit);
         try {
             let cancelOptionBtn = document.getElementById("cancelOptionBtn");
             cancelOptionBtn.addEventListener("click", onCancelOption);
@@ -343,18 +362,64 @@ async function FurniturePage(id) {
             sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
         }
     }
-};
+}
 
+const onEdit = () => {
+    typeElem = document.getElementById("furniture-type");
+    descElem = document.getElementById("furniture-description");
+    priceElem = document.getElementById("furniture-price");
+    type = typeElem.innerText; // TODO getType
+    desc = descElem.innerText;
+    price = priceElem.innerText;
+
+    typeElem.contentEditable = "true";
+    descElem.contentEditable = "true";
+    priceElem.contentEditable = "true";
+    typeElem.style.background = "lightgrey";
+    descElem.style.background = "lightgrey";
+    priceElem.style.background = "lightgrey";
+
+    let buttons = document.createElement("div");
+    buttons.innerHTML = `<button class="btn btn-outline-success col-6 confirmEditBtn" id="confirmEditBtn" " type="submit">Confirmer</button>
+                         <button class="btn btn-outline-danger col-6 cancelEditBtn" id="cancelEditBtn" type="submit">Annuler</button>`
+    buttons.className = "row";
+    buttons.id = "furniture-edit-buttons"
+    document.getElementById("furniture-container").appendChild(buttons);
+
+    document.getElementById("confirmEditBtn").addEventListener("click", onConfirmEditButton);
+    document.getElementById("cancelEditBtn").addEventListener("click", onCancelEditButton);
+}
+
+const onCancelEditButton = () => {
+    typeElem.style.background = "none";
+    descElem.style.background = "none";
+    priceElem.style.background = "none";
+
+    typeElem.contentEditable = "false";
+    descElem.contentEditable = "false";
+    priceElem.contentEditable = "false";
+
+    typeElem.innerText = type;
+    descElem.innerText = desc;
+    priceElem.innerText = price;
+
+    document.getElementById("furniture-container").removeChild(document.getElementById("furniture-edit-buttons"))
+}
+
+const onConfirmEditButton = () => {
+    if (typeElem.innerText === type && descElem.innerText === desc && priceElem.innerText === price) {
+        onCancelEditButton();
+        return;
+    }
+
+    //TODO POST sur meuble pour modifications
+    PrintMessage("Les modifications on été effectuées avec succès")
+}
 
 const onCheckBtnAnon = () => {
     let btnAnon = document.getElementById("input-client");
 
-    if (btnAnon.disabled == true) {
-        btnAnon.disabled = false;
-    }
-    else {
-        btnAnon.disabled = true;
-    }
+    btnAnon.disabled = !btnAnon.disabled;
 }
 
 const onClickSell = () => {
