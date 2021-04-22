@@ -704,10 +704,14 @@ footer{
 
 /*FURNITURE PAGE*/
 
-.furniture-pictures{
-    width: max-content;
+#big-img{
+    max-width: 30%;
+    left: 15%;
+    top: 5%;
+    position: absolute;
 }
-.furniture-small-images img{
+
+#furniture-small-images img{
     object-fit: cover;
     margin: 10px 0;
     width: 40px;
@@ -718,10 +722,10 @@ footer{
     display: block;
     opacity: 0.5;
 }
-.furniture-small-images img:hover{
+#furniture-small-images img:hover{
     opacity: 1;
 }
-.furniture-small-images{
+#furniture-small-images{
     position: absolute;
     left: 10%;
     top: 10%;
@@ -738,11 +742,20 @@ footer{
 
 #star-image {
     position: absolute;
-    width: 7%;
-    height: auto;
-    top:38%;
-    left:36%;
+    width: auto;
+    height: 4%;
+    top: 10.5%;
+    left: 15%;
 }
+
+#eye-image {
+    position: absolute;
+    width: auto;
+    height: 3.5%;
+    top: 11%;
+    left: 18%;
+}
+
 #furniture-type{
     font-weight: 300;
     font-size: 32px;

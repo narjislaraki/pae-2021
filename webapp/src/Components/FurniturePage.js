@@ -7,12 +7,6 @@ import PrintMessage from "./PrintMessage.js";
 
 const API_BASE_URL = "api/furnitures/";
 
-let smallImg1 = document.getElementById("small-img1");
-let smallImg2 = document.getElementById("small-img2");
-let smallImg3 = document.getElementById("small-img3");
-let smallImg4 = document.getElementById("small-img4");
-let smallImg5 = document.getElementById("small-img5");
-
 let furniture;
 let userData;
 let nbOfDay;
@@ -102,14 +96,13 @@ async function FurniturePage(id) {
         }
     }
 
+    console.log(furniture);
+
     page.innerHTML = `
         <div id="furniture-container">
-                    <div class="furniture-pictures">
-                        <div class="furniture-small-images">
-                            
+                    <div id="furniture-pictures">
+                        <div id="furniture-small-images">
                         </div>
-                        <img src="" alt="main-image" id="big-img" class="main-image">
-                        <img src="../assets/fullStar.png" alt="secondary-image" id="star-image">
                     </div>
                     <div class="condensed small-caps" id="furniture-type">
                         ${furniture.type}
@@ -129,7 +122,15 @@ async function FurniturePage(id) {
 
         let smallImages = document.getElementById("furniture-small-images");
         furniturePhotos.map((element) => {
-            smallImages.innerHTML += `<img id="small-img${++nbPhoto}" src="${element.photo}" alt="small img ${nbPhoto}">`;
+            if (nbPhoto == 0) {
+                let image = document.createElement("img");
+                image.src = element.photo;
+                image.alt = "main Furniture image";
+                image.id = "big-img";
+                image.class = "main-image"
+                document.getElementById("furniture-pictures").appendChild(image);
+            }
+            smallImages.innerHTML += `<img id="small-img${++nbPhoto}" src="${element.photo}" alt="small Furniture image">`;
         })
     if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
         if (furniture.condition == "SOUS_OPTION") {
@@ -380,6 +381,9 @@ async function FurniturePage(id) {
 }
 
 const onEdit = () => {
+    document.getElementById("editIcon").style.display = "none";
+
+    /**** Furniture ****/
     typeElem = document.getElementById("furniture-type");
     descElem = document.getElementById("furniture-description");
     priceElem = document.getElementById("furniture-price");
@@ -403,9 +407,18 @@ const onEdit = () => {
 
     document.getElementById("confirmEditBtn").addEventListener("click", onConfirmEditButton);
     document.getElementById("cancelEditBtn").addEventListener("click", onCancelEditButton);
+
+    /**** Photos ****/
+    let div = document.createElement("div");
+    div.innerHTML = `<img src="../assets/star_full.png" alt="secondary image" id="star-image">
+                     <img src="../assets/eye_open.png" alt="visibility" id="eye-image">`
+    div.id = "img-edit"
+    document.getElementById("furniture-pictures").appendChild(div);
+
 }
 
 const onCancelEditButton = () => {
+    document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
     descElem.style.background = "none";
     priceElem.style.background = "none";
@@ -418,7 +431,8 @@ const onCancelEditButton = () => {
     descElem.innerText = desc;
     priceElem.innerText = price;
 
-    document.getElementById("furniture-container").removeChild(document.getElementById("furniture-edit-buttons"))
+    document.getElementById("furniture-container").removeChild(document.getElementById("furniture-edit-buttons"));
+    document.getElementById("furniture-pictures").removeChild(document.getElementById("img-edit"));
 }
 
 const onConfirmEditButton = () => {

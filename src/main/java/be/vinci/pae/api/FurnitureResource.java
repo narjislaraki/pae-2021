@@ -302,6 +302,7 @@ public class FurnitureResource {
   @GET
   @Path("/{idFurniture}/photos")
   @Authorize
+  @Produces(MediaType.APPLICATION_JSON)
   public List<PhotoDTO> getPhotos(@Context ContainerRequest request,
       @PathParam("idFurniture") int idFurniture) {
 
@@ -309,10 +310,21 @@ public class FurnitureResource {
 
     FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
 
+    // Placing the favourite photo first
+    for (PhotoDTO p : list) {
+      if (p.getId() == furniture.getFavouritePhotoId()) {
+        list.remove(p);
+        list.add(0, p);
+      }
+    }
+
     UserDTO user = (UserDTO) request.getProperty("user");
 
-    if (!user.getRole().equals(Role.ADMIN) && user.getId() != furniture.getSellerId()) {
-      list = list.stream().filter(e -> e.isVisible()).collect(Collectors.toList());
+    if (!user.getRole().equals(Role.ADMIN)) {
+      list = list.stream()
+          .filter(
+              e -> e.isVisible() || (user.getId() == furniture.getSellerId() && e.isAClientPhoto()))
+          .collect(Collectors.toList());
     }
     return list;
   }
