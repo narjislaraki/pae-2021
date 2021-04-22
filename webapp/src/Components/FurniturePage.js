@@ -96,8 +96,6 @@ async function FurniturePage(id) {
         }
     }
 
-    console.log(furniture);
-
     page.innerHTML = `
         <div id="furniture-container">
                     <div id="furniture-pictures">
@@ -409,6 +407,7 @@ const onEdit = () => {
     document.getElementById("cancelEditBtn").addEventListener("click", onCancelEditButton);
 
     /**** Photos ****/
+
     let div = document.createElement("div");
     div.innerHTML = `<img src="../assets/star_full.png" alt="secondary image" id="star-image">
                      <img src="../assets/eye_open.png" alt="visibility" id="eye-image">`
@@ -535,7 +534,7 @@ const onWorkShop = async () => {
         console.error("FurniturePage::onWorkShop", err);
         PrintError(err);
     }
-    FurniturePage(id);
+    await FurniturePage(id);
 };
 
 
@@ -552,7 +551,7 @@ const onDropOfStore = async () => {
         console.error("FurniturePage::dropOfStore", err);
         PrintError(err);
     }
-    FurniturePage(id);
+    await FurniturePage(id);
 };
 
 const onOfferedForSale = async () => {
@@ -579,7 +578,7 @@ const onOfferedForSale = async () => {
         console.error("FurniturePage::offeredForSale", err);
         PrintError(err);
     }
-    FurniturePage(id);
+    await FurniturePage(id);
 };
 
 
@@ -596,7 +595,7 @@ const onWithdrawSale = async () => {
         console.error("FurniturePage::onWithdrawSale", err);
         PrintError(err);
     }
-    FurniturePage(id);
+    await FurniturePage(id);
 };
 
 const onCancelOption = async () => {
@@ -623,7 +622,7 @@ const onCancelOption = async () => {
         console.error("FurniturePage::onWithdrawSale", err);
         PrintError(err);
     }
-    FurniturePage(id);
+    await FurniturePage(id);
 };
 
 const onIntroduceOption = async () => {
@@ -643,7 +642,7 @@ const onIntroduceOption = async () => {
         console.error("FurniturePage::onWithdrawSale", err);
         PrintError(err);
     }
-    FurniturePage(id_furniture);
+    await FurniturePage(id_furniture);
 };
 
 

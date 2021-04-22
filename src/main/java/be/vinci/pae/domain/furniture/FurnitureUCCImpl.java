@@ -48,7 +48,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   private void scheduledTasks() {
     dalServices.getBizzTransaction(true);
     furnitureDao.cancelOvertimedOptions();
-    logger.info("Scheduled management of overtimed Options and Reservations just happend");
+    logger.info("Scheduled management of overtimed Options just happend");
     dalServices.stopBizzTransaction();
   }
 

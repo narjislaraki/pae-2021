@@ -78,6 +78,7 @@ async function FurnitureListPage() {
 
 const onFurniture = (e) => {
   let id = e.srcElement.dataset.id;
+  document.getElementById("page").innerHTML = `<div id="ringdiv"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>`
   FurniturePage(id);
 };
 
