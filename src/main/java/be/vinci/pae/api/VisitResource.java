@@ -125,7 +125,7 @@ public class VisitResource {
    * database if this is different from the customer's address. This method adds each furniture and
    * for each furniture, each photo.
    * 
-   * @param request
+   * @param visit the request for visit converted from json
    * @return Response 401 Or 409 if KO; token if OK
    */
   @POST
