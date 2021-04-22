@@ -63,14 +63,14 @@ public class UserUCCTest {
   public void reset() {
     Mockito.reset(userDAO);
 
-    badEmail = UserDistributor.getBadEmail();
-    badPassword = UserDistributor.getBadPassword();
+    badEmail = ObjectDistributor.getBadEmail();
+    badPassword = ObjectDistributor.getBadPassword();
 
-    goodUser = UserDistributor.getGoodValidatedUser();
-    goodPassword = UserDistributor.getGoodPassword();
-    goodEmail = UserDistributor.getGoodEmail();
-    goodUserNotValidated = UserDistributor.getGoodNotValidatedUser();
-    goodEmailNotValidated = UserDistributor.getGoodEmailNotValidated();
+    goodUser = ObjectDistributor.getGoodValidatedUser();
+    goodPassword = ObjectDistributor.getGoodPassword();
+    goodEmail = ObjectDistributor.getGoodEmail();
+    goodUserNotValidated = ObjectDistributor.getGoodNotValidatedUser();
+    goodEmailNotValidated = ObjectDistributor.getGoodEmailNotValidated();
   }
 
   @DisplayName("Test connection with right email and password")
@@ -274,7 +274,7 @@ public class UserUCCTest {
   @DisplayName("Test registering with an already used email and an already used username")
   @Test
   public void registerTest1() {
-    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    UserDTO user = ObjectDistributor.getGoodNotValidatedUser();
     user.setUsername(goodUser.getUsername());
     user.setEmail(goodUser.getEmail());
     Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(goodUser);
@@ -285,7 +285,7 @@ public class UserUCCTest {
   @DisplayName("Test registering with an already used email and a valid username")
   @Test
   public void registerTest2() {
-    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    UserDTO user = ObjectDistributor.getGoodNotValidatedUser();
     user.setUsername("James");
     user.setEmail(goodUser.getEmail());
     Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(goodUser);
@@ -296,7 +296,7 @@ public class UserUCCTest {
   @DisplayName("Test registering with a valid email and an already used username")
   @Test
   public void registerTest3() {
-    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    UserDTO user = ObjectDistributor.getGoodNotValidatedUser();
     user.setUsername(goodUser.getUsername());
     user.setEmail("james@bond.uk");
     Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(null);
@@ -308,7 +308,7 @@ public class UserUCCTest {
   @Test
   public void registerTest4() {
 
-    UserDTO user = UserDistributor.getGoodNotValidatedUser();
+    UserDTO user = ObjectDistributor.getGoodNotValidatedUser();
     Mockito.when(addressDAO.addAddress(user.getAddress())).thenReturn(1);
     Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(null);
     Mockito.when(userDAO.getUserFromUsername(user.getUsername())).thenReturn(null);
