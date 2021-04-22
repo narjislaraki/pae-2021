@@ -18,6 +18,7 @@ import be.vinci.pae.domain.furniture.OptionDTO.State;
 import be.vinci.pae.domain.furniture.OptionFactory;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
+import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
@@ -69,7 +70,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    */
   @Override
   public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
-    int number = -1;
+    // TODO on avait -1 mais 0 semble logique si aucune option n'existe.
+    // sinon, un user valide sur un meuble valide sans aucune option aura -1 comme réponse.
+    int number = 0;
     try {
       String sql =
           "SELECT SUM(option_term) FROM pae.options WHERE id_furniture = ? AND id_user = ?";
@@ -408,6 +411,42 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       throw new FatalException(e);
     }
     return type;
+  }
+
+  @Override
+  public int addFurniture(FurnitureDTO furniture, int idRequestForVisit, int idSeller) {
+    int key = 0;
+    try {
+      String sql =
+          "INSERT INTO pae.furnitures VALUES(default, ?, ?, null, null, null, null, null, ?, ?, ?, null);";
+      ps = dalBackendService.getPreparedStatementWithGeneratedReturn(sql);
+      ps.setString(1, Condition.EN_ATTENTE.toString());
+      ps.setString(2, furniture.getDescription());
+      ps.setInt(3, furniture.getTypeId());
+      ps.setInt(4, idRequestForVisit);
+      ps.setInt(5, idSeller);
+      ps.execute();
+      ResultSet rs = ps.getGeneratedKeys();
+      if (rs.next()) {
+        key = rs.getInt(1);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return key;
+  }
+
+  @Override
+  public void addPhoto(PhotoDTO photo, int idFurniture) {
+    try {
+      String sql = "INSERT INTO pae.photos VALUES (default, ?, false, true, ?);";
+      PreparedStatement ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, photo.getPhoto());
+      ps.setInt(2, idFurniture);
+      ps.execute();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
 }

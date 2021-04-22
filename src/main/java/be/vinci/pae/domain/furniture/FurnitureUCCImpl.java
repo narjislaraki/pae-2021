@@ -4,11 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -207,12 +205,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
-  public void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures) {
-    // TODO Auto-generated method stub
-  }
-
-  @Override
   public FurnitureDTO getFurnitureById(int id) {
     dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
@@ -248,7 +240,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     return list;
   }
 
-  @Override
+
   public boolean addSale(SaleDTO sale) {
     dalServices.getBizzTransaction(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());

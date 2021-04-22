@@ -7,6 +7,7 @@ import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
+import be.vinci.pae.domain.visit.PhotoDTO;
 
 public interface FurnitureDAO {
 
@@ -49,5 +50,9 @@ public interface FurnitureDAO {
   void cancelOvertimedOptions();
 
   List<TypeOfFurnitureDTO> getTypesOfFurnitureList();
+
+  int addFurniture(FurnitureDTO furniture, int idRequestForVisit, int idSeller);
+
+  void addPhoto(PhotoDTO photo, int idFurniture);
 
 }

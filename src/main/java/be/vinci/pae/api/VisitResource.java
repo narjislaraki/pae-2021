@@ -132,6 +132,7 @@ public class VisitResource {
   @Path("introduce")
   // TODO pas fini
   public Response introduceRequestForVisit(VisitDTO visit) {
+    System.out.println(visit);
     if (!checkFieldsIntroduce(visit)) {
       return responseWithStatus(Status.UNAUTHORIZED, "Missing fields");
     }
@@ -145,36 +146,40 @@ public class VisitResource {
           || visit.getWarehouseAddress().getBuildingNumber() == null
           || visit.getWarehouseAddress().getCity() == null
           || visit.getWarehouseAddress().getPostCode() == null
-          || visit.getWarehouseAddress().getCountry() == null || visit.getClient() == null
+          || visit.getWarehouseAddress().getCountry() == null || visit.getIdClient() == 0
           || visit.getTimeSlot().isEmpty() || visit.getWarehouseAddress().getStreet().isEmpty()
           || visit.getWarehouseAddress().getBuildingNumber().isEmpty()
           || visit.getWarehouseAddress().getCity().isEmpty()
           || visit.getWarehouseAddress().getPostCode().isEmpty()
           || visit.getWarehouseAddress().getCountry().isEmpty()) {
+        System.out.println("une autre addresse");
         return false;
       }
     } else {
-      if (visit.getTimeSlot() == null || visit.getClient() == null
+      if (visit.getTimeSlot() == null || visit.getIdClient() == 0
           || visit.getTimeSlot().isEmpty()) {
+        System.out.println("la même adresse");
         return false;
       }
     }
+    System.out.println("je passe ici");
     return true;
   }
 
   private boolean isAnOtherAddress(VisitDTO visit) {
-    if (visit.getWarehouseAddress().getStreet() == null
-        && visit.getWarehouseAddress().getBuildingNumber() == null
-        && visit.getWarehouseAddress().getCity() == null
-        && visit.getWarehouseAddress().getPostCode() == null
-        && visit.getWarehouseAddress().getCountry() == null
-        && visit.getWarehouseAddress().getStreet().isEmpty()
-        && visit.getWarehouseAddress().getBuildingNumber().isEmpty()
-        && visit.getWarehouseAddress().getCity().isEmpty()
-        && visit.getWarehouseAddress().getPostCode().isEmpty()
-        && visit.getWarehouseAddress().getCountry().isEmpty()) {
-      return false;
+    if (/*
+         * visit.getWarehouseAddress().getStreet() != null ||
+         * visit.getWarehouseAddress().getBuildingNumber() != null ||
+         * visit.getWarehouseAddress().getCity() != null ||
+         * visit.getWarehouseAddress().getPostCode() != null ||
+         * visit.getWarehouseAddress().getCountry() != null ||
+         */ !visit.getWarehouseAddress().getStreet().isEmpty()
+        || !visit.getWarehouseAddress().getBuildingNumber().isEmpty()
+        || !visit.getWarehouseAddress().getCity().isEmpty()
+        || !visit.getWarehouseAddress().getPostCode().isEmpty()
+        || !visit.getWarehouseAddress().getCountry().isEmpty()) {
+      return true;
     }
-    return true;
+    return false;
   }
 }

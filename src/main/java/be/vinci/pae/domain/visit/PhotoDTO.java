@@ -1,14 +1,17 @@
 package be.vinci.pae.domain.visit;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(as = PhotoImpl.class)
 public interface PhotoDTO {
 
   int getId();
 
   void setId(int id);
 
-  byte[] getPhoto();
+  String getPhoto();
 
-  void setPhoto(byte[] photo);
+  void setPhoto(String photo);
 
   boolean isVisible();
 
