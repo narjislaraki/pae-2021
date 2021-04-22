@@ -7,7 +7,7 @@ public interface VisitUCC {
 
   List<VisitDTO> getNotConfirmedVisits();
 
-  boolean submitRequestOfVisit(VisitDTO visit, int idClient, int idWarehouseAddress);
+  boolean submitRequestOfVisit(VisitDTO visit);
 
   boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime);
 
