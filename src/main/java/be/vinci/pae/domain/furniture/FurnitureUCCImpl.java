@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
+import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
@@ -252,6 +254,14 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     saleDao.addSale(sale);
     dalServices.commitBizzTransaction();
     return true;
+  }
+
+  @Override
+  public List<PhotoDTO> getFurniturePhotos(int idFurniture) {
+    dalServices.getBizzTransaction(true);
+    List<PhotoDTO> list = furnitureDao.getFurniturePhotos(idFurniture);
+    dalServices.stopBizzTransaction();
+    return list;
   }
 
 }

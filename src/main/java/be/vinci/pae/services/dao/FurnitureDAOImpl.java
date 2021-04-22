@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -19,6 +20,7 @@ import be.vinci.pae.domain.furniture.OptionFactory;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
 import be.vinci.pae.domain.visit.PhotoDTO;
+import be.vinci.pae.domain.visit.PhotoFactory;
 import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
@@ -33,6 +35,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   private OptionFactory optionFactory;
   @Inject
   private TypeOfFurnitureFactory typeOfFurnitureFactory;
+  @Inject
+  private PhotoFactory photoFactory;
 
   PreparedStatement ps;
 
@@ -447,6 +451,32 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+  }
+
+  @Override
+  public List<PhotoDTO> getFurniturePhotos(int idFurniture) {
+    List<PhotoDTO> list = new ArrayList<PhotoDTO>();
+    try {
+      String sql =
+          "SELECT id_photo, photo, is_visible, is_a_client_photo, id_furniture FROM pae.photos WHERE id_furniture = ?;";
+
+      PreparedStatement ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, idFurniture);
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        PhotoDTO p = photoFactory.getPhotoDTO();
+        p.setId(rs.getInt(1));
+        p.setPhoto(rs.getString(2));
+        p.setIdFurniture(idFurniture);
+        p.setIsAClientPhoto(rs.getBoolean(4));
+        p.setVisible(rs.getBoolean(3));
+
+        list.add(p);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
   }
 
 }

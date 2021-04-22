@@ -4,6 +4,7 @@ import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -21,6 +22,7 @@ import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
+import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -297,22 +299,22 @@ public class FurnitureResource {
     return responseOkWithEntity(r);
   }
 
-  // @GET
-  // @Path("/{idFurniture}/photos")
-  // @Authorize
-  // public List<PhotoDTO> getPhotos(@Context ContainerRequest request, @PathParam("idFurniture")
-  // int idFurniture) {
-  //
-  // List<PhotoDTO> list = furnitureUCC.getFurniturePhoto();
-  //
-  // FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
-  //
-  // UserDTO user = (UserDTO) request.getProperty("user");
-  //
-  // if (!user.getRole().equals(Role.ADMIN) && user.getId() != furniture.getSellerId()) {
-  // list = list.stream().filter((PhotoDTO) e -> e.)
-  // }
-  // return
-  // }
+  @GET
+  @Path("/{idFurniture}/photos")
+  @Authorize
+  public List<PhotoDTO> getPhotos(@Context ContainerRequest request,
+      @PathParam("idFurniture") int idFurniture) {
+
+    List<PhotoDTO> list = furnitureUCC.getFurniturePhotos(idFurniture);
+
+    FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
+
+    UserDTO user = (UserDTO) request.getProperty("user");
+
+    if (!user.getRole().equals(Role.ADMIN) && user.getId() != furniture.getSellerId()) {
+      list = list.stream().filter(e -> e.isVisible()).collect(Collectors.toList());
+    }
+    return list;
+  }
 
 }
