@@ -1,4 +1,4 @@
-let id = Math.random;;
+let id = Math.random;
 const PrintError = (err) => {
   if (!err) return;
   let page = document.querySelector("#page");
