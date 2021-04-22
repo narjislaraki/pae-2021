@@ -8,7 +8,7 @@ public class PhotoImpl implements PhotoDTO {
   @JsonView(Views.Public.class)
   private int id;
   @JsonView(Views.Public.class)
-  private byte[] photo;
+  private String photo;
   @JsonView(Views.Public.class)
   private boolean isVisible;
   @JsonView(Views.Public.class)
@@ -27,12 +27,12 @@ public class PhotoImpl implements PhotoDTO {
   }
 
   @Override
-  public byte[] getPhoto() {
+  public String getPhoto() {
     return this.photo;
   }
 
   @Override
-  public void setPhoto(byte[] photo) {
+  public void setPhoto(String photo) {
     this.photo = photo;
   }
 
@@ -66,4 +66,9 @@ public class PhotoImpl implements PhotoDTO {
     this.idFurniture = idFurniture;
   }
 
+  @Override
+  public String toString() {
+    return "PhotoImpl [id=" + id + ", photo=" + photo + ", isVisible=" + isVisible
+        + ", isAClientPhoto=" + isAClientPhoto + ", idFurniture=" + idFurniture + "]";
+  }
 }

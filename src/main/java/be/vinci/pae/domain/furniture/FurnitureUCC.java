@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.visit.PhotoDTO;
 
 public interface FurnitureUCC {
 
@@ -31,7 +32,7 @@ public interface FurnitureUCC {
 
   // pas encore pour le livrable
   void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures);
+      Map<FurnitureDTO, List<PhotoDTO>> photos);
 
   FurnitureDTO getFurnitureById(int id);
 

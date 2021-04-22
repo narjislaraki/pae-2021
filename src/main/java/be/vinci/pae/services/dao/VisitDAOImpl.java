@@ -89,18 +89,25 @@ public class VisitDAOImpl implements VisitDAO {
   }
 
   @Override
-  public void submitRequestOfVisit(VisitDTO visit) {
+  public int submitRequestOfVisit(VisitDTO visit) {
+    int key = 0;
     try {
       String sql = "INSERT INTO pae.requests_for_visits VALUES (default, ?, ?, null, null, ?, ?);";
-      ps = dalBackendServices.getPreparedStatement(sql);
+      ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, visit.getTimeSlot());
       ps.setString(2, VisitCondition.EN_ATTENTE.toString());
+      System.out.println(visit.getWarehouseAddressId());
       ps.setInt(3, visit.getWarehouseAddressId());
       ps.setInt(4, visit.getIdClient());
       ps.execute();
+      ResultSet rs = ps.getGeneratedKeys();
+      if (rs.next()) {
+        key = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return key;
   }
 
   @Override
@@ -159,7 +166,7 @@ public class VisitDAOImpl implements VisitDAO {
     try {
       String sql = "INSERT INTO pae.photos VALUES (default, ?, ?, ?, ?);";
       ps = dalBackendServices.getPreparedStatement(sql);
-      ps.setBytes(1, photo.getPhoto());
+      ps.setString(1, photo.getPhoto());
       ps.setBoolean(2, photo.isVisible());
       ps.setBoolean(3, photo.isAClientPhoto());
       ps.setInt(4, photo.getIdFurniture());

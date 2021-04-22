@@ -12,6 +12,7 @@ import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
+import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
@@ -43,7 +44,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   private void scheduledTasks() {
     dalServices.getBizzTransaction(true);
     furnitureDao.cancelOvertimedOptions();
-    furnitureDao.cancelOvertimedReservations();
+    // furnitureDao.cancelOvertimedReservations();
     logger.info("Scheduled management of overtimed Options and Reservations just happend");
     dalServices.stopBizzTransaction();
   }
@@ -107,7 +108,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public void indicateSentToWorkshop(int id) {
     dalServices.getBizzTransaction(false);
-    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateSentToWorkshop(id);
       dalServices.commitBizzTransaction();
@@ -119,7 +120,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public void indicateDropOfStore(int id) {
     dalServices.getBizzTransaction(false);
-    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.EN_RESTAURATION)
         || furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateDropInStore(id);
@@ -132,7 +133,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public void indicateOfferedForSale(int id, double price) {
     dalServices.getBizzTransaction(false);
-    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
     if (price > 0 && furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.indicateOfferedForSale(furniture, price);
       dalServices.commitBizzTransaction();
@@ -144,7 +145,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public void withdrawSale(int id) {
     dalServices.getBizzTransaction(false);
-    Furniture furniture = (Furniture) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.EN_VENTE)
         || furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.withdrawSale(id);
@@ -183,7 +184,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     OptionDTO opt = furnitureDao.getOption(idOption);
     if (user.getId() == opt.getIdUser() || user.getRole() == Role.ADMIN) {
       int idFurniture = furnitureDao.cancelOption(cancellationReason, opt.getId());
-      Furniture furniture = (Furniture) furnitureDao.getFurnitureById(idFurniture);
+      FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(idFurniture);
       furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
       dalServices.commitBizzTransaction();
     } else {
@@ -205,11 +206,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
 
-  @Override
-  public void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures) {
-    // TODO Auto-generated method stub
-  }
 
   @Override
   public FurnitureDTO getFurnitureById(int id) {
@@ -245,6 +241,13 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     list = furnitureDao.getTypesOfFurnitureList();
     dalServices.stopBizzTransaction();
     return list;
+  }
+
+  @Override
+  public void introduceRequestForVisite(String timeSlot, Address address,
+      Map<FurnitureDTO, List<PhotoDTO>> photos) {
+    // TODO Auto-generated method stub
+
   }
 
 

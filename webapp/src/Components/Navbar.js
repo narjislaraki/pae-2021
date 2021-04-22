@@ -85,7 +85,7 @@ const Navbar = async () => {
               <div>
                 ${idFurniture}. <textarea class="description" id="furniture${idFurniture}" name="furniture${idFurniture}" required></textarea> 
                 <label for="files${idFurniture}" class="bi bi-upload"></label>
-                <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" multiple required>
+                <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" accept="image/*" multiple required>
                 <div id="typeFurniture" class="dropdown">
                   <label for="type">Type du meuble : </label>
                   <div id="tousLesTypes${idFurniture}"></div>
@@ -244,10 +244,13 @@ function encodeFile(file) {
 }
 
 async function encodeFiles(files) { 
-  const returnedFiles = {}
+  const returnedFiles = [];
   if (files.length > 0) {
     for(let i = 0; i < files.length; i++) {
-      returnedFiles[i] = await encodeFile(files[i])
+      let photo = await encodeFile(files[i])
+      returnedFiles[i] = {
+        photo: photo,
+      }
     }
   }
   return returnedFiles; 
@@ -263,7 +266,7 @@ const onAddFurniture = (e) => {
     <div>
       ${idFurniture}. <textarea class="description" id="furniture${idFurniture}" name="furniture${idFurniture}"></textarea> 
       <label for="files${idFurniture}" class="bi bi-upload"></label>
-      <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" multiple>
+      <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" accept="image/*" multiple>
       <div id="typeFurniture${idFurniture}" class="dropdown">
         <label for="type">Type du meuble : </label>
         <div id="tousLesTypes${idFurniture}"></div>
@@ -293,7 +296,8 @@ const onIntroduceRequest = async (e) => {
       city: e.target.elements.city.value,
       unitNumber: e.target.elements.unitnumber?.value,
     },
-    furnitures:{},
+    idClient: currentUser.id,
+    furnitureList:[],
 
   };
   console.log(mapPhotos);
@@ -301,14 +305,13 @@ const onIntroduceRequest = async (e) => {
     let furniture = {
       id: i,
       description : e.target.elements['furniture'+i].value,
-      idTypeOfFurniture: e.target.elements['type'+i].value,
+      typeId: e.target.elements['type'+i].value,
       listPhotos: await encodeFiles(e.target.elements['files'+i].files),
     }
-    request.furnitures[i] = furniture;
+    request.furnitureList[i-1] = furniture;
   }
   console.log(request);
   
-  //en commentaire pour les tests
   try {
     const requestVisit = await callAPI(
       "/api/visits/introduce",
