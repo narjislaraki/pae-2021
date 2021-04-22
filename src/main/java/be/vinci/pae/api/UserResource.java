@@ -2,16 +2,12 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.util.List;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
@@ -55,6 +51,27 @@ public class UserResource {
   @AdminAuthorize
   public Response getListOfUnvalidatedUsers(@Context ContainerRequest request) {
     List<UserDTO> list = userUCC.getUnvalidatedUsers();
+
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+  /**
+   * Get a list of validated users.
+   * 
+   * @param request the request
+   * @return a list of validated users wrapped in a Response
+   */
+  @GET
+  @Path("validatedList")
+  @AdminAuthorize
+  public Response getListOfUsers(@Context ContainerRequest request) {
+    List<UserDTO> list = userUCC.getValidatedUsers();
 
     String r = null;
     try {

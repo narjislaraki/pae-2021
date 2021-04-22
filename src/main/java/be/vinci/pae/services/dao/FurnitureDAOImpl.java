@@ -25,7 +25,6 @@ import jakarta.inject.Inject;
 
 public class FurnitureDAOImpl implements FurnitureDAO {
 
-
   @Inject
   private DalBackendServices dalBackendService;
   @Inject
@@ -71,7 +70,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    */
   @Override
   public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
-    int number = -1;
+    // TODO on avait -1 mais 0 semble logique si aucune option n'existe.
+    // sinon, un user valide sur un meuble valide sans aucune option aura -1 comme réponse.
+    int number = 0;
     try {
       String sql =
           "SELECT SUM(option_term) FROM pae.options WHERE id_furniture = ? AND id_user = ?";
@@ -127,7 +128,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return option;
   }
 
-
   @Override
   public void setFurnitureCondition(FurnitureDTO furniture, Condition condition) {
     try {
@@ -140,7 +140,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       throw new FatalException(e);
     }
   }
-
 
   @Override
   public void introduceOption(int optionTerm, int idUser, int idFurniture) {
@@ -162,7 +161,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   @Override
   public void indicateFurnitureUnderOption(int id) {
-    FurnitureDTO furniture = (FurnitureDTO) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     setFurnitureCondition(furniture, Condition.SOUS_OPTION);
   }
 
@@ -207,17 +206,16 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return option;
   }
 
-
   @Override
   public void indicateSentToWorkshop(int id) {
-    FurnitureDTO furniture = (FurnitureDTO) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     setFurnitureCondition(furniture, Condition.EN_RESTAURATION);
 
   }
 
   @Override
   public void indicateDropInStore(int id) {
-    FurnitureDTO furniture = (FurnitureDTO) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     try {
       String sql = "UPDATE pae.furnitures SET condition = ?, store_deposit = ?, "
           + "deposit_date = ? WHERE id_furniture = ? ;";
@@ -252,7 +250,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   @Override
   public void withdrawSale(int id) {
-    FurnitureDTO furniture = (FurnitureDTO) getFurnitureById(id);
+    FurnitureDTO furniture = getFurnitureById(id);
     setFurnitureCondition(furniture, Condition.RETIRE);
 
   }
@@ -300,7 +298,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
     return list;
   }
-
 
   @Override
   public void introduceRequestForVisite(String timeSlot, Address address,
@@ -372,30 +369,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
         ps.setString(1, Condition.EN_VENTE.toString());
         ps.setString(2, Condition.SOUS_OPTION.toString());
         ps.setString(3, State.EN_COURS.toString());
-        ps.executeUpdate();
-        System.out.println(ps.executeUpdate() + " / =?= / " + val);
-      }
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
-  @Override
-  public void cancelOvertimedReservations() {
-    try {
-      String sql = "UPDATE pae.sales SET condition = 'annulé'" + " WHERE condition = 'en cours'"
-          + " AND (date_of_sale + interval '1' day + interval '1' year) < NOW();";
-
-      ps = dalBackendService.getPreparedStatement(sql);
-      int val = ps.executeUpdate();
-      if (val > 0) {
-        sql = "UPDATE pae.furnitures" + " SET condition = ?"
-            + " WHERE condition = ? AND id_furniture NOT IN "
-            + " (SELECT s.id_furniture FROM pae.sales s WHERE s.condition = 'en cours');";
-
-        ps = dalBackendService.getPreparedStatement(sql);
-        ps.setString(1, Condition.EN_VENTE.toString());
-        ps.setString(2, Condition.RESERVE.toString());
         ps.executeUpdate();
         System.out.println(ps.executeUpdate() + " / =?= / " + val);
       }

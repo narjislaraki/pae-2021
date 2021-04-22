@@ -15,7 +15,6 @@ public interface FurnitureDAO {
 
   // A REVOIR
 
-
   void setFurnitureCondition(FurnitureDTO furniture, Condition condition);
 
   int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser);
@@ -42,7 +41,6 @@ public interface FurnitureDAO {
   void introduceRequestForVisite(String timeSlot, Address address,
       Map<Integer, List<String>> furnitures);
 
-
   String getFurnitureTypeById(int id);
 
   String getFavouritePhotoById(int id);
@@ -50,8 +48,6 @@ public interface FurnitureDAO {
   OptionDTO getOption(int id);
 
   void cancelOvertimedOptions();
-
-  void cancelOvertimedReservations();
 
   List<TypeOfFurnitureDTO> getTypesOfFurnitureList();
 

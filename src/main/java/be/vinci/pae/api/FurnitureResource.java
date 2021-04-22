@@ -14,6 +14,7 @@ import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
+import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
 import be.vinci.pae.views.Views;
@@ -262,6 +263,14 @@ public class FurnitureResource {
     int optionTerm = json.get("duration").asInt();
     furnitureUCC.introduceOption(optionTerm, idUser, idFurniture);
     return true;
+  }
+
+  @Authorize
+  @POST
+  @Path("sale")
+  @Produces(MediaType.APPLICATION_JSON)
+  public boolean addSale(@Context ContainerRequest request, SaleDTO sale) {
+    return furnitureUCC.addSale(sale);
   }
 
   /**

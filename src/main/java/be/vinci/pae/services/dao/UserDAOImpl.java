@@ -26,7 +26,6 @@ public class UserDAOImpl implements UserDAO {
 
   PreparedStatement ps;
 
-
   /**
    * Searching through the database for the user, using his email.
    * 
@@ -43,7 +42,6 @@ public class UserDAOImpl implements UserDAO {
               + "u.registration_date, u.is_validated, u.password, u.address "
               + "FROM pae.users u WHERE u.email = ?;");
 
-
       ps.setString(1, email);
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
@@ -54,7 +52,6 @@ public class UserDAOImpl implements UserDAO {
     }
     return user;
   }
-
 
   /**
    * Searching through the database for the user, using his username.
@@ -73,7 +70,6 @@ public class UserDAOImpl implements UserDAO {
           "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
               + "u.registration_date, u.is_validated, u.password, u.address "
               + "FROM pae.users u WHERE u.username = ?;");
-
 
       ps.setString(1, username);
 
@@ -108,7 +104,6 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
-
   /**
    * Searching through the database for the user, using his id.
    * 
@@ -127,7 +122,6 @@ public class UserDAOImpl implements UserDAO {
               + "u.registration_date, u.is_validated, u.password, u.address "
               + "FROM pae.users u WHERE u.id_user= ?;");
 
-
       ps.setInt(1, id);
 
       ResultSet rs = ps.executeQuery();
@@ -139,8 +133,6 @@ public class UserDAOImpl implements UserDAO {
     }
     return user;
   }
-
-
 
   @Override
   public List<UserDTO> getUnvalidatedUsers() {
@@ -234,6 +226,24 @@ public class UserDAOImpl implements UserDAO {
     return user;
   }
 
+  @Override
+  public List<UserDTO> getValidatedUsers() {
+    List<UserDTO> list = new ArrayList<UserDTO>();
+    try {
+      String sql = "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
+          + "u.registration_date, u.is_validated, u.password, u.address "
+          + "FROM pae.users u WHERE u.is_validated = true;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ResultSet rs = ps.executeQuery();
+      UserDTO user = null;
+      while (rs.next()) {
+        UserDTO userDTO = setUser(rs, user);
+        list.add(userDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
 
 }
-

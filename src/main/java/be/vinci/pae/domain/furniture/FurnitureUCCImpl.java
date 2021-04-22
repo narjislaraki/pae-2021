@@ -4,19 +4,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
+import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
-import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.FurnitureDAO;
+import be.vinci.pae.services.dao.SaleDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
 
@@ -34,6 +33,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Inject
   private Logger logger;
 
+  @Inject
+  private SaleDAO saleDao;
+
   public FurnitureUCCImpl() {
     scheduledTasksInit();
   }
@@ -44,7 +46,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   private void scheduledTasks() {
     dalServices.getBizzTransaction(true);
     furnitureDao.cancelOvertimedOptions();
-    // furnitureDao.cancelOvertimedReservations();
     logger.info("Scheduled management of overtimed Options and Reservations just happend");
     dalServices.stopBizzTransaction();
   }
@@ -53,6 +54,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
    * Initiation of the Options and Reservations management. The scheduledTask will be launched 1 sec
    * after the loading and then once a day at 00:05.
    */
+
   private void scheduledTasksInit() {
     TimerTask task = new TimerTask() {
       public void run() {
@@ -86,7 +88,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   }
 
-
   @Override
   public OptionDTO getOption(int id) {
     dalServices.getBizzTransaction(true);
@@ -103,12 +104,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     return nbOfDay;
   }
 
-
-
   @Override
   public void indicateSentToWorkshop(int id) {
     dalServices.getBizzTransaction(false);
-    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateSentToWorkshop(id);
       dalServices.commitBizzTransaction();
@@ -120,7 +119,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public void indicateDropOfStore(int id) {
     dalServices.getBizzTransaction(false);
-    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.EN_RESTAURATION)
         || furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateDropInStore(id);
@@ -133,7 +132,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public void indicateOfferedForSale(int id, double price) {
     dalServices.getBizzTransaction(false);
-    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
     if (price > 0 && furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.indicateOfferedForSale(furniture, price);
       dalServices.commitBizzTransaction();
@@ -145,7 +144,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public void withdrawSale(int id) {
     dalServices.getBizzTransaction(false);
-    FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(id);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
     if (furniture.getCondition().equals(Condition.EN_VENTE)
         || furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.withdrawSale(id);
@@ -184,7 +183,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     OptionDTO opt = furnitureDao.getOption(idOption);
     if (user.getId() == opt.getIdUser() || user.getRole() == Role.ADMIN) {
       int idFurniture = furnitureDao.cancelOption(cancellationReason, opt.getId());
-      FurnitureDTO furniture = (FurnitureDTO) furnitureDao.getFurnitureById(idFurniture);
+      FurnitureDTO furniture = furnitureDao.getFurnitureById(idFurniture);
       furnitureDao.indicateOfferedForSale(furniture, furniture.getOfferedSellingPrice());
       dalServices.commitBizzTransaction();
     } else {
@@ -204,8 +203,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.stopBizzTransaction();
     return list;
   }
-
-
 
   @Override
   public FurnitureDTO getFurnitureById(int id) {
@@ -243,13 +240,18 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     return list;
   }
 
-  @Override
-  public void introduceRequestForVisite(String timeSlot, Address address,
-      Map<FurnitureDTO, List<PhotoDTO>> photos) {
-    // TODO Auto-generated method stub
 
+  public boolean addSale(SaleDTO sale) {
+    dalServices.getBizzTransaction(false);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());
+    if (furniture.getCondition().equals(Condition.VENDU)) {
+      return false;
+    }
+    furnitureDao.setFurnitureCondition(furniture, Condition.VENDU);
+    sale.setDateOfSale(LocalDateTime.now());
+    saleDao.addSale(sale);
+    dalServices.commitBizzTransaction();
+    return true;
   }
-
-
 
 }

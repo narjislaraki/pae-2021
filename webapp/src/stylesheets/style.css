@@ -704,10 +704,6 @@ footer{
 
 /*FURNITURE PAGE*/
 
-
-.furniture-container{
-
-}
 .furniture-pictures{
     width: max-content;
 }
@@ -989,7 +985,6 @@ footer{
     width:100%;
     z-index:10000;
     overflow-y: scroll;
-    
 }
 .hover_bkgr_fricc .helper{
     display:inline-block;
