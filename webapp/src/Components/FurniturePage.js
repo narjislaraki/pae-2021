@@ -99,6 +99,7 @@ async function FurniturePage(id) {
                             <img id="small-img5" src="" alt="">
                         </div>
                         <img src="" alt="" id="big-img" class="main-image">
+                        <img src="../assets/fullStar.png" id="full-star">
                     </div>
                     <div class="condensed small-caps" id="furniture-type">
                         ${furniture.type}

@@ -735,6 +735,14 @@ footer{
     left: 15%;
     top: 10%;
 }
+
+#full-star {
+    position: absolute;
+    width: 7%;
+    height: auto;
+    top:38%;
+    left:36%;
+}
 #furniture-type{
     font-weight: 300;
     font-size: 32px;
