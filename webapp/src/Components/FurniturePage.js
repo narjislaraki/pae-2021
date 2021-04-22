@@ -1,9 +1,10 @@
-import { getUserSessionData, currentUser } from "../utils/session.js";
-import { RedirectUrl } from "./Router.js";
+import {getUserSessionData, currentUser} from "../utils/session.js";
+import {RedirectUrl} from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
+
 const API_BASE_URL = "api/furnitures/";
 
 let smallImg1 = document.getElementById("small-img1");
@@ -25,10 +26,24 @@ let type;
 let desc;
 let price;
 
+let furniturePhotos;
+let nbPhoto = 0;
+
 let page = document.querySelector("#page");
+
 async function FurniturePage(id) {
 
     userData = getUserSessionData();
+    try {
+        furniturePhotos = await callAPI(
+            API_BASE_URL + id + "/photos",
+            "GET",
+            userData.token,
+            undefined);
+    } catch (err) {
+        console.error("FurniturePage::get furniture", err);
+        PrintError(err);
+    }
     /****** Furniture ******/
     if (currentUser) {
         try {
@@ -41,8 +56,7 @@ async function FurniturePage(id) {
             console.error("FurniturePage::get furniture", err);
             PrintError(err);
         }
-    }
-    else {
+    } else {
         try {
             furniture = await callAPI(
                 API_BASE_URL + "public/" + id,
@@ -92,14 +106,10 @@ async function FurniturePage(id) {
         <div id="furniture-container">
                     <div class="furniture-pictures">
                         <div class="furniture-small-images">
-                            <img id="small-img1" src="" alt="">
-                            <img id="small-img2" src="" alt="">
-                            <img id="small-img3" src="" alt="">
-                            <img id="small-img4" src="" alt="">
-                            <img id="small-img5" src="" alt="">
+                            
                         </div>
-                        <img src="" alt="" id="big-img" class="main-image">
-                        <img src="../assets/fullStar.png" id="full-star">
+                        <img src="" alt="main-image" id="big-img" class="main-image">
+                        <img src="../assets/fullStar.png" alt="secondary-image" id="star-image">
                     </div>
                     <div class="condensed small-caps" id="furniture-type">
                         ${furniture.type}
@@ -114,9 +124,13 @@ async function FurniturePage(id) {
                         <br>
                         <div id="sellingDiv"></div>
                     </div>
-                    
                 </div>
         `;
+
+        let smallImages = document.getElementById("furniture-small-images");
+        furniturePhotos.map((element) => {
+            smallImages.innerHTML += `<img id="small-img${++nbPhoto}" src="${element.photo}" alt="small img ${nbPhoto}">`;
+        })
     if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
         if (furniture.condition == "SOUS_OPTION") {
 
@@ -232,7 +246,7 @@ async function FurniturePage(id) {
             }
 
             divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      Vendre      </button>`
-            document.getElementById("popups").innerHTML =`
+            document.getElementById("popups").innerHTML = `
             <div class="hover_bkgr_fricc" id="popupSell" >
                 <span class="helper"></span>
                 <div>
@@ -449,8 +463,7 @@ const onSell = async () => {
         }
         PrintError(err);
         return;
-    }
-    else if (document.getElementById("input-client").disabled == false) {
+    } else if (document.getElementById("input-client").disabled == false) {
         if (data.dataset.role == "ANTIQUAIRE") {
             sale.sellingPrice = parseFloat(document.getElementById("sellingPrice").textContent);
         }
@@ -482,7 +495,6 @@ const onSell = async () => {
 }
 
 
-
 const onClientSelection = () => {
     let inputClient = document.getElementById("input-client").value;
     if (!document.querySelector("#clients-list option[value='" + inputClient + "']")) return;
@@ -491,8 +503,7 @@ const onClientSelection = () => {
 
     if (roleClient == "ANTIQUAIRE") {
         divPrice.style.display = "block";
-    }
-    else {
+    } else {
         divPrice.style.display = "none";
     }
 }
@@ -622,7 +633,6 @@ const onIntroduceOption = async () => {
 };
 
 
-
 /*function gallerySlides(smallImg) {
     let bigImg = document.getElementById("big-img");
     bigImg.src = smallImg.src;
@@ -663,4 +673,4 @@ const decrementCounter = () => {
 }
 
 
-export { FurniturePage };
+export {FurniturePage};

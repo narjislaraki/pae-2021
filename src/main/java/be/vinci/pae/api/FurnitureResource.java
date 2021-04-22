@@ -2,12 +2,16 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
+
 import java.util.List;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -292,5 +296,23 @@ public class FurnitureResource {
     }
     return responseOkWithEntity(r);
   }
+
+  // @GET
+  // @Path("/{idFurniture}/photos")
+  // @Authorize
+  // public List<PhotoDTO> getPhotos(@Context ContainerRequest request, @PathParam("idFurniture")
+  // int idFurniture) {
+  //
+  // List<PhotoDTO> list = furnitureUCC.getFurniturePhoto();
+  //
+  // FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
+  //
+  // UserDTO user = (UserDTO) request.getProperty("user");
+  //
+  // if (!user.getRole().equals(Role.ADMIN) && user.getId() != furniture.getSellerId()) {
+  // list = list.stream().filter((PhotoDTO) e -> e.)
+  // }
+  // return
+  // }
 
 }
