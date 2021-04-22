@@ -9,21 +9,23 @@ let userData = getUserSessionData();
 let VisitsPage = () => {
     let menu = `
     <div class="menuAdmin">
-        <button class="menuAdminOn" id="visits">Visites</button>
-        <button id="advancedSearches">Recherche avancées</button>
-        <button id="confirmRegister">Confirmation des inscriptions</button>
+        <div id="visits" class="condensed small-caps menuAdminOn">Visites</div>
+        <div id="advancedSearches" class="condensed small-caps">Recherche avancées</div>
+        <div id="confirmRegister" class="condensed small-caps">Confirmation des inscriptions</div>
     </div>
     `;
-    let visitPage = `<div class="visits-title small-caps">
+    let visitPage = `
+    <div class="visits-title small-caps">
         <button class="buttonsVisits" id="btnWaiting">En attente</button>
         <button class="buttonsVisits" id="btnToTreat">À traiter</button>
-    </div>`;
+    </div>
+    `;
     page.innerHTML = menu + visitPage;
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
 
     let advancedSearches = document.getElementById("advancedSearches");
-    advancedSearches.addEventListener("click", onAdanvancedSearches);
+    advancedSearches.addEventListener("click", onAdvancedSearches);
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
@@ -43,7 +45,7 @@ const onVisits = (e) => {
     RedirectUrl("/visits");
 };
 
-const onAdanvancedSearches = (e) => {
+const onAdvancedSearches = (e) => {
     e.preventDefault();
     console.log("to advancedSearches")
     RedirectUrl("/advancedSearches");

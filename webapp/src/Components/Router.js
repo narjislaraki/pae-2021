@@ -12,7 +12,7 @@ const routes = {
   "/login": LoginRegisterPage,
   "/logout": LogoutComponent,
   "/visits" : VisitsPage,
-  //"/advancedSearches" : AdvancedSearchesPage,
+  "/advancedSearches" : AdvancedSearchesPage,
   "/confirmRegistration": ConfirmRegistrationPage,
   "/furnitures": FurnitureListPage,
   "/error": ErrorPage,
