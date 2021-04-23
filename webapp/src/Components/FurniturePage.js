@@ -20,13 +20,15 @@ let type;
 let desc;
 let price;
 
+let furnitureTypes;
+
 let furniturePhotos;
-let nbPhoto = 0;
+let nbPhoto;
 
 let page = document.querySelector("#page");
 
 async function FurniturePage(id) {
-
+    nbPhoto = 0; // must be initialized every time!!
     userData = getUserSessionData();
     try {
         furniturePhotos = await callAPI(
@@ -39,6 +41,7 @@ async function FurniturePage(id) {
         PrintError(err);
     }
     /****** Furniture ******/
+
     if (currentUser) {
         try {
             furniture = await callAPI(
@@ -80,6 +83,7 @@ async function FurniturePage(id) {
         }
 
         /****** Option ******/
+
         try {
             option = await callAPI(
                 API_BASE_URL + idFurniture + "/getOption",
@@ -118,18 +122,18 @@ async function FurniturePage(id) {
                 </div>
         `;
 
-        let smallImages = document.getElementById("furniture-small-images");
-        furniturePhotos.map((element) => {
-            if (nbPhoto == 0) {
-                let image = document.createElement("img");
-                image.src = element.photo;
-                image.alt = "main Furniture image";
-                image.id = "big-img";
-                image.class = "main-image"
-                document.getElementById("furniture-pictures").appendChild(image);
-            }
-            smallImages.innerHTML += `<img id="small-img${++nbPhoto}" src="${element.photo}" alt="small Furniture image">`;
-        })
+    let smallImages = document.getElementById("furniture-small-images");
+    furniturePhotos.map((element) => {
+        if (nbPhoto == 0) {
+            let image = document.createElement("img");
+            image.src = element.photo;
+            image.alt = "main Furniture image";
+            image.id = "big-img";
+            image.class = "Image principale"
+            document.getElementById("furniture-pictures").appendChild(image);
+        }
+        smallImages.innerHTML += `<img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
+    })
     if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
         if (furniture.condition == "SOUS_OPTION") {
 
@@ -355,6 +359,9 @@ async function FurniturePage(id) {
         buttonEnVente.addEventListener("click", onOfferedForSale);
         buttonRetire.addEventListener("click", onWithdrawSale)
         document.getElementById("editIcon").addEventListener("click", onEdit);
+        for (let i = 0; i < nbPhoto; i++) {
+            document.getElementById("small-img" + i).addEventListener("click", onSmallImg)
+        }
         try {
             let cancelOptionBtn = document.getElementById("cancelOptionBtn");
             cancelOptionBtn.addEventListener("click", onCancelOption);
@@ -375,21 +382,42 @@ async function FurniturePage(id) {
             confirmSellBtn.addEventListener("click", onSell);
             sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
         }
+
     }
 }
 
-const onEdit = () => {
+const onEdit = async () => {
     document.getElementById("editIcon").style.display = "none";
 
     /**** Furniture ****/
     typeElem = document.getElementById("furniture-type");
     descElem = document.getElementById("furniture-description");
     priceElem = document.getElementById("furniture-price");
-    type = typeElem.innerText; // TODO getType
+
+    if (!furnitureTypes) {
+        furnitureTypes = await callAPI(
+            API_BASE_URL + "typeOfFurnitureList",
+            "GET",
+            undefined,
+            undefined
+        );
+    }
+
+    type = typeElem.innerText;
     desc = descElem.innerText;
     price = priceElem.innerText;
 
-    typeElem.contentEditable = "true";
+    typeElem.innerHTML = `
+            <label for="furniture-types">Type de meuble:</label>
+            <select class="form-select" id="furniture-types"></select>`
+    let furnitureTypesElem = document.getElementById("furniture-types");
+    furnitureTypes.map((e) => {
+        if (e.label == furniture.type)
+            furnitureTypesElem.innerHTML += `<option value="${e.id}" selected>${e.label}</option>`
+        else
+            furnitureTypesElem.innerHTML += `<option value="${e.id}">${e.label}</option>`;
+    });
+
     descElem.contentEditable = "true";
     priceElem.contentEditable = "true";
     typeElem.style.background = "lightgrey";
@@ -409,8 +437,8 @@ const onEdit = () => {
     /**** Photos ****/
 
     let div = document.createElement("div");
-    div.innerHTML = `<img src="../assets/star_full.png" alt="secondary image" id="star-image">
-                     <img src="../assets/eye_open.png" alt="visibility" id="eye-image">`
+    div.innerHTML = `<img src="../assets/star_full.png" alt="favorite" id="star-image">
+                     <img src="../assets/eye_open.png" alt="visibilité" id="eye-image">`
     div.id = "img-edit"
     document.getElementById("furniture-pictures").appendChild(div);
 
@@ -442,6 +470,11 @@ const onConfirmEditButton = () => {
 
     //TODO POST sur meuble pour modifications
     PrintMessage("Les modifications on été effectuées avec succès")
+}
+
+const onSmallImg = (e) => {
+    console.log("onSmallImages")
+    document.getElementById("big-img").src = furniturePhotos[e.srcElement.dataset.id].photo;
 }
 
 const onCheckBtnAnon = () => {
@@ -483,7 +516,6 @@ const onSell = async () => {
         sale.idBuyer = parseInt(data.dataset.userid);
     }
 
-    console.log(sale.sellingPrice)
     if (isNaN(sale.sellingPrice)) {
         let err = {
             message: "Le prix est invalide"

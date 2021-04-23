@@ -286,17 +286,12 @@ public class FurnitureResource {
    * @return a list of types of furniture
    */
   @GET
-  @Path("typeOfFurnitureList/")
-  public Response getTypeOfFurnitureList(@Context ContainerRequest request) {
+  @Path("typeOfFurnitureList")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<TypeOfFurnitureDTO> getTypeOfFurnitureList(@Context ContainerRequest request) {
     List<TypeOfFurnitureDTO> list = furnitureUCC.getTypesOfFurnitureList();
 
-    String r = null;
-    try {
-      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
-    } catch (JsonProcessingException e) {
-      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
-    }
-    return responseOkWithEntity(r);
+    return list;
   }
 
   @GET

@@ -1,4 +1,4 @@
-let id = Math.random;
+let id = Math.random();
 const PrintMessage = (msg) => {
     if (!msg) return;
     let page = document.querySelector("#page");
@@ -8,7 +8,7 @@ const PrintMessage = (msg) => {
     div.innerText = msg;
     page.appendChild(div);
     setTimeout(() => document.getElementById("errorBoard" + id).remove(), 5000);
-  };
-  
-  export default PrintMessage;
+};
+
+export default PrintMessage;
   
