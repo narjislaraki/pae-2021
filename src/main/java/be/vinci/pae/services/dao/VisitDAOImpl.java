@@ -7,8 +7,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
@@ -26,6 +27,9 @@ public class VisitDAOImpl implements VisitDAO {
 
   @Inject
   private VisitFactory visitFactory;
+
+  @Inject
+  private FurnitureFactory furnitureFactory;
 
   @Inject
   private AddressDAO addressDAO;
@@ -157,6 +161,38 @@ public class VisitDAOImpl implements VisitDAO {
     return visit;
   }
 
+  @Override
+  public List<FurnitureDTO> getListFurnituresForOnVisit(int idVisit) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT id_furniture, description, id_type, request_visit "
+          + "FROM pae.furnitures WHERE request_visit = ?";
+      ps = dalBackendServices.getPreparedStatement(sql);
+      ps.setInt(1, idVisit);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
+  private FurnitureDTO setFurniture(ResultSet rs, FurnitureDTO furniture) {
+    try {
+      furniture = furnitureFactory.getFurnitureDTO();
+      furniture.setId(rs.getInt(1));
+      furniture.setDescription(rs.getString(2));
+      furniture.setTypeId(rs.getInt(3));
+      furniture.setRequestForVisitId(rs.getInt(4));
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return furniture;
+  }
   // private int addPhoto(PhotoDTO photo) {
   // int key = 0;
   // try {

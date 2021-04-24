@@ -1015,6 +1015,21 @@ footer{
     width: 200px;
 }
 
+.photoDiv{
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    align-content: center;
+}
+
+.photoDiv img{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.imageVisits{
+    width: 60%;
+}
+
 /* Popup box BEGIN */
 .hover_bkgr_fricc{
     background:rgba(0,0,0,.4);
