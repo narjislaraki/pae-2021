@@ -4,6 +4,8 @@ import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import { FurniturePage } from "./FurniturePage.js";
+import waitingSpinner from "./WaitingSpinner";
+
 const API_BASE_URL = "/api/furnitures/";
 
 let furnitureListTab;
@@ -20,6 +22,7 @@ let furnitureListPage =
 
 
 async function FurnitureListPage() {
+  waitingSpinner();
   let page = document.querySelector("#page");
   let furnitures;
   if (currentUser) {
@@ -78,7 +81,7 @@ async function FurnitureListPage() {
 
 const onFurniture = (e) => {
   let id = e.srcElement.dataset.id;
-  document.getElementById("page").innerHTML = `<div id="ringdiv"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>`
+  waitingSpinner();
   FurniturePage(id);
 };
 

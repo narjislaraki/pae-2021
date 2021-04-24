@@ -242,7 +242,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     return list;
   }
 
-
+  @Override
   public boolean addSale(SaleDTO sale) {
     dalServices.getBizzTransaction(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());

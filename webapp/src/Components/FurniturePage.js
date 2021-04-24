@@ -386,6 +386,7 @@ async function FurniturePage(id) {
     }
 }
 
+
 const onEdit = async () => {
     document.getElementById("editIcon").style.display = "none";
 
@@ -444,6 +445,7 @@ const onEdit = async () => {
 
 }
 
+
 const onCancelEditButton = () => {
     document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
@@ -462,6 +464,7 @@ const onCancelEditButton = () => {
     document.getElementById("furniture-pictures").removeChild(document.getElementById("img-edit"));
 }
 
+
 const onConfirmEditButton = () => {
     if (typeElem.innerText === type && descElem.innerText === desc && priceElem.innerText === price) {
         onCancelEditButton();
@@ -472,10 +475,11 @@ const onConfirmEditButton = () => {
     PrintMessage("Les modifications on été effectuées avec succès")
 }
 
+
 const onSmallImg = (e) => {
-    console.log("onSmallImages")
     document.getElementById("big-img").src = furniturePhotos[e.srcElement.dataset.id].photo;
 }
+
 
 const onCheckBtnAnon = () => {
     let btnAnon = document.getElementById("input-client");
@@ -483,13 +487,16 @@ const onCheckBtnAnon = () => {
     btnAnon.disabled = !btnAnon.disabled;
 }
 
+
 const onClickSell = () => {
     document.getElementById("popupSell").style.display = "block";
 }
 
+
 const onCloseSell = () => {
     document.getElementById("popupSell").style.display = "none";
 }
+
 
 const onSell = async () => {
     let inputClient = document.getElementById("input-client").value;
@@ -499,9 +506,6 @@ const onSell = async () => {
         idFurniture: furniture.id,
         sellingPrice: furniture.offeredSellingPrice
     }
-    // si c'est pas disabled, et qu'il y a autre chose dans le truc de client -> KO
-    // sinon si c'est disabled, on gère client anon
-    //sinon client
 
     if (document.getElementById("input-client").disabled == false && !data) {
         let err = {

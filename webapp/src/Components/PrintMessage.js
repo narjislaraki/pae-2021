@@ -7,7 +7,7 @@ const PrintMessage = (msg) => {
     div.id = "messageBoard" + id;
     div.innerText = msg;
     page.appendChild(div);
-    setTimeout(() => document.getElementById("errorBoard" + id).remove(), 5000);
+    setTimeout(() => document.getElementById("messageBoard" + id).remove(), 5000);
 };
 
 export default PrintMessage;
