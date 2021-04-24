@@ -1015,20 +1015,18 @@ footer{
     width: 200px;
 }
 
-.column{
-    float: left;
-    width: auto;
-    padding: 5px;
-}
-.row::after{
-    content:"";
-    clear: both;
-    display: table;
+.photoDiv{
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    align-content: center;
 }
 
-
-img.imageVisits{
-    display: inline;
+.photoDiv img{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.imageVisits{
     width: 60%;
 }
 
