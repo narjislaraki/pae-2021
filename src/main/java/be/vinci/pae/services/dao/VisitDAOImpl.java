@@ -165,8 +165,8 @@ public class VisitDAOImpl implements VisitDAO {
   public List<FurnitureDTO> getListFurnituresForOnVisit(int idVisit) {
     List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
     try {
-      String sql =
-          "SELECT id_furniture, description, id_type, request_visit FROM pae.furnitures WHERE request_visit = ?";
+      String sql = "SELECT id_furniture, description, id_type, request_visit "
+          + "FROM pae.furnitures WHERE request_visit = ?";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setInt(1, idVisit);
       ResultSet rs = ps.executeQuery();
