@@ -318,8 +318,9 @@ public class FurnitureResource {
     for (PhotoDTO p : list) {
       if (p.getId() == furniture.getFavouritePhotoId()) {
         orderedList.add(0, p);
-      } else
+      } else {
         orderedList.add(p);
+      }
     }
 
     UserDTO user = (UserDTO) request.getProperty("user");

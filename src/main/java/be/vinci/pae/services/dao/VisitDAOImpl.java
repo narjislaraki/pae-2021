@@ -7,10 +7,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.user.User;
-import be.vinci.pae.domain.visit.PhotoDTO;
-import be.vinci.pae.domain.visit.PhotoFactory;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
 import be.vinci.pae.domain.visit.VisitFactory;
@@ -30,9 +29,6 @@ public class VisitDAOImpl implements VisitDAO {
 
   @Inject
   private AddressDAO addressDAO;
-
-  @Inject
-  private PhotoFactory photoFactory;
 
   @Inject
   private UserDAO userDAO;
@@ -161,25 +157,25 @@ public class VisitDAOImpl implements VisitDAO {
     return visit;
   }
 
-  private int addPhoto(PhotoDTO photo) {
-    int key = 0;
-    try {
-      String sql = "INSERT INTO pae.photos VALUES (default, ?, ?, ?, ?);";
-      ps = dalBackendServices.getPreparedStatement(sql);
-      ps.setString(1, photo.getPhoto());
-      ps.setBoolean(2, photo.isVisible());
-      ps.setBoolean(3, photo.isAClientPhoto());
-      ps.setInt(4, photo.getIdFurniture());
-      ps.execute();
-      ResultSet rs = ps.getGeneratedKeys();
-      if (rs.next()) {
-        key = rs.getInt(1);
-      }
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return key;
-  }
+  // private int addPhoto(PhotoDTO photo) {
+  // int key = 0;
+  // try {
+  // String sql = "INSERT INTO pae.photos VALUES (default, ?, ?, ?, ?);";
+  // ps = dalBackendServices.getPreparedStatement(sql);
+  // ps.setString(1, photo.getPhoto());
+  // ps.setBoolean(2, photo.isVisible());
+  // ps.setBoolean(3, photo.isAClientPhoto());
+  // ps.setInt(4, photo.getIdFurniture());
+  // ps.execute();
+  // ResultSet rs = ps.getGeneratedKeys();
+  // if (rs.next()) {
+  // key = rs.getInt(1);
+  // }
+  // } catch (SQLException e) {
+  // throw new FatalException(e);
+  // }
+  // return key;
+  // }
 
 
 

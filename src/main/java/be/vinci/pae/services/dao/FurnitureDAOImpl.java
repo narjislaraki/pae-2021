@@ -266,7 +266,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
           + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
-          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p ON p.id_photo = f.favorite_photo;";
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo;";
       ps = dalBackendService.getPreparedStatement(sql);
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
@@ -288,8 +289,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
           + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
-          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p ON p.id_photo = f.favorite_photo "
-          + "WHERE f.condition = ? OR f.condition = ? ;";
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo WHERE f.condition = ? OR f.condition = ? ;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, Condition.EN_VENTE.toString());
       ps.setString(2, Condition.SOUS_OPTION.toString());
@@ -424,8 +425,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public int addFurniture(FurnitureDTO furniture, int idRequestForVisit, int idSeller) {
     int key = 0;
     try {
-      String sql =
-          "INSERT INTO pae.furnitures VALUES(default, ?, ?, null, null, null, null, null, ?, ?, ?, null);";
+      String sql = "INSERT INTO pae.furnitures VALUES(default, ?, ?, "
+          + "null, null, null, null, null, ?, ?, ?, null);";
       ps = dalBackendService.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, Condition.EN_ATTENTE.toString());
       ps.setString(2, furniture.getDescription());
@@ -460,8 +461,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public List<PhotoDTO> getFurniturePhotos(int idFurniture) {
     List<PhotoDTO> list = new ArrayList<PhotoDTO>();
     try {
-      String sql =
-          "SELECT id_photo, photo, is_visible, is_a_client_photo, id_furniture FROM pae.photos WHERE id_furniture = ?;";
+      String sql = "SELECT id_photo, photo, is_visible, is_a_client_photo, "
+          + "id_furniture FROM pae.photos WHERE id_furniture = ?;";
 
       PreparedStatement ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, idFurniture);
