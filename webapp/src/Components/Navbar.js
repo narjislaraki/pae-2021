@@ -58,7 +58,7 @@ const Navbar = async () => {
 
         <div class="hover_bkgr_fricc" id="hover_bkgr_friccNavbar">
         <span class="helper"></span>
-        <div>
+        <div id="popupRequestForVisit">
             <div class="popupCloseButton" id="popupCloseButtonNavbar">&times;</div>
             <h2>Introduire une demande de visite</h2>
           <form id="formRequest" class="RequestVisitForm">
@@ -216,6 +216,7 @@ const onIntroduceVisit = (e) => {
 
 const onCloseVisit = (e) => {
   e.preventDefault();
+  console.log("je close");
   document.getElementById("hover_bkgr_friccNavbar").style.display = "none";
 }
 
@@ -320,6 +321,7 @@ const onIntroduceRequest = async (e) => {
       request
     );
     if (requestVisit) {
+      document.getElementById("hover_bkgr_friccNavbar").style.display = "none";
       RedirectUrl("/");
       PrintMessage("Votre demande de visite a bien été enregistrée. Elle est maintenant en attente de confirmation.");
     }

@@ -80,7 +80,7 @@ const onVisitsWaiting = async () => {
             `<tr>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
                 <td>x</td>
-                <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + user.address.unitNumber)}<br>
+                <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
                 <td><button name="trigger_popup_fricc" class="btn btn-dark condensed small-caps block-display" data-id="${visit.idRequest}" type="submit">Consulter la demande de visite</button></td>

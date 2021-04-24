@@ -3,7 +3,6 @@ package be.vinci.pae.services.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.exceptions.FatalException;
@@ -29,10 +28,13 @@ public class AddressDAOImpl implements AddressDAO {
       PreparedStatement ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, address.getStreet());
       ps.setString(2, address.getBuildingNumber());
-      if (address.getUnitNumber() != null) { // TODO
-        ps.setString(3, address.getUnitNumber());
-      } else {
+      if (address.getUnitNumber() == null || address.getUnitNumber().isEmpty()
+          || address.getUnitNumber().equals("")) { // TODO
+        System.out.println("le unitNumber est null");
         ps.setObject(3, null);
+      } else {
+        System.out.println("le unitNumber n'est pas null");
+        ps.setString(3, address.getUnitNumber());
       }
       ps.setString(4, address.getCity());
       ps.setString(5, address.getPostCode());
