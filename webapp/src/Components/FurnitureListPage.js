@@ -80,6 +80,13 @@ async function FurnitureListPage() {
 };
 
 const onFurniture = (e) => {
+  if (!currentUser){
+    let err = {
+      message: "Vous devez être connecté pour accéder à ce contenu",
+    }
+    PrintError(err);
+    return;
+  }
   let id = e.srcElement.dataset.id;
   waitingSpinner();
   FurniturePage(id);
