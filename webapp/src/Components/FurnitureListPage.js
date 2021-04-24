@@ -4,6 +4,8 @@ import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import { FurniturePage } from "./FurniturePage.js";
+import waitingSpinner from "./WaitingSpinner";
+
 const API_BASE_URL = "/api/furnitures/";
 
 let furnitureListTab;
@@ -20,6 +22,7 @@ let furnitureListPage =
 
 
 async function FurnitureListPage() {
+  waitingSpinner();
   let page = document.querySelector("#page");
   let furnitures;
   if (currentUser) {
@@ -73,11 +76,19 @@ async function FurnitureListPage() {
     e.addEventListener("click", onFurniture);
   });
 
-  const user = getUserSessionData();
+  console.log(furnitures)
 };
 
 const onFurniture = (e) => {
+  if (!currentUser){
+    let err = {
+      message: "Vous devez être connecté pour accéder à ce contenu",
+    }
+    PrintError(err);
+    return;
+  }
   let id = e.srcElement.dataset.id;
+  waitingSpinner();
   FurniturePage(id);
 };
 

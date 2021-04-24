@@ -2,6 +2,7 @@ package be.vinci.pae.services.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -54,5 +55,7 @@ public interface FurnitureDAO {
   int addFurniture(FurnitureDTO furniture, int idRequestForVisit, int idSeller);
 
   void addPhoto(PhotoDTO photo, int idFurniture);
+
+  List<PhotoDTO> getFurniturePhotos(int idFurniture);
 
 }
