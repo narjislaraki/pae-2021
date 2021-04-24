@@ -1,10 +1,10 @@
 package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonView;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.views.Views;
 
@@ -41,7 +41,9 @@ public class FurnitureImpl implements FurnitureDTO {
   @JsonView(Views.Internal.class)
   private int favouritePhotoId;
   @JsonView(Views.Public.class)
-  private byte[] favouritePhoto;
+  private String favouritePhoto;
+  @JsonView(Views.Public.class)
+  private ArrayList<PhotoDTO> listPhotos;
 
   public int getId() {
     return id;
@@ -194,16 +196,20 @@ public class FurnitureImpl implements FurnitureDTO {
     this.favouritePhotoId = favouritePhotoId;
   }
 
-  public byte[] getFavouritePhoto() {
+  public String getFavouritePhoto() {
     return favouritePhoto;
   }
 
-  public void setFavouritePhoto(byte[] favouritePhoto) {
+  public void setFavouritePhoto(String favouritePhoto) {
     this.favouritePhoto = favouritePhoto;
   }
 
-  public void setFavouritePhoto(String encodedPhoto) {
-    this.favouritePhoto = Base64.decode(encodedPhoto);
+  public ArrayList<PhotoDTO> getListPhotos() {
+    return this.listPhotos;
+  }
+
+  public void setListPhotos(ArrayList<PhotoDTO> listPhotos) {
+    this.listPhotos = listPhotos;
   }
 
   @Override
@@ -213,8 +219,7 @@ public class FurnitureImpl implements FurnitureDTO {
         + seller + ", condition=" + condition + ", description=" + description + ", purchasePrice="
         + purchasePrice + ", pickUpDate=" + pickUpDate + ", storeDeposit=" + storeDeposit
         + ", depositDate=" + depositDate + ", offeredSellingPrice=" + offeredSellingPrice
-        + ", favouritePhotoId=" + favouritePhotoId + ", favouritePhoto="
-        + Arrays.toString(favouritePhoto) + "]";
+        + ", favouritePhotoId=" + favouritePhotoId + ", favouritePhoto=" + favouritePhoto + "]";
   }
 
 }

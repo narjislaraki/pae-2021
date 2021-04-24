@@ -119,4 +119,67 @@ public class VisitResource {
     return responseOkWithEntity(r);
   }
 
+
+  /**
+   * This method is used for introduce a request for visit. It also adds the address into the
+   * database if this is different from the customer's address. This method adds each furniture and
+   * for each furniture, each photo.
+   * 
+   * @param visit the request for visit converted from json
+   * @return Response 401 Or 409 if KO; token if OK
+   */
+  @POST
+  @Path("introduce")
+  // TODO pas fini
+  public Response introduceRequestForVisit(VisitDTO visit) {
+    System.out.println(visit);
+    if (!checkFieldsIntroduce(visit)) {
+      return responseWithStatus(Status.UNAUTHORIZED, "Missing fields");
+    }
+    return responseWithStatus(Status.CREATED, visitUCC.submitRequestOfVisit(visit));
+  }
+
+  private boolean checkFieldsIntroduce(VisitDTO visit) {
+    // TODO à peaufiner
+    if (isAnOtherAddress(visit)) {
+      if (visit.getTimeSlot() == null || visit.getWarehouseAddress().getStreet() == null
+          || visit.getWarehouseAddress().getBuildingNumber() == null
+          || visit.getWarehouseAddress().getCity() == null
+          || visit.getWarehouseAddress().getPostCode() == null
+          || visit.getWarehouseAddress().getCountry() == null || visit.getIdClient() == 0
+          || visit.getTimeSlot().isEmpty() || visit.getWarehouseAddress().getStreet().isEmpty()
+          || visit.getWarehouseAddress().getBuildingNumber().isEmpty()
+          || visit.getWarehouseAddress().getCity().isEmpty()
+          || visit.getWarehouseAddress().getPostCode().isEmpty()
+          || visit.getWarehouseAddress().getCountry().isEmpty()) {
+        System.out.println("une autre addresse");
+        return false;
+      }
+    } else {
+      if (visit.getTimeSlot() == null || visit.getIdClient() == 0
+          || visit.getTimeSlot().isEmpty()) {
+        System.out.println("la même adresse");
+        return false;
+      }
+    }
+    System.out.println("je passe ici");
+    return true;
+  }
+
+  private boolean isAnOtherAddress(VisitDTO visit) {
+    if (/*
+         * visit.getWarehouseAddress().getStreet() != null ||
+         * visit.getWarehouseAddress().getBuildingNumber() != null ||
+         * visit.getWarehouseAddress().getCity() != null ||
+         * visit.getWarehouseAddress().getPostCode() != null ||
+         * visit.getWarehouseAddress().getCountry() != null ||
+         */ !visit.getWarehouseAddress().getStreet().isEmpty()
+        || !visit.getWarehouseAddress().getBuildingNumber().isEmpty()
+        || !visit.getWarehouseAddress().getCity().isEmpty()
+        || !visit.getWarehouseAddress().getPostCode().isEmpty()
+        || !visit.getWarehouseAddress().getCountry().isEmpty()) {
+      return true;
+    }
+    return false;
+  }
 }

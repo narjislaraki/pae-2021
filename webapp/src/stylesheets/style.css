@@ -693,7 +693,7 @@ footer{
     font-size: 24px;
 }
 
-.furniture-container{
+#furniture-container{
     margin-left: 10%;
 }
 .furniture-options{
@@ -704,10 +704,14 @@ footer{
 
 /*FURNITURE PAGE*/
 
-.furniture-pictures{
-    width: max-content;
+#big-img{
+    max-width: 30%;
+    left: 15%;
+    top: 5%;
+    position: absolute;
 }
-.furniture-small-images img{
+
+#furniture-small-images img{
     object-fit: cover;
     margin: 10px 0;
     width: 40px;
@@ -718,10 +722,10 @@ footer{
     display: block;
     opacity: 0.5;
 }
-.furniture-small-images img:hover{
+#furniture-small-images img:hover{
     opacity: 1;
 }
-.furniture-small-images{
+#furniture-small-images{
     position: absolute;
     left: 10%;
     top: 10%;
@@ -735,6 +739,23 @@ footer{
     left: 15%;
     top: 10%;
 }
+
+#star-image {
+    position: absolute;
+    width: auto;
+    height: 4%;
+    top: 10.5%;
+    left: 15%;
+}
+
+#eye-image {
+    position: absolute;
+    width: auto;
+    height: 3.5%;
+    top: 11%;
+    left: 18%;
+}
+
 #furniture-type{
     font-weight: 300;
     font-size: 32px;
@@ -743,9 +764,15 @@ footer{
     text-align: left;
 
     position: absolute;
-    top: 10%;;
+    top: 10%;
     left: 50%;
 }
+#editImage{
+    position: absolute;
+    top: 9.5%;
+    right: 10%;
+}
+
 #furniture-description{
     font-style: normal;
     font-weight: 300;
@@ -768,6 +795,21 @@ footer{
     top: 40%;
     left: 50%;
 }
+#furniture-price{
+    display: inline;
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 56px;
+}
+
+#furniture-edit-buttons {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+}
+
 #furniture-price{
     display: inline;
     font-family: Roboto;
@@ -1043,7 +1085,49 @@ footer{
 
 /*Confirm Registration**************************************************************/
 
+#ringdiv {
+    width: fit-content;
+    margin: 20%;
+    margin-inline: auto;
+    align-self: center;
+}
 .tableConfirmRegistration{
     margin-left: 20%;
 }
 
+/* loader */
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid dimgrey;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: dimgrey transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -116,13 +116,18 @@ public class ObjectDistributor {
    * Returning a localDateTime based on a string.
    * 
    * @param str the dateTime format as "yyyy-MM-dd HH:mm"
-   * @return
+   * @return the LocalDateTime
    */
   private static LocalDateTime getLocalDateTime(String str) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     return LocalDateTime.parse(str, formatter);
   }
 
+  /**
+   * Construct a Visit not yet confirmed.
+   * 
+   * @return the visit
+   */
   public static VisitDTO getNotConfirmedVisitDTO() {
     VisitDTO visit = visitFactory.getVisitDTO();
     visit.setClient(getGoodNotValidatedUser());
@@ -137,6 +142,11 @@ public class ObjectDistributor {
   }
 
 
+  /**
+   * Construct a furniture in sale.
+   * 
+   * @return the furniture
+   */
   public static FurnitureDTO getFurnitureInSale() {
     FurnitureDTO furniture = furnitureFactory.getFurnitureDTO();
     furniture.setCondition(Condition.EN_VENTE.toString());

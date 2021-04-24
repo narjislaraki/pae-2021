@@ -8,12 +8,13 @@ public interface VisitDAO {
 
   List<VisitDTO> getNotConfirmedVisits();
 
-  void submitRequestOfVisit(VisitDTO visit, int idClient, int idWarehouseAddress);
+  int submitRequestOfVisit(VisitDTO visit);
 
   boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime);
 
   boolean cancelVisit(int idVisit, String explanatoryNote);
 
   VisitDTO getVisitById(int idVisit);
+
 
 }
