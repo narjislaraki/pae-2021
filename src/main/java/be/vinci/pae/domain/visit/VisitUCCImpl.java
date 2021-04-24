@@ -114,6 +114,17 @@ public class VisitUCCImpl implements VisitUCC {
     return visit;
   }
 
+  @Override
+  public List<FurnitureDTO> getListFurnituresForOneVisit(int idVisit) {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list = visitDAO.getListFurnituresForOnVisit(idVisit);
+    for (FurnitureDTO furniture : list) {
+      furniture.setListPhotos(furnitureDAO.getFurniturePhotos(furniture.getId()));
+    }
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
 
 
 }

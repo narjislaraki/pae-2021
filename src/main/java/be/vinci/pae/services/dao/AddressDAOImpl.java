@@ -30,10 +30,8 @@ public class AddressDAOImpl implements AddressDAO {
       ps.setString(2, address.getBuildingNumber());
       if (address.getUnitNumber() == null || address.getUnitNumber().isEmpty()
           || address.getUnitNumber().equals("")) { // TODO
-        System.out.println("le unitNumber est null");
         ps.setObject(3, null);
       } else {
-        System.out.println("le unitNumber n'est pas null");
         ps.setString(3, address.getUnitNumber());
       }
       ps.setString(4, address.getCity());

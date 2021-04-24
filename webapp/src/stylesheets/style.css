@@ -1015,6 +1015,19 @@ footer{
     width: 200px;
 }
 
+.photoDiv{
+    
+}
+
+.photoDiv img{
+    display: flexbox;
+}
+
+img.imageVisits{
+    max-width: inherit;
+    width: 60%;
+}
+
 /* Popup box BEGIN */
 .hover_bkgr_fricc{
     background:rgba(0,0,0,.4);

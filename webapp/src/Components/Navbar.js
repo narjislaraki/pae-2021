@@ -56,83 +56,23 @@ const Navbar = async () => {
             </div>
         </div>
 
-        <div class="hover_bkgr_fricc" id="hover_bkgr_friccNavbar">
-        <span class="helper"></span>
-        <div id="popupRequestForVisit">
-            <div class="popupCloseButton" id="popupCloseButtonNavbar">&times;</div>
-            <h2>Introduire une demande de visite</h2>
-          <form id="formRequest" class="RequestVisitForm">
-          <div>
-            <h4>Plage horaire *: </h4><input type="text" id="timeSlot" name="timeSlot" placeholder="exemple : le lundi de 18h à 22h" required><br>
-            <h4>Adresse : (uniquement si elle est différente de votre addresse)</h4>
-          </div>
-          <div>
-            <input type="text" class="form-control input-card" id="street" name="street" placeholder="Rue">
-
-            <input type="text" class="form-control input-card" id="number" name="number" placeholder="Numéro">
-                  
-            <input type="text" class="form-control input-card" id="unitnumber" name="unitnumber" placeholder="Boite">
-                  
-            <input type="text" class="form-control input-card" id="postcode" name="postcode" placeholder="Code Postal">
-                  
-            <input type="text" class="form-control input-card" id="city" name="city" placeholder="Commune">
-                  
-            <input type="text" class="form-control input-card" id="country" name="country" placeholder="Pays">
-              
-          </div><br>
-          <h4>Meuble(s) *: </h4><br>
-            <div id="eachFurniture">
-              <div>
-                ${idFurniture}. <textarea class="description" id="furniture${idFurniture}" name="furniture${idFurniture}" required></textarea> 
-                <label for="files${idFurniture}" class="bi bi-upload"></label>
-                <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" accept="image/*" multiple required>
-                <div id="typeFurniture" class="dropdown">
-                  <label for="type">Type du meuble : </label>
-                  <div id="tousLesTypes${idFurniture}"></div>
-                </div>
-              </div>
-            </div>
-         
-          <br>
-          <button class="bi bi-plus-circle" id="btnPlus" type="button"></button>
-          
-          <br>
-          <button class="btn btn-outline-success" id="introduceBtn" name="introduceBtn" type="submit">Confirmer</button>
-          <button class="btn btn-outline-danger" id="cancelBtn" name="cancelBtn" type="button">Annuler</button>
-          </form>
-
-          <span class="btnClose"></span>
-        </div>
+        
+        
     </div>
         `;
     navBar.innerHTML = nb;
 
     let introduceBtn = document.getElementById("introduceBtn");
     //introduceBtn.addEventListener("click", onIntroduceRequest);
-    let formRequest = document.getElementById("formRequest");
-    formRequest.addEventListener("submit", onIntroduceRequest);
-    let cancelBtn = document.getElementById("cancelBtn");
-    cancelBtn.addEventListener("click", onCloseVisit);
-    document.getElementById("popupCloseButtonNavbar").addEventListener("click", onCloseVisit);
+    
     
     //inputImage = document.getElementById("files"+idFurniture);
     //console.log(document.getElementById("files"+idFurniture).files);
     //inputImage.addEventListener("change", encodeImagetoBase64(document.getElementById("files"+idFurniture).files));
 
-    let btnPlus = document.getElementById("btnPlus");
-    btnPlus.addEventListener("click", onAddFurniture);
+   
 
-    try {
-      typesOfFurniture = await callAPI(
-        "/api/furnitures/typeOfFurnitureList",
-        "GET",
-        undefined,
-        undefined);
-      onTypesOfFurniture(typesOfFurniture);
-    } catch (err) {
-      console.error("Navbar::onIntroduceVisit", err);
-      PrintError(err);
-    }
+   
 
     if (user.role == "ADMIN") {
       let adminTools = document.getElementById("adminToolsIcon");
@@ -209,14 +149,82 @@ const onClickTools = (e) => {
   RedirectUrl("/visits")
 }
 
-const onIntroduceVisit = (e) => {
+const onIntroduceVisit = async (e)=> {
   e.preventDefault();
+  let popUpVisit = `
+  <div class="hover_bkgr_fricc" id="hover_bkgr_friccNavbar">
+        <span class="helper"></span>
+  <div id="popupRequestForVisit">
+  <div class="popupCloseButton" id="popupCloseButtonNavbar">&times;</div>
+  <h2>Introduire une demande de visite</h2>
+<form id="formRequest" class="RequestVisitForm">
+<div>
+  <h4>Plage horaire *: </h4><input type="text" id="timeSlot" name="timeSlot" placeholder="exemple : le lundi de 18h à 22h" required><br>
+  <h4>Adresse : (uniquement si elle est différente de votre addresse)</h4>
+</div>
+<div>
+  <input type="text" class="form-control input-card" id="street" name="street" placeholder="Rue">
+
+  <input type="text" class="form-control input-card" id="number" name="number" placeholder="Numéro">
+        
+  <input type="text" class="form-control input-card" id="unitnumber" name="unitnumber" placeholder="Boite">
+        
+  <input type="text" class="form-control input-card" id="postcode" name="postcode" placeholder="Code Postal">
+        
+  <input type="text" class="form-control input-card" id="city" name="city" placeholder="Commune">
+        
+  <input type="text" class="form-control input-card" id="country" name="country" placeholder="Pays">
+    
+</div><br>
+<h4>Meuble(s) *: </h4><br>
+  <div id="eachFurniture">
+    <div>
+      ${idFurniture}. <textarea class="description" id="furniture${idFurniture}" name="furniture${idFurniture}" required></textarea> 
+      <label for="files${idFurniture}" class="bi bi-upload"></label>
+      <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" accept="image/*" multiple required>
+      <div id="typeFurniture" class="dropdown">
+        <label for="type">Type du meuble : </label>
+        <div id="tousLesTypes${idFurniture}"></div>
+      </div>
+    </div>
+  </div>
+
+<br>
+<button class="bi bi-plus-circle" id="btnPlus" type="button"></button>
+
+<br>
+<button class="btn btn-outline-success" id="introduceBtn" name="introduceBtn" type="submit">Confirmer</button>
+<button class="btn btn-outline-danger" id="cancelBtn" name="cancelBtn" type="button">Annuler</button>
+</form>
+
+<span class="btnClose"></span>
+</div>
+  `;
+  document.getElementById("popups").innerHTML = popUpVisit;
+
   document.getElementById("hover_bkgr_friccNavbar").style.display = "block";
+  let formRequest = document.getElementById("formRequest");
+  formRequest.addEventListener("submit", onIntroduceRequest);
+  let cancelBtn = document.getElementById("cancelBtn");
+  cancelBtn.addEventListener("click", onCloseVisit);
+  document.getElementById("popupCloseButtonNavbar").addEventListener("click", onCloseVisit);
+  let btnPlus = document.getElementById("btnPlus");
+  btnPlus.addEventListener("click", onAddFurniture);
+  try {
+    typesOfFurniture = await callAPI(
+      "/api/furnitures/typeOfFurnitureList",
+      "GET",
+      undefined,
+      undefined);
+    onTypesOfFurniture(typesOfFurniture);
+  } catch (err) {
+    console.error("Navbar::onIntroduceVisit", err);
+    PrintError(err);
+  }
 }
 
 const onCloseVisit = (e) => {
   e.preventDefault();
-  console.log("je close");
   document.getElementById("hover_bkgr_friccNavbar").style.display = "none";
 }
 
@@ -280,7 +288,7 @@ const onAddFurniture = (e) => {
 
 const onIntroduceRequest = async (e) => {
   e.preventDefault();
-  
+  document.getElementById("hover_bkgr_friccNavbar").style.display = "none";
   /*for (let i = 1; i<= idFurniture; i++){
     let files = document.getElementById("files"+idFurniture);
     console.log(files.value);
@@ -321,8 +329,9 @@ const onIntroduceRequest = async (e) => {
       request
     );
     if (requestVisit) {
-      document.getElementById("hover_bkgr_friccNavbar").style.display = "none";
-      RedirectUrl("/");
+      if (window.location.pathname == "/visits"){
+        window.location.reload();
+      }
       PrintMessage("Votre demande de visite a bien été enregistrée. Elle est maintenant en attente de confirmation.");
     }
   } catch (err) {

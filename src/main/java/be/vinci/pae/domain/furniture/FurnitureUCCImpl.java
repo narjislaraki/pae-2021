@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -262,6 +261,27 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     List<PhotoDTO> list = furnitureDao.getFurniturePhotos(idFurniture);
     dalServices.stopBizzTransaction();
     return list;
+  }
+
+  @Override
+  public FurnitureDTO getFurnitureWithPhotosById(int id) {
+    dalServices.getBizzTransaction(true);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
+    furniture.setListPhotos(furnitureDao.getFurniturePhotos(id));
+    if (furniture == null) {
+      throw new BusinessException("There are no furniture for the given id");
+    }
+    int seller = furniture.getSellerId();
+    if (seller != 0) {
+      furniture.setSeller(userDAO.getUserFromId(seller));
+    }
+    int idPhoto = furniture.getFavouritePhotoId();
+    if (idPhoto != 0) {
+      furniture.setFavouritePhoto(furnitureDao.getFavouritePhotoById(idPhoto));
+    }
+    furniture.setType(furnitureDao.getFurnitureTypeById(furniture.getTypeId()));
+    dalServices.stopBizzTransaction();
+    return furniture;
   }
 
 }

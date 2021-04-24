@@ -2,7 +2,6 @@ package be.vinci.pae.services.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
