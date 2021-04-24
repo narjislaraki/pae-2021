@@ -740,20 +740,23 @@ footer{
     top: 10%;
 }
 
-#star-image {
+#edit-icons {
     position: absolute;
-    width: auto;
-    height: 4%;
-    top: 10.5%;
-    left: 15%;
+    align-content: center;
+    max-width: 50px;
+    top: 10%;
+    left: 5%;
+}
+#star-image {
+    max-width: inherit;
 }
 
 #eye-image {
-    position: absolute;
-    width: auto;
-    height: 3.5%;
-    top: 11%;
-    left: 18%;
+    max-width: inherit;
+}
+
+#delete-image {
+    max-width: inherit;
 }
 
 #furniture-type{

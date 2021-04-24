@@ -4,6 +4,7 @@ import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
+import waitingSpinner from "./WaitingSpinner.js";
 
 const API_BASE_URL = "api/furnitures/";
 
@@ -25,9 +26,22 @@ let furnitureTypes;
 let furniturePhotos;
 let nbPhoto;
 
+let editionMode = false;
+let edition = {
+    newDescription: undefined,
+    newType: undefined,
+    newPrice: undefined,
+    newFavoriteId: undefined,
+    toAdd: [],
+    toDelete: [],
+    toDisplay: [],
+    toHide: [],
+}
+
 let page = document.querySelector("#page");
 
 async function FurniturePage(id) {
+    waitingSpinner();
     nbPhoto = 0; // must be initialized every time!!
     userData = getUserSessionData();
     try {
@@ -93,7 +107,7 @@ async function FurniturePage(id) {
             );
         } catch (err) {
             //ugly and terrible idea but it works!
-            if (err != "SyntaxError: Unexpected end of JSON input") {
+            if (err !== "SyntaxError: Unexpected end of JSON input") {
                 console.error("FurniturePage::onGetOption", err);
                 PrintError(err);
             }
@@ -114,7 +128,7 @@ async function FurniturePage(id) {
                         ${furniture.description}
                     </div>
                     <div class="furniture-price-inline">
-                        <div id="furniture-price">${furniture.offeredSellingPrice == 0 ? "N/A" : furniture.offeredSellingPrice}</div>
+                        <div id="furniture-price">${furniture.offeredSellingPrice === 0 ? "N/A" : furniture.offeredSellingPrice}</div>
                         <div class="currency">euro</div>
                         <br>
                         <div id="sellingDiv"></div>
@@ -124,20 +138,22 @@ async function FurniturePage(id) {
 
     let smallImages = document.getElementById("furniture-small-images");
     furniturePhotos.map((element) => {
-        if (nbPhoto == 0) {
+        if (nbPhoto === 0) {
             let image = document.createElement("img");
             image.src = element.photo;
-            image.alt = "main Furniture image";
+            image.alt = "Grande image";
             image.id = "big-img";
-            image.class = "Image principale"
+            image.class = "main-image"
+            image.dataset.id = nbPhoto;
+            image.dataset.photoid = element.id
             document.getElementById("furniture-pictures").appendChild(image);
         }
-        smallImages.innerHTML += `<img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
+        smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
     })
-    if (currentUser != null && (currentUser.role == "CLIENT" || currentUser.role == "ANTIQUAIRE")) {
-        if (furniture.condition == "SOUS_OPTION") {
+    if (currentUser != null && (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE")) {
+        if (furniture.condition === "SOUS_OPTION") {
 
-            if (option.idUser != currentUser.id) {
+            if (option.idUser !== currentUser.id) {
                 page.innerHTML += `<div class="option-days condensed small-caps">Ce meuble est sous option, repassez plus tard</div>`;
             } else {
                 page.innerHTML += `
@@ -152,7 +168,7 @@ async function FurniturePage(id) {
                 cancelOptionBtn.addEventListener("click", onCancelOption);
             }
 
-        } else if (furniture.condition == "EN_VENTE") {
+        } else if (furniture.condition === "EN_VENTE") {
             if (nbOfDay >= 5) {
                 page.innerHTML += `<div class="option-days condensed small-caps">Vous avez atteint la limite d'option pour cet objet</div>`;
             } else {
@@ -179,7 +195,7 @@ async function FurniturePage(id) {
                 introduceOptionBtn.addEventListener("click", onIntroduceOption);
             }
         }
-    } else if (currentUser != null && currentUser.role == "ADMIN") {
+    } else if (currentUser != null && currentUser.role === "ADMIN") {
         let editIcon = document.createElement("img");
         editIcon.width = 40;
         editIcon.height = 40;
@@ -187,7 +203,7 @@ async function FurniturePage(id) {
         editIcon.src = "../assets/edit_icon.png";
         editIcon.id = "editIcon";
         document.getElementById("editImage").appendChild(editIcon);
-        if (furniture.condition == "ACHETE") {
+        if (furniture.condition === "ACHETE") {
             menuDeroulant = `
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -202,7 +218,7 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
-        } else if (furniture.condition == "EN_RESTAURATION") {
+        } else if (furniture.condition === "EN_RESTAURATION") {
             menuDeroulant = `
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -217,7 +233,7 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
-        } else if (furniture.condition == "DEPOSE_EN_MAGASIN") {
+        } else if (furniture.condition === "DEPOSE_EN_MAGASIN") {
             menuDeroulant = `
             <div class="price-inline" >
                         <input type="number"  min="0" id="price" required/>Entrez un prix de vente</div>
@@ -234,7 +250,7 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
-        } else if (furniture.condition == "EN_VENTE") {
+        } else if (furniture.condition === "EN_VENTE") {
             let divSelling = document.getElementById("sellingDiv");
             let clients;
             try {
@@ -295,7 +311,7 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
-        } else if (furniture.condition == "SOUS_OPTION") {
+        } else if (furniture.condition === "SOUS_OPTION") {
             page.innerHTML += `
                 <div class="option-days-below">
                 <p>Raison de l'annulation</p>
@@ -317,7 +333,7 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
-        } else if (furniture.condition == "RETIRE" || furniture.condition == "REFUSE") {
+        } else if (furniture.condition === "RETIRE" || furniture.condition === "REFUSE") {
             menuDeroulant = `
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -332,7 +348,7 @@ async function FurniturePage(id) {
                 </div>
             </div>
         `;
-        } else if (furniture.condition == "VENDU") {
+        } else if (furniture.condition === "VENDU") {
             menuDeroulant = `
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -368,7 +384,7 @@ async function FurniturePage(id) {
         } catch (err) {
 
         }
-        if (furniture.condition == "EN_VENTE") {
+        if (furniture.condition === "EN_VENTE") {
             let sellingBtn = document.getElementById("sell");
             let btnPopup = document.getElementById("closeBtnPop");
             let inputClient = document.getElementById("input-client");
@@ -388,12 +404,13 @@ async function FurniturePage(id) {
 
 
 const onEdit = async () => {
+    editionMode = true;
     document.getElementById("editIcon").style.display = "none";
+    console.log(furniturePhotos, furniture)
 
     /**** Furniture ****/
     typeElem = document.getElementById("furniture-type");
     descElem = document.getElementById("furniture-description");
-    priceElem = document.getElementById("furniture-price");
 
     if (!furnitureTypes) {
         furnitureTypes = await callAPI(
@@ -406,24 +423,29 @@ const onEdit = async () => {
 
     type = typeElem.innerText;
     desc = descElem.innerText;
-    price = priceElem.innerText;
 
     typeElem.innerHTML = `
             <label for="furniture-types">Type de meuble:</label>
             <select class="form-select" id="furniture-types"></select>`
     let furnitureTypesElem = document.getElementById("furniture-types");
     furnitureTypes.map((e) => {
-        if (e.label == furniture.type)
+        if (e.label === furniture.type)
             furnitureTypesElem.innerHTML += `<option value="${e.id}" selected>${e.label}</option>`
         else
             furnitureTypesElem.innerHTML += `<option value="${e.id}">${e.label}</option>`;
     });
 
     descElem.contentEditable = "true";
-    priceElem.contentEditable = "true";
     typeElem.style.background = "lightgrey";
     descElem.style.background = "lightgrey";
-    priceElem.style.background = "lightgrey";
+
+
+    if (furniture.condition === "EN_VENTE") {
+        priceElem = document.getElementById("furniture-price");
+        price = priceElem.innerText;
+        priceElem.contentEditable = "true";
+        priceElem.style.background = "lightgrey";
+    }
 
     let buttons = document.createElement("div");
     buttons.innerHTML = `<button class="btn btn-outline-success col-6 confirmEditBtn" id="confirmEditBtn" " type="submit">Confirmer</button>
@@ -438,11 +460,85 @@ const onEdit = async () => {
     /**** Photos ****/
 
     let div = document.createElement("div");
-    div.innerHTML = `<img src="../assets/star_full.png" alt="favorite" id="star-image">
-                     <img src="../assets/eye_open.png" alt="visibilité" id="eye-image">`
+    let bigImg = document.getElementById("big-img");
+    let edit_btns = `<div id="edit-icons">`;
+    if (furniture.favouritePhotoId == bigImg.dataset.photoid)
+        edit_btns += `<img src="../assets/star_full.png" alt="Favoris" id="star-image">`
+    else
+        edit_btns += `<img src="../assets/star_empty.png" alt="Non avoris" id="star-image">`
+    edit_btns += `<br><br>`
+    if (furniturePhotos.isVisible === "true")
+        edit_btns += `<img src="../assets/eye_open.png" alt="Visible" id="eye-image">`
+    else
+        edit_btns += `<img src="../assets/eye_close.png" alt="Non visible" id="eye-image">`
+    edit_btns += `<br><br>`
+    edit_btns += `<img src="../assets/red_cross.png" alt="Suppression" id="delete-image"></div>`
+    div.innerHTML = edit_btns;
     div.id = "img-edit"
     document.getElementById("furniture-pictures").appendChild(div);
 
+    let plus = document.createElement("img");
+    plus.id = "small-img-plus";
+    plus.alt = "Ajout d'image"
+    plus.src = "../assets/plus.png"
+    document.getElementById("furniture-small-images").append(plus);
+
+    let imgInput = document.createElement("input");
+    imgInput.type = "file";
+    imgInput.multiple = true;
+    imgInput.hidden = true;
+    imgInput.id = "imgInput"
+    document.getElementById("furniture-small-images").append(imgInput);
+
+    document.getElementById("small-img-plus").addEventListener("click", onPlusImage);
+    document.getElementById("eye-image").addEventListener("click", onEyeImg);
+    document.getElementById("delete-image").addEventListener("click", onDeleteImg);
+    document.getElementById("star-image").addEventListener("click", onStarImg, true);
+}
+
+const onEyeImg = () => {
+    let bigImg = document.getElementById("big-img");
+
+    if (furniture.favouritePhotoId == bigImg.dataset.photoid) {
+        let err = {
+            message: "Impossible de rendre non visible une image favorite",
+        }
+        PrintError(err);
+        return;
+    } else
+        PrintMessage("À implémenter :-)");
+}
+
+const onDeleteImg = () => {
+    let bigImg = document.getElementById("big-img");
+
+    if (furniture.favouritePhotoId == bigImg.dataset.photoid) {
+        let err = {
+            message: "Impossible de supprimer une image favorite",
+        }
+        PrintError(err);
+        return;
+    } else
+        PrintMessage("À implémenter :-)");
+}
+
+const onStarImg = () => {
+    let bigImg = document.getElementById("big-img");
+
+    if (furniture.favouritePhotoId == bigImg.dataset.photoid) {
+        let err = {
+            message: "Action impossible, veuillez choisir une nouvelle image favorite",
+        }
+        PrintError(err);
+        return;
+    } else
+        PrintMessage("À implémenter :-)");
+
+
+}
+
+const onPlusImage = () => {
+    document.getElementById("imgInput").click();
 }
 
 
@@ -450,21 +546,26 @@ const onCancelEditButton = () => {
     document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
     descElem.style.background = "none";
-    priceElem.style.background = "none";
 
     descElem.contentEditable = "false";
-    priceElem.contentEditable = "false";
 
     typeElem.innerText = type;
     descElem.innerText = desc;
-    priceElem.innerText = price;
 
-    document.getElementById("furniture-container").removeChild(document.getElementById("furniture-edit-buttons"));
-    document.getElementById("furniture-pictures").removeChild(document.getElementById("img-edit"));
+    if (furniture.condition === "EN_VENTE") {
+        priceElem.style.background = "none";
+        priceElem.contentEditable = "false";
+        priceElem.innerText = price;
+    }
+    removeEditElements();
+    editionMode = false;
 }
 
 
 const onConfirmEditButton = () => {
+
+
+    /***** Display *****/
     document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
     descElem.style.background = "none";
@@ -481,16 +582,38 @@ const onConfirmEditButton = () => {
     furniture.description = descElem.innerText;
     furniture.offeredSellingPrice = desc.innerText;
 
-    document.getElementById("furniture-container").removeChild(document.getElementById("furniture-edit-buttons"));
-    document.getElementById("furniture-pictures").removeChild(document.getElementById("img-edit"));
-
+    removeEditElements();
     //TODO POST sur meuble pour modifications
     PrintMessage("Les modifications on été effectuées avec succès")
+    editionMode = false;
+}
+
+function removeEditElements() {
+    document.getElementById("furniture-container").removeChild(document.getElementById("furniture-edit-buttons"));
+    document.getElementById("furniture-pictures").removeChild(document.getElementById("img-edit"));
+    document.getElementById("furniture-small-images").removeChild(document.getElementById("small-img-plus"));
+    document.getElementById("furniture-small-images").removeChild(document.getElementById("imgInput"));
 }
 
 
 const onSmallImg = (e) => {
-    document.getElementById("big-img").src = furniturePhotos[e.srcElement.dataset.id].photo;
+    let bigImg = document.getElementById("big-img");
+    bigImg.src = furniturePhotos[e.target.dataset.id].photo;
+    bigImg.dataset.photoid = furniturePhotos[e.target.dataset.id].id;
+    if (editionMode === true) {
+        let star = document.getElementById("star-image")
+        let eye = document.getElementById("eye-image")
+        if (furniture.favouritePhotoId === furniturePhotos[e.target.dataset.id].id)
+            star.src = "../assets/star_full.png"
+        else
+            star.src = "../assets/star_empty.png"
+        if (furniturePhotos.isVisible === "true")
+            eye.src = "../assets/eye_open.png"
+        else
+            eye.src = "../assets/eye_close.png"
+        star.removeEventListener("click", onStarImg, true);
+        star.addEventListener("click", onStarImg, true);
+    }
 }
 
 
@@ -520,14 +643,14 @@ const onSell = async () => {
         sellingPrice: furniture.offeredSellingPrice
     }
 
-    if (document.getElementById("input-client").disabled == false && !data) {
+    if (document.getElementById("input-client").disabled === false && !data) {
         let err = {
             message: "L'utilisateur est invalide"
         }
         PrintError(err);
         return;
-    } else if (document.getElementById("input-client").disabled == false) {
-        if (data.dataset.role == "ANTIQUAIRE") {
+    } else if (document.getElementById("input-client").disabled === false) {
+        if (data.dataset.role === "ANTIQUAIRE") {
             sale.sellingPrice = parseFloat(document.getElementById("sellingPrice").textContent);
         }
         sale.idBuyer = parseInt(data.dataset.userid);
@@ -563,7 +686,7 @@ const onClientSelection = () => {
     let roleClient = document.querySelector("#clients-list option[value='" + inputClient + "']").dataset.role;
     let divPrice = document.getElementById("sellingPrice");
 
-    if (roleClient == "ANTIQUAIRE") {
+    if (roleClient === "ANTIQUAIRE") {
         divPrice.style.display = "block";
     } else {
         divPrice.style.display = "none";
@@ -606,7 +729,7 @@ const onDropOfStore = async () => {
 const onOfferedForSale = async () => {
     let id = furniture.id;
     let price = document.getElementById("price").value;
-    if (price == "") {
+    if (price === "") {
         let error = {
             message: "Veuillez d'abord entrer un prix de vente",
         }
@@ -650,7 +773,7 @@ const onWithdrawSale = async () => {
 const onCancelOption = async () => {
     let id = furniture.id;
     let reason = document.getElementById("cancelOption").value;
-    if (reason == "") {
+    if (reason === "") {
         let error = {
             message: "Veuillez d'abord entrer une raison d'annulation",
         }
@@ -716,7 +839,7 @@ const incrementCounter = () => {
         document.querySelector(".minus-btn").removeAttribute("disabled");
         document.querySelector(".minus-btn").classList.remove("disabled");
     }
-    if (valueCount == 5) {
+    if (valueCount === 5) {
         document.querySelector(".plus-btn").setAttribute("disabled", "disabled");
     }
 }
@@ -725,7 +848,7 @@ const decrementCounter = () => {
     valueCount = document.getElementById("optionTerm").value;
     valueCount--;
     document.getElementById("optionTerm").value = valueCount;
-    if (valueCount == 1) {
+    if (valueCount === 1) {
         document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
     }
     if (valueCount < 5) {
@@ -734,5 +857,28 @@ const decrementCounter = () => {
     }
 }
 
+function encodeFile(file) {
+    return new Promise((resolve, reject) => {
+        var fileReader = new FileReader();
+        fileReader.onload = function (fileLoadedEvent) {
+            let base64 = fileLoadedEvent.target.result;
+            resolve(base64);
+        }
+        fileReader.readAsDataURL(file)
+    });
+}
+
+async function encodeFiles(files) {
+    const returnedFiles = [];
+    if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+            let photo = await encodeFile(files[i])
+            returnedFiles[i] = {
+                photo: photo,
+            }
+        }
+    }
+    return returnedFiles;
+}
 
 export {FurniturePage};
