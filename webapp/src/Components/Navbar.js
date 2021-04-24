@@ -335,6 +335,9 @@ const onIntroduceRequest = async (e) => {
       PrintMessage("Votre demande de visite a bien été enregistrée. Elle est maintenant en attente de confirmation.");
     }
   } catch (err) {
+    if (err == "Error: Missing fields") {
+      err.message = "Vous n'avez pas rempli tous les champs, la demande de visite n'a pas été enregistrée ! ";
+    }
     console.error("Navbar :: onIntroduceRequest", err);
     PrintError(err);
   }
