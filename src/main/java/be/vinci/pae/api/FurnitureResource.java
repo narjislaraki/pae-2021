@@ -328,7 +328,7 @@ public class FurnitureResource {
     if (!user.getRole().equals(Role.ADMIN)) {
       orderedList = orderedList.stream()
           .filter(
-              e -> e.isVisible() || (user.getId() == furniture.getSellerId() && e.isAClientPhoto()))
+              e -> e.isVisible() || user.getId() == furniture.getSellerId() && e.isAClientPhoto())
           .collect(Collectors.toList());
     }
     return orderedList;
