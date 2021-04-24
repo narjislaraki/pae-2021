@@ -1015,16 +1015,20 @@ footer{
     width: 200px;
 }
 
-.photoDiv{
-    
+.column{
+    float: left;
+    width: auto;
+    padding: 5px;
+}
+.row::after{
+    content:"";
+    clear: both;
+    display: table;
 }
 
-.photoDiv img{
-    display: flexbox;
-}
 
 img.imageVisits{
-    max-width: inherit;
+    display: inline;
     width: 60%;
 }
 

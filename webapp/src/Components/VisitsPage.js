@@ -225,9 +225,9 @@ async function onClickVisit(e) {
                 <li>
                     <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
                         ${furniture.description}
-                        <div class="photoDiv">`;
+                        <div class="row" id="photoDiv">`;
             furniture.listPhotos.map(e => {
-                toAdd += `<img class="imageVisits" src="${e.photo}">`
+                toAdd += `<div class="column"><img class="imageVisits" src="${e.photo}" style="width:60%"></div>`
             });
                         toAdd +=  `</div>
                     </div>
@@ -253,6 +253,13 @@ const onConfirm = async (e) => {
         }
         PrintError(error);
         return;
+    }else{
+        Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
+            if (element.dataset.id == id) {
+                element.style.display = "none";
+                return;
+            }
+        });
     }
     try {
         await callAPI(
@@ -280,6 +287,13 @@ const onCancel = async (e) => {
         }
         PrintError(error);
         return;
+    }else{
+        Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
+            if (element.dataset.id == id) {
+                element.style.display = "none";
+                return;
+            }
+        });
     }
     try {
         await callAPI(
