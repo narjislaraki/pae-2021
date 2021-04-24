@@ -76,7 +76,7 @@ async function FurnitureListPage() {
     e.addEventListener("click", onFurniture);
   });
 
-  const user = getUserSessionData();
+  console.log(furnitures)
 };
 
 const onFurniture = (e) => {

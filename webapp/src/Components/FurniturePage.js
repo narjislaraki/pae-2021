@@ -452,7 +452,6 @@ const onCancelEditButton = () => {
     descElem.style.background = "none";
     priceElem.style.background = "none";
 
-    typeElem.contentEditable = "false";
     descElem.contentEditable = "false";
     priceElem.contentEditable = "false";
 
@@ -466,10 +465,24 @@ const onCancelEditButton = () => {
 
 
 const onConfirmEditButton = () => {
-    if (typeElem.innerText === type && descElem.innerText === desc && priceElem.innerText === price) {
-        onCancelEditButton();
-        return;
-    }
+    document.getElementById("editIcon").style.display = "inline"
+    typeElem.style.background = "none";
+    descElem.style.background = "none";
+    priceElem.style.background = "none";
+
+    descElem.contentEditable = "false";
+    priceElem.contentEditable = "false";
+
+    let index = document.getElementById("furniture-types").selectedIndex;
+    console.log("pouet", index, document.getElementsByTagName("option")[index].value, furniture)
+    typeElem.innerText = document.getElementsByTagName("option")[index].innerText;
+
+    furniture.type = typeElem.innerText;
+    furniture.description = descElem.innerText;
+    furniture.offeredSellingPrice = desc.innerText;
+
+    document.getElementById("furniture-container").removeChild(document.getElementById("furniture-edit-buttons"));
+    document.getElementById("furniture-pictures").removeChild(document.getElementById("img-edit"));
 
     //TODO POST sur meuble pour modifications
     PrintMessage("Les modifications on été effectuées avec succès")

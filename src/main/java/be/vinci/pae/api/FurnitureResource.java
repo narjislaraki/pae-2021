@@ -3,6 +3,7 @@ package be.vinci.pae.api;
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -294,6 +295,13 @@ public class FurnitureResource {
     return list;
   }
 
+  /**
+   * Get the photos related to a particuliar furniture.
+   * 
+   * @param request the request
+   * @param idFurniture the furniture id
+   * @return a list of photos
+   */
   @GET
   @Path("/{idFurniture}/photos")
   @Authorize
@@ -306,22 +314,23 @@ public class FurnitureResource {
     FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
 
     // Placing the favourite photo first
+    List<PhotoDTO> orderedList = new ArrayList<>();
     for (PhotoDTO p : list) {
       if (p.getId() == furniture.getFavouritePhotoId()) {
-        list.remove(p);
-        list.add(0, p);
-      }
+        orderedList.add(0, p);
+      } else
+        orderedList.add(p);
     }
 
     UserDTO user = (UserDTO) request.getProperty("user");
 
     if (!user.getRole().equals(Role.ADMIN)) {
-      list = list.stream()
+      orderedList = orderedList.stream()
           .filter(
               e -> e.isVisible() || (user.getId() == furniture.getSellerId() && e.isAClientPhoto()))
           .collect(Collectors.toList());
     }
-    return list;
+    return orderedList;
   }
 
 }
