@@ -132,6 +132,9 @@ const onVisitsWaiting = async () => {
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
 
+    let visitsATraiter = document.getElementById("visitsToBeProcessed");
+    visitsATraiter.addEventListener("click", onVisitsToBeProcessed);
+
     let advancedSearches = document.getElementById("advancedSearches");
     advancedSearches.addEventListener("click", onAdvancedSearches);
     

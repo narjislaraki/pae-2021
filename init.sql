@@ -1,4 +1,4 @@
--- Last modification date : 24/04/2021 --
+-- Last modification date : 26/04/2021 --
 DROP SCHEMA IF EXISTS pae CASCADE;
 CREATE SCHEMA pae;
 
@@ -117,8 +117,8 @@ INSERT INTO pae.users VALUES
 		(default, 'bazz', 'Ile', 'Basile', 'bazz.ile@gmail.be', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 5); --mdpusr.2
 
 INSERT INTO pae.requests_for_visits VALUES
-		(default, 'lundi de 18h à 22h', 'accepté', null, '2021-03-29 20:00:00', 4, 4),
-		(default, 'lundi de 18h à 22h', 'annulé', 'Meuble trop récent', null, 4, 4),
+		(default, 'lundi de 18h à 22h', 'acceptée', null, '2021-03-29 20:00:00', 4, 4),
+		(default, 'lundi de 18h à 22h', 'annulée', 'Meuble trop récent', null, 4, 4),
 		(default, 'tous les jours de 15h à 18h', 'acceptée', null, '2021-03-29 15:00:00', 5, 5);
 	
 INSERT INTO pae.types_of_furnitures VALUES

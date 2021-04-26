@@ -22,7 +22,7 @@ let VisitsToBeProcessedPage = () => {
     let visitToBeProcessedPage = `<div class="visits-title small-caps">
     <div class="all-furn-title small-caps">Visites à traiter</div>
     </div>`;
-    page.innerHTML = menu + visitPage;
+    page.innerHTML = menu + visitToBeProcessedPage;
 
     onVisitsToBeProcessed();
 
@@ -61,6 +61,7 @@ const onVisitsToBeProcessed = async() => {
             userData.token,
             undefined,
         );
+        console.log(listVisitsToBeProcessed);
 
     } catch (err) {
         if (err == "Error: Admin only") {
@@ -95,5 +96,22 @@ const onVisitsToBeProcessed = async() => {
 
             `
         ).join("");
+    
+    page.innerHTML += visitsToBeProcessed;
+    page.innerHTML += `</tbody></table></div>`;
+
+    let visits = document.getElementById("visits");
+    visits.addEventListener("click", onVisits);
+
+    let visitsATraiter = document.getElementById("visitsToBeProcessed");
+    visitsATraiter.addEventListener("click", onVisitsToBeProcessed);
+
+    let advancedSearches = document.getElementById("advancedSearches");
+    advancedSearches.addEventListener("click", onAdvancedSearches);
+    
+    let confirmRegister = document.getElementById("confirmRegister");
+    confirmRegister.addEventListener("click", onConfirmRegister);
 }
+
+export default VisitsToBeProcessedPage;
 
