@@ -9,6 +9,8 @@ public interface VisitDAO {
 
   List<VisitDTO> getNotConfirmedVisits();
 
+  List<VisitDTO> getVisitsToBeProcessed();
+
   int submitRequestOfVisit(VisitDTO visit);
 
   boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime);

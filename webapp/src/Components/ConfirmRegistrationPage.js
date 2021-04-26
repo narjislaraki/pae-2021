@@ -164,6 +164,12 @@ const onVisits = (e) => {
   RedirectUrl("/visits");
 };
 
+const onVisitsToBeProcessed = (e) => {
+  e.preventDefault();
+  console.log("to visits to be processed");
+  RedirectUrl("/visitsToBeProcessed");
+}
+
 const onAdanvancedSearches = (e) => {
   e.preventDefault();
   RedirectUrl("/advancedSearches");
