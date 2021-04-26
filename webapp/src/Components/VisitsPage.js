@@ -13,7 +13,8 @@ let VisitsPage = () => {
     userData = getUserSessionData();
     let menu = `
     <div class="menuAdmin">
-        <button class="menuAdminOn" id="visits">Visites</button>
+        <button class="menuAdminOn" id="visits">Visites en attente</button>
+        <button id="visitsToBeProcessed">Visites à traiter</button>
         <button id="advancedSearches">Recherche avancées</button>
         <button id="confirmRegister">Confirmation des inscriptions</button>
     </div>
