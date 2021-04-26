@@ -595,13 +595,21 @@ const onCancelEditButton = () => {
 
 const onConfirmEditButton = () => {
     /***** Data management *****/
-    //TODO
-    console.log(edition)
+    let index = document.getElementById("furniture-types").selectedIndex;
+    console.log("pouet", index, document.getElementsByTagName("option")[index].value, furniture)
+    typeElem.innerText = document.getElementsByTagName("option")[index].innerText;
+
+    let newType = document.getElementsByTagName("option")[index].innerText;
+
+    edition.newType = newType === furniture.type ? null : newType;
+    edition.newDescription = descElem.innerText === furniture.description ? null : descElem.innerText;
+    if (furniture.condition === "EN_VENTE" && priceElem.innerText !== price) {
+        edition.newPrice = priceElem.innerText;
+    }
     /***** Display management *****/
     document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
     descElem.style.background = "none";
-
     descElem.contentEditable = "false";
 
     if (furniture.condition === "EN_VENTE") {
@@ -609,18 +617,10 @@ const onConfirmEditButton = () => {
         priceElem.contentEditable = "false";
     }
 
-    let index = document.getElementById("furniture-types").selectedIndex;
-    console.log("pouet", index, document.getElementsByTagName("option")[index].value, furniture)
-    typeElem.innerText = document.getElementsByTagName("option")[index].innerText;
-
-    furniture.type = typeElem.innerText;
-    furniture.description = descElem.innerText;
-    furniture.offeredSellingPrice = desc.innerText;
-
     removeEditElements();
     //TODO POST sur meuble pour modifications
     stopEdition();
-    FurniturePage(furniture.id);
+    //FurniturePage(furniture.id);
 }
 
 function stopEdition() {
