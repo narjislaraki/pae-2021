@@ -28,10 +28,10 @@ let nbPhoto;
 
 let editionMode = false;
 let edition = {
-    newDescription: undefined,
-    newType: undefined,
-    newPrice: undefined,
-    newFavoriteId: undefined,
+    newDescription: null,
+    newType: null,
+    newPrice: null,
+    newFavouriteId: null,
     toAdd: [],
     toDelete: [],
     toDisplay: [],
@@ -467,7 +467,7 @@ const onEdit = async () => {
     else
         edit_btns += `<img src="../assets/star_empty.png" alt="Non avoris" id="star-image">`
     edit_btns += `<br><br>`
-    if (furniturePhotos.isVisible === "true")
+    if (furniturePhotos[0].isVisible == true)
         edit_btns += `<img src="../assets/eye_open.png" alt="Visible" id="eye-image">`
     else
         edit_btns += `<img src="../assets/eye_close.png" alt="Non visible" id="eye-image">`
@@ -498,41 +498,72 @@ const onEdit = async () => {
 
 const onEyeImg = () => {
     let bigImg = document.getElementById("big-img");
+    let clickedId = bigImg.dataset.photoid;
+    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
 
-    if (furniture.favouritePhotoId == bigImg.dataset.photoid) {
+    if (actualFavourite == clickedId) {
         let err = {
             message: "Impossible de rendre non visible une image favorite",
         }
         PrintError(err);
-        return;
-    } else
-        PrintMessage("À implémenter :-)");
+    } else {
+        let isOpen = document.getElementById("eye-image").src.includes("eye_open.png");
+        let indexD = edition.toDisplay.indexOf(clickedId);
+        let indexH = edition.toHide.indexOf(clickedId);
+        if (isOpen) {
+            if (indexD !== -1)
+                edition.toDisplay.splice(indexD, 1);
+            edition.toHide.push(clickedId);
+            document.getElementById("eye-image").src = "../assets/eye_close.png"
+        } else {
+            if (indexH !== -1)
+                edition.toHide.splice(indexH, 1);
+            edition.toDisplay.push(clickedId)
+            document.getElementById("eye-image").src = "../assets/eye_open.png"
+        }
+    }
 }
 
 const onDeleteImg = () => {
     let bigImg = document.getElementById("big-img");
+    let clickedId = bigImg.dataset.photoid;
+    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
 
-    if (furniture.favouritePhotoId == bigImg.dataset.photoid) {
+    if (actualFavourite == clickedId) {
         let err = {
             message: "Impossible de supprimer une image favorite",
         }
         PrintError(err);
-        return;
-    } else
-        PrintMessage("À implémenter :-)");
+    } else {
+        let index = edition.toDelete.indexOf(clickedId)
+        if (index === -1) {
+            edition.toDelete.push(clickedId);
+            bigImg.src = "../assets/red_cross.png";
+        } else {
+            edition.toDelete.splice(index, 1)
+            bigImg.src = furniturePhotos[bigImg.dataset.id].photo
+        }
+    }
 }
 
 const onStarImg = () => {
     let bigImg = document.getElementById("big-img");
+    let clickedId = bigImg.dataset.photoid;
+    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
 
-    if (furniture.favouritePhotoId == bigImg.dataset.photoid) {
+    if (actualFavourite == clickedId || document.getElementById("eye-image").src.includes("eye_close.png")) {
         let err = {
-            message: "Action impossible, veuillez choisir une nouvelle image favorite",
+            message: "Action impossible, veuillez choisir une nouvelle image favorite au préalable",
         }
         PrintError(err);
-        return;
-    } else
-        PrintMessage("À implémenter :-)");
+    } else {
+        let star = document.getElementById("star-image");
+        star.src = "../assets/star_full.png";
+        if (clickedId == furniture.favouritePhotoId)
+            edition.newFavouriteId = null;
+        else
+            edition.newFavouriteId = clickedId;
+    }
 
 
 }
@@ -558,21 +589,25 @@ const onCancelEditButton = () => {
         priceElem.innerText = price;
     }
     removeEditElements();
-    editionMode = false;
+    stopEdition();
 }
 
 
 const onConfirmEditButton = () => {
-
-
-    /***** Display *****/
+    /***** Data management *****/
+    //TODO
+    console.log(edition)
+    /***** Display management *****/
     document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
     descElem.style.background = "none";
-    priceElem.style.background = "none";
 
     descElem.contentEditable = "false";
-    priceElem.contentEditable = "false";
+
+    if (furniture.condition === "EN_VENTE") {
+        priceElem.style.background = "none";
+        priceElem.contentEditable = "false";
+    }
 
     let index = document.getElementById("furniture-types").selectedIndex;
     console.log("pouet", index, document.getElementsByTagName("option")[index].value, furniture)
@@ -584,8 +619,23 @@ const onConfirmEditButton = () => {
 
     removeEditElements();
     //TODO POST sur meuble pour modifications
-    PrintMessage("Les modifications on été effectuées avec succès")
+    stopEdition();
+    FurniturePage(furniture.id);
+}
+
+function stopEdition() {
+    console.log(edition)
     editionMode = false;
+    edition = {
+        newDescription: null,
+        newType: null,
+        newPrice: null,
+        newFavouriteId: null,
+        toAdd: [],
+        toDelete: [],
+        toDisplay: [],
+        toHide: [],
+    }
 }
 
 function removeEditElements() {
@@ -598,16 +648,21 @@ function removeEditElements() {
 
 const onSmallImg = (e) => {
     let bigImg = document.getElementById("big-img");
-    bigImg.src = furniturePhotos[e.target.dataset.id].photo;
-    bigImg.dataset.photoid = furniturePhotos[e.target.dataset.id].id;
-    if (editionMode === true) {
+    let index = e.target.dataset.id
+    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
+    let visible = (furniturePhotos[index].isVisible == true && !edition.toHide.find(e => e == furniturePhotos[index].id)) || edition.toDisplay.find(e => e == furniturePhotos[index].id);
+    bigImg.src = edition.toDelete.indexOf(furniturePhotos[index].id.toString()) === -1 ? furniturePhotos[index].photo : "../assets/red_cross.png";
+    bigImg.dataset.photoid = furniturePhotos[index].id;
+    bigImg.dataset.id = index;
+
+    if (editionMode) {
         let star = document.getElementById("star-image")
         let eye = document.getElementById("eye-image")
-        if (furniture.favouritePhotoId === furniturePhotos[e.target.dataset.id].id)
+        if (actualFavourite == furniturePhotos[index].id)
             star.src = "../assets/star_full.png"
         else
             star.src = "../assets/star_empty.png"
-        if (furniturePhotos.isVisible === "true")
+        if (visible)
             eye.src = "../assets/eye_open.png"
         else
             eye.src = "../assets/eye_close.png"
