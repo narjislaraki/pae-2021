@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitUCC;
 import be.vinci.pae.views.Views;
@@ -61,6 +62,29 @@ public class VisitResource {
     }
     return responseOkWithEntity(r);
   }
+
+  /**
+   * Get a list of furnitures for one request for visits.
+   * 
+   * @param request the request
+   * @return a list of furnitures for one requests for visits wrapped in a Response
+   */
+  @GET
+  @Path("{idVisit}/furnitures")
+  @AdminAuthorize
+  public Response getListFurnituresForOneVisit(@Context ContainerRequest request,
+      @PathParam("idVisit") int idVisit) {
+    List<FurnitureDTO> list = visitUCC.getListFurnituresForOneVisit(idVisit);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+
+    } catch (JsonProcessingException e) {
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
 
   /**
    * Acceptation of a request for visit.
@@ -152,17 +176,14 @@ public class VisitResource {
           || visit.getWarehouseAddress().getCity().isEmpty()
           || visit.getWarehouseAddress().getPostCode().isEmpty()
           || visit.getWarehouseAddress().getCountry().isEmpty()) {
-        System.out.println("une autre addresse");
         return false;
       }
     } else {
       if (visit.getTimeSlot() == null || visit.getIdClient() == 0
           || visit.getTimeSlot().isEmpty()) {
-        System.out.println("la même adresse");
         return false;
       }
     }
-    System.out.println("je passe ici");
     return true;
   }
 

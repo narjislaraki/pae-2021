@@ -2,7 +2,7 @@ package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import be.vinci.pae.domain.user.UserDTO;
@@ -45,7 +45,7 @@ public class FurnitureImpl implements FurnitureDTO {
   @JsonView(Views.Public.class)
   private String favouritePhoto;
   @JsonView(Views.Public.class)
-  private ArrayList<PhotoDTO> listPhotos;
+  private List<PhotoDTO> listPhotos;
 
   public int getId() {
     return id;
@@ -206,11 +206,11 @@ public class FurnitureImpl implements FurnitureDTO {
     this.favouritePhoto = favouritePhoto;
   }
 
-  public ArrayList<PhotoDTO> getListPhotos() {
+  public List<PhotoDTO> getListPhotos() {
     return this.listPhotos;
   }
 
-  public void setListPhotos(ArrayList<PhotoDTO> listPhotos) {
+  public void setListPhotos(List<PhotoDTO> listPhotos) {
     this.listPhotos = listPhotos;
   }
 

@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -65,6 +64,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
     return furniture;
   }
+
 
   /**
    * Calculate and return the number of days booked by the user for a furniture.

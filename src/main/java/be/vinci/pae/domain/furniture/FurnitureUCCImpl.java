@@ -266,6 +266,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
+<<<<<<< src/main/java/be/vinci/pae/domain/furniture/FurnitureUCCImpl.java
   public boolean edit(EditionDTO edition) {
     dalServices.getBizzTransaction(false);
     if (!(edition.getDescription().isEmpty() && edition.getIdType() == -1
@@ -298,6 +299,26 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
     dalServices.commitBizzTransaction();
     return true;
+=======
+  public FurnitureDTO getFurnitureWithPhotosById(int id) {
+    dalServices.getBizzTransaction(true);
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
+    furniture.setListPhotos(furnitureDao.getFurniturePhotos(id));
+    if (furniture == null) {
+      throw new BusinessException("There are no furniture for the given id");
+    }
+    int seller = furniture.getSellerId();
+    if (seller != 0) {
+      furniture.setSeller(userDAO.getUserFromId(seller));
+    }
+    int idPhoto = furniture.getFavouritePhotoId();
+    if (idPhoto != 0) {
+      furniture.setFavouritePhoto(furnitureDao.getFavouritePhotoById(idPhoto));
+    }
+    furniture.setType(furnitureDao.getFurnitureTypeById(furniture.getTypeId()));
+    dalServices.stopBizzTransaction();
+    return furniture;
+>>>>>>> src/main/java/be/vinci/pae/domain/furniture/FurnitureUCCImpl.java
   }
 
 }

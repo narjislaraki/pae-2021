@@ -1,7 +1,7 @@
 package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.visit.PhotoDTO;
@@ -86,9 +86,9 @@ public interface FurnitureDTO {
 
   void setFavouritePhoto(String favouritePhoto);
 
-  ArrayList<PhotoDTO> getListPhotos();
+  List<PhotoDTO> getListPhotos();
 
-  void setListPhotos(ArrayList<PhotoDTO> listPhotos);
+  void setListPhotos(List<PhotoDTO> listPhotos);
 
   String toString();
 
