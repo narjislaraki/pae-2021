@@ -59,7 +59,7 @@ public class VisitUCCImpl implements VisitUCC {
       int idFurniture =
           furnitureDAO.addFurniture(furniture, idRequestForVisit, visit.getIdClient());
       for (PhotoDTO photo : furniture.getListPhotos()) {
-        furnitureDAO.addPhoto(photo, idFurniture);
+        furnitureDAO.addClientPhoto(photo, idFurniture);
       }
     }
     dalServices.commitBizzTransaction();

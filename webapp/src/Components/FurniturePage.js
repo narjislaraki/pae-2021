@@ -28,14 +28,14 @@ let nbPhoto;
 
 let editionMode = false;
 let edition = {
-    newDescription: null,
-    newType: null,
-    newPrice: null,
-    newFavouriteId: null,
-    toAdd: [],
-    toDelete: [],
-    toDisplay: [],
-    toHide: [],
+    description: "",
+    idType: -1,
+    offeredSellingPrice: -1,
+    favouritePhotoId: -1,
+    photosToAdd: [],
+    photosToDelete: [],
+    photosToDisplay: [],
+    photosToHide: [],
 }
 
 let page = document.querySelector("#page");
@@ -128,10 +128,13 @@ async function FurniturePage(id) {
                         ${furniture.description}
                     </div>
                     <div class="furniture-price-inline">
-                        <div id="furniture-price">${furniture.offeredSellingPrice === 0 ? "N/A" : furniture.offeredSellingPrice}</div>
-                        <div class="currency">euro</div>
+                        <div id="price-div">
+                            <div id="furniture-price">${furniture.offeredSellingPrice === 0 ? "N/A" : furniture.offeredSellingPrice}</div>
+                            <div class="currency">euro</div>
+                        </div>
                         <br>
                         <div id="sellingDiv"></div>
+                        
                     </div>
                 </div>
         `;
@@ -203,6 +206,10 @@ async function FurniturePage(id) {
         editIcon.src = "../assets/edit_icon.png";
         editIcon.id = "editIcon";
         document.getElementById("editImage").appendChild(editIcon);
+
+        document.getElementById("price-div").innerHTML += `<div id="furniture-price-paid">${furniture.purchasePrice === 0 ? "N/A" : furniture.purchasePrice}</div>
+                        <div class="currency-paid">euro</div>`
+
         if (furniture.condition === "ACHETE") {
             menuDeroulant = `
             <div class="dropdown">
@@ -499,7 +506,7 @@ const onEdit = async () => {
 const onEyeImg = () => {
     let bigImg = document.getElementById("big-img");
     let clickedId = bigImg.dataset.photoid;
-    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
+    let actualFavourite = edition.favouritePhotoId == -1 ? furniture.favouritePhotoId : edition.favouritePhotoId;
 
     if (actualFavourite == clickedId) {
         let err = {
@@ -508,17 +515,17 @@ const onEyeImg = () => {
         PrintError(err);
     } else {
         let isOpen = document.getElementById("eye-image").src.includes("eye_open.png");
-        let indexD = edition.toDisplay.indexOf(clickedId);
-        let indexH = edition.toHide.indexOf(clickedId);
+        let indexD = edition.photosToDisplay.indexOf(clickedId);
+        let indexH = edition.photosToHide.indexOf(clickedId);
         if (isOpen) {
             if (indexD !== -1)
-                edition.toDisplay.splice(indexD, 1);
-            edition.toHide.push(clickedId);
+                edition.photosToDisplay.splice(indexD, 1);
+            edition.photosToHide.push(clickedId);
             document.getElementById("eye-image").src = "../assets/eye_close.png"
         } else {
             if (indexH !== -1)
-                edition.toHide.splice(indexH, 1);
-            edition.toDisplay.push(clickedId)
+                edition.photosToHide.splice(indexH, 1);
+            edition.photosToDisplay.push(clickedId)
             document.getElementById("eye-image").src = "../assets/eye_open.png"
         }
     }
@@ -527,7 +534,7 @@ const onEyeImg = () => {
 const onDeleteImg = () => {
     let bigImg = document.getElementById("big-img");
     let clickedId = bigImg.dataset.photoid;
-    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
+    let actualFavourite = edition.favouritePhotoId == -1 ? furniture.favouritePhotoId : edition.favouritePhotoId;
 
     if (actualFavourite == clickedId) {
         let err = {
@@ -535,12 +542,12 @@ const onDeleteImg = () => {
         }
         PrintError(err);
     } else {
-        let index = edition.toDelete.indexOf(clickedId)
+        let index = edition.photosToDelete.indexOf(clickedId)
         if (index === -1) {
-            edition.toDelete.push(clickedId);
+            edition.photosToDelete.push(clickedId);
             bigImg.src = "../assets/red_cross.png";
         } else {
-            edition.toDelete.splice(index, 1)
+            edition.photosToDelete.splice(index, 1)
             bigImg.src = furniturePhotos[bigImg.dataset.id].photo
         }
     }
@@ -549,20 +556,25 @@ const onDeleteImg = () => {
 const onStarImg = () => {
     let bigImg = document.getElementById("big-img");
     let clickedId = bigImg.dataset.photoid;
-    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
+    let actualFavourite = edition.favouritePhotoId == -1 ? furniture.favouritePhotoId : edition.favouritePhotoId;
 
-    if (actualFavourite == clickedId || document.getElementById("eye-image").src.includes("eye_close.png")) {
+    if (actualFavourite == clickedId) {
         let err = {
             message: "Action impossible, veuillez choisir une nouvelle image favorite au préalable",
+        }
+        PrintError(err);
+    } else if (document.getElementById("eye-image").src.includes("eye_close.png")){
+        let err = {
+            message: "Action impossible, l'image n'est pas visible",
         }
         PrintError(err);
     } else {
         let star = document.getElementById("star-image");
         star.src = "../assets/star_full.png";
         if (clickedId == furniture.favouritePhotoId)
-            edition.newFavouriteId = null;
+            edition.favouritePhotoId = -1;
         else
-            edition.newFavouriteId = clickedId;
+            edition.favouritePhotoId = clickedId;
     }
 
 
@@ -593,19 +605,24 @@ const onCancelEditButton = () => {
 }
 
 
-const onConfirmEditButton = () => {
+const onConfirmEditButton = async () => {
     /***** Data management *****/
-    let index = document.getElementById("furniture-types").selectedIndex;
-    console.log("pouet", index, document.getElementsByTagName("option")[index].value, furniture)
-    typeElem.innerText = document.getElementsByTagName("option")[index].innerText;
+    let index = document.getElementById("furniture-types").value - 1;
+    console.log("pouet", index, document.getElementById("furniture-types").value, furnitureTypes[index].label, furniture)
+    typeElem.innerText = furnitureTypes[index].label;
 
-    let newType = document.getElementsByTagName("option")[index].innerText;
+    let newType = furnitureTypes[index].id;
 
-    edition.newType = newType === furniture.type ? null : newType;
-    edition.newDescription = descElem.innerText === furniture.description ? null : descElem.innerText;
+    edition.idType = newType === furniture.type ? -1 : newType;
+    edition.description = descElem.innerText === furniture.description ? "" : descElem.innerText;
     if (furniture.condition === "EN_VENTE" && priceElem.innerText !== price) {
-        edition.newPrice = priceElem.innerText;
+        edition.offeredSellingPrice = priceElem.innerText;
     }
+    let files = document.getElementById("imgInput").files;
+    if (files.length > 0) {
+        edition.photosToAdd = await encodeFiles(files);
+    }
+
     /***** Display management *****/
     document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
@@ -619,22 +636,34 @@ const onConfirmEditButton = () => {
 
     removeEditElements();
     //TODO POST sur meuble pour modifications
+    console.log(furniture.id)
+    try {
+        nbOfDay = await callAPI(
+            API_BASE_URL + furniture.id + "/edit",
+            "POST",
+            userData.token,
+            edition,
+        ).then(e => console.log(e));
+    } catch (err) {
+        console.error("FurniturePage::onNbOfDay", err);
+        PrintError(err);
+    }
     stopEdition();
-    //FurniturePage(furniture.id);
+    FurniturePage(furniture.id);
 }
 
 function stopEdition() {
     console.log(edition)
     editionMode = false;
     edition = {
-        newDescription: null,
-        newType: null,
-        newPrice: null,
-        newFavouriteId: null,
-        toAdd: [],
-        toDelete: [],
-        toDisplay: [],
-        toHide: [],
+        description: "",
+        idType: -1,
+        offeredSellingPrice: -1,
+        favouritePhotoId: -1,
+        photosToAdd: [],
+        photosToDelete: [],
+        photosToDisplay: [],
+        photosToHide: [],
     }
 }
 
@@ -649,9 +678,9 @@ function removeEditElements() {
 const onSmallImg = (e) => {
     let bigImg = document.getElementById("big-img");
     let index = e.target.dataset.id
-    let actualFavourite = edition.newFavouriteId == null ? furniture.favouritePhotoId : edition.newFavouriteId;
-    let visible = (furniturePhotos[index].isVisible == true && !edition.toHide.find(e => e == furniturePhotos[index].id)) || edition.toDisplay.find(e => e == furniturePhotos[index].id);
-    bigImg.src = edition.toDelete.indexOf(furniturePhotos[index].id.toString()) === -1 ? furniturePhotos[index].photo : "../assets/red_cross.png";
+    let actualFavourite = edition.favouritePhotoId == -1 ? furniture.favouritePhotoId : edition.favouritePhotoId;
+    let visible = (furniturePhotos[index].isVisible == true && !edition.photosToHide.find(e => e == furniturePhotos[index].id)) || edition.photosToDisplay.find(e => e == furniturePhotos[index].id);
+    bigImg.src = edition.photosToDelete.indexOf(furniturePhotos[index].id.toString()) === -1 ? furniturePhotos[index].photo : "../assets/red_cross.png";
     bigImg.dataset.photoid = furniturePhotos[index].id;
     bigImg.dataset.id = index;
 

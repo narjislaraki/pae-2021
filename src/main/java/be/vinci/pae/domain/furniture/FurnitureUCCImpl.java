@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
+import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -262,6 +263,41 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     List<PhotoDTO> list = furnitureDao.getFurniturePhotos(idFurniture);
     dalServices.stopBizzTransaction();
     return list;
+  }
+
+  @Override
+  public boolean edit(EditionDTO edition) {
+    dalServices.getBizzTransaction(false);
+    if (!(edition.getDescription().isEmpty() && edition.getIdType() == -1
+        && edition.getOfferedSellingPrice() == -1 && edition.getFavouritePhotoId() == -1)) {
+
+      FurnitureDTO furniture = furnitureDao.getFurnitureById(edition.getIdFurniture());
+      System.out.println(furniture);
+      String description = edition.getDescription().isEmpty() ? furniture.getDescription()
+          : edition.getDescription();
+
+      int idType = edition.getIdType() == -1 ? furniture.getTypeId() : edition.getIdType();
+
+      double offeredSellingPrice =
+          edition.getOfferedSellingPrice() == -1 ? furniture.getOfferedSellingPrice()
+              : edition.getOfferedSellingPrice();
+
+      int favouritePhoto = edition.getFavouritePhotoId() == -1 ? furniture.getFavouritePhotoId()
+          : edition.getFavouritePhotoId();
+      furnitureDao.edit(furniture.getId(), description, idType, offeredSellingPrice,
+          favouritePhoto);
+    }
+
+    edition.getPhotosToAdd().forEach(e -> furnitureDao.addAdminPhoto(e, edition.getIdFurniture()));
+
+    edition.getPhotosToDelete().forEach(e -> furnitureDao.deletePhoto(e));
+
+    edition.getPhotosToDisplay().forEach(e -> furnitureDao.displayPhoto(e));
+
+    edition.getPhotosToHide().forEach(e -> furnitureDao.hidePhoto(e));
+
+    dalServices.commitBizzTransaction();
+    return true;
   }
 
 }
