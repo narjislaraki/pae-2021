@@ -41,8 +41,9 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       try {
         decodedToken = this.jwtVerifier.verify(token);
       } catch (Exception e) {
-        if (e instanceof TokenExpiredException)
+        if (e instanceof TokenExpiredException) {
           throw new WebApplicationException("Expired token", e, Status.UNAUTHORIZED);
+        }
         throw new WebApplicationException("Malformed token", e, Status.UNAUTHORIZED);
       }
 

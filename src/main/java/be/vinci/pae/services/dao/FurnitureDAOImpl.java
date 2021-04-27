@@ -501,9 +501,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       int favouritePhoto) {
     try {
 
-      String sql =
-          "UPDATE pae.furnitures SET description = ?, id_type = ?, offered_selling_price = ?, favorite_photo = ? "
-              + "WHERE id_furniture = ?;";
+      String sql = "UPDATE pae.furnitures SET description = ?, id_type = ?, "
+          + "offered_selling_price = ?, favorite_photo = ? WHERE id_furniture = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, description);
       ps.setInt(2, idType);
