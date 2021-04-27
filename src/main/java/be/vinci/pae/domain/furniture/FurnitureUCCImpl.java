@@ -300,6 +300,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     return true;
   }
 
+  @Override
   public FurnitureDTO getFurnitureWithPhotosById(int id) {
     dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);

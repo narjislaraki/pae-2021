@@ -1,8 +1,8 @@
 package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import be.vinci.pae.domain.user.UserDTO;
