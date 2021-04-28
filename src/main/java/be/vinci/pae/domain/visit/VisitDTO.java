@@ -1,9 +1,13 @@
 package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.User;
 
+@JsonDeserialize(as = VisitImpl.class)
 public interface VisitDTO {
 
   enum VisitCondition {
@@ -55,5 +59,9 @@ public interface VisitDTO {
   LocalDateTime getScheduledDateTime();
 
   void setScheduledDateTime(LocalDateTime scheduledDateTime);
+
+  ArrayList<FurnitureDTO> getFurnitureList();
+
+  void setFurnitureList(ArrayList<FurnitureDTO> furnitureList);
 
 }

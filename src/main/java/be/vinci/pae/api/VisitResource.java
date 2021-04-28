@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitUCC;
 import be.vinci.pae.views.Views;
@@ -63,10 +64,33 @@ public class VisitResource {
   }
 
   /**
+   * Get a list of furnitures for one request for visits.
+   * 
+   * @param request the request
+   * @return a list of furnitures for one requests for visits wrapped in a Response
+   */
+  @GET
+  @Path("{idVisit}/furnitures")
+  @AdminAuthorize
+  public Response getListFurnituresForOneVisit(@Context ContainerRequest request,
+      @PathParam("idVisit") int idVisit) {
+    List<FurnitureDTO> list = visitUCC.getListFurnituresForOneVisit(idVisit);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+
+    } catch (JsonProcessingException e) {
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+
+  /**
    * Acceptation of a request for visit.
    * 
    * @param request the request
-   * @param id the visit's id
+   * @param idVisit the visit's id
    * @return true if OK
    */
   @POST
@@ -85,7 +109,7 @@ public class VisitResource {
    * Cancellation of a request for visit.
    * 
    * @param request the request
-   * @param id the request visit's id
+   * @param idVisit the request visit's id
    * @return true if OK
    */
   @POST
@@ -119,4 +143,64 @@ public class VisitResource {
     return responseOkWithEntity(r);
   }
 
+
+  /**
+   * This method is used for introduce a request for visit. It also adds the address into the
+   * database if this is different from the customer's address. This method adds each furniture and
+   * for each furniture, each photo.
+   * 
+   * @param visit the request for visit converted from json
+   * @return Response 401 Or 409 if KO; token if OK
+   */
+  @POST
+  @Path("introduce")
+  // TODO pas fini
+  public Response introduceRequestForVisit(VisitDTO visit) {
+    System.out.println(visit);
+    if (!checkFieldsIntroduce(visit)) {
+      return responseWithStatus(Status.UNAUTHORIZED, "Missing fields");
+    }
+    return responseWithStatus(Status.CREATED, visitUCC.submitRequestOfVisit(visit));
+  }
+
+  private boolean checkFieldsIntroduce(VisitDTO visit) {
+    // TODO à peaufiner
+    if (isAnOtherAddress(visit)) {
+      if (visit.getTimeSlot() == null || visit.getWarehouseAddress().getStreet() == null
+          || visit.getWarehouseAddress().getBuildingNumber() == null
+          || visit.getWarehouseAddress().getCity() == null
+          || visit.getWarehouseAddress().getPostCode() == null
+          || visit.getWarehouseAddress().getCountry() == null || visit.getIdClient() == 0
+          || visit.getTimeSlot().isEmpty() || visit.getWarehouseAddress().getStreet().isEmpty()
+          || visit.getWarehouseAddress().getBuildingNumber().isEmpty()
+          || visit.getWarehouseAddress().getCity().isEmpty()
+          || visit.getWarehouseAddress().getPostCode().isEmpty()
+          || visit.getWarehouseAddress().getCountry().isEmpty()) {
+        return false;
+      }
+    } else {
+      if (visit.getTimeSlot() == null || visit.getIdClient() == 0
+          || visit.getTimeSlot().isEmpty()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private boolean isAnOtherAddress(VisitDTO visit) {
+    if (/*
+         * visit.getWarehouseAddress().getStreet() != null ||
+         * visit.getWarehouseAddress().getBuildingNumber() != null ||
+         * visit.getWarehouseAddress().getCity() != null ||
+         * visit.getWarehouseAddress().getPostCode() != null ||
+         * visit.getWarehouseAddress().getCountry() != null ||
+         */ !visit.getWarehouseAddress().getStreet().isEmpty()
+        || !visit.getWarehouseAddress().getBuildingNumber().isEmpty()
+        || !visit.getWarehouseAddress().getCity().isEmpty()
+        || !visit.getWarehouseAddress().getPostCode().isEmpty()
+        || !visit.getWarehouseAddress().getCountry().isEmpty()) {
+      return true;
+    }
+    return false;
+  }
 }

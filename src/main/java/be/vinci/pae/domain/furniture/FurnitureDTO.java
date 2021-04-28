@@ -1,8 +1,12 @@
 package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.visit.PhotoDTO;
 
+@JsonDeserialize(as = FurnitureImpl.class)
 public interface FurnitureDTO {
 
   enum Condition {
@@ -78,11 +82,13 @@ public interface FurnitureDTO {
 
   void setFavouritePhotoId(int favouritePhotoId);
 
-  byte[] getFavouritePhoto();
+  String getFavouritePhoto();
 
-  void setFavouritePhoto(byte[] favouritePhoto);
+  void setFavouritePhoto(String favouritePhoto);
 
-  void setFavouritePhoto(String encodedPhoto);
+  List<PhotoDTO> getListPhotos();
+
+  void setListPhotos(List<PhotoDTO> listPhotos);
 
   String toString();
 

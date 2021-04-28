@@ -2,23 +2,24 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
+import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
+import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -139,6 +140,8 @@ public class FurnitureResource {
 
     return responseOkWithEntity(r);
   }
+
+
 
   /**
    * Getting active option from a specific furniture by giving its id.
@@ -265,6 +268,68 @@ public class FurnitureResource {
     int optionTerm = json.get("duration").asInt();
     furnitureUCC.introduceOption(optionTerm, idUser, idFurniture);
     return true;
+  }
+
+  @Authorize
+  @POST
+  @Path("sale")
+  @Produces(MediaType.APPLICATION_JSON)
+  public boolean addSale(@Context ContainerRequest request, SaleDTO sale) {
+    return furnitureUCC.addSale(sale);
+  }
+
+  /**
+   * Get a list of types of furniture.
+   * 
+   * @param request the request
+   * @return a list of types of furniture
+   */
+  @GET
+  @Path("typeOfFurnitureList")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<TypeOfFurnitureDTO> getTypeOfFurnitureList(@Context ContainerRequest request) {
+    List<TypeOfFurnitureDTO> list = furnitureUCC.getTypesOfFurnitureList();
+
+    return list;
+  }
+
+  /**
+   * Get the photos related to a particuliar furniture.
+   * 
+   * @param request the request
+   * @param idFurniture the furniture id
+   * @return a list of photos
+   */
+  @GET
+  @Path("/{idFurniture}/photos")
+  @Authorize
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<PhotoDTO> getPhotos(@Context ContainerRequest request,
+      @PathParam("idFurniture") int idFurniture) {
+
+    List<PhotoDTO> list = furnitureUCC.getFurniturePhotos(idFurniture);
+
+    FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
+
+    // Placing the favourite photo first
+    List<PhotoDTO> orderedList = new ArrayList<>();
+    for (PhotoDTO p : list) {
+      if (p.getId() == furniture.getFavouritePhotoId()) {
+        orderedList.add(0, p);
+      } else {
+        orderedList.add(p);
+      }
+    }
+
+    UserDTO user = (UserDTO) request.getProperty("user");
+
+    if (!user.getRole().equals(Role.ADMIN)) {
+      orderedList = orderedList.stream()
+          .filter(
+              e -> e.isVisible() || user.getId() == furniture.getSellerId() && e.isAClientPhoto())
+          .collect(Collectors.toList());
+    }
+    return orderedList;
   }
 
 }

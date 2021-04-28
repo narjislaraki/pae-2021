@@ -74,10 +74,11 @@ const RedirectUrl = (uri, data) => {
   // therefore, those components have to be either a function or a class
   componentToRender = routes[uri];
   if (routes[uri]) {
-    if(!data)
+    if(!data){
       componentToRender();
-    else
+    }else{
       componentToRender(data);
+    }
     
   } else {
     ErrorPage(new Error("The " + uri + " ressource does not exist"));

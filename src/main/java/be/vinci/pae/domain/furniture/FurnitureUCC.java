@@ -1,10 +1,9 @@
 package be.vinci.pae.domain.furniture;
 
 import java.util.List;
-import java.util.Map;
-
-import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.visit.PhotoDTO;
 
 public interface FurnitureUCC {
 
@@ -30,15 +29,19 @@ public interface FurnitureUCC {
 
   List<FurnitureDTO> getFurnitureList(UserDTO user);
 
-  // pas encore pour le livrable
-  void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures);
-
   FurnitureDTO getFurnitureById(int id);
+
+  FurnitureDTO getFurnitureWithPhotosById(int id);
 
   OptionDTO getOption(int idFurniture);
 
   int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser);
 
   void cancelOvertimedOptions();
+
+  List<TypeOfFurnitureDTO> getTypesOfFurnitureList();
+
+  boolean addSale(SaleDTO sale);
+
+  List<PhotoDTO> getFurniturePhotos(int idFurniture);
 }

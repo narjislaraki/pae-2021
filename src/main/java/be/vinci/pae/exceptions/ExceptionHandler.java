@@ -24,8 +24,13 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
   @Override
   public Response toResponse(Exception exception) {
-    if (dalServices.hasTransaction()) {
-      dalServices.rollbackTransaction();
+    // Safe way to be sure to close a connection if an error happened
+    if (dalServices.hasBizzTransaction()) {
+      if (dalServices.isBizzTransactionInAutoCommit()) {
+        dalServices.stopBizzTransaction();
+      } else {
+        dalServices.rollbackBizzTransaction();
+      }
     }
 
     if (exception instanceof BusinessException == false) {

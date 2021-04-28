@@ -2,10 +2,12 @@ package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.AddressDAO;
+import be.vinci.pae.services.dao.FurnitureDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.dao.VisitDAO;
 import jakarta.inject.Inject;
@@ -22,6 +24,9 @@ public class VisitUCCImpl implements VisitUCC {
   private AddressDAO addressDAO;
 
   @Inject
+  private FurnitureDAO furnitureDAO;
+
+  @Inject
   private UserDAO userDAO;
 
   @Override
@@ -33,10 +38,30 @@ public class VisitUCCImpl implements VisitUCC {
   }
 
   @Override
-  public boolean submitRequestOfVisit(VisitDTO visit, int idClient, int idWarehouseAddress) {
+  public boolean submitRequestOfVisit(VisitDTO visit) {
     dalServices.getBizzTransaction(false);
-    visit.getWarehouseAddress().setId(addressDAO.addAddress(visit.getWarehouseAddress()));
-    visitDAO.submitRequestOfVisit(visit, idClient, idWarehouseAddress);
+    // TODO vérifier autrement que l'adresse est différente de celle du client
+    visit.setClient((User) userDAO.getUserFromId(visit.getIdClient()));
+    if (visit.getWarehouseAddress().getStreet().isEmpty()) {
+      System.out.println(visit.getWarehouseAddress());
+      System.out.println(visit.getClient());
+      System.out.println(visit.getClient().getAddress());
+      System.out.println(visit.getClient().getAddress().getId());
+      visit.getWarehouseAddress().setId(visit.getClient().getAddress().getId());
+      visit.setWarehouseAddressId(visit.getClient().getAddress().getId());
+    } else {
+      visit.getWarehouseAddress().setId(addressDAO.addAddress(visit.getWarehouseAddress()));
+      visit.setWarehouseAddressId(visit.getWarehouseAddress().getId());
+    }
+    visit.setVisitCondition("en attente");
+    int idRequestForVisit = visitDAO.submitRequestOfVisit(visit);
+    for (FurnitureDTO furniture : visit.getFurnitureList()) {
+      int idFurniture =
+          furnitureDAO.addFurniture(furniture, idRequestForVisit, visit.getIdClient());
+      for (PhotoDTO photo : furniture.getListPhotos()) {
+        furnitureDAO.addPhoto(photo, idFurniture);
+      }
+    }
     dalServices.commitBizzTransaction();
     return true;
   }
@@ -87,6 +112,17 @@ public class VisitUCCImpl implements VisitUCC {
     }
     dalServices.stopBizzTransaction();
     return visit;
+  }
+
+  @Override
+  public List<FurnitureDTO> getListFurnituresForOneVisit(int idVisit) {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list = visitDAO.getListFurnituresForOnVisit(idVisit);
+    for (FurnitureDTO furniture : list) {
+      furniture.setListPhotos(furnitureDAO.getFurniturePhotos(furniture.getId()));
+    }
+    dalServices.stopBizzTransaction();
+    return list;
   }
 
 

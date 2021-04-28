@@ -2,12 +2,9 @@ package be.vinci.pae.domain.user;
 
 
 import java.time.LocalDateTime;
-
 import org.mindrot.jbcrypt.BCrypt;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.views.Views;
 

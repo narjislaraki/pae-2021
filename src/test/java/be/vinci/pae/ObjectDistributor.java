@@ -5,11 +5,26 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import be.vinci.pae.domain.address.Address;
-import be.vinci.pae.domain.address.AddressImpl;
+import be.vinci.pae.domain.address.AddressFactory;
+import be.vinci.pae.domain.address.AddressFactoryImpl;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
+import be.vinci.pae.domain.furniture.FurnitureFactory;
+import be.vinci.pae.domain.furniture.FurnitureFactoryImpl;
 import be.vinci.pae.domain.user.User;
-import be.vinci.pae.domain.user.UserImpl;
+import be.vinci.pae.domain.user.UserFactory;
+import be.vinci.pae.domain.user.UserFactoryImpl;
+import be.vinci.pae.domain.visit.VisitDTO;
+import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
+import be.vinci.pae.domain.visit.VisitFactory;
+import be.vinci.pae.domain.visit.VisitFactoryImpl;
 
-public class UserDistributor {
+public class ObjectDistributor {
+
+  private static UserFactory userFactory = new UserFactoryImpl();
+  private static AddressFactory addressFactory = new AddressFactoryImpl();
+  private static VisitFactory visitFactory = new VisitFactoryImpl();
+  private static FurnitureFactory furnitureFactory = new FurnitureFactoryImpl();
 
   private static String goodPassword = "1234";
   private static String goodEmail = "test@test.com";
@@ -23,7 +38,7 @@ public class UserDistributor {
    * @return the good user
    */
   public static User getGoodValidatedUser() {
-    User goodUser = new UserImpl();
+    User goodUser = (User) userFactory.getUserDTO();
     goodUser.setId(1);
     goodUser.setUsername("test");
     goodUser.setLastName("Heuzer");
@@ -49,7 +64,7 @@ public class UserDistributor {
    * @return the not-validated good user
    */
   public static User getGoodNotValidatedUser() {
-    User goodUserNotValidated = new UserImpl();
+    User goodUserNotValidated = (User) userFactory.getUserDTO();
     goodUserNotValidated.setId(3);
     goodUserNotValidated.setUsername("test3");
     goodUserNotValidated.setLastName("de Theux");
@@ -87,7 +102,7 @@ public class UserDistributor {
   }
 
   private static Address getAddress() {
-    Address address = new AddressImpl();
+    Address address = addressFactory.getAddress();
     address.setBuildingNumber("10");
     address.setCity("Bruxelles");
     address.setCountry("Belgique");
@@ -101,10 +116,45 @@ public class UserDistributor {
    * Returning a localDateTime based on a string.
    * 
    * @param str the dateTime format as "yyyy-MM-dd HH:mm"
-   * @return
+   * @return the LocalDateTime
    */
-  public static LocalDateTime getLocalDateTime(String str) {
+  private static LocalDateTime getLocalDateTime(String str) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     return LocalDateTime.parse(str, formatter);
   }
+
+  /**
+   * Construct a Visit not yet confirmed.
+   * 
+   * @return the visit
+   */
+  public static VisitDTO getNotConfirmedVisitDTO() {
+    VisitDTO visit = visitFactory.getVisitDTO();
+    visit.setClient(getGoodNotValidatedUser());
+    visit.setIdClient(getGoodValidatedUser().getId());
+    visit.setIdRequest((int) (Math.random() * 100));
+    visit.setTimeSlot("Du 10 au 25 avril de 17h à 21h");
+    visit.setWarehouseAddress(getAddress());
+    visit.setWarehouseAddressId(getAddress().getId());
+    visit.setVisitCondition(VisitCondition.EN_ATTENTE.toString());
+
+    return visit;
+  }
+
+
+  /**
+   * Construct a furniture in sale.
+   * 
+   * @return the furniture
+   */
+  public static FurnitureDTO getFurnitureInSale() {
+    FurnitureDTO furniture = furnitureFactory.getFurnitureDTO();
+    furniture.setCondition(Condition.EN_VENTE.toString());
+    furniture.setDepositDate(LocalDateTime.now());
+    furniture.setDescription("meuble");
+    furniture.setId(1);
+    // TODO to complete with the tests
+    return furniture;
+  }
+
 }

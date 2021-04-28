@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
@@ -27,11 +29,21 @@ public class VisitDAOImpl implements VisitDAO {
   private VisitFactory visitFactory;
 
   @Inject
+  private FurnitureFactory furnitureFactory;
+
+  @Inject
   private AddressDAO addressDAO;
 
   @Inject
   private UserDAO userDAO;
 
+  /**
+   * Method to set a visit from a resultset.
+   * 
+   * @param rs the resultset
+   * @param visit a null visit
+   * @return a visitDTO
+   */
   public VisitDTO setVisit(ResultSet rs, VisitDTO visit) {
     try {
       visit = visitFactory.getVisitDTO();
@@ -59,8 +71,9 @@ public class VisitDAOImpl implements VisitDAO {
   public List<VisitDTO> getNotConfirmedVisits() {
     List<VisitDTO> list = new ArrayList<VisitDTO>();
     try {
-      String sql =
-          "SELECT id_request, time_slot, condition, explanatory_note, scheduled_date_time, warehouse_address, client FROM pae.requests_for_visits WHERE condition = ?;";
+      String sql = "SELECT id_request, time_slot, condition, "
+          + "explanatory_note, scheduled_date_time, warehouse_address, client "
+          + "FROM pae.requests_for_visits WHERE condition = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.EN_ATTENTE.toString());
       ResultSet rs = ps.executeQuery();
@@ -76,26 +89,33 @@ public class VisitDAOImpl implements VisitDAO {
   }
 
   @Override
-  public void submitRequestOfVisit(VisitDTO visit, int idClient, int idWarehouseAddress) {
+  public int submitRequestOfVisit(VisitDTO visit) {
+    int key = 0;
     try {
       String sql = "INSERT INTO pae.requests_for_visits VALUES (default, ?, ?, null, null, ?, ?);";
-      ps = dalBackendServices.getPreparedStatement(sql);
+      ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, visit.getTimeSlot());
       ps.setString(2, VisitCondition.EN_ATTENTE.toString());
-      ps.setInt(3, idWarehouseAddress);
-      ps.setInt(4, idClient);
+      System.out.println(visit.getWarehouseAddressId());
+      ps.setInt(3, visit.getWarehouseAddressId());
+      ps.setInt(4, visit.getIdClient());
       ps.execute();
+      ResultSet rs = ps.getGeneratedKeys();
+      if (rs.next()) {
+        key = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return key;
   }
 
   @Override
   public boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime) {
     System.out.println("acceptVisit dao");
     try {
-      String sql =
-          "UPDATE pae.requests_for_visits SET condition = ?, scheduled_date_time = ? WHERE id_request = ?;";
+      String sql = "UPDATE pae.requests_for_visits SET condition = ?, scheduled_date_time = ? "
+          + "WHERE id_request = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.ACCEPTEE.toString());
       Timestamp timeStampScheduledDateTime = Timestamp.valueOf(scheduledDateTime);
@@ -110,8 +130,8 @@ public class VisitDAOImpl implements VisitDAO {
   @Override
   public boolean cancelVisit(int idVisit, String explanatoryNote) {
     try {
-      String sql =
-          "UPDATE pae.requests_for_visits SET condition = ?, explanatory_note = ? WHERE id_request = ?;";
+      String sql = "UPDATE pae.requests_for_visits SET condition = ?, explanatory_note = ? "
+          + "WHERE id_request = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.ANNULEE.toString());
       ps.setString(2, explanatoryNote);
@@ -140,6 +160,58 @@ public class VisitDAOImpl implements VisitDAO {
     }
     return visit;
   }
+
+  @Override
+  public List<FurnitureDTO> getListFurnituresForOnVisit(int idVisit) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT id_furniture, description, id_type, request_visit "
+          + "FROM pae.furnitures WHERE request_visit = ?";
+      ps = dalBackendServices.getPreparedStatement(sql);
+      ps.setInt(1, idVisit);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
+  private FurnitureDTO setFurniture(ResultSet rs, FurnitureDTO furniture) {
+    try {
+      furniture = furnitureFactory.getFurnitureDTO();
+      furniture.setId(rs.getInt(1));
+      furniture.setDescription(rs.getString(2));
+      furniture.setTypeId(rs.getInt(3));
+      furniture.setRequestForVisitId(rs.getInt(4));
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return furniture;
+  }
+  // private int addPhoto(PhotoDTO photo) {
+  // int key = 0;
+  // try {
+  // String sql = "INSERT INTO pae.photos VALUES (default, ?, ?, ?, ?);";
+  // ps = dalBackendServices.getPreparedStatement(sql);
+  // ps.setString(1, photo.getPhoto());
+  // ps.setBoolean(2, photo.isVisible());
+  // ps.setBoolean(3, photo.isAClientPhoto());
+  // ps.setInt(4, photo.getIdFurniture());
+  // ps.execute();
+  // ResultSet rs = ps.getGeneratedKeys();
+  // if (rs.next()) {
+  // key = rs.getInt(1);
+  // }
+  // } catch (SQLException e) {
+  // throw new FatalException(e);
+  // }
+  // return key;
+  // }
 
 
 

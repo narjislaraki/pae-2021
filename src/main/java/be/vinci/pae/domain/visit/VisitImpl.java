@@ -1,15 +1,17 @@
 package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonView;
 import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.views.Views;
 
 public class VisitImpl implements Visit {
 
   @JsonView(Views.Public.class)
-  private int idReqeust;
+  private int idRequest;
   @JsonView(Views.Public.class)
   private String timeSlot;
   @JsonView(Views.Public.class)
@@ -26,15 +28,17 @@ public class VisitImpl implements Visit {
   private String explanatoryNote;
   @JsonView(Views.Public.class)
   private LocalDateTime scheduledDateTime;
+  @JsonView(Views.Public.class)
+  private ArrayList<FurnitureDTO> furnitureList;
 
   @Override
   public int getIdRequest() {
-    return this.idReqeust;
+    return this.idRequest;
   }
 
   @Override
   public void setIdRequest(int idRequest) {
-    this.idReqeust = idRequest;
+    this.idRequest = idRequest;
   }
 
   @Override
@@ -60,6 +64,15 @@ public class VisitImpl implements Visit {
   @Override
   public VisitCondition getVisitCondition() {
     return this.visitCondition;
+  }
+
+  @Override
+  public String toString() {
+    return "VisitImpl [idRequest=" + idRequest + ", timeSlot=" + timeSlot + ", warehouseAddressId="
+        + warehouseAddressId + ", warehouseAddress=" + warehouseAddress + ", visitCondition="
+        + visitCondition + ", idClient=" + idClient + ", client=" + client + ", explanatoryNote="
+        + explanatoryNote + ", scheduledDateTime=" + scheduledDateTime + ", furnitureList="
+        + furnitureList + "]";
   }
 
   @Override
@@ -128,6 +141,16 @@ public class VisitImpl implements Visit {
   @Override
   public void setWarehouseAddressId(int id) {
     this.warehouseAddressId = id;
+  }
+
+  @Override
+  public ArrayList<FurnitureDTO> getFurnitureList() {
+    return this.furnitureList;
+  }
+
+  @Override
+  public void setFurnitureList(ArrayList<FurnitureDTO> furnitureList) {
+    this.furnitureList = furnitureList;
   }
 
 }

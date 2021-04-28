@@ -693,7 +693,7 @@ footer{
     font-size: 24px;
 }
 
-.furniture-container{
+#furniture-container{
     margin-left: 10%;
 }
 .furniture-options{
@@ -704,14 +704,14 @@ footer{
 
 /*FURNITURE PAGE*/
 
-
-.furniture-container{
-
+#big-img{
+    max-width: 30%;
+    left: 15%;
+    top: 5%;
+    position: absolute;
 }
-.furniture-pictures{
-    width: max-content;
-}
-.furniture-small-images img{
+
+#furniture-small-images img{
     object-fit: cover;
     margin: 10px 0;
     width: 40px;
@@ -722,10 +722,10 @@ footer{
     display: block;
     opacity: 0.5;
 }
-.furniture-small-images img:hover{
+#furniture-small-images img:hover{
     opacity: 1;
 }
-.furniture-small-images{
+#furniture-small-images{
     position: absolute;
     left: 10%;
     top: 10%;
@@ -739,6 +739,23 @@ footer{
     left: 15%;
     top: 10%;
 }
+
+#star-image {
+    position: absolute;
+    width: auto;
+    height: 4%;
+    top: 10.5%;
+    left: 15%;
+}
+
+#eye-image {
+    position: absolute;
+    width: auto;
+    height: 3.5%;
+    top: 11%;
+    left: 18%;
+}
+
 #furniture-type{
     font-weight: 300;
     font-size: 32px;
@@ -747,9 +764,15 @@ footer{
     text-align: left;
 
     position: absolute;
-    top: 10%;;
+    top: 10%;
     left: 50%;
 }
+#editImage{
+    position: absolute;
+    top: 9.5%;
+    right: 10%;
+}
+
 #furniture-description{
     font-style: normal;
     font-weight: 300;
@@ -772,6 +795,21 @@ footer{
     top: 40%;
     left: 50%;
 }
+#furniture-price{
+    display: inline;
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 56px;
+}
+
+#furniture-edit-buttons {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+}
+
 #furniture-price{
     display: inline;
     font-family: Roboto;
@@ -973,36 +1011,102 @@ footer{
 }
 
 
-.popupVisit{
-    width: 80%;
-    height: 80%;
-    background-color: white;
-    margin-left: 20%;
-    margin-bottom: 10%;
-    text-align: center;
-}
-
-.btnClose{
-    cursor: pointer;
-}
-
 #explanatoryNote{
     height: 60px;
     width: 200px;
 }
 
-#confirmVisitBtn{
-    background-color:green;
-    border-radius:  12px 12px 12px 12px;
+.photoDiv{
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    align-content: center;
 }
 
-#cancelVisitBtn{
-    background-color:red;
-    border-radius:  12px 12px 12px 12px;
+.photoDiv img{
+    margin-left: 5px;
+    margin-right: 5px;
 }
+.imageVisits{
+    width: 60%;
+}
+
+/* Popup box BEGIN */
+.hover_bkgr_fricc{
+    background:rgba(0,0,0,.4);
+    cursor:pointer;
+    display:none;
+    height:100%;
+    position:fixed;
+    text-align:center;
+    top:0;
+    width:100%;
+    z-index:10000;
+    overflow-y: scroll;
+}
+.hover_bkgr_fricc .helper{
+    display:inline-block;
+    height:100%;
+    vertical-align:middle;
+}
+.hover_bkgr_fricc > div {
+    background-color: #fff;
+    box-shadow: 10px 10px 60px #555;
+    display: inline-block;
+    height: auto;
+    max-width: 551px;
+    min-height: 100px;
+    vertical-align: middle;
+    width: 60%;
+    position: relative;
+    border-radius: 8px;
+    padding: 15px 5%;
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+.popupCloseButton {
+    background-color: #fff;
+    border: 3px solid #999;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-block;
+    font-family: arial;
+    font-weight: bold;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 25px;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+.popupCloseButton:hover {
+    background-color: #ccc;
+}
+.trigger_popup_fricc {
+    cursor: pointer;
+    font-size: 20px;
+    margin: 20px;
+    display: inline-block;
+    font-weight: bold;
+}
+/* Popup box END */
+
+.titre {
+    font-size: large;
+    font-weight: bold;
+}
+
 
 /*Confirm Registration**************************************************************/
 
+#ringdiv {
+    width: fit-content;
+    margin: 20%;
+    margin-inline: auto;
+    align-self: center;
+}
 .tableConfirmRegistration{
     margin-left: 20%;
 }
@@ -1204,4 +1308,40 @@ footer{
     width: 40px;
     height: 40px;
     border-radius: 22px;
+}
+/* loader */
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid dimgrey;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: dimgrey transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
