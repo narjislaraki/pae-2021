@@ -108,6 +108,29 @@ const onConfirmRegister = (e) => {
     RedirectUrl("/confirmRegistration");
 };
 
+async function SearchClients (name, city, postcode) {
+    let clientList;
+    try{
+        listVisitsWaiting = await callAPI(
+            API_BASE_URL + "notConfirmedVisits",
+            "GET",
+            userData.token,
+            undefined,
+        );
+        
+    } catch(err){
+        if (err == "Error: Admin only") {
+            err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+          }
+          console.error("VisitsPage::onVisitsWainting", err);
+          PrintError(err);
+    }
+}
+
+async function SearchFurn (nameClient, type, maxAmount, minAmount) {
+
+}
+
 function onSwitch(switchElement, clientDiv, furnDiv, menuDiv){
     console.log("dans onSwitch")
     if(switchElement.checked){
