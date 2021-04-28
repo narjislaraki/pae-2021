@@ -9,6 +9,7 @@ let page = document.querySelector("#page");
 let userData;
 let listVisitsToBeProcessed;
 let listFurnituresForOnVisit;
+let listToSend = [];
 
 let VisitsToBeProcessedPage = () => {
     userData = getUserSessionData();
@@ -216,12 +217,12 @@ async function onClickVisit(e){
                             toAdd += `<img class="imageVisits" src="${e.photo}">`
                         });
                         toAdd += `</div>   <label class="switch">
-                                <input class="switch-input" type="checkbox" />
+                                <input class="switch-input" type="checkbox" id="check${furniture.id}"/>
                                 <span class="switch-label" data-on="Confirmer" data-off="Refuser"></span> 
                                 <span class="switch-handle"></span> 
                             </label>
-                            <h4>Prix d'achat : <input type="number" class="form-control input-card id="purchasePrice" name="purchasePrice${idFurniture}">€</h4>
-                            <h4>Date de la visite : </h4><input type="datetime-local" class="pickUpDate" name="pickUpDate${idFurniture}id="pickUpDate${visit.idRequest}" min="${Date.now}" max="9999-31-12T23:59">
+                            <h4>Prix d'achat : <input type="number" class="form-control input-card" id="purchaseprice${furniture.id}" name="purchaseprice${furniture.id}">€</h4>
+                            <h4>Date d'emport' : </h4><input type="datetime-local" class="pickUpDate" name="pickupdate${furniture.id}" id="pickupdate${furniture.id}" min="${Date.now}" max="9999-31-12T23:59">
                         `;
                         toAdd += "</div></li>";
                         idFurniture++;
@@ -229,23 +230,50 @@ async function onClickVisit(e){
         toAdd += `
             </ol></div>
         `;
-
         allFurnitures.innerHTML = toAdd;
 }
 
 const onConfirm = async (e) => {
     e.preventDefault();
     let idVisit = e.srcElement.dataset.id;
-
-    for (let i = 0; i <= listFurnituresForOnVisit.length; i++){
+    console.log(document.getElementById("check6").checked);
+    console.log(e);
+    console.log(document.getElementById("purchaseprice6").value);
+    console.log("ieiei");
+    for (let i = 0; i < listFurnituresForOnVisit.length; i++){
+        let idA = document.getElementsByClassName("furniture")[i].dataset.id;
         let furniture = {
-          id: i,
-          purchasePrice : e.target.elements['purchasePrice'+i].value,
-          pickUpDate: e.target.elements['pickUpDate'+i].value,
+          id: idA,
+          purchasePrice :document.getElementById("purchaseprice" + idA).value == "" ? null : document.getElementById("purchaseprice" + idA).value,
+          pickUpDate: document.getElementById("pickupdate" + idA).value == "" ? null : document.getElementById("pickupdate" + idA).value,
+          condition: document.getElementById("check"+idA).checked ? "accepté" : "refusé"
         }
-        request.furnitureList[i-1] = furniture;
+        console.log(furniture);
+        listToSend[i] = furniture;
+    }
+
+    try{
+        const sendList = await callAPI(
+            "/api/furnitures/furnituresListToBeProcessed", 
+            "POST",
+            userData.token,
+            listToSend,
+        );
+        if (sendList){
+            if (window.location.pathname == "/visitsToBeProcessed"){
+                window.location.reload();
+            }
+            PrintMessage("La demande de visite a bien été traitée.");
+        }
+    }
+    catch (err) {
+        if (err == "Error: Missing fields") {
+          err.message = "Veuillez entrer un prix d'achat et une date d'emport si vous décidez d'acheter le meuble !";
+        }
+        console.error("VisitToBeProcessedPage::onConfirm", err);
+        PrintError(err);
       }
-    onClose();
+    onClose(e);
 
 }
 
