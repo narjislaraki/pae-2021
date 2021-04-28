@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -378,7 +379,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
         ps.setString(2, Condition.SOUS_OPTION.toString());
         ps.setString(3, State.EN_COURS.toString());
         ps.executeUpdate();
-        System.out.println(ps.executeUpdate() + " / =?= / " + val);
       }
     } catch (SQLException e) {
       throw new FatalException(e);

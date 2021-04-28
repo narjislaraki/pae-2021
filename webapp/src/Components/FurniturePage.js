@@ -413,7 +413,6 @@ async function FurniturePage(id) {
 const onEdit = async () => {
     editionMode = true;
     document.getElementById("editIcon").style.display = "none";
-    console.log(furniturePhotos, furniture)
 
     /**** Furniture ****/
     typeElem = document.getElementById("furniture-type");
@@ -608,7 +607,6 @@ const onCancelEditButton = () => {
 const onConfirmEditButton = async () => {
     /***** Data management *****/
     let index = document.getElementById("furniture-types").value - 1;
-    console.log("pouet", index, document.getElementById("furniture-types").value, furnitureTypes[index].label, furniture)
     typeElem.innerText = furnitureTypes[index].label;
 
     let newType = furnitureTypes[index].id;
@@ -635,15 +633,13 @@ const onConfirmEditButton = async () => {
     }
 
     removeEditElements();
-    //TODO POST sur meuble pour modifications
-    console.log(furniture.id)
     try {
         nbOfDay = await callAPI(
             API_BASE_URL + furniture.id + "/edit",
             "POST",
             userData.token,
             edition,
-        ).then(e => console.log(e));
+        );
     } catch (err) {
         console.error("FurniturePage::onNbOfDay", err);
         PrintError(err);
@@ -653,7 +649,6 @@ const onConfirmEditButton = async () => {
 }
 
 function stopEdition() {
-    console.log(edition)
     editionMode = false;
     edition = {
         description: "",

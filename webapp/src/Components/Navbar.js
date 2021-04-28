@@ -13,7 +13,6 @@ const Navbar = async () => {
   let nb;
   let user = currentUser;
   userData = getUserSessionData;
- console.log(userData)
   if (user) {
     
     nb = `

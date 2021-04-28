@@ -272,7 +272,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
         && edition.getOfferedSellingPrice() == -1 && edition.getFavouritePhotoId() == -1)) {
 
       FurnitureDTO furniture = furnitureDao.getFurnitureById(edition.getIdFurniture());
-      System.out.println(furniture);
       String description = edition.getDescription().isEmpty() ? furniture.getDescription()
           : edition.getDescription();
 
