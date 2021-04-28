@@ -8,6 +8,7 @@ const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
 let userData;
 let listVisitsToBeProcessed;
+let listFurnituresForOnVisit;
 
 let VisitsToBeProcessedPage = () => {
     userData = getUserSessionData();
@@ -143,7 +144,7 @@ async function onClickVisit(e){
             &times;
         </div>
         <h2>Veuillez confirmer ou refuser les propositions de meubles : </h2>
-        <form id="formRequest" class="RequestVisitForm"
+        <form id="formFurnituresToBeProcessed">
         <div>
                 <span class="titre">Client : </span> ${visit.client.lastName} ${visit.client.firstName}<br>
                 <h4>Adresse : </h4>
@@ -176,6 +177,7 @@ async function onClickVisit(e){
         e.addEventListener("click", onClose);
     });
 
+    
     Array.from(document.getElementsByClassName("confirmVisitBtn")).forEach((e) => {
         e.addEventListener("click", onConfirm);
     });
@@ -186,7 +188,7 @@ async function onClickVisit(e){
             <ol>
     `;
 
-    let listFurnituresForOnVisit;
+    
     try{
         listFurnituresForOnVisit = await callAPI(
             API_BASE_URL + idVisit + "/furnitures",
@@ -204,6 +206,7 @@ async function onClickVisit(e){
 
     listFurnituresForOnVisit 
         .map((furniture)=>{
+            let idFurniture = 0
             toAdd += `
                 <li>
                     <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
@@ -217,10 +220,11 @@ async function onClickVisit(e){
                                 <span class="switch-label" data-on="Confirmer" data-off="Refuser"></span> 
                                 <span class="switch-handle"></span> 
                             </label>
-                            <h4>Prix d'achat : <input type="number" class="form-control input-card id="purchasePrice" name="purchasePrice">€</h4>
-                            <h4>Date de la visite : </h4><input type="datetime-local" class="pickUpDate" id="pickUpDate${visit.idRequest}" min="${Date.now}" max="9999-31-12T23:59">
+                            <h4>Prix d'achat : <input type="number" class="form-control input-card id="purchasePrice" name="purchasePrice${idFurniture}">€</h4>
+                            <h4>Date de la visite : </h4><input type="datetime-local" class="pickUpDate" name="pickUpDate${idFurniture}id="pickUpDate${visit.idRequest}" min="${Date.now}" max="9999-31-12T23:59">
                         `;
                         toAdd += "</div></li>";
+                        idFurniture++;
         });
         toAdd += `
             </ol></div>
@@ -230,7 +234,19 @@ async function onClickVisit(e){
 }
 
 const onConfirm = async (e) => {
-    console.log("onConfirm");
+    e.preventDefault();
+    let idVisit = e.srcElement.dataset.id;
+
+    for (let i = 0; i <= listFurnituresForOnVisit.length; i++){
+        let furniture = {
+          id: i,
+          purchasePrice : e.target.elements['purchasePrice'+i].value,
+          pickUpDate: e.target.elements['pickUpDate'+i].value,
+        }
+        request.furnitureList[i-1] = furniture;
+      }
+    onClose();
+
 }
 
 export default VisitsToBeProcessedPage;
