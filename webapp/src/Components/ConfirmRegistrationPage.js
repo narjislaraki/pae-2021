@@ -7,7 +7,7 @@ let adresse = ``;
 const API_BASE_URL = "/api/users/";
 let menu = `
     <div class="menuAdmin">
-        <button  id="visits">Visites</button>
+        <button  id="visits">Visites en attente</button>
         <button id="visitsToBeProcessed">Visites à traiter</button>
         <button id="advancedSearches">Recherche avancées</button>
         <button class="menuAdminOn" id="confirmRegister">Confirmation des inscriptions</button>

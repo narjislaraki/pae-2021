@@ -210,7 +210,7 @@ async function onClickVisit(e) {
 
     let allFurnitures = document.getElementById("allFurnitures");
     let toAdd = `
-        <div class=allFurnituresForOnVisit>
+        <div class="allFurnituresForOnVisit">
             <ol>
     `;
     let listFurnituresForOnVisit;

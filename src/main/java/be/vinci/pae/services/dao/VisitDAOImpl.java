@@ -93,7 +93,7 @@ public class VisitDAOImpl implements VisitDAO {
   public List<VisitDTO> getVisitsToBeProcessed() {
     List<VisitDTO> list = new ArrayList<VisitDTO>();
     try {
-      String sql = "SELECT r.id_request, r.time_slot, r.condition, "
+      String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
           + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, r.client FROM pae.requests_for_visits r, pae.furnitures f "
           + "WHERE r.id_request = f.request_visit AND r.condition=?" + "AND f.condition = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);

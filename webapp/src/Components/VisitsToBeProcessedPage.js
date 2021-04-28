@@ -61,8 +61,6 @@ const onVisitsToBeProcessed = async() => {
             userData.token,
             undefined,
         );
-        console.log(listVisitsToBeProcessed);
-
     } catch (err) {
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
@@ -71,34 +69,43 @@ const onVisitsToBeProcessed = async() => {
         PrintError(err);
     }
     let visitsToBeProcessed = `
-    <div class="visitsWaiting">
+    <div class="visitsToBeProcessed">
         <table class="table table-light">
             <thead>
                 <tr>
                     <th scope="col">Client</th>
                     <th scope="col">Nombres de meubles</th>
                     <th scope="col">Date</th>
-                    <th scope="col">Adresse
+                    <th scope="col">Adresse</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
-        <tbody class="eachVisit">
+        <tbody class="eachVisit" >
     `;
     visitsToBeProcessed += listVisitsToBeProcessed
         .map((visit) =>
-            `<tr>
+            `
+            <div data-id="${visit.idRequest}">
+            <tr>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
                 <td>x</td>
                 <td>${visit.scheduledDateTime}
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
-            </tr>
-
+                <td><button name="trigger_popup_fricc" class="btn btn-dark condensed small-caps block-display" data-id="${visit.idRequest}" type="submit">Traiter la demande de visite</button></td>
+            </tr></div>    
             `
         ).join("");
     
+    
+
     page.innerHTML += visitsToBeProcessed;
     page.innerHTML += `</tbody></table></div>`;
+    let listVisit = document.getElementsByName("trigger_popup_fricc");
+    Array.from(listVisit).forEach((e) => {
+        e.addEventListener("click", onClickVisit);
+    });
 
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
@@ -111,6 +118,119 @@ const onVisitsToBeProcessed = async() => {
     
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
+}
+
+const onClose = (e) => {
+    e.preventDefault();
+    let idVisit = e.srcElement.dataset.id;
+
+    Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
+        if (element.dataset.id == idVisit) {
+            element.style.display = "none";
+            return;
+        }
+    });
+}
+
+async function onClickVisit(e){
+    let idVisit = e.srcElement.dataset.id;
+    let visit = listVisitsToBeProcessed.filter(e => e.idRequest == idVisit)[0];
+    let popupVisit = `
+    <div class="hover_bkgr_fricc" data-id="${visit.idRequest}">
+    <span class="helper"></span>
+    <div>
+        <div class="popupCloseButton" data-id="${visit.idRequest}">
+            &times;
+        </div>
+        <h2>Veuillez confirmer ou refuser les propositions de meubles : </h2>
+        <form id="formRequest" class="RequestVisitForm"
+        <div>
+                <span class="titre">Client : </span> ${visit.client.lastName} ${visit.client.firstName}<br>
+                <h4>Adresse : </h4>
+                <div>${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
+                    ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
+                    ${visit.warehouseAddress.country} 
+                </div>
+                <span class="titre">Date : </span>${visit.scheduledDateTime}<br>
+                <h4>Meuble(s) : </h4><br>
+                <div id="allFurnitures"></div>
+                <div class="center">
+                    <button class="btn btn-outline-success col-6 confirmVisitBtn" name="confirmBtn" data-id="${visit.idRequest}" type="submit">Confirmer</button>
+                </div>
+        </div>
+        </form>
+    </div>
+    
+    
+    `;
+
+    document.getElementById("popups").innerHTML = popupVisit;
+    Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
+        if (element.dataset.id == idVisit) {
+            element.style.display = "block";
+            return;
+        }
+    });
+
+    Array.from(document.getElementsByClassName("popupCloseButton")).forEach((e) => {
+        e.addEventListener("click", onClose);
+    });
+
+    Array.from(document.getElementsByClassName("confirmVisitBtn")).forEach((e) => {
+        e.addEventListener("click", onConfirm);
+    });
+
+    let allFurnitures = document.getElementById("allFurnitures");
+    let toAdd = `
+        <div class="allFurnituresForOnVisit">
+            <ol>
+    `;
+
+    let listFurnituresForOnVisit;
+    try{
+        listFurnituresForOnVisit = await callAPI(
+            API_BASE_URL + idVisit + "/furnitures",
+            "GET",
+            userData.token,
+            undefined,
+        )
+    }catch (err) {
+        if (err == "Error: Admin only") {
+            err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+        }
+        console.error("VisitsToBeProcessed::onClickVisit", err);
+        PrintError(err);
+    }
+
+    listFurnituresForOnVisit 
+        .map((furniture)=>{
+            toAdd += `
+                <li>
+                    <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
+                        ${furniture.description}
+                        <div class="photoDiv">`;
+                        furniture.listPhotos.map(e => {
+                            toAdd += `<img class="imageVisits" src="${e.photo}">`
+                        });
+                        toAdd += `</div>   <label class="switch">
+                                <input class="switch-input" type="checkbox" />
+                                <span class="switch-label" data-on="Confirmer" data-off="Refuser"></span> 
+                                <span class="switch-handle"></span> 
+                            </label>
+                            <h4>Prix d'achat : <input type="number" class="form-control input-card id="purchasePrice" name="purchasePrice">€</h4>
+                            <h4>Date de la visite : </h4><input type="datetime-local" class="pickUpDate" id="pickUpDate${visit.idRequest}" min="${Date.now}" max="9999-31-12T23:59">
+                        `;
+                        toAdd += "</div></li>";
+        });
+        toAdd += `
+            </ol></div>
+        `;
+
+        allFurnitures.innerHTML = toAdd;
+}
+
+const onConfirm = async (e) => {
+    console.log("onConfirm");
 }
 
 export default VisitsToBeProcessedPage;

@@ -77,9 +77,7 @@ public class VisitImpl implements Visit {
 
   @Override
   public void setVisitCondition(String visitCondition) {
-    System.out.println(visitCondition);
     switch (visitCondition.toLowerCase()) {
-
       case "en attente":
         this.visitCondition = VisitCondition.EN_ATTENTE;
         break;
