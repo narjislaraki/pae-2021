@@ -44,4 +44,6 @@ public interface FurnitureUCC {
   boolean addSale(SaleDTO sale);
 
   List<PhotoDTO> getFurniturePhotos(int idFurniture);
+
+  boolean processVisit(List<FurnitureDTO> listFurnitures);
 }

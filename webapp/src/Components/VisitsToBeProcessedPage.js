@@ -9,7 +9,6 @@ let page = document.querySelector("#page");
 let userData;
 let listVisitsToBeProcessed;
 let listFurnituresForOnVisit;
-let listToSend = [];
 
 let VisitsToBeProcessedPage = () => {
     userData = getUserSessionData();
@@ -240,6 +239,10 @@ const onConfirm = async (e) => {
     console.log(e);
     console.log(document.getElementById("purchaseprice6").value);
     console.log("ieiei");
+    let visit = {
+        idRequest : idVisit,
+        furnitureList:[],
+    }
     for (let i = 0; i < listFurnituresForOnVisit.length; i++){
         let idA = document.getElementsByClassName("furniture")[i].dataset.id;
         let furniture = {
@@ -249,7 +252,7 @@ const onConfirm = async (e) => {
           condition: document.getElementById("check"+idA).checked ? "accepté" : "refusé"
         }
         console.log(furniture);
-        listToSend[i] = furniture;
+        visit.furnitureList[i] = furniture;
     }
 
     try{
@@ -257,7 +260,7 @@ const onConfirm = async (e) => {
             "/api/furnitures/furnituresListToBeProcessed", 
             "POST",
             userData.token,
-            listToSend,
+            visit,
         );
         if (sendList){
             if (window.location.pathname == "/visitsToBeProcessed"){
@@ -267,8 +270,8 @@ const onConfirm = async (e) => {
         }
     }
     catch (err) {
-        if (err == "Error: Missing fields") {
-          err.message = "Veuillez entrer un prix d'achat et une date d'emport si vous décidez d'acheter le meuble !";
+        if (err == "Error: Missing fields or uncorrect fields") {
+          err.message = "Veuillez entrer un prix d'achat (positif) et une date d'emport si vous décidez d'acheter le meuble !";
         }
         console.error("VisitToBeProcessedPage::onConfirm", err);
         PrintError(err);
