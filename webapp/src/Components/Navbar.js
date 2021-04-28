@@ -4,7 +4,7 @@ import { removeSessionData, currentUser, resetCurrentUser, getUserSessionData } 
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
 import { RedirectUrl } from "./Router.js";
-let userData = getUserSessionData;
+let userData;
 let idFurniture = 1;
 let mapPhotos = new Map();
 let typesOfFurniture;
@@ -12,7 +12,8 @@ let typesOfFurniture;
 const Navbar = async () => {
   let nb;
   let user = currentUser;
-
+  userData = getUserSessionData;
+ console.log(userData)
   if (user) {
     
     nb = `
