@@ -2,7 +2,9 @@ package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.visit.PhotoDTO;
 
@@ -12,8 +14,7 @@ public interface FurnitureDTO {
   enum Condition {
     EN_ATTENTE("proposé"), ACHETE("acheté"), REFUSE("refusé"), EN_RESTAURATION(
         "en restauration"), DEPOSE_EN_MAGASIN("déposé en magasin"), EN_VENTE(
-            "en vente"), SOUS_OPTION("sous option"), VENDU("vendu"), EMPORTE(
-                "emporté"), LIVRE("livré"), RESERVE("réservé"), RETIRE("retiré de la vente");
+            "en vente"), SOUS_OPTION("sous option"), VENDU("vendu"), RETIRE("retiré de la vente");
 
     private String condition;
 
