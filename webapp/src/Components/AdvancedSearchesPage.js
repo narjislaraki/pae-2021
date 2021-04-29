@@ -6,11 +6,26 @@ import PrintError from "./PrintError";
 const API_BASE_URL = "/api/searches/";
 
 let page = document.querySelector("#page");
-let clientMode = true;
 let userData = getUserSessionData();
-let AdvancedSearchesPage = () => {
+let clientMode = true;
+let typeList;
+let menu, advancedSearchesBar, advancedSearchesPageClient,  advancedSearchesPageFurniture;
 
-    let menu = `
+
+let AdvancedSearchesPage = async () =>{
+    if (typeList == null) {
+        /*
+        try {
+            typeList = await callAPI(
+                API_BASE_URL +
+            )
+        } catch (err) {
+
+        }
+        */
+    }
+
+    menu = `
     <div class="menuAdmin">
         <div id="visits" class="condensed small-caps ">Visites</div>
         <div id="advancedSearches" class="condensed small-caps menuAdminOn">Recherche avancées</div>
@@ -18,7 +33,7 @@ let AdvancedSearchesPage = () => {
     </div>
     `;
 
-    let advancedSearchesBar = `
+    advancedSearchesBar = `
 <div class="searchBar-advanced">
         
             <label class="switch-client-furn switch-client">
@@ -37,7 +52,7 @@ let AdvancedSearchesPage = () => {
         <button class="btn btn-dark condensed small-caps" type="submit" id="search">Rechercher</button>
 `
 
-    let advancedSearchesPageClient = `
+    advancedSearchesPageClient = `
         <p>Recherche:</p>
         <input type="text" class="form-control" id="searchUsername" placeholder="Nom">
         <input type="text" class="form-control" id="searchUserCity" placeholder="Ville">
@@ -45,7 +60,7 @@ let AdvancedSearchesPage = () => {
     </div>
     `;
 
-    let advancedSearchesPageFurniture = `
+    advancedSearchesPageFurniture = `
         <p>Recherche:</p>
         <input type="text" class="form-control" id="searchClientName" placeholder="Nom du client">
         <select class="form-select" aria-label="Type" id="searchType">
@@ -63,14 +78,40 @@ let AdvancedSearchesPage = () => {
     </div>
     `;
 
-    page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
+    if(clientMode){
+        page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
+    }
 
+    else {
+        page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
+    }
 
    btns();
+   addEL();
+
    return;
 };
 
 let btns = () => {
+    document.body.addEventListener('change', function(e){
+        let target = e.target;
+        switch(target.value){
+            case 'client':
+                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
+                clientMode = true;
+                break;
+            case 'furn':
+                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
+                clientMode = false;
+                break;
+            default:
+                break;
+        }
+        addEL();
+    });
+}
+
+function addEL () {
     let search = document.getElementById("search");
     search.addEventListener("click", onSearch);
 
@@ -82,27 +123,10 @@ let btns = () => {
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
-    document.body.addEventListener('change', function(e){
-        let target = e.target;
-        switch(target.value){
-            case 'client':
-                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
-                target.style.checked = "checked";
-                clientMode = true;
-                console.log(clientMode);
-                break;
-            case 'furn':
-                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
-                clientMode = false;
-                console.log(clientMode);
-                break;
-        }
-    });
 }
 
 const onVisits = (e) => {
     e.preventDefault();
-    console.log("to visits");
     RedirectUrl("/visits");
 };
 
@@ -113,13 +137,12 @@ const onAdvancedSearches = (e) => {
 
 const onConfirmRegister = (e) => {
     e.preventDefault();
-    console.log("toConfirmRegistration");
     RedirectUrl("/confirmRegistration");
 };
 
 const onSearch = async (e) => {
     e.preventDefault();
-    if(clientMode){
+    if (clientMode){
         let city = document.getElementById("searchUserCity").value;
         let name = document.getElementById("searchUsername").value;
         let postcode = document.getElementById("searchUserPostCode").value;
@@ -132,21 +155,19 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
-            console.log(clientList);
-            console.log(name);
             if (name){
-                clientList = clientList.filter(e => e.lastName.toLowerCase() == name.toLowerCase());
+                clientList = clientList.filter(e => e.lastName.toLowerCase().startsWith(name.toLowerCase()));
             } if (city) {
-                clientList = clientList.filter(e => e.address.city.toLowerCase() == city.toLowerCase());
+                clientList = clientList.filter(e => e.address.city.toLowerCase().startsWith(city.toLowerCase()));
             } if (postcode) {
-                clientList = clientList.filter(e => e.address.postcode.toLowerCase() == postcode.toLowerCase());
+                clientList = clientList.filter(e => e.address.postCode.toLowerCase().startsWith(postcode.toLowerCase()));
             }
 
             
             onShowClientList(clientList);
+            
             btns();
-            
-            
+            addEL();
         } catch(err){
             if (err == "Error: Admin only") {
                 err.message = "Seuls les administrateurs peuvent accéder à cette page !";
@@ -155,7 +176,7 @@ const onSearch = async (e) => {
             PrintError(err);
         }
     }
-    else{
+    else {
         let username = document.getElementById("searchClientName").value;
         let type = document.getElementById("searchType").value;
         let minAmount = document.getElementById("montantMin").value;
@@ -170,21 +191,20 @@ const onSearch = async (e) => {
                 undefined,
             );
             console.log(furnList);
-            /*
             if (username){
-                furnList = furnList.filter(e => e.username.toLowerCase() == username.toLowerCase());
+                furnList = furnList.filter(e => e.username.toLowerCase().startsWith(username.toLowerCase()));
             } if (type) {
-                furnList = furnList.filter(e => e.furniture.type.toLowerCase() == type.toLowerCase());
+              //  furnList = furnList.filter(e => e.type.toLowerCase() == type.toLowerCase());
             } if (maxAmount) {
-                furnList = furnList.filter(e => e.furniture.purchase_price.toLowerCase() == postcode.toLowerCase());
+                furnList = furnList.filter(e => e.offeredSellingPrice <= maxAmount);
+            } if (minAmount) {
+                furnList = furnList.filter(e => e.offeredSellingPrice >= minAmount);
             }
 
             
-            onShowClientList(clientList);
+            onShowFurnitureList(furnList);
             btns();
-            */
-            
-            
+            addEL();
         } catch(err){
             if (err == "Error: Admin only") {
                 err.message = "Seuls les administrateurs peuvent accéder à cette page !";
@@ -195,8 +215,57 @@ const onSearch = async (e) => {
     }
 }
 
+async function SearchFurn (nameClient, type, maxAmount, minAmount) {
+
+}
+
+const onShowFurnitureList = (data) => {
+    let furnitureList = `
+    <div class="clientHandles">
+        <div id="pseudoHandle" class="condensed">TYPE</div>
+        <div id="namesHandle" class="condensed">DESCRIPTION</div>
+        <div id="moreInfoHandle" class="condensed">INFORMATIONS SUPPL.</div>
+    </div>
+    `;
+
+    let nbPhoto = 1;
+    furnitureList += data.map((furniture) => 
+    `<div class="advancedSearchClientItem-container">
+        <div class="advancedSearchClientItem condensed">
+            <div class="advancedSearchClientItem_pseudo">${furniture.type == null ? "N/A" : furniture.type}</div>
+            <div class="advancedSearchFurntItem_description">${furniture.description}</div>
+            <div class="advancedSearchFurnItem_moreInfo1">
+                <div>Statut: ${furniture.condition}</div>
+                <div>Prix d'achat: ${furniture.purchasePrice == null ? "N/A" : furniture.purchasePrice}</div>
+                <div>Prix de vente: ${furniture.offeredSellingPrice == null ? "N/A" : furniture.offeredSellingPrice}</div>
+            </div>
+            <div class="advancedSearchFurnItem_moreInfo2">
+                <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : furniture.pickUpDate}</div>
+                <div>Date dépot: ${furniture.depositDate== null ? "N/A" : furniture.depositDate}</div>
+            </div>
+        </div>
+        <div class="furnInfo">
+            <div class="furnInfo-cat">
+                <p class="small-caps">Acheté à:</p>
+                <div>${furniture.seller == null? "N/A" : furniture.seller}</div>
+            </div>
+            <div class="furnInfo-cat">
+                <p class="small-caps">Photo préférée :</p>
+                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto}" alt="Petite image"  width = 60px
+                height= 60px>
+            </div>
+        </div>
+    </div>`).join("");
+
+    page.innerHTML += furnitureList;    
+
+    page.innerHTML+= `
+    <div class="white-space"></div>
+    `
+    return page;
+}
+  
 const onShowClientList = (data) => {
-    console.log("hello");
     let clientList =
       `<div class="clientHandles">
       <div id="pseudoHandle" class="condensed">PSEUDO</div>
