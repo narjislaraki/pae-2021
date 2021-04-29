@@ -3,6 +3,7 @@ import LoginRegisterPage from "./LoginRegisterPage.js";
 import LogoutComponent from "./LogoutComponent.js";
 import ErrorPage from "./ErrorPage.js";
 import VisitsPage from "./VisitsPage.js";
+import VisitsToBeProcessedPage from "./VisitsToBeProcessedPage.js"
 import AdvancedSearchesPage from "./AdvancedSearchesPage.js";
 import ConfirmRegistrationPage from "./ConfirmRegistrationPage.js";
 import FurnitureListPage from "./FurnitureListPage.js";
@@ -12,6 +13,7 @@ const routes = {
   "/login": LoginRegisterPage,
   "/logout": LogoutComponent,
   "/visits" : VisitsPage,
+  "/visitsToBeProcessed" : VisitsToBeProcessedPage,
   //"/advancedSearches" : AdvancedSearchesPage,
   "/confirmRegistration": ConfirmRegistrationPage,
   "/furnitures": FurnitureListPage,

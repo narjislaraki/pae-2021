@@ -1,5 +1,6 @@
 package be.vinci.pae.services.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import be.vinci.pae.domain.address.Address;
@@ -56,6 +57,8 @@ public interface FurnitureDAO {
   void addClientPhoto(PhotoDTO photo, int idFurniture);
 
   List<PhotoDTO> getFurniturePhotos(int idFurniture);
+
+  void processFurniture(int id, String condition, double purchasePrice, LocalDateTime pickUpDate);
 
   void edit(int id, String description, int idType, double offeredSellingPrice, int favouritePhoto);
 

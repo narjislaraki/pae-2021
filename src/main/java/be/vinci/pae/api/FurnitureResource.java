@@ -2,22 +2,19 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
@@ -25,6 +22,7 @@ import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
 import be.vinci.pae.domain.visit.PhotoDTO;
+import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -336,6 +334,38 @@ public class FurnitureResource {
     }
     return orderedList;
   }
+
+  /**
+   * It will change the state of the furniture on the list to "purchased" or "refused" and if the
+   * furniture is purchased, update its purchase price and date of shipment.
+   * 
+   * @param request the request
+   * @param visit the visit that contains the list of furnitures to update
+   * @return true
+   */
+  @AdminAuthorize
+  @POST
+  @Path("furnituresListToBeProcessed")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response processVisit(@Context ContainerRequest request, VisitDTO visit) {
+    System.out.println(visit);
+    if (!checkFieldsProcess(visit)) {
+      return responseWithStatus(Status.UNAUTHORIZED, "Missing fields or uncorrect fields");
+    }
+    return responseWithStatus(Status.CREATED, furnitureUCC.processVisit(visit.getFurnitureList()));
+  }
+
+  private boolean checkFieldsProcess(VisitDTO visit) {
+    for (FurnitureDTO furniture : visit.getFurnitureList()) {
+      if (furniture.getCondition().equals(Condition.ACHETE) && (furniture.getPurchasePrice() <= 0
+          || furniture.getPickUpDate() == null || furniture.getPickUpDate() == null)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
 
   /**
    * Allows to edit a furniture such as: description, type id, offered selling price and favourite

@@ -7,7 +7,8 @@ let adresse = ``;
 const API_BASE_URL = "/api/users/";
 let menu = `
     <div class="menuAdmin">
-        <button  id="visits">Visites</button>
+        <button  id="visits">Visites en attente</button>
+        <button id="visitsToBeProcessed">Visites à traiter</button>
         <button id="advancedSearches">Recherche avancées</button>
         <button class="menuAdminOn" id="confirmRegister">Confirmation des inscriptions</button>
     </div>
@@ -38,6 +39,9 @@ const ConfirmRegistrationPage = async () => {
 
   let visits = document.getElementById("visits");
   visits.addEventListener("click", onVisits);
+
+  let visitsATraiter = document.getElementById("visitsToBeProcessed");
+    visitsATraiter.addEventListener("click", onVisitsToBeProcessed);
 
   let advancedSearches = document.getElementById("advancedSearches");
   advancedSearches.addEventListener("click", onAdanvancedSearches);
@@ -162,6 +166,12 @@ const onVisits = (e) => {
   e.preventDefault();
   RedirectUrl("/visits");
 };
+
+const onVisitsToBeProcessed = (e) => {
+  e.preventDefault();
+  console.log("to visits to be processed");
+  RedirectUrl("/visitsToBeProcessed");
+}
 
 const onAdanvancedSearches = (e) => {
   e.preventDefault();

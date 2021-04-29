@@ -303,7 +303,7 @@ const onIntroduceRequest = async (e) => {
       postCode: e.target.elements.postcode.value,
       country: e.target.elements.country.value,
       city: e.target.elements.city.value,
-      unitNumber: e.target.elements.unitnumber?.value,
+      unitNumber: e.target.elements.unitnumber.value,
     },
     idClient: currentUser.id,
     furnitureList:[],

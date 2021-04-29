@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -500,7 +499,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   public void edit(int id, String description, int idType, double offeredSellingPrice,
       int favouritePhoto) {
     try {
-
       String sql = "UPDATE pae.furnitures SET description = ?, id_type = ?, "
           + "offered_selling_price = ?, favorite_photo = ? WHERE id_furniture = ?;";
       ps = dalBackendService.getPreparedStatement(sql);
@@ -550,6 +548,33 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ps.setInt(1, id);
       ps.execute();
 
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public void processFurniture(int id, String condition, double purchasePrice,
+      LocalDateTime pickUpDate) {
+    try {
+      if (condition.equals(Condition.ACHETE.toString())) {
+        String sql = "UPDATE pae.furnitures SET condition = ? , purchase_price = ? "
+            + ", pick_up_date = ? WHERE id_furniture = ?;";
+        ps = dalBackendService.getPreparedStatement(sql);
+        ps.setString(1, condition);
+        ps.setDouble(2, purchasePrice);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp date = Timestamp.valueOf(pickUpDate.format(formatter));
+        ps.setTimestamp(3, date);
+        ps.setInt(4, id);
+        ps.execute();
+      } else if (condition.equals(Condition.REFUSE.toString())) {
+        String sql = "UPDATE pae.furnitures SET condition = ? WHERE id_furniture = ?;";
+        ps = dalBackendService.getPreparedStatement(sql);
+        ps.setString(1, condition);
+        ps.setInt(2, id);
+        ps.execute();
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }

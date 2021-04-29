@@ -320,4 +320,15 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     return furniture;
   }
 
+  @Override
+  public boolean processVisit(List<FurnitureDTO> listFurnitures) {
+    dalServices.getBizzTransaction(false);
+    for (FurnitureDTO furniture : listFurnitures) {
+      furnitureDao.processFurniture(furniture.getId(), furniture.getCondition().toString(),
+          furniture.getPurchasePrice(), furniture.getPickUpDate());
+    }
+    dalServices.commitBizzTransaction();
+    return true;
+  }
+
 }

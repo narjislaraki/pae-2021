@@ -8,6 +8,8 @@ public interface VisitUCC {
 
   List<VisitDTO> getNotConfirmedVisits();
 
+  List<VisitDTO> getVisitsToBeProcessed();
+
   boolean submitRequestOfVisit(VisitDTO visit);
 
   boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime);
@@ -17,5 +19,6 @@ public interface VisitUCC {
   VisitDTO getVisitById(int id);
 
   List<FurnitureDTO> getListFurnituresForOneVisit(int idVisit);
+
 
 }

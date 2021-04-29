@@ -68,6 +68,26 @@ public class VisitResource {
   }
 
   /**
+   * Get a list of visits to be processed (accept/refuse for each furniture).
+   * 
+   * @param request the request
+   * @return a list of confirmed visits
+   */
+  @GET
+  @Path("toBeProcessedVisits")
+  @AdminAuthorize
+  public Response getListOfVisitsToBeProcessed(@Context ContainerRequest request) {
+    List<VisitDTO> list = visitUCC.getVisitsToBeProcessed();
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+  /**
    * Get a list of furnitures for one request for visits.
    * 
    * @param request the request
