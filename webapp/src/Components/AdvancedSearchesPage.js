@@ -65,23 +65,6 @@ let AdvancedSearchesPage = () => {
 
     page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
 
-    
-    document.body.addEventListener('change', function(e){
-        let target = e.target;
-        switch(target.value){
-            case 'client':
-                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
-                target.style.checked = "checked";
-                clientMode = true;
-                console.log(clientMode);
-                break;
-            case 'furn':
-                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
-                clientMode = false;
-                console.log(clientMode);
-                break;
-        }
-    });
 
    btns();
    return;
@@ -99,6 +82,22 @@ let btns = () => {
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
+    document.body.addEventListener('change', function(e){
+        let target = e.target;
+        switch(target.value){
+            case 'client':
+                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
+                target.style.checked = "checked";
+                clientMode = true;
+                console.log(clientMode);
+                break;
+            case 'furn':
+                page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
+                clientMode = false;
+                console.log(clientMode);
+                break;
+        }
+    });
 }
 
 const onVisits = (e) => {
