@@ -17,4 +17,5 @@ public interface UserUCC {
   UserDTO getUserFromId(int id);
 
   List<UserDTO> getValidatedUsers();
+
 }

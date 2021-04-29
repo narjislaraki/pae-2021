@@ -3,6 +3,8 @@ import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
 import PrintError from "./PrintError";
 
+const API_BASE_URL = "/api/searches/";
+
 let page = document.querySelector("#page");
 let userData = getUserSessionData();
 let AdvancedSearchesPage = () => {
@@ -31,7 +33,7 @@ let AdvancedSearchesPage = () => {
                 </span>
             </label>
         
-        <button class="btn btn-dark condensed small-caps" type="submit">Rechercher</button>
+        <button class="btn btn-dark condensed small-caps" type="submit" id="search">Rechercher</button>
 `
 
     let advancedSearchesPageClient = `
@@ -78,7 +80,8 @@ let AdvancedSearchesPage = () => {
         }
     });
 
-    
+    let search = document.getElementById("search");
+    search.addEventListener("click", onSearchClients);
 
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
@@ -98,7 +101,6 @@ const onVisits = (e) => {
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
-    console.log("to advancedSearches")
     RedirectUrl("/advancedSearches");
 };
 
@@ -108,21 +110,38 @@ const onConfirmRegister = (e) => {
     RedirectUrl("/confirmRegistration");
 };
 
-async function SearchClients (name, city, postcode) {
+const onSearchClients = async (e) => {
+    e.preventDefault();
+    let city = document.getElementById("searchUserCity").value;
+    let name = document.getElementById("searchUsername").value;
+    let postcode = document.getElementById("searchUserPostCode").value;
     let clientList;
     try{
-        listVisitsWaiting = await callAPI(
-            API_BASE_URL + "notConfirmedVisits",
+        clientList = await callAPI(
+            "/api/users/validatedList",
             "GET",
             userData.token,
             undefined,
         );
+        console.log(clientList);
+        console.log(name);
+        if (name){
+            clientList = clientList.filter(e => e.lastName == name)[0];
+        } if (city) {
+             clientList = clientList.filter(e => e.address.city == city)[0];
+        } if (postcode) {
+            clientList = clientList.filter(e => e.address.postcode== postcode)[0]
+        }
+
+        
+        onShowClientList(clientList);
+        
         
     } catch(err){
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
           }
-          console.error("VisitsPage::onVisitsWainting", err);
+          console.error("AdvancedSearchesPage::onSearchClients", err);
           PrintError(err);
     }
 }
@@ -130,6 +149,60 @@ async function SearchClients (name, city, postcode) {
 async function SearchFurn (nameClient, type, maxAmount, minAmount) {
 
 }
+
+const onShowClientList = (data) => {
+    console.log("hello");
+    let onShowClientList =
+      `<table class="table table-light tableShowClientList">
+        <thead>
+          <tr>
+            <th scope="col">Pseudo</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Adresse</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+         
+          
+      `;
+      onShowClientList += data
+      .map((user) =>
+     `<div class="advancedSearchClientItem-container">
+        <div class="advancedSearchClientItem condensed">
+        <div class="advancedSearchClientItem_pseudo">${user.username}</div>
+        <div class="advancedSearchClientItem_fullName">
+            <div class="asci-name">${user.firstName}</div>
+            <div class="asci-surname">${user.lastName}</div>
+        </div>
+        <div class="advancedSearchClientItem_email">${user.email}</div>
+        <div class="advancedSearchClientItem_moreInfo">
+            <div class="asci-signUpDate">Inscrit depuis: ${user.registrationDate}</div>
+            <div class="asci-role">Role: ${user.role} </div>
+            <div class="asci-amountBought">Nbr achats:</div>
+            <div class="asci-amountSold">Nbr ventes:</div>
+        </div>
+    </div>
+        <div class="furnInfo">
+          <div class="advancedSearchClientItem-boughtFurn">
+            <p>MEUBLES ACHETÉS</p>
+            <img src="" alt="" class="asci-boughtFurn">
+            <img src="" alt="" class="asci-boughtFurn">
+            <img src="" alt="" class="asci-boughtFurn">
+          </div>
+         <div class="advancedSearchClientItem-soldFurn">
+            <p>MEUBLES VENDUS</p>
+            <img src="" alt="" class="asci-soldFurn">
+         </div>
+        </div>
+        </div> `)
+                              
+      .join("");
+    page.innerHTML += onShowClientList;    
+    return page;
+  }
 
 function onSwitch(switchElement, clientDiv, furnDiv, menuDiv){
     console.log("dans onSwitch")
