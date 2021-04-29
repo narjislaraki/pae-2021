@@ -1,7 +1,8 @@
 import callAPI from "../utils/api";
-import {RedirectUrl} from "./Router";
+import {RedirectUrl} from "./Router.js";
 import {getUserSessionData} from "../utils/session.js";
-import PrintError from "./PrintError";
+import PrintError from "./PrintError.js";
+import PrintMessage from "./PrintMessage.js";
 import Navbar from "./Navbar";
 
 const API_BASE_URL = "/api/visits/";
@@ -235,10 +236,6 @@ async function onClickVisit(e){
 const onConfirm = async (e) => {
     e.preventDefault();
     let idVisit = e.srcElement.dataset.id;
-    console.log(document.getElementById("check6").checked);
-    console.log(e);
-    console.log(document.getElementById("purchaseprice6").value);
-    console.log("ieiei");
     let visit = {
         idRequest : idVisit,
         furnitureList:[],
@@ -247,11 +244,10 @@ const onConfirm = async (e) => {
         let idA = document.getElementsByClassName("furniture")[i].dataset.id;
         let furniture = {
           id: idA,
-          purchasePrice :document.getElementById("purchaseprice" + idA).value == "" ? null : document.getElementById("purchaseprice" + idA).value,
+          purchasePrice: document.getElementById("purchaseprice" + idA).value == "" ? null : document.getElementById("purchaseprice" + idA).value,
           pickUpDate: document.getElementById("pickupdate" + idA).value == "" ? null : document.getElementById("pickupdate" + idA).value,
-          condition: document.getElementById("check"+idA).checked ? "accepté" : "refusé"
+          condition: document.getElementById("check"+idA).checked ? "acheté" : "refusé"
         }
-        console.log(furniture);
         visit.furnitureList[i] = furniture;
     }
 
@@ -264,7 +260,7 @@ const onConfirm = async (e) => {
         );
         if (sendList){
             if (window.location.pathname == "/visitsToBeProcessed"){
-                window.location.reload();
+                VisitsToBeProcessedPage();
             }
             PrintMessage("La demande de visite a bien été traitée.");
         }
