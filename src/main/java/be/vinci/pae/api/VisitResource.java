@@ -2,13 +2,17 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -120,7 +124,6 @@ public class VisitResource {
   @Consumes(MediaType.APPLICATION_JSON)
   public boolean acceptVisit(@Context ContainerRequest request, @PathParam("id") int idVisit,
       JsonNode json) {
-    System.out.println("acceptVisit resource");
     LocalDateTime scheduledDateTime = LocalDateTime.parse(json.get("scheduledDateTime").asText());
     return visitUCC.acceptVisit(idVisit, scheduledDateTime);
   }
@@ -176,7 +179,6 @@ public class VisitResource {
   @Path("introduce")
   // TODO pas fini
   public Response introduceRequestForVisit(VisitDTO visit) {
-    System.out.println(visit);
     if (!checkFieldsIntroduce(visit)) {
       return responseWithStatus(Status.UNAUTHORIZED, "Missing fields");
     }

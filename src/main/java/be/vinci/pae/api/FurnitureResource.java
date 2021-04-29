@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
@@ -368,4 +369,23 @@ public class FurnitureResource {
 
 
 
+  /**
+   * Allows to edit a furniture such as: description, type id, offered selling price and favourite
+   * photo ID. Also allows to deal with photos with id's lists for: display, hide, delete. Finally,
+   * allows to add photos to a furniture.
+   * 
+   * @param request the request
+   * @param idFurniture the furniture's id
+   * @param edition the data to be edited
+   * @return true if OK
+   */
+  @POST
+  @Path("/{idFurniture}/edit")
+  @AdminAuthorize
+  @Produces(MediaType.APPLICATION_JSON)
+  public boolean edit(@Context ContainerRequest request, @PathParam("idFurniture") int idFurniture,
+      EditionDTO edition) {
+    edition.setIdFurniture(idFurniture);
+    return furnitureUCC.edit(edition);
+  }
 }
