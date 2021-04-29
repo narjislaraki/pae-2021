@@ -6,6 +6,7 @@ import PrintError from "./PrintError";
 const API_BASE_URL = "/api/searches/";
 
 let page = document.querySelector("#page");
+let clientMode = true;
 let userData = getUserSessionData();
 let AdvancedSearchesPage = () => {
 
@@ -71,17 +72,19 @@ let AdvancedSearchesPage = () => {
             case 'client':
                 page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
                 target.style.checked = "checked";
-                console.log("dans client");
+                clientMode = true;
+                console.log(clientMode);
                 break;
             case 'furn':
                 page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
-                console.log("dans furn");
+                clientMode = false;
+                console.log(clientMode);
                 break;
         }
     });
 
     let search = document.getElementById("search");
-    search.addEventListener("click", onSearchClients);
+    search.addEventListener("click", onSearch);
 
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
@@ -110,44 +113,78 @@ const onConfirmRegister = (e) => {
     RedirectUrl("/confirmRegistration");
 };
 
-const onSearchClients = async (e) => {
+const onSearch = async (e) => {
     e.preventDefault();
-    let city = document.getElementById("searchUserCity").value;
-    let name = document.getElementById("searchUsername").value;
-    let postcode = document.getElementById("searchUserPostCode").value;
-    let clientList = [];
-    try{
-        clientList = await callAPI(
-            "/api/users/validatedList",
-            "GET",
-            userData.token,
-            undefined,
-        );
-        console.log(clientList);
-        console.log(name);
-        if (name){
-            clientList = clientList.filter(e => e.lastName.toLowerCase() == name.toLowerCase());
-        } if (city) {
-             clientList = clientList.filter(e => e.address.city.toLowerCase() == city.toLowerCase());
-        } if (postcode) {
-            clientList = clientList.filter(e => e.address.postcode.toLowerCase() == postcode.toLowerCase());
+    if(clientMode){
+        let city = document.getElementById("searchUserCity").value;
+        let name = document.getElementById("searchUsername").value;
+        let postcode = document.getElementById("searchUserPostCode").value;
+        let clientList = [];
+        try{
+            clientList = await callAPI(
+                "/api/users/validatedList",
+                "GET",
+                userData.token,
+                undefined,
+            );
+            console.log(clientList);
+            console.log(name);
+            if (name){
+                clientList = clientList.filter(e => e.lastName.toLowerCase() == name.toLowerCase());
+            } if (city) {
+                clientList = clientList.filter(e => e.address.city.toLowerCase() == city.toLowerCase());
+            } if (postcode) {
+                clientList = clientList.filter(e => e.address.postcode.toLowerCase() == postcode.toLowerCase());
+            }
+
+            
+            onShowClientList(clientList);
+            
+            
+        } catch(err){
+            if (err == "Error: Admin only") {
+                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+            }
+            console.error("AdvancedSearchesPage::onSearchClients", err);
+            PrintError(err);
         }
-
-        
-        onShowClientList(clientList);
-        
-        
-    } catch(err){
-        if (err == "Error: Admin only") {
-            err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-          }
-          console.error("AdvancedSearchesPage::onSearchClients", err);
-          PrintError(err);
     }
-}
+    else{
+        let username = document.getElementById("searchClientName").value;
+        let type = document.getElementById("searchType").value;
+        let minAmount = document.getElementById("montantMin").value;
+        let maxAmount = document.getElementById("montantMax").value;
+        let furnList = [];
+        try{
+            furnList = await callAPI(
+                "/api/furnitures",
+                "GET",
+                userData.token,
+                undefined,
+            );
+            console.log(furnList);
+            /*
+            if (username){
+                furnList = furnList.filter(e => e.username.toLowerCase() == username.toLowerCase());
+            } if (type) {
+                furnList = furnList.filter(e => e.furniture.type.toLowerCase() == type.toLowerCase());
+            } if (maxAmount) {
+                furnList = furnList.filter(e => e.furniture.purchase_price.toLowerCase() == postcode.toLowerCase());
+            }
 
-async function SearchFurn (nameClient, type, maxAmount, minAmount) {
-
+            
+            onShowClientList(clientList);
+            */
+            
+            
+        } catch(err){
+            if (err == "Error: Admin only") {
+                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+            }
+            console.error("AdvancedSearchesPage::onSearchClients", err);
+            PrintError(err);
+        }
+    }
 }
 
 const onShowClientList = (data) => {

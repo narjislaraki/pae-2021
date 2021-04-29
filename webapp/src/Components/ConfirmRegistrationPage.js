@@ -7,9 +7,9 @@ let adresse = ``;
 const API_BASE_URL = "/api/users/";
 let menu = `
     <div class="menuAdmin">
-        <button  id="visits">Visites</button>
-        <button id="advancedSearches">Recherche avancées</button>
-        <button class="menuAdminOn" id="confirmRegister">Confirmation des inscriptions</button>
+        <div id="visits" class="condensed small-caps ">Visites</div>
+        <div id="advancedSearches" class="condensed small-caps">Recherche avancées</div>
+        <div id="confirmRegister" class="condensed small-caps menuAdminOn">Confirmation des inscriptions</div>
     </div>
     `;
 let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer l'inscription</div>`;
