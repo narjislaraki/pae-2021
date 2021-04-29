@@ -53,8 +53,18 @@ public interface FurnitureDAO {
 
   int addFurniture(FurnitureDTO furniture, int idRequestForVisit, int idSeller);
 
-  void addPhoto(PhotoDTO photo, int idFurniture);
+  void addClientPhoto(PhotoDTO photo, int idFurniture);
 
   List<PhotoDTO> getFurniturePhotos(int idFurniture);
+
+  void edit(int id, String description, int idType, double offeredSellingPrice, int favouritePhoto);
+
+  void deletePhoto(int id);
+
+  void displayPhoto(int id);
+
+  void hidePhoto(int id);
+
+  void addAdminPhoto(PhotoDTO photo, int idFurniture);
 
 }

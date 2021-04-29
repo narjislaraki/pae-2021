@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -96,7 +97,6 @@ public class VisitDAOImpl implements VisitDAO {
       ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, visit.getTimeSlot());
       ps.setString(2, VisitCondition.EN_ATTENTE.toString());
-      System.out.println(visit.getWarehouseAddressId());
       ps.setInt(3, visit.getWarehouseAddressId());
       ps.setInt(4, visit.getIdClient());
       ps.execute();
@@ -112,7 +112,6 @@ public class VisitDAOImpl implements VisitDAO {
 
   @Override
   public boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime) {
-    System.out.println("acceptVisit dao");
     try {
       String sql = "UPDATE pae.requests_for_visits SET condition = ?, scheduled_date_time = ? "
           + "WHERE id_request = ?;";

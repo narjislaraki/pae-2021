@@ -1,10 +1,13 @@
 /**
- * 
+ *
  * @param {*} endpoint : relative URI path that will be used by the proxy to call the right operation on ressource(s)
  * @param {*} method : HTTP method to call the right operation (CRUD, Create = POST, Read = GET ...)
  * @param {*} token : JWT token to be provided when an operation on a ressource is secured
  * @param {*} data : data to be sent in the body of the request (for POST, PUT... requests)
  */
+import Navbar from "../Components/Navbar.js";
+import {resetCurrentUser, removeSessionData} from "./session.js";
+import LoginRegisterPage from "../Components/LoginRegisterPage.js";
 
 async function callAPI(endpoint, method = "get", token, data) {
   let headers = new Headers();
@@ -31,6 +34,13 @@ async function callAPI(endpoint, method = "get", token, data) {
     const response = await fetch(endpoint, options);
     if (!response.ok) {    
       const error = await response.text(); // get the textual error message
+      if (error === ("Expired token")) {
+        resetCurrentUser();
+        removeSessionData();
+        await Navbar();
+        setTimeout(LoginRegisterPage, 2000);
+        alert("Veuillez vous reconnecter")
+      }
       throw new Error(error);
     }
     return await response.json();

@@ -75,9 +75,7 @@ async function FurnitureListPage() {
   Array.from(list).forEach((e) => {
     e.addEventListener("click", onFurniture);
   });
-
-  console.log(furnitures)
-};
+}
 
 const onFurniture = (e) => {
   if (!currentUser){
@@ -88,7 +86,6 @@ const onFurniture = (e) => {
     return;
   }
   let id = e.srcElement.dataset.id;
-  waitingSpinner();
   FurniturePage(id);
 };
 

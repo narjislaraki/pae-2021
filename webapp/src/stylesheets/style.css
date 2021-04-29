@@ -740,20 +740,23 @@ footer{
     top: 10%;
 }
 
-#star-image {
+#edit-icons {
     position: absolute;
-    width: auto;
-    height: 4%;
-    top: 10.5%;
-    left: 15%;
+    align-content: center;
+    max-width: 50px;
+    top: 10%;
+    left: 5%;
+}
+#star-image {
+    max-width: inherit;
 }
 
 #eye-image {
-    position: absolute;
-    width: auto;
-    height: 3.5%;
-    top: 11%;
-    left: 18%;
+    max-width: inherit;
+}
+
+#delete-image {
+    max-width: inherit;
 }
 
 #furniture-type{
@@ -804,6 +807,21 @@ footer{
     line-height: 56px;
 }
 
+#price-space {
+    display: inline;
+}
+
+#furniture-price-paid{
+    display: inline;
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: bold;
+    color: gray;
+    font-size: 48px;
+    line-height: 56px;
+    padding-left: 50px;
+}
+
 #furniture-edit-buttons {
     position: absolute;
     top: 45%;
@@ -822,6 +840,16 @@ footer{
     display: inline;
     font-family: Roboto;
     font-style: italic;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 28px;
+}
+
+.currency-paid{
+    display: inline;
+    font-family: Roboto;
+    font-style: italic;
+    color: gray;
     font-weight: 300;
     font-size: 24px;
     line-height: 28px;
