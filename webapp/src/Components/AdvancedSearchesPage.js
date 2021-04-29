@@ -115,7 +115,7 @@ const onSearchClients = async (e) => {
     let city = document.getElementById("searchUserCity").value;
     let name = document.getElementById("searchUsername").value;
     let postcode = document.getElementById("searchUserPostCode").value;
-    let clientList;
+    let clientList = [];
     try{
         clientList = await callAPI(
             "/api/users/validatedList",
@@ -126,11 +126,11 @@ const onSearchClients = async (e) => {
         console.log(clientList);
         console.log(name);
         if (name){
-            clientList = clientList.filter(e => e.lastName == name)[0];
+            clientList = clientList.filter(e => e.lastName.toLowerCase() == name.toLowerCase());
         } if (city) {
-             clientList = clientList.filter(e => e.address.city == city)[0];
+             clientList = clientList.filter(e => e.address.city.toLowerCase() == city.toLowerCase());
         } if (postcode) {
-            clientList = clientList.filter(e => e.address.postcode== postcode)[0]
+            clientList = clientList.filter(e => e.address.postcode.toLowerCase() == postcode.toLowerCase());
         }
 
         
@@ -152,23 +152,18 @@ async function SearchFurn (nameClient, type, maxAmount, minAmount) {
 
 const onShowClientList = (data) => {
     console.log("hello");
-    let onShowClientList =
-      `<table class="table table-light tableShowClientList">
-        <thead>
-          <tr>
-            <th scope="col">Pseudo</th>
-            <th scope="col">Prénom</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Adresse</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
+    let clientList =
+      `<div class="clientHandles">
+      <div id="pseudoHandle" class="condensed">PSEUDO</div>
+      <div id="namesHandle" class="condensed">NOMS</div>
+      <div id="emailHandle" class="condensed">EMAIL</div>
+      <div id="moreInfoHandle" class="condensed">INFORMATIONS SUPPL.</div>
+  </div>
          
           
       `;
-      onShowClientList += data
+      console.log(data);
+      clientList += data
       .map((user) =>
      `<div class="advancedSearchClientItem-container">
         <div class="advancedSearchClientItem condensed">
@@ -200,7 +195,12 @@ const onShowClientList = (data) => {
         </div> `)
                               
       .join("");
-    page.innerHTML += onShowClientList;    
+
+    page.innerHTML += clientList;    
+
+    page.innerHTML+= `
+    <div class="white-space"></div>
+    `
     return page;
   }
 
