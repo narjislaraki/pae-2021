@@ -357,11 +357,9 @@ public class FurnitureResource {
 
   private boolean checkFieldsProcess(VisitDTO visit) {
     for (FurnitureDTO furniture : visit.getFurnitureList()) {
-      if (furniture.getCondition().equals(Condition.ACHETE)) {
-        if (furniture.getPurchasePrice() <= 0 || furniture.getPickUpDate() == null
-            || furniture.getPickUpDate() == null) {
-          return false;
-        }
+      if (furniture.getCondition().equals(Condition.ACHETE) && (furniture.getPurchasePrice() <= 0
+          || furniture.getPickUpDate() == null || furniture.getPickUpDate() == null)) {
+        return false;
       }
     }
     return true;

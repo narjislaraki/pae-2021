@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -95,7 +94,8 @@ public class VisitDAOImpl implements VisitDAO {
     List<VisitDTO> list = new ArrayList<VisitDTO>();
     try {
       String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
-          + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, r.client FROM pae.requests_for_visits r, pae.furnitures f "
+          + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
+          + "r.client FROM pae.requests_for_visits r, pae.furnitures f "
           + "WHERE r.id_request = f.request_visit AND r.condition=?" + "AND f.condition = ?;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.ACCEPTEE.toString());

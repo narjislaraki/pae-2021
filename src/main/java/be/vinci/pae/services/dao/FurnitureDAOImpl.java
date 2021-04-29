@@ -558,8 +558,8 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       LocalDateTime pickUpDate) {
     try {
       if (condition.equals(Condition.ACHETE.toString())) {
-        String sql =
-            "UPDATE pae.furnitures SET condition = ? , purchase_price = ? , pick_up_date = ? WHERE id_furniture = ?;";
+        String sql = "UPDATE pae.furnitures SET condition = ? , purchase_price = ? "
+            + ", pick_up_date = ? WHERE id_furniture = ?;";
         ps = dalBackendService.getPreparedStatement(sql);
         ps.setString(1, condition);
         ps.setDouble(2, purchasePrice);
