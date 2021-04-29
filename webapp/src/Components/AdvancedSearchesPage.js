@@ -83,6 +83,11 @@ let AdvancedSearchesPage = () => {
         }
     });
 
+   btns();
+   return;
+};
+
+let btns = () => {
     let search = document.getElementById("search");
     search.addEventListener("click", onSearch);
 
@@ -94,7 +99,7 @@ let AdvancedSearchesPage = () => {
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
-};
+}
 
 const onVisits = (e) => {
     e.preventDefault();
@@ -104,7 +109,7 @@ const onVisits = (e) => {
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
-    RedirectUrl("/advancedSearches");
+    AdvancedSearchesPage();
 };
 
 const onConfirmRegister = (e) => {
@@ -119,6 +124,7 @@ const onSearch = async (e) => {
         let city = document.getElementById("searchUserCity").value;
         let name = document.getElementById("searchUsername").value;
         let postcode = document.getElementById("searchUserPostCode").value;
+        AdvancedSearchesPage();
         let clientList = [];
         try{
             clientList = await callAPI(
@@ -139,6 +145,7 @@ const onSearch = async (e) => {
 
             
             onShowClientList(clientList);
+            btns();
             
             
         } catch(err){
@@ -154,6 +161,7 @@ const onSearch = async (e) => {
         let type = document.getElementById("searchType").value;
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
+        AdvancedSearchesPage();
         let furnList = [];
         try{
             furnList = await callAPI(
@@ -174,6 +182,7 @@ const onSearch = async (e) => {
 
             
             onShowClientList(clientList);
+            btns();
             */
             
             
