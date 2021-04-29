@@ -3,7 +3,7 @@ import {RedirectUrl} from "./Router.js";
 import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
-import Navbar from "./Navbar";
+import WaitingSpinner from "./WaitingSpinner.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -155,6 +155,7 @@ async function onClickVisit(e){
                 </div>
                 <span class="titre">Date : </span>${visit.scheduledDateTime}<br>
                 <h4>Meuble(s) : </h4><br>
+                
                 <div id="allFurnitures"></div>
                 <div class="center">
                     <button class="btn btn-outline-success col-6 confirmVisitBtn" name="confirmBtn" data-id="${visit.idRequest}" type="submit">Confirmer</button>
@@ -167,10 +168,11 @@ async function onClickVisit(e){
     `;
 
     document.getElementById("popups").innerHTML = popupVisit;
+    WaitingSpinner(document.getElementById("allFurnitures"));
+
     Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
         if (element.dataset.id == idVisit) {
             element.style.display = "block";
-            return;
         }
     });
 
@@ -205,7 +207,7 @@ async function onClickVisit(e){
         PrintError(err);
     }
 
-    listFurnituresForOnVisit 
+    listFurnituresForOnVisit
         .map((furniture)=>{
             let idFurniture = 0
             toAdd += `
