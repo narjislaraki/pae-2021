@@ -131,9 +131,6 @@ public class FurnitureImpl implements FurnitureDTO {
       case "vendu":
         this.condition = Condition.VENDU;
         break;
-      case "réservé":
-        this.condition = Condition.RESERVE;
-        break;
       case "retiré de la vente":
         this.condition = Condition.RETIRE;
         break;

@@ -242,8 +242,10 @@ async function FurniturePage(id) {
         `;
         } else if (furniture.condition === "DEPOSE_EN_MAGASIN") {
             menuDeroulant = `
-            <div class="price-inline" >
-                        <input type="number"  min="0" id="price" required/>Entrez un prix de vente</div>
+            <div id="price-inline">
+                        <input type="number"  min="0" id="price" required/>
+                        Entrez un prix de vente
+            </div>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     ${furniture.condition}
@@ -412,7 +414,12 @@ async function FurniturePage(id) {
 
 const onEdit = async () => {
     editionMode = true;
-    document.getElementById("editIcon").style.display = "none";
+    if (furniture.condition === "DEPOSE_EN_MAGASIN")
+        document.getElementById("price-inline").style.display = "none";
+    if (furniture.condition === "EN_VENTE")
+        document.getElementById("sellingDiv").style.display = "none";
+    document.getElementById("editIcon").style.display = "none"
+    document.getElementById("dropdownMenu2").style.display = "none"
 
     /**** Furniture ****/
     typeElem = document.getElementById("furniture-type");
@@ -585,7 +592,6 @@ const onPlusImage = () => {
 
 
 const onCancelEditButton = () => {
-    document.getElementById("editIcon").style.display = "inline"
     typeElem.style.background = "none";
     descElem.style.background = "none";
 
@@ -660,6 +666,12 @@ function stopEdition() {
         photosToDisplay: [],
         photosToHide: [],
     }
+    if (furniture.condition === "DEPOSE_EN_MAGASIN")
+        document.getElementById("price-inline").style.display = "block";
+    if (furniture.condition === "EN_VENTE")
+        document.getElementById("sellingDiv").style.display = "block";
+    document.getElementById("editIcon").style.display = "inline"
+    document.getElementById("dropdownMenu2").style.display = "block"
 }
 
 function removeEditElements() {
@@ -754,6 +766,7 @@ const onSell = async () => {
         console.error("FurniturePage::onSell", err);
         PrintError(err);
     }
+    onCloseSell();
     await FurniturePage(furniture.id);
     PrintMessage("L'opération s'est déroulée avec succès");
 }
