@@ -80,6 +80,11 @@ let AdvancedSearchesPage = () => {
         }
     });
 
+   btns();
+   return;
+};
+
+let btns = () => {
     let search = document.getElementById("search");
     search.addEventListener("click", onSearchClients);
 
@@ -91,7 +96,7 @@ let AdvancedSearchesPage = () => {
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
-};
+}
 
 const onVisits = (e) => {
     e.preventDefault();
@@ -101,7 +106,7 @@ const onVisits = (e) => {
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
-    RedirectUrl("/advancedSearches");
+    AdvancedSearchesPage();
 };
 
 const onConfirmRegister = (e) => {
@@ -115,6 +120,7 @@ const onSearchClients = async (e) => {
     let city = document.getElementById("searchUserCity").value;
     let name = document.getElementById("searchUsername").value;
     let postcode = document.getElementById("searchUserPostCode").value;
+    AdvancedSearchesPage();
     let clientList = [];
     try{
         clientList = await callAPI(
@@ -123,20 +129,19 @@ const onSearchClients = async (e) => {
             userData.token,
             undefined,
         );
-        console.log(clientList);
-        console.log(name);
+        console.log(postcode);
         if (name){
             clientList = clientList.filter(e => e.lastName.toLowerCase() == name.toLowerCase());
         } if (city) {
              clientList = clientList.filter(e => e.address.city.toLowerCase() == city.toLowerCase());
         } if (postcode) {
-            clientList = clientList.filter(e => e.address.postcode.toLowerCase() == postcode.toLowerCase());
+            clientList = clientList.filter(e => e.address.postCode.toLowerCase() == postcode.toLowerCase());
         }
 
         
         onShowClientList(clientList);
         
-        
+        btns();
     } catch(err){
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
