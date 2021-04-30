@@ -3,6 +3,7 @@ import {RedirectUrl} from "./Router";
 import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError";
 import Navbar from "./Navbar";
+import WaitingSpinner from "./WaitingSpinner.js"
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -189,6 +190,7 @@ async function onClickVisit(e) {
     `;
 
     document.getElementById("popups").innerHTML = popupVisit;
+    WaitingSpinner(document.getElementById("allFurnitures"))
     Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
         if (element.dataset.id == idVisit) {
             element.style.display = "block";

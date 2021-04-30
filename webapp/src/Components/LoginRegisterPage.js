@@ -1,7 +1,7 @@
 /* In a template literal, the ` (backtick), \ (backslash), and $ (dollar sign) characters should be 
 escaped using the escape character \ if they are to be included in their template value. 
 By default, all escape sequences in a template literal are ignored.*/
-import { setUserSessionData, getCurrentUser, currentUser } from "../utils/session.js";
+import {setUserSessionData, getCurrentUser, currentUser, setUserStorageData} from "../utils/session.js";
 import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
@@ -109,7 +109,14 @@ const onLogin = async (e) => {
 
 const onUserLogin = async (userData) => {
   const user = { ...userData, isAutenticated: true };
-  setUserSessionData(user);
+  if (document.getElementById("stayconnected").checked) {
+    console.log("storage")
+    setUserStorageData(user)
+  }
+  else {
+    setUserSessionData(user);
+    console.log("session")
+  }
   await getCurrentUser();
   // re-render the navbar for the authenticated user
   Navbar();
