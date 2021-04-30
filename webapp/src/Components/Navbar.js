@@ -8,6 +8,8 @@ let userData;
 let idFurniture = 1;
 let mapPhotos = new Map();
 let typesOfFurniture;
+let typeOfFurnitureId;
+let title; 
 // destructuring assignment
 const Navbar = async () => {
   let nb;
@@ -26,16 +28,7 @@ const Navbar = async () => {
         <button id="all-furnitures-navbar" class="condensed small-caps">
           Voir tous les meubles
         </button>
-        <div id="category" class="dropdown">
-          <span class=" dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Types de meuble
-          </span>
-          <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-toggle-item" href="#">Type1</a></li>
-            <li><a class="dropdown-toggle-item" href="#">Type2</a></li>
-            <li><a class="dropdown-toggle-item" href="#">Type3</a></li>
-          </ul>
-        </div>
+        <div id="category" class="dropdown"></div>
         <button id="btnIntroduceVisit" class="btn btn-dark btn-navbar condensed small-caps">
           Demander une visite
         </button>
@@ -63,6 +56,25 @@ const Navbar = async () => {
     navBar.innerHTML = nb;
 
     let introduceBtn = document.getElementById("introduceBtn");
+    try {
+      typesOfFurniture = await callAPI(
+        "/api/furnitures/typeOfFurnitureList",
+        "GET",
+        undefined,
+        undefined);
+     
+    } catch (err) {
+      console.error("Navbar::onIntroduceVisit", err);
+      PrintError(err);
+    }
+    onTypesOfFurnituresFilter(typesOfFurniture);
+    let listOfType = document.getElementsByClassName("typeOfFurniture");
+    console.log(listOfType);
+    Array.from(listOfType).forEach((e) => {
+      typeOfFurnitureId = e.value;
+      title = e.innerHTML;
+      e.addEventListener("click", onFurnitureListPage(e.value, e.innerHTML));
+    });
     //introduceBtn.addEventListener("click", onIntroduceRequest);
     
     
@@ -93,18 +105,6 @@ const Navbar = async () => {
         <img class="logo-writing" src="assets/lvs.svg" alt="logo">
       </a>
     </div>
-    <button id="all-furnitures-navbar" class="condensed small-caps">
-        Voir tous les meubles
-    </button>
-    <div id="category" class="dropdown">
-      <span class=" dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        Types de meuble
-      </span>
-      <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-toggle-item" href="#">Type1</a></li>
-        <li><a class="dropdown-toggle-item" href="#">Type2</a></li>
-        <li><a class="dropdown-toggle-item" href="#">Type3</a></li>
-      </ul>
     </div>
 
     <a class="btn btn-dark btn-navbar condensed small-caps" href="#" data-uri="/login">S'identifier</a>`;
@@ -210,17 +210,8 @@ const onIntroduceVisit = async (e)=> {
   document.getElementById("popupCloseButtonNavbar").addEventListener("click", onCloseVisit);
   let btnPlus = document.getElementById("btnPlus");
   btnPlus.addEventListener("click", onAddFurniture);
-  try {
-    typesOfFurniture = await callAPI(
-      "/api/furnitures/typeOfFurnitureList",
-      "GET",
-      undefined,
-      undefined);
-    onTypesOfFurniture(typesOfFurniture);
-  } catch (err) {
-    console.error("Navbar::onIntroduceVisit", err);
-    PrintError(err);
-  }
+  onTypesOfFurniture(typesOfFurniture);
+  
 }
 
 const onCloseVisit = (e) => {
@@ -238,6 +229,21 @@ const onTypesOfFurniture = (data) => {
   let tousLesTypes = document.getElementById("tousLesTypes"+idFurniture);
   tousLesTypes.innerHTML = eachType;
   tousLesTypes.innerHTML += `</select>`
+}
+
+const onTypesOfFurnituresFilter = (data) => {
+  console.log("types");
+  let filter = `<span class="dropdown-toggle condensed small-caps" id="selectType" type="button" id="dropdownMenuButton1"data-bs-toggle="dropdown" aria-expanded="false">
+                  Types de meuble
+                </span>
+                <ul class="dropdown-menu condensed" id="menuType" aria-labelledby="dropdownMenuButton1">` ;
+  filter += data
+    .map((type) => 
+      `<li><a class="dropdown-toggle-item typeOfFurniture" value="${type.id}" href="#">${type.label}</a></li>`
+    ).join("");
+  let category = document.getElementById("category");
+  category.innerHTML = filter;
+  category.innerHTML += `</ul>`;
 }
 
 
@@ -342,6 +348,5 @@ const onIntroduceRequest = async (e) => {
     PrintError(err);
   }
 }
-
 
 export default Navbar;

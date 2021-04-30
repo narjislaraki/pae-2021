@@ -10,11 +10,12 @@ const API_BASE_URL = "/api/furnitures/";
 
 let furnitureListTab;
 
-
+//console.log(typeOfFurnitureId);
+//console.log(title);
 
 let furnitureListPage =
   `
-        <div class="all-furn-title small-caps">Tous les meubles</div>
+        <div class="all-furn-title small-caps" id="titlePage">Tous les meubles</div>
 
         <div class="parent-furnitures-container">
 
@@ -23,20 +24,34 @@ let furnitureListPage =
 
 async function FurnitureListPage() {
   waitingSpinner();
+  console.log(typeOfFurnitureId);
   let page = document.querySelector("#page");
   let furnitures;
   if (currentUser) {
     let userData = getUserSessionData();
-    try {
-      furnitures = await callAPI(
-        API_BASE_URL,
-        "GET",
-        userData.token,
-        undefined);
-    } catch (err) {
-      console.error("FurnitureListPage::get listfurnitures", err);
-      PrintError(err);
-    }
+    if (typeOfFurnitureId == null){
+      try {
+        furnitures = await callAPI(
+          API_BASE_URL,
+          "GET",
+          userData.token,
+          undefined);
+      } catch (err) {
+        console.error("FurnitureListPage::get listfurnitures", err);
+        PrintError(err);
+      }
+    }else{
+      try {
+        furnitures = await callAPI(
+          API_BASE_URL + "type/" + typeOfFurnitureId,
+          "GET",
+          userData.token,
+          typeOfFurnitureId);
+      } catch (err) {
+        console.error("FurnitureListPage::get listfurnitures", err);
+        PrintError(err);
+      }
+    }  
   }
   else {
     try {
@@ -75,6 +90,8 @@ async function FurnitureListPage() {
   Array.from(list).forEach((e) => {
     e.addEventListener("click", onFurniture);
   });
+  let title = document.getElementById("titlePage");
+      title.innerHTML = "Voici tout(es) les " + title;
 }
 
 const onFurniture = (e) => {

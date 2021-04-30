@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
@@ -208,6 +207,19 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
+  public List<FurnitureDTO> getFurnitureListByType(UserDTO user, int idType) {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list = null;
+    if (user != null && user.getRole() == Role.ADMIN) {
+      list = furnitureDao.getFurnitureListByType(idType);
+    } else {
+      list = furnitureDao.getPublicFurnitureListByType(idType);
+    }
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
   public FurnitureDTO getFurnitureById(int id) {
     dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
@@ -330,5 +342,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.commitBizzTransaction();
     return true;
   }
+
+
 
 }
