@@ -13,16 +13,13 @@ let menu, advancedSearchesBar, advancedSearchesPageClient,  advancedSearchesPage
 
 
 let AdvancedSearchesPage = async () =>{
-    if (typeList == null) {
-        /*
-        try {
-            typeList = await callAPI(
-                API_BASE_URL +
-            )
-        } catch (err) {
-
-        }
-        */
+    if (!typeList) {
+        typeList = await callAPI(
+            "/api/furnitures/typeOfFurnitureList",
+            "GET",
+            undefined,
+            undefined
+        )  
     }
 
     menu = `
@@ -63,20 +60,17 @@ let AdvancedSearchesPage = async () =>{
     advancedSearchesPageFurniture = `
         <p>Recherche:</p>
         <input type="text" class="form-control" id="searchClientName" placeholder="Nom du client">
-        <select class="form-select" aria-label="Type" id="searchType">
-            <option selected>Type</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-          <div class="searchMontant">
-             <p>Montant</p>
-            <input type="text" class="form-control" id="montantMin" placeholder="Min.">
-            <input type="text" class="form-control" id="montantMax" placeholder="Max.">
-          </div>
-        
+        <datalist id="types-list">
+        </datalist>
+        <input id="input-type" list="types-list">
+        <div class="searchMontant">
+            <p>Montant</p>
+        <input type="text" class="form-control" id="montantMin" placeholder="Min.">
+        <input type="text" class="form-control" id="montantMax" placeholder="Max.">
+        </div>
     </div>
     `;
+
 
     if(clientMode){
         page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
@@ -84,6 +78,11 @@ let AdvancedSearchesPage = async () =>{
 
     else {
         page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
+        let dataListTypes = document.getElementById("types-list");
+        typeList.map((element) => {
+            dataListTypes.innerHTML +=
+            `<option data-label="${element.label}" data-typeId="${element.id}" value="${element.label}">${element.label}</option>`;
+        })
     }
 
    btns();
@@ -102,6 +101,11 @@ let btns = () => {
                 break;
             case 'furn':
                 page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
+                let dataListTypes = document.getElementById("types-list");
+                typeList.map((element) => {
+                    dataListTypes.innerHTML +=
+                    `<option data-label="${element.label}" data-typeId="${element.id}" value="${element.label}">${element.label}</option>`;
+                })
                 clientMode = false;
                 break;
             default:
@@ -178,7 +182,8 @@ const onSearch = async (e) => {
     }
     else {
         let username = document.getElementById("searchClientName").value;
-        let type = document.getElementById("searchType").value;
+        let inputType = document.getElementById("input-type").value;
+        let type = document.querySelector("#types-list option[value='" + inputType + "']");
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
         AdvancedSearchesPage();
@@ -190,12 +195,13 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
-            console.log(furnList);
             if (username){
                 furnList = furnList.filter(e => e.username.toLowerCase().startsWith(username.toLowerCase()));
-            } if (type) {
-              //  furnList = furnList.filter(e => e.type.toLowerCase() == type.toLowerCase());
-            } if (maxAmount) {
+            } if (type != null) {
+    
+                furnList = furnList.filter(e => e.type != null && e.type.toLowerCase() == type.dataset.label.toLowerCase());
+            } 
+            if (maxAmount) {
                 furnList = furnList.filter(e => e.offeredSellingPrice <= maxAmount);
             } if (minAmount) {
                 furnList = furnList.filter(e => e.offeredSellingPrice >= minAmount);

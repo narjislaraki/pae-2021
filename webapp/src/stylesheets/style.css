@@ -198,6 +198,10 @@ input[type="checkbox"]:focus,
 .user-head{
     
 }
+
+#input-type {
+    margin-top: 52px;
+}
 .text-user{
     /*position: absolute;
     right: 55px;
