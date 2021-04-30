@@ -8,8 +8,6 @@ let userData;
 let idFurniture = 1;
 let mapPhotos = new Map();
 let typesOfFurniture;
-let typeOfFurnitureId;
-let title; 
 // destructuring assignment
 const Navbar = async () => {
   let nb;
@@ -69,11 +67,8 @@ const Navbar = async () => {
     }
     onTypesOfFurnituresFilter(typesOfFurniture);
     let listOfType = document.getElementsByClassName("typeOfFurniture");
-    console.log(listOfType);
     Array.from(listOfType).forEach((e) => {
-      typeOfFurnitureId = e.value;
-      title = e.innerHTML;
-      e.addEventListener("click", onFurnitureListPage(e.value, e.innerHTML));
+      e.addEventListener("click", () => onFurnitureListPage(e.getAttribute("data-id"), e.innerHTML));
     });
     //introduceBtn.addEventListener("click", onIntroduceRequest);
     
@@ -127,9 +122,11 @@ const Navbar = async () => {
 };
 
 
-const onFurnitureListPage = (e) => {
-  e.preventDefault();
-  RedirectUrl("/furnitures");
+const onFurnitureListPage = (idTypeOfFurniture, title) => {
+  console.log(idTypeOfFurniture);
+  console.log(title);
+  const uri = "/furnitures"+(title ? "?idType="+idTypeOfFurniture+"&title="+title : "")
+  RedirectUrl(uri);
 };
 const onHomePage = (e) => {
   e.preventDefault();
@@ -239,7 +236,7 @@ const onTypesOfFurnituresFilter = (data) => {
                 <ul class="dropdown-menu condensed" id="menuType" aria-labelledby="dropdownMenuButton1">` ;
   filter += data
     .map((type) => 
-      `<li><a class="dropdown-toggle-item typeOfFurniture" value="${type.id}" href="#">${type.label}</a></li>`
+      `<li><a class="dropdown-toggle-item typeOfFurniture" data-id="${type.id}" href="#">${type.label}</a></li>`
     ).join("");
   let category = document.getElementById("category");
   category.innerHTML = filter;

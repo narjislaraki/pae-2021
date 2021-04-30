@@ -24,7 +24,10 @@ let furnitureListPage =
 
 async function FurnitureListPage() {
   waitingSpinner();
-  console.log(typeOfFurnitureId);
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const typeOfFurnitureId = urlParams.get('idType');
+  const titleHtml = urlParams.get('title');
   let page = document.querySelector("#page");
   let furnitures;
   if (currentUser) {
@@ -46,7 +49,7 @@ async function FurnitureListPage() {
           API_BASE_URL + "type/" + typeOfFurnitureId,
           "GET",
           userData.token,
-          typeOfFurnitureId);
+          undefined);
       } catch (err) {
         console.error("FurnitureListPage::get listfurnitures", err);
         PrintError(err);
@@ -67,8 +70,12 @@ async function FurnitureListPage() {
   }
 
   page.innerHTML = furnitureListPage;
-  let data =
-    furnitures.map((element) => {
+
+  let data;
+  if (furnitures.length === 0){
+    data = "Aucun meuble actueellement";
+  }else{
+    data = furnitures.map((element) => {
       page.innerHTML +=
         `
         <div data-id="${element.id}" class="item-card furniture">
@@ -82,6 +89,8 @@ async function FurnitureListPage() {
     `;
 
     });
+  }
+    
 
 
   //close the div
@@ -91,7 +100,7 @@ async function FurnitureListPage() {
     e.addEventListener("click", onFurniture);
   });
   let title = document.getElementById("titlePage");
-      title.innerHTML = "Voici tout(es) les " + title;
+  title.innerHTML = "Voici tous les meubles de type \"" + titleHtml + "\"";
 }
 
 const onFurniture = (e) => {
