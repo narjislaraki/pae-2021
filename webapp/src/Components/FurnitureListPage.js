@@ -22,12 +22,16 @@ let furnitureListPage =
 `;
 
 
-async function FurnitureListPage() {
+async function FurnitureListPage(pageData) {
   waitingSpinner();
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const typeOfFurnitureId = urlParams.get('idType');
-  const titleHtml = urlParams.get('title');
+  let typeOfFurnitureId;
+  let titleHtml;
+  if (pageData && pageData.title){
+    typeOfFurnitureId = pageData.idTypeOfFurniture;
+    titleHtml = pageData.title;
+  }
   let page = document.querySelector("#page");
   let furnitures;
   if (currentUser) {
@@ -99,8 +103,10 @@ async function FurnitureListPage() {
   Array.from(list).forEach((e) => {
     e.addEventListener("click", onFurniture);
   });
-  let title = document.getElementById("titlePage");
-  title.innerHTML = "Voici tous les meubles de type \"" + titleHtml + "\"";
+  if (titleHtml){
+    let title = document.getElementById("titlePage");
+    title.innerHTML = "Voici tous les meubles de type \"" + titleHtml + "\"";
+  }
 }
 
 const onFurniture = (e) => {

@@ -125,8 +125,7 @@ const Navbar = async () => {
 const onFurnitureListPage = (idTypeOfFurniture, title) => {
   console.log(idTypeOfFurniture);
   console.log(title);
-  const uri = "/furnitures"+(title ? "?idType="+idTypeOfFurniture+"&title="+title : "")
-  RedirectUrl(uri);
+  RedirectUrl("/furnitures", {idTypeOfFurniture, title});
 };
 const onHomePage = (e) => {
   e.preventDefault();
