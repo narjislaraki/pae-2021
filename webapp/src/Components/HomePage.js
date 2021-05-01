@@ -3,6 +3,7 @@ import { RedirectUrl } from "./Router";
 import { currentUser, getUserSessionData } from "../utils/session.js";
 import PrintError from "./PrintError";
 import waitingSpinner from "./WaitingSpinner.js";
+import { FurniturePage } from "./FurniturePage.js";
 
 const API_BASE_URL = "/api/furnitures/slider";
 
@@ -32,7 +33,6 @@ const HomePage = async () => {
     console.error("Homepage::get list", err);
     PrintError(err);
 }
-console.log(furnitures);
 if(furnitures.length >= 1){
   let carousel1 = `
   <div class="container-carousel">
@@ -99,10 +99,19 @@ if(furnitures.length >= 1){
         </div>
   `;
   page.innerHTML = homepageTitle + carousel1;
+
+if(currentUser){
+  let list = document.getElementsByClassName("carousel-item");
+  for (let index = 0; index < Array.from(list).length; index++) {
+    Array.from(list)[index].addEventListener("click", ()=>{
+      FurniturePage(furnitures[index].id);
+    });
+  }
+}
 }
 
-
-
 };
+
+
 
 export default HomePage;
