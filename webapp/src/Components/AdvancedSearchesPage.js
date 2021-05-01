@@ -8,22 +8,21 @@ const API_BASE_URL = "/api/searches/";
 let page = document.querySelector("#page");
 let userData = getUserSessionData();
 let clientMode = true;
-let typeList;
+let typeList = [];
 let menu, advancedSearchesBar, advancedSearchesPageClient,  advancedSearchesPageFurniture;
 let furnList = [];
 let saleList = [];
 let clientList = [];
 
 let AdvancedSearchesPage = async () =>{
-    if (!typeList) {
+
         typeList = await callAPI(
             "/api/furnitures/typeOfFurnitureList",
             "GET",
             undefined,
             undefined
         )  
-    }
-
+   
     menu = `
     <div class="menuAdmin">
         <div id="visits" class="condensed small-caps ">Visites</div>
@@ -160,6 +159,7 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
+            
             if (name){
                 clientList = clientList.filter(e => e.lastName.toLowerCase().startsWith(name.toLowerCase()));
             } if (city) {
@@ -280,16 +280,31 @@ const onShowFurnitureList = async (data) => {
             <p class="small-caps">Vendu à:</p>
                 <div>${saleList.filter(s=>s.idFurniture == furniture.id).length == 0 ? "N/A" : clientList.filter(c=>c.id == saleList.filter(s=>s.idFurniture == furniture.id)[0].idBuyer)[0].username}</div>
             </div>
-            <div class="furnInfo-cat">
-                <p class="small-caps">Photo préférée :</p>
-                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto}" alt="Petite image"  width = 60px
-                height= 60px>
+            <div id = "photosMeuble${furniture.id}" class="furnInfo-cat">
+                <p  class="small-caps">Photos du meuble:</p>
             </div>
         </div>
     </div>`).join("");
 
     page.innerHTML += furnitureList;    
 
+    let furniturePhotos;
+    for (let i = 0; i < data.length; i++) {
+        let photosMeubles = document.getElementById("photosMeuble"+data[i].id);
+        let photosAAjouter = "";
+        furniturePhotos = await callAPI(
+            "/api/furnitures/" + data[i].id + "/photos",
+            "GET",
+            userData.token,
+            undefined
+        );
+                
+        furniturePhotos.map((p) => {
+            photosAAjouter += `<img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${p.photo}" alt="Petite image"  width = 60px
+            height= 60px>`
+        })
+        photosMeubles.innerHTML = photosAAjouter;
+    }
     page.innerHTML+= `
     <div class="white-space"></div>
     `
@@ -306,7 +321,6 @@ const onShowClientList = async (data) =>  {
   </div>
     
       `;
-      console.log(data);
         try{
             furnList = await callAPI(
                 "/api/furnitures",
@@ -349,24 +363,11 @@ const onShowClientList = async (data) =>  {
             <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
         </div>
     </div>
-        <div class="furnInfo">
-          <div class="advancedSearchClientItem-boughtFurn">
-            <p>MEUBLES ACHETÉS</p>
-            <img src="" alt="" class="asci-boughtFurn">
-            <img src="" alt="" class="asci-boughtFurn">
-            <img src="" alt="" class="asci-boughtFurn">
-          </div>
-         <div class="advancedSearchClientItem-soldFurn">
-            <p>MEUBLES VENDUS</p>
-            <img src="" alt="" class="asci-soldFurn">
-         </div>
-        </div>
         </div> `)
                               
       .join("");
 
     page.innerHTML += clientList;    
-
     page.innerHTML+= `
     <div class="white-space"></div>
     `
