@@ -40,7 +40,7 @@ const Navbar = async () => {
             <div class="dropleft" id="head-menu">
               <i id="user" class="bi bi-person-circle dropdown-toggle-user"></i>
               <ul class="dropdown-menu dropdown-menu-left condensed" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" id="profile" href="#">Profile</a></li>
+                <li><a class="dropdown-item" id="transactions" href="#">Transactions</a></li>
                 <li><a class="dropdown-item" id="logout" href="#">Se déconnecter</a></li>
               </ul>
             </div>
@@ -103,9 +103,12 @@ const Navbar = async () => {
         navBar.innerHTML = nb;
     }
 
-    if (user) {
-        let logout = document.querySelector("#logout");
-        logout.addEventListener("click", onLogout);
+  if (user) {
+    let transactions = document.getElementById("transactions");
+    transactions.addEventListener("click", onTransactions);
+
+    let logout = document.querySelector("#logout");
+    logout.addEventListener("click", onLogout);
 
         let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
         btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
@@ -136,6 +139,10 @@ const onLogout = (e) => {
     RedirectUrl("/");
     Navbar();
 };
+const onTransactions = (e) => {
+  e.preventDefault();
+  RedirectUrl("/transactions");
+}
 
 const onClickTools = (e) => {
     e.preventDefault();

@@ -70,4 +70,6 @@ public interface FurnitureDAO {
 
   int addAdminPhoto(PhotoDTO photo, int idFurniture);
 
+  List<FurnitureDTO> getSliderFurnitureList(int limit);
+
 }

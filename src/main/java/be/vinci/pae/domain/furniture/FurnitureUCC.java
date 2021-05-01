@@ -52,4 +52,6 @@ public interface FurnitureUCC {
 
   boolean edit(EditionDTO edition);
 
+  List<FurnitureDTO> getSliderFurnitureList(int limit);
+
 }

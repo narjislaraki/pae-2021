@@ -3,6 +3,7 @@ import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
 import PrintError from "./PrintError";
 
+
 const API_BASE_URL = "/api/searches/";
 
 let page = document.querySelector("#page");

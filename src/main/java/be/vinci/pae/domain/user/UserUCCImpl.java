@@ -2,10 +2,12 @@ package be.vinci.pae.domain.user;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.AddressDAO;
+import be.vinci.pae.services.dao.SaleDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import jakarta.inject.Inject;
 
@@ -13,6 +15,9 @@ public class UserUCCImpl implements UserUCC {
 
   @Inject
   private UserDAO userDAO;
+
+  @Inject
+  private SaleDAO saleDAO;
 
   @Inject
   private AddressDAO addressDAO;
@@ -117,6 +122,22 @@ public class UserUCCImpl implements UserUCC {
   public List<UserDTO> getValidatedUsers() {
     dalServices.getBizzTransaction(true);
     List<UserDTO> list = userDAO.getValidatedUsers();
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
+  public List<SaleDTO> getTransactionsBuyer(int id) {
+    dalServices.getBizzTransaction(true);
+    List<SaleDTO> list = saleDAO.getTransactionsBuyer(id);
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
+  public List<SaleDTO> getTransactionsSeller(int id) {
+    dalServices.getBizzTransaction(true);
+    List<SaleDTO> list = saleDAO.getTransactionsSeller(id);
     dalServices.stopBizzTransaction();
     return list;
   }

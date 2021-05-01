@@ -8,8 +8,6 @@ import waitingSpinner from "./WaitingSpinner";
 
 const API_BASE_URL = "/api/furnitures/";
 
-let furnitureListTab;
-
 let furnitureListPage =
     `
         <div class="all-furn-title small-caps" id="titlePage">Tous les meubles</div>

@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.user;
 
 import java.util.List;
+import be.vinci.pae.domain.sale.SaleDTO;
 
 public interface UserUCC {
 
@@ -18,4 +19,8 @@ public interface UserUCC {
 
   List<UserDTO> getValidatedUsers();
 
+
+  List<SaleDTO> getTransactionsBuyer(int id);
+
+  List<SaleDTO> getTransactionsSeller(int id);
 }
