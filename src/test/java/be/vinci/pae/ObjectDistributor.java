@@ -16,6 +16,8 @@ import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
 import be.vinci.pae.domain.visit.PhotoDTO;
+import be.vinci.pae.domain.visit.PhotoFactory;
+import be.vinci.pae.domain.visit.PhotoFactoryImpl;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
 import be.vinci.pae.domain.visit.VisitFactory;
@@ -27,6 +29,7 @@ public class ObjectDistributor {
   private static AddressFactory addressFactory = new AddressFactoryImpl();
   private static VisitFactory visitFactory = new VisitFactoryImpl();
   private static FurnitureFactory furnitureFactory = new FurnitureFactoryImpl();
+  private static PhotoFactory photoFactory = new PhotoFactoryImpl();
 
   private static String goodPassword = "1234";
   private static String goodEmail = "test@test.com";
@@ -216,6 +219,16 @@ public class ObjectDistributor {
   }
 
   /**
+   * Construct a photo
+   * 
+   * @return the photo
+   */
+  public static PhotoDTO getPhoto() {
+    PhotoDTO photo = photoFactory.getPhotoDTO();
+    return photo;
+  }
+
+  /**
    * Construct a furniture in sale.
    * 
    * @return the furniture
@@ -252,6 +265,7 @@ public class ObjectDistributor {
     goodVisit.setAmountOfFurnitures(0);
     List<PhotoDTO> list = new ArrayList<PhotoDTO>();
     goodVisit.getFurnitureList().get(0).setListPhotos(list);
+    goodVisit.getFurnitureList().get(0).getListPhotos().add(getPhoto());
     return goodVisit;
   }
 
@@ -273,6 +287,7 @@ public class ObjectDistributor {
     goodVisit.setAmountOfFurnitures(0);
     List<PhotoDTO> list = new ArrayList<PhotoDTO>();
     goodVisit.getFurnitureList().get(0).setListPhotos(list);
+    goodVisit.getFurnitureList().get(0).getListPhotos().add(getPhoto());
     return goodVisit;
   }
 
