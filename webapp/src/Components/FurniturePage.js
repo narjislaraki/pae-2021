@@ -1,6 +1,5 @@
 import {getUserSessionData, currentUser} from "../utils/session.js";
 import {RedirectUrl} from "./Router.js";
-import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
@@ -41,8 +40,20 @@ let edition = {
 let page = document.querySelector("#page");
 
 async function FurniturePage(id) {
+    if (!id){
+        RedirectUrl("/");
+        let err = {
+            message: "Id invalide",
+        }
+        PrintError(err);
+        return;
+    }
     if (!currentUser) {
         RedirectUrl("/");
+        let err = {
+            message: "Vous n'êtes pas autorisé",
+        }
+        PrintError(err);
         return;
     }
     waitingSpinner();
@@ -138,9 +149,9 @@ async function FurniturePage(id) {
             image.dataset.photoid = element.id
             document.getElementById("furniture-pictures").appendChild(image);
         }
-        if (element.isAClientPhoto)
+        if (element.isAClientPhoto && currentUser.role === "ADMIN")
             smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image" style="border: red; border-style: dotted">`;
-        else
+        else if (element.isVisible && currentUser.role !== "ADMIN")
             smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
     })
     if (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE") {
@@ -470,7 +481,7 @@ const onEdit = async () => {
     else
         edit_btns += `<img src="../assets/star_empty.png" alt="Non avoris" id="star-image">`
     edit_btns += `<br><br>`
-    if (furniturePhotos[0].isVisible == true)
+    if (furniturePhotos[0].isVisible)
         edit_btns += `<img src="../assets/eye_open.png" alt="Visible" id="eye-image">`
     else
         edit_btns += `<img src="../assets/eye_close.png" alt="Non visible" id="eye-image">`

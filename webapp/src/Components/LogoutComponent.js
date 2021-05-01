@@ -1,13 +1,13 @@
-import LoginRegisterPage from "./LoginRegisterPage.js";
-import { RedirectUrl } from "./Router.js";
+import {RedirectUrl} from "./Router.js";
 import Navbar from "./Navbar.js";
-import {removeSessionData} from "../utils/session.js";
+import {removeSessionData, resetCurrentUser} from "../utils/session.js";
 
 const Logout = () => {
-  removeSessionData();
-  // re-render the navbar for a non-authenticated user
-  Navbar();
-  RedirectUrl("/login"); 
+    removeSessionData();
+    resetCurrentUser();
+    // re-render the navbar for a non-authenticated user
+    Navbar();
+    RedirectUrl("/login");
 };
 
 
