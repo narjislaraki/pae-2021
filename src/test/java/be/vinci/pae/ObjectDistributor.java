@@ -250,6 +250,25 @@ public class ObjectDistributor {
     return goodVisit;
   }
 
+  /**
+   * Construct a visit considered as"a good visit",and return it.**@return the good visit
+   * 
+   * @return the visit
+   */
+  public static VisitDTO getGoodVisitWithoutWarehouseAddress() {
+    VisitDTO goodVisit = visitFactory.getVisitDTO();
+    goodVisit.setIdRequest(1);
+    goodVisit.setTimeSlot("maintenant");
+    goodVisit.setVisitCondition(VisitCondition.ACCEPTEE.toString());
+    goodVisit.setClient(getGoodValidatedUser());
+    goodVisit.setIdClient(getGoodValidatedUser().getId());
+    goodVisit.setExplanatoryNote(null);
+    goodVisit.setScheduledDateTime(LocalDateTime.now());
+    goodVisit.setFurnitureList(new ArrayList<FurnitureDTO>());
+    goodVisit.setAmountOfFurnitures(0);
+    return goodVisit;
+  }
+
 
 
 }

@@ -29,6 +29,7 @@ public class VisitUCCTest {
   private static VisitUCC visitUCC;
   private static VisitDAO visitDAO;
   private static VisitDTO goodVisit;
+  private static VisitDTO goodVisitWithoutAddress;
   private LocalDateTime goodScheduledDateTime;
   private LocalDateTime badScheduledDateTime;
   private static String goodExplanatoryNote;
@@ -62,6 +63,7 @@ public class VisitUCCTest {
     goodExplanatoryNote = ObjectDistributor.getGoodExplanatoryNote();
     badExplanatoryNote = ObjectDistributor.getBadExplanatoryNote();
     emptyExplanatoryNote = ObjectDistributor.getEmptyExplanatoryNote();
+    goodVisitWithoutAddress = ObjectDistributor.getGoodVisitWithoutWarehouseAddress();
   }
 
   @DisplayName("Test getNotConfirmedVisits with empty list")
@@ -213,6 +215,7 @@ public class VisitUCCTest {
   public void acceptVisitTest2() {
     int id = goodVisit.getIdRequest();
     Mockito.when(visitDAO.acceptVisit(id, goodScheduledDateTime)).thenReturn(true);
+    assertTrue(visitUCC.acceptVisit(id, goodScheduledDateTime));
   }
 
   @DisplayName("Test accept a visit whit a good id and a null scheduled date time")
@@ -241,6 +244,7 @@ public class VisitUCCTest {
   public void cancelVisitTest2() {
     int id = goodVisit.getIdRequest();
     Mockito.when(visitDAO.cancelVisit(id, goodExplanatoryNote)).thenReturn(true);
+    assertTrue(visitUCC.cancelVisit(id, goodExplanatoryNote));
   }
 
   @DisplayName("Test accept a visit whit a good id and a null explanatory note")
@@ -276,5 +280,12 @@ public class VisitUCCTest {
   public void submitARequestOfVisitTest1() {
     assertTrue(visitUCC.submitRequestOfVisit(goodVisit));
   }
+
+  @DisplayName("Test submit a request for visit without warehouse address")
+  @Test
+  public void submitARequestOfVisitTest2() {
+    assertTrue(visitUCC.submitRequestOfVisit(goodVisit));
+  }
+
 
 }
