@@ -73,7 +73,8 @@ public class VisitDAOImpl implements VisitDAO {
     List<VisitDTO> list = new ArrayList<VisitDTO>();
     try {
       String sql = "SELECT r.id_request, r.time_slot, r.condition, "
-          + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, r.client, COUNT(f.id_furniture) "
+          + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
+          + "r.client, COUNT(f.id_furniture) "
           + "FROM pae.requests_for_visits r, pae.furnitures f WHERE r.condition = ? AND"
           + " r.id_request = f.request_visit GROUP BY r.id_request;";
       ps = dalBackendServices.getPreparedStatement(sql);
