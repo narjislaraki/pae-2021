@@ -2,6 +2,7 @@ package be.vinci.pae.services.dao;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.OptionDTO;
@@ -58,14 +59,15 @@ public interface FurnitureDAO {
 
   void processFurniture(int id, String condition, double purchasePrice, LocalDateTime pickUpDate);
 
-  void edit(int id, String description, int idType, double offeredSellingPrice, int favouritePhoto);
+  boolean edit(int id, String description, int idType, double offeredSellingPrice,
+      int favouritePhoto);
 
-  void deletePhoto(int id);
+  int deletePhoto(int id);
 
-  void displayPhoto(int id);
+  int displayPhoto(int id);
 
-  void hidePhoto(int id);
+  int hidePhoto(int id);
 
-  void addAdminPhoto(PhotoDTO photo, int idFurniture);
+  int addAdminPhoto(PhotoDTO photo, int idFurniture);
 
 }

@@ -3,7 +3,9 @@ package be.vinci.pae.domain.furniture;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -280,32 +282,50 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public boolean edit(EditionDTO edition) {
     dalServices.getBizzTransaction(false);
-    if (!(edition.getDescription().isEmpty() && edition.getIdType() == -1
-        && edition.getOfferedSellingPrice() == -1 && edition.getFavouritePhotoId() == -1)) {
 
-      FurnitureDTO furniture = furnitureDao.getFurnitureById(edition.getIdFurniture());
-      String description = edition.getDescription().isEmpty() ? furniture.getDescription()
-          : edition.getDescription();
-
-      int idType = edition.getIdType() == -1 ? furniture.getTypeId() : edition.getIdType();
-
-      double offeredSellingPrice =
-          edition.getOfferedSellingPrice() == -1 ? furniture.getOfferedSellingPrice()
-              : edition.getOfferedSellingPrice();
-
-      int favouritePhoto = edition.getFavouritePhotoId() == -1 ? furniture.getFavouritePhotoId()
-          : edition.getFavouritePhotoId();
-      furnitureDao.edit(furniture.getId(), description, idType, offeredSellingPrice,
-          favouritePhoto);
+    if (edition.getIdFurniture() <= 0) {
+      throw new BusinessException("The furniture id is invalid");
     }
 
-    edition.getPhotosToAdd().forEach(e -> furnitureDao.addAdminPhoto(e, edition.getIdFurniture()));
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(edition.getIdFurniture());
+    int id = furniture.getId();
+    String description = edition.getDescription() == null || edition.getDescription().isEmpty()
+        ? furniture.getDescription()
+        : edition.getDescription();
+    int idType = edition.getIdType() <= 0 ? furniture.getTypeId() : edition.getIdType();
+    double offeredSellingPrice =
+        edition.getOfferedSellingPrice() < 0 ? furniture.getOfferedSellingPrice()
+            : edition.getOfferedSellingPrice();
+    int favouritePhoto = edition.getFavouritePhotoId() <= 0 ? furniture.getFavouritePhotoId()
+        : edition.getFavouritePhotoId();
 
-    edition.getPhotosToDelete().forEach(e -> furnitureDao.deletePhoto(e));
+    if (!description.equals(furniture.getDescription()) || idType != furniture.getTypeId()
+        || offeredSellingPrice != furniture.getFavouritePhotoId()
+        || favouritePhoto != furniture.getFavouritePhotoId()) {
+      furnitureDao.edit(id, description, idType, offeredSellingPrice, favouritePhoto);
+    }
 
-    edition.getPhotosToDisplay().forEach(e -> furnitureDao.displayPhoto(e));
 
-    edition.getPhotosToHide().forEach(e -> furnitureDao.hidePhoto(e));
+    Set<Integer> furnitureIds = new HashSet<>();
+    furnitureIds.add(furniture.getId());
+    if (edition.getPhotosToAdd() != null) {
+      edition.getPhotosToAdd()
+          .forEach(e -> furnitureIds.add(furnitureDao.addAdminPhoto(e, edition.getIdFurniture())));
+    }
+    if (edition.getPhotosToDelete() != null) {
+      edition.getPhotosToDelete().forEach(e -> furnitureIds.add(furnitureDao.deletePhoto(e)));
+    }
+    if (edition.getPhotosToDisplay() != null) {
+      edition.getPhotosToDisplay().forEach(e -> furnitureIds.add(furnitureDao.displayPhoto(e)));
+    }
+    if (edition.getPhotosToHide() != null) {
+      edition.getPhotosToHide().forEach(e -> furnitureIds.add(furnitureDao.hidePhoto(e)));
+    }
+
+    if (furnitureIds.size() != 1) {
+      System.out.println(furnitureIds);
+      throw new BusinessException("Some images ids are not related to the given furniture");
+    }
 
     dalServices.commitBizzTransaction();
     return true;

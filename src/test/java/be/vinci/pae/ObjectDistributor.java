@@ -9,6 +9,9 @@ import java.util.List;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
+import be.vinci.pae.domain.edition.EditionDTO;
+import be.vinci.pae.domain.edition.EditionFactory;
+import be.vinci.pae.domain.edition.EditionFactoryImpl;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -43,6 +46,7 @@ public class ObjectDistributor {
   private static OptionFactory optionFactory = new OptionFactoryImpl();
   private static PhotoFactory photoFactory = new PhotoFactoryImpl();
   private static TypeOfFurnitureFactory typeOfFurnitureFactory = new TypeOfFurnitureFactoryImpl();
+  private static EditionFactory editionFactory = new EditionFactoryImpl();
 
 
   private static String goodPassword = "1234";
@@ -400,6 +404,10 @@ public class ObjectDistributor {
     goodVisit.getFurnitureList().get(0).setListPhotos(list);
     goodVisit.getFurnitureList().get(0).getListPhotos().add(getPhoto());
     return goodVisit;
+  }
+
+  public static EditionDTO getEmptyEdition() {
+    return editionFactory.getEditionDTO();
   }
 
 

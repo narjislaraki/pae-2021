@@ -18,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
@@ -82,7 +83,6 @@ public class FurnitureUCCTest {
     goodUser = ObjectDistributor.getGoodValidatedUser();
     goodType = ObjectDistributor.getGoodTypeOfFurniture();
     sale = ObjectDistributor.getSale();
-
   }
 
   @DisplayName("Test getting the option by id with a valid id")
@@ -462,12 +462,6 @@ public class FurnitureUCCTest {
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
   }
 
-  @DisplayName("")
-  @Test
-  public void editTest1() {
-
-  }
-
   @DisplayName("Test getting furniture with photo by an id with a null furniture")
   @Test
   public void getFurnitureWithPhotosByIdTest1() {
@@ -500,6 +494,140 @@ public class FurnitureUCCTest {
 
   }
 
+  @DisplayName("Test edit with empty furniture id")
+  @Test
+  public void editTest1() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    assertThrows(BusinessException.class, () -> furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and nothing else")
+  @Test
+  public void editTest2() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and a valid price of 0")
+  @Test
+  public void editTest3() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setOfferedSellingPrice(0);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and a valid price of 100")
+  @Test
+  public void editTest4() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setOfferedSellingPrice(100);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and an invalid negative price")
+  @Test
+  public void editTest5() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setOfferedSellingPrice(-1);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and a valid id type of 1")
+  @Test
+  public void editTest6() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setOfferedSellingPrice(1);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and an invalid id type < 1 (0)")
+  @Test
+  public void editTest7() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setOfferedSellingPrice(0);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and an invalid id type < 1 (-1)")
+  @Test
+  public void editTest8() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setOfferedSellingPrice(-1);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and a valid description != to the original")
+  @Test
+  public void editTest9() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setDescription("Random description");
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertAll(() -> assertFalse(edition.getDescription().equals(goodFurniture.getDescription())),
+        () -> assertTrue(furnitureUCC.edit(edition)));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and a valid description == to the original")
+  @Test
+  public void editTest10() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setDescription(goodFurniture.getDescription());
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertAll(() -> assertTrue(edition.getDescription().equals(goodFurniture.getDescription())),
+        () -> assertTrue(furnitureUCC.edit(edition)));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and an empty photo list to add")
+  @Test
+  public void editTest11() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setPhotosToAdd(new ArrayList<PhotoDTO>());
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add but not related")
+  @Test
+  public void editTest12() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setPhotosToAdd(new ArrayList<PhotoDTO>());
+    photo.setIdFurniture(goodFurniture.getId() + 1);
+    edition.getPhotosToAdd().add(photo);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    Mockito.when(furnitureDAO.addAdminPhoto(photo, goodFurniture.getId()))
+        .thenReturn(goodFurniture.getId());
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add but not related")
+  @Test
+  public void editTest13() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setPhotosToAdd(new ArrayList<PhotoDTO>());
+    edition.getPhotosToAdd().add(photo);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    Mockito.when(furnitureDAO.addAdminPhoto(photo, goodFurniture.getId()))
+        .thenReturn(goodFurniture.getId());
+    assertTrue(furnitureUCC.edit(edition));
+  }
 
 
 }
