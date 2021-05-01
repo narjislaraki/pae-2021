@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
@@ -315,10 +316,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public FurnitureDTO getFurnitureWithPhotosById(int id) {
     dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
-    furniture.setListPhotos(furnitureDao.getFurniturePhotos(id));
     if (furniture == null) {
       throw new BusinessException("There are no furniture for the given id");
     }
+    furniture.setListPhotos(furnitureDao.getFurniturePhotos(id));
     int seller = furniture.getSellerId();
     if (seller != 0) {
       furniture.setSeller(userDAO.getUserFromId(seller));
