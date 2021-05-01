@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonView;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.views.Views;
 
 public class VisitImpl implements Visit {
@@ -23,7 +23,7 @@ public class VisitImpl implements Visit {
   @JsonView(Views.Public.class)
   private int idClient;
   @JsonView(Views.Public.class)
-  private User client;
+  private UserDTO client;
   @JsonView(Views.Public.class)
   private String explanatoryNote;
   @JsonView(Views.Public.class)
@@ -105,12 +105,12 @@ public class VisitImpl implements Visit {
   }
 
   @Override
-  public User getClient() {
+  public UserDTO getClient() {
     return this.client;
   }
 
   @Override
-  public void setClient(User client) {
+  public void setClient(UserDTO client) {
     this.client = client;
   }
 

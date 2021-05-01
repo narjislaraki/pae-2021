@@ -2,7 +2,6 @@ package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.exceptions.BusinessException;
@@ -50,9 +49,10 @@ public class VisitUCCImpl implements VisitUCC {
   public boolean submitRequestOfVisit(VisitDTO visit) {
     dalServices.getBizzTransaction(false);
     // TODO vérifier autrement que l'adresse est différente de celle du client
-    visit.setClient((User) userDAO.getUserFromId(visit.getIdClient()));
-    if (visit.getWarehouseAddress().getStreet().isEmpty()) {
-      visit.getWarehouseAddress().setId(visit.getClient().getAddress().getId());
+    visit.setClient(userDAO.getUserFromId(visit.getIdClient()));
+    if (visit.getWarehouseAddress() == null || visit.getWarehouseAddress().getStreet() == null
+        || visit.getWarehouseAddress().getStreet().isEmpty()) {
+      visit.setWarehouseAddress(visit.getClient().getAddress());
       visit.setWarehouseAddressId(visit.getClient().getAddress().getId());
     } else {
       visit.getWarehouseAddress().setId(addressDAO.addAddress(visit.getWarehouseAddress()));
