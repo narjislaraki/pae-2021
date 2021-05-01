@@ -12,6 +12,8 @@ public class SaleUCCImpl implements SaleUCC {
   @Inject
   private DalServices dalServices;
 
+
+  @Override
   public List<SaleDTO> getSalesList() {
     dalServices.getBizzTransaction(true);
     List<SaleDTO> list = saleDao.getSalesList();
