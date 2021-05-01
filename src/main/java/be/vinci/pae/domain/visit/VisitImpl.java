@@ -1,8 +1,10 @@
 package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonView;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -29,7 +31,7 @@ public class VisitImpl implements Visit {
   @JsonView(Views.Public.class)
   private LocalDateTime scheduledDateTime;
   @JsonView(Views.Public.class)
-  private ArrayList<FurnitureDTO> furnitureList;
+  private List<FurnitureDTO> furnitureList;
   @JsonView(Views.Public.class)
   private int amountOfFurnitures;
 
@@ -145,12 +147,12 @@ public class VisitImpl implements Visit {
   }
 
   @Override
-  public ArrayList<FurnitureDTO> getFurnitureList() {
+  public List<FurnitureDTO> getFurnitureList() {
     return this.furnitureList;
   }
 
   @Override
-  public void setFurnitureList(ArrayList<FurnitureDTO> furnitureList) {
+  public void setFurnitureList(List<FurnitureDTO> furnitureList) {
     this.furnitureList = furnitureList;
   }
 
