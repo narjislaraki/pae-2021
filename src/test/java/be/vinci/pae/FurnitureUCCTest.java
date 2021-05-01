@@ -605,7 +605,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add but not related")
+  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add but ! related")
   @Test
   public void editTest12() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -619,7 +619,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add but not related")
+  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add related")
   @Test
   public void editTest13() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();

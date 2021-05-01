@@ -506,6 +506,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   @Override
   public int addAdminPhoto(PhotoDTO photo, int idFurniture) {
+    int response = -1;
     try {
       String sql =
           "INSERT INTO pae.photos VALUES (default, ?, false, false, ?) RETURNING id_furniture;";
@@ -514,12 +515,12 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ps.setInt(2, idFurniture);
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
-        return rs.getInt(1);
+        response = rs.getInt(1);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return -1;
+    return response;
   }
 
   @Override
@@ -570,22 +571,24 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   @Override
   public int deletePhoto(int id) {
+    int response = -1;
     try {
       String sql = "DELETE FROM pae.photos WHERE id_photo = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
-        return rs.getInt(1);
+        response = rs.getInt(1);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return -1;
+    return response;
   }
 
   @Override
   public int displayPhoto(int id) {
+    int response = -1;
     try {
       String sql =
           "UPDATE pae.photos SET is_visible = TRUE WHERE id_photo = ? RETURNING id_furniture;";
@@ -593,16 +596,17 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
-        return rs.getInt(1);
+        response = rs.getInt(1);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return -1;
+    return response;
   }
 
   @Override
   public int hidePhoto(int id) {
+    int response = -1;
     try {
       String sql =
           "UPDATE pae.photos SET is_visible = FALSE WHERE id_photo = ? RETURNING id_furniture;";
@@ -610,12 +614,12 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
-        return rs.getInt(1);
+        response = rs.getInt(1);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return -1;
+    return response;
   }
 
   @Override
