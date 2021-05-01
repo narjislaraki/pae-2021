@@ -338,6 +338,38 @@ public class FurnitureUCCTest {
     assertAll(() -> assertEquals(list, listB), () -> assertEquals(1, listB.size()));
   }
 
+  @DisplayName("Test to get the furniture list with a null user")
+  @Test
+  public void getFurnitureListByTypeTest1() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    list.add(goodFurniture);
+
+    Mockito.when(furnitureDAO.getPublicFurnitureListByType(goodType.getId())).thenReturn(list);
+    List<FurnitureDTO> listB = furnitureUCC.getFurnitureListByType(null, goodType.getId());
+    assertAll(() -> assertEquals(list, listB), () -> assertEquals(1, listB.size()));
+  }
+
+  @DisplayName("Test to get the furniture list with a client user")
+  @Test
+  public void getFurnitureListByTypeTest2() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    list.add(goodFurniture);
+    goodUser.setRole(Role.CLIENT.toString());
+    Mockito.when(furnitureDAO.getPublicFurnitureListByType(goodType.getId())).thenReturn(list);
+    List<FurnitureDTO> listB = furnitureUCC.getFurnitureListByType(goodUser, goodType.getId());
+    assertAll(() -> assertEquals(list, listB), () -> assertEquals(1, listB.size()));
+  }
+
+  @DisplayName("Test to get the furniture list with a non null user admin")
+  @Test
+  public void getFurnitureListByTypeTest3() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    list.add(goodFurniture);
+    Mockito.when(furnitureDAO.getFurnitureListByType(goodType.getId())).thenReturn(list);
+    List<FurnitureDTO> listB = furnitureUCC.getFurnitureListByType(goodUser, goodType.getId());
+    assertAll(() -> assertEquals(list, listB), () -> assertEquals(1, listB.size()));
+  }
+
   @DisplayName("Test getting furniture by id with an invalid id")
   @Test
   public void getFurnitureByIdTest1() {
