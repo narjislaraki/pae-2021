@@ -41,6 +41,10 @@ let edition = {
 let page = document.querySelector("#page");
 
 async function FurniturePage(id) {
+    if (!currentUser) {
+        RedirectUrl("/");
+        return;
+    }
     waitingSpinner();
     nbPhoto = 0; // must be initialized every time!!
     userData = getUserSessionData();
@@ -56,61 +60,46 @@ async function FurniturePage(id) {
     }
     /****** Furniture ******/
 
-    if (currentUser) {
-        try {
-            furniture = await callAPI(
-                API_BASE_URL + id,
-                "GET",
-                userData.token,
-                undefined);
-        } catch (err) {
-            console.error("FurniturePage::get furniture", err);
-            PrintError(err);
-        }
-    } else {
-        try {
-            furniture = await callAPI(
-                API_BASE_URL + "public/" + id,
-                "GET",
-                undefined,
-                undefined);
-        } catch (err) {
-            console.error("FurniturePage::get furniture", err);
-            PrintError(err);
-        }
+    try {
+        furniture = await callAPI(
+            API_BASE_URL + id,
+            "GET",
+            userData.token,
+            undefined);
+    } catch (err) {
+        console.error("FurniturePage::get furniture", err);
+        PrintError(err);
     }
 
     /****** nbOfDays ******/
 
-    if (currentUser) {
-        let idFurniture = furniture.id;
-        try {
-            nbOfDay = await callAPI(
-                API_BASE_URL + idFurniture + "/getSumOfOptionDays",
-                "GET",
-                userData.token,
-                undefined,
-            );
-        } catch (err) {
-            console.error("FurniturePage::onNbOfDay", err);
+    let idFurniture = furniture.id;
+    try {
+        nbOfDay = await callAPI(
+            API_BASE_URL + idFurniture + "/getSumOfOptionDays",
+            "GET",
+            userData.token,
+            undefined,
+        );
+    } catch (err) {
+        console.error("FurniturePage::onNbOfDay", err);
+        PrintError(err);
+    }
+
+    /****** Option ******/
+
+    try {
+        option = await callAPI(
+            API_BASE_URL + idFurniture + "/getOption",
+            "GET",
+            userData.token,
+            undefined,
+        );
+    } catch (err) {
+        //ugly and terrible idea but it works!
+        if (err !== "SyntaxError: Unexpected end of JSON input") {
+            console.error("FurniturePage::onGetOption", err);
             PrintError(err);
-        }
-
-        /****** Option ******/
-
-        try {
-            option = await callAPI(
-                API_BASE_URL + idFurniture + "/getOption",
-                "GET",
-                userData.token,
-                undefined,
-            );
-        } catch (err) {
-            //ugly and terrible idea but it works!
-            if (err !== "SyntaxError: Unexpected end of JSON input") {
-                console.error("FurniturePage::onGetOption", err);
-                PrintError(err);
-            }
         }
     }
 
@@ -153,7 +142,7 @@ async function FurniturePage(id) {
         }
         smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
     })
-    if (currentUser != null && (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE")) {
+    if (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE") {
         if (furniture.condition === "SOUS_OPTION") {
 
             if (option.idUser !== currentUser.id) {
@@ -198,7 +187,7 @@ async function FurniturePage(id) {
                 introduceOptionBtn.addEventListener("click", onIntroduceOption);
             }
         }
-    } else if (currentUser != null && currentUser.role === "ADMIN") {
+    } else if (currentUser.role === "ADMIN") {
         let editIcon = document.createElement("img");
         editIcon.width = 40;
         editIcon.height = 40;
@@ -569,7 +558,7 @@ const onStarImg = () => {
             message: "Action impossible, veuillez choisir une nouvelle image favorite au préalable",
         }
         PrintError(err);
-    } else if (document.getElementById("eye-image").src.includes("eye_close.png")){
+    } else if (document.getElementById("eye-image").src.includes("eye_close.png")) {
         let err = {
             message: "Action impossible, l'image n'est pas visible",
         }
