@@ -798,7 +798,7 @@ footer{
     top: 32%;
     left: 50%;
 }
-.price-inline{
+#price-inline{
     width:max-content;
     position: absolute;
     top: 40%;
