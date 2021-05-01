@@ -11,9 +11,21 @@ import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.furniture.FurnitureFactoryImpl;
+import be.vinci.pae.domain.furniture.OptionDTO;
+import be.vinci.pae.domain.furniture.OptionFactory;
+import be.vinci.pae.domain.furniture.OptionFactoryImpl;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
+import be.vinci.pae.domain.furniture.TypeOfFurnitureFactoryImpl;
+import be.vinci.pae.domain.sale.SaleDTO;
+import be.vinci.pae.domain.sale.SaleFactory;
+import be.vinci.pae.domain.sale.SaleFactoryImpl;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
+import be.vinci.pae.domain.visit.PhotoDTO;
+import be.vinci.pae.domain.visit.PhotoFactory;
+import be.vinci.pae.domain.visit.PhotoFactoryImpl;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
 import be.vinci.pae.domain.visit.VisitFactory;
@@ -25,6 +37,10 @@ public class ObjectDistributor {
   private static AddressFactory addressFactory = new AddressFactoryImpl();
   private static VisitFactory visitFactory = new VisitFactoryImpl();
   private static FurnitureFactory furnitureFactory = new FurnitureFactoryImpl();
+  private static SaleFactory saleFactory = new SaleFactoryImpl();
+  private static OptionFactory optionFactory = new OptionFactoryImpl();
+  private static PhotoFactory photoFactory = new PhotoFactoryImpl();
+  private static TypeOfFurnitureFactory typeOfFurnitureFactory = new TypeOfFurnitureFactoryImpl();
 
   private static String goodPassword = "1234";
   private static String goodEmail = "test@test.com";
@@ -156,5 +172,104 @@ public class ObjectDistributor {
     // TODO to complete with the tests
     return furniture;
   }
+
+  /**
+   * Construct a furniture concidered as "a good furniture model", and return it.
+   * 
+   * @return the good furniture
+   */
+  public static FurnitureDTO getFurniture() {
+    FurnitureDTO goodFurniture = furnitureFactory.getFurnitureDTO();
+    goodFurniture.setId(1);
+    goodFurniture.setTypeId(1);
+    goodFurniture.setType("Armoire");
+    goodFurniture.setRequestForVisitId(1);
+    goodFurniture.setSellerId(1);
+    goodFurniture.setSeller(getGoodValidatedUser());
+    goodFurniture.setCondition("acheté");
+    goodFurniture.setDescription("meuble");
+    goodFurniture.setPurchasePrice(10);
+    goodFurniture.setPickUpDate(LocalDateTime.now());
+    goodFurniture.setStoreDeposit(false);
+    goodFurniture.setFavouritePhotoId(1);
+    return goodFurniture;
+  }
+
+  public static void setFurnitureCondition(FurnitureDTO furniture, String condition) {
+    furniture.setCondition(condition);
+  }
+
+  /**
+   * Construct a photo
+   * 
+   * @return the photo
+   */
+  public static PhotoDTO createPhoto() {
+    PhotoDTO photo = photoFactory.getPhotoDTO();
+    photo.setId(1);
+    photo.setIdFurniture(1);
+    photo.setPhoto("goodPhoto");
+    return photo;
+  }
+
+
+  /**
+   * Construct a sold furniture.
+   * 
+   * @return the sold furniture
+   */
+  public static FurnitureDTO getSoldFurniture() {
+    FurnitureDTO furniture = furnitureFactory.getFurnitureDTO();
+    furniture.setId(1);
+    furniture.setCondition(Condition.VENDU.toString());
+    furniture.setOfferedSellingPrice(10);
+    // furniture.set
+    return furniture;
+  }
+
+
+  /**
+   * Construct a sale with a sold furniture
+   * 
+   * @return the bad sale
+   */
+  public static SaleDTO getSale() {
+    SaleDTO sale = saleFactory.getSaleDTO();
+    sale.setId(1);
+    sale.setIdFurniture(getSoldFurniture().getId());
+    sale.setIdBuyer(1);
+    sale.setDateOfSale(LocalDateTime.now());
+    sale.setSellingPrice(11);
+    return sale;
+  }
+
+
+  /**
+   * Construct a good option.
+   * 
+   * @return the good option
+   */
+  public static OptionDTO getGoodOption() {
+    OptionDTO option = optionFactory.getOptionDTO();
+    option.setId(1);
+    option.setIdFurniture(1);
+    option.setIdUser(1);
+    option.setDate(LocalDateTime.now());
+    option.setOptionTerm(4);
+    return option;
+  }
+
+  /**
+   * Construct a good type of furniture.
+   * 
+   * @return the good type of furniture
+   */
+  public static TypeOfFurnitureDTO getGoodTypeOfFurniture() {
+    TypeOfFurnitureDTO type = typeOfFurnitureFactory.getTypeOfFurnitureDTO();
+    type.setId(1);
+    type.setLabel("Chaise");
+    return type;
+  }
+
 
 }

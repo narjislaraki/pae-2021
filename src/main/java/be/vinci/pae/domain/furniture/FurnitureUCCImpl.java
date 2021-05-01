@@ -54,8 +54,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   /**
-   * Initiation of the Options and Reservations management. The scheduledTask will be launched 1 sec
-   * after the loading and then once a day at 00:05.
+   * Initiation of the Options and Reservations management. The scheduledTask will be launched 1 sec after the loading and then once a day at 00:05.
    */
 
   private void scheduledTasksInit() {
@@ -303,10 +302,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public FurnitureDTO getFurnitureWithPhotosById(int id) {
     dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
-    furniture.setListPhotos(furnitureDao.getFurniturePhotos(id));
     if (furniture == null) {
       throw new BusinessException("There are no furniture for the given id");
     }
+    furniture.setListPhotos(furnitureDao.getFurniturePhotos(id));
     int seller = furniture.getSellerId();
     if (seller != 0) {
       furniture.setSeller(userDAO.getUserFromId(seller));
