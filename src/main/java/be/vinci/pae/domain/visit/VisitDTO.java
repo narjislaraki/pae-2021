@@ -64,4 +64,8 @@ public interface VisitDTO {
 
   void setFurnitureList(ArrayList<FurnitureDTO> furnitureList);
 
+  int getAmountOfFurnitures();
+
+  void setAmountOfFurnitures(int amountOfFurnitures);
+
 }

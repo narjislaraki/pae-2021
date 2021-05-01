@@ -112,9 +112,11 @@ const Navbar = async () => {
 
     let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
     btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
+
+    let voir = document.getElementById("all-furnitures-navbar");
+    voir.addEventListener("click", onFurnitureListPage);
   }
-  let voir = document.getElementById("all-furnitures-navbar");
-  voir.addEventListener("click", onFurnitureListPage);
+  
 
   let home = document.getElementById("home");
   home.addEventListener("click", onHomePage);
