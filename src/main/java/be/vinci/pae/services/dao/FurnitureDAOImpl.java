@@ -505,16 +505,22 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void addAdminPhoto(PhotoDTO photo, int idFurniture) {
+  public int addAdminPhoto(PhotoDTO photo, int idFurniture) {
+    int response = -1;
     try {
-      String sql = "INSERT INTO pae.photos VALUES (default, ?, false, false, ?);";
+      String sql =
+          "INSERT INTO pae.photos VALUES (default, ?, false, false, ?) RETURNING id_furniture;";
       PreparedStatement ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, photo.getPhoto());
       ps.setInt(2, idFurniture);
-      ps.execute();
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
@@ -544,7 +550,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void edit(int id, String description, int idType, double offeredSellingPrice,
+  public boolean edit(int id, String description, int idType, double offeredSellingPrice,
       int favouritePhoto) {
     try {
       String sql = "UPDATE pae.furnitures SET description = ?, id_type = ?, "
@@ -560,45 +566,60 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return true;
   }
 
   @Override
-  public void deletePhoto(int id) {
+  public int deletePhoto(int id) {
+    int response = -1;
     try {
-      String sql = "DELETE FROM pae.photos WHERE id_photo = ?;";
+      String sql = "DELETE FROM pae.photos WHERE id_photo = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
-
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
-  public void displayPhoto(int id) {
+  public int displayPhoto(int id) {
+    int response = -1;
     try {
-      String sql = "UPDATE pae.photos SET is_visible = TRUE WHERE id_photo = ?;";
+      String sql =
+          "UPDATE pae.photos SET is_visible = TRUE WHERE id_photo = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
-
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
-  public void hidePhoto(int id) {
+  public int hidePhoto(int id) {
+    int response = -1;
     try {
-      String sql = "UPDATE pae.photos SET is_visible = FALSE WHERE id_photo = ?;";
+      String sql =
+          "UPDATE pae.photos SET is_visible = FALSE WHERE id_photo = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
-
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
