@@ -30,6 +30,8 @@ public class VisitImpl implements Visit {
   private LocalDateTime scheduledDateTime;
   @JsonView(Views.Public.class)
   private ArrayList<FurnitureDTO> furnitureList;
+  @JsonView(Views.Public.class)
+  private int amountOfFurnitures;
 
   @Override
   public int getIdRequest() {
@@ -150,6 +152,16 @@ public class VisitImpl implements Visit {
   @Override
   public void setFurnitureList(ArrayList<FurnitureDTO> furnitureList) {
     this.furnitureList = furnitureList;
+  }
+
+  @Override
+  public int getAmountOfFurnitures() {
+    return this.amountOfFurnitures;
+  }
+
+  @Override
+  public void setAmountOfFurnitures(int amountOfFurnitures) {
+    this.amountOfFurnitures = amountOfFurnitures;
   }
 
 }

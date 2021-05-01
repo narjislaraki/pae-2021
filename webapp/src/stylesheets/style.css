@@ -300,6 +300,12 @@ input[type="checkbox"]:focus,
     border-radius: 0px;
     width: 100%;
 }
+
+#menuType{
+    overflow-y: scroll;
+    height: 1100%;
+}
+
 /*
 * === ---1.2 FOOTER ===
 */

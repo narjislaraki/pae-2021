@@ -2,8 +2,6 @@ package be.vinci.pae.services.dao;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.OptionDTO;
@@ -38,9 +36,9 @@ public interface FurnitureDAO {
 
   List<FurnitureDTO> getPublicFurnitureList();
 
-  // pas encore pour le livrable
-  void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures);
+  List<FurnitureDTO> getFurnitureListByType(int idType);
+
+  List<FurnitureDTO> getPublicFurnitureListByType(int idType);
 
   String getFurnitureTypeById(int id);
 

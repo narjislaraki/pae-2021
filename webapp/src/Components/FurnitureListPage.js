@@ -10,33 +10,52 @@ const API_BASE_URL = "/api/furnitures/";
 
 let furnitureListTab;
 
-
-
 let furnitureListPage =
   `
-        <div class="all-furn-title small-caps">Tous les meubles</div>
+        <div class="all-furn-title small-caps" id="titlePage">Tous les meubles</div>
 
         <div class="parent-furnitures-container">
 
 `;
 
 
-async function FurnitureListPage() {
+async function FurnitureListPage(pageData) {
   waitingSpinner();
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  let typeOfFurnitureId;
+  let titleHtml;
+  if (pageData && pageData.title){
+    typeOfFurnitureId = pageData.idTypeOfFurniture;
+    titleHtml = pageData.title;
+  }
   let page = document.querySelector("#page");
   let furnitures;
   if (currentUser) {
     let userData = getUserSessionData();
-    try {
-      furnitures = await callAPI(
-        API_BASE_URL,
-        "GET",
-        userData.token,
-        undefined);
-    } catch (err) {
-      console.error("FurnitureListPage::get listfurnitures", err);
-      PrintError(err);
-    }
+    if (typeOfFurnitureId == null){
+      try {
+        furnitures = await callAPI(
+          API_BASE_URL,
+          "GET",
+          userData.token,
+          undefined);
+      } catch (err) {
+        console.error("FurnitureListPage::get listfurnitures", err);
+        PrintError(err);
+      }
+    }else{
+      try {
+        furnitures = await callAPI(
+          API_BASE_URL + "type/" + typeOfFurnitureId,
+          "GET",
+          userData.token,
+          undefined);
+      } catch (err) {
+        console.error("FurnitureListPage::get listfurnitures", err);
+        PrintError(err);
+      }
+    }  
   }
   else {
     try {
@@ -52,8 +71,12 @@ async function FurnitureListPage() {
   }
 
   page.innerHTML = furnitureListPage;
-  let data =
-    furnitures.map((element) => {
+
+  let data;
+  if (furnitures.length === 0){
+    data = "Aucun meuble actueellement";
+  }else{
+    data = furnitures.map((element) => {
       page.innerHTML +=
         `
         <div data-id="${element.id}" class="item-card furniture">
@@ -67,6 +90,8 @@ async function FurnitureListPage() {
     `;
 
     });
+  }
+    
 
 
   //close the div
@@ -75,6 +100,10 @@ async function FurnitureListPage() {
   Array.from(list).forEach((e) => {
     e.addEventListener("click", onFurniture);
   });
+  if (titleHtml){
+    let title = document.getElementById("titlePage");
+    title.innerHTML = "Voici tous les meubles de type \"" + titleHtml + "\"";
+  }
 }
 
 const onFurniture = (e) => {
