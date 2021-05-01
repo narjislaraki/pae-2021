@@ -2,6 +2,8 @@ package be.vinci.pae.services.dao;
 
 import java.sql.ResultSet;
 import java.util.List;
+
+import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 
 public interface UserDAO {
@@ -32,4 +34,5 @@ public interface UserDAO {
   UserDTO setUser(ResultSet rs, UserDTO user);
 
   List<UserDTO> getValidatedUsers();
+
 }

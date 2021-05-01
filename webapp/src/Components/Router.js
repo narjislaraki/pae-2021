@@ -5,6 +5,7 @@ import ErrorPage from "./ErrorPage.js";
 import VisitsPage from "./VisitsPage.js";
 import VisitsToBeProcessedPage from "./VisitsToBeProcessedPage.js"
 import AdvancedSearchesPage from "./AdvancedSearchesPage.js";
+import TransactionsPage from "./TransactionsPage.js";
 import ConfirmRegistrationPage from "./ConfirmRegistrationPage.js";
 import FurnitureListPage from "./FurnitureListPage.js";
 
@@ -14,7 +15,8 @@ const routes = {
   "/logout": LogoutComponent,
   "/visits" : VisitsPage,
   "/visitsToBeProcessed" : VisitsToBeProcessedPage,
-  //"/advancedSearches" : AdvancedSearchesPage,
+  "/advancedSearches" : AdvancedSearchesPage,
+  "/transactions" : TransactionsPage,
   "/confirmRegistration": ConfirmRegistrationPage,
   "/furnitures": FurnitureListPage,
   "/error": ErrorPage,

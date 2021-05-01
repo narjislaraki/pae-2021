@@ -95,6 +95,26 @@ public class FurnitureResource {
     }
     return responseOkWithEntity(r);
   }
+  
+  /**
+   * Get a list of furniture for the homepage (sold, available and under options).
+   * 
+   * @param request the request
+   * @return a list of furniture wrapped in a Response
+   */
+  @GET
+  @Path("slider")
+  public Response getSliderFurnituresList(@Context ContainerRequest request) {
+    List<FurnitureDTO> list = furnitureUCC.getSliderFurnitureList(10);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+  
 
   /**
    * Get a specific furniture for unlogged users by giving its id.

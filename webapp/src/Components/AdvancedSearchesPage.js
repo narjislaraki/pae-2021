@@ -1,3 +1,5 @@
-let AdvancedSearchesPage = ``;
+let AdvancedSearchesPage = () =>{
+    
+}
 
-export {AdvancedSearchesPage};
+export default AdvancedSearchesPage;

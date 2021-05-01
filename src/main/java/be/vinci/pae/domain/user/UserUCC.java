@@ -2,6 +2,8 @@ package be.vinci.pae.domain.user;
 
 import java.util.List;
 
+import be.vinci.pae.domain.sale.SaleDTO;
+
 public interface UserUCC {
 
   UserDTO connection(String email, String password);
@@ -17,4 +19,8 @@ public interface UserUCC {
   UserDTO getUserFromId(int id);
 
   List<UserDTO> getValidatedUsers();
+
+  List<SaleDTO> getTransactionsBuyer(int id);
+
+	List<SaleDTO> getTransactionsSeller(int id);
 }
