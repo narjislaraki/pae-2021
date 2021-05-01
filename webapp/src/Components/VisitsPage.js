@@ -25,6 +25,17 @@ let VisitsPage = () => {
     </div>`;
     page.innerHTML = menu + visitPage;
 
+    let advancedSearches = document.getElementById("advancedSearches");
+    advancedSearches.addEventListener("click", onAdvancedSearches);
+
+    let confirmRegister = document.getElementById("confirmRegister");
+    confirmRegister.addEventListener("click", onConfirmRegister);
+
+    let btnWaiting = document.getElementById("btnWaiting");
+    btnWaiting.addEventListener("click", onVisitsWaiting);
+
+    let btnToTreat = document.getElementById("btnToTreat");
+    btnToTreat.addEventListener("click", onVisitsToTreat);
     onVisitsWaiting();
 
 };
@@ -66,7 +77,6 @@ const onVisitsWaiting = async () => {
             userData.token,
             undefined,
         );
-
     } catch (err) {
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
@@ -91,7 +101,7 @@ const onVisitsWaiting = async () => {
         .map((visit) =>
             `<tr>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
-                <td>x</td>
+                <td>${visit.amountOfFurnitures}</td>
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>

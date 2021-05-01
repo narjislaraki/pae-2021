@@ -1,6 +1,5 @@
 import {getUserSessionData, currentUser} from "../utils/session.js";
 import {RedirectUrl} from "./Router.js";
-import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
@@ -41,6 +40,22 @@ let edition = {
 let page = document.querySelector("#page");
 
 async function FurniturePage(id) {
+    if (!id){
+        RedirectUrl("/");
+        let err = {
+            message: "Id invalide",
+        }
+        PrintError(err);
+        return;
+    }
+    if (!currentUser) {
+        RedirectUrl("/");
+        let err = {
+            message: "Vous n'êtes pas autorisé",
+        }
+        PrintError(err);
+        return;
+    }
     waitingSpinner();
     nbPhoto = 0; // must be initialized every time!!
     userData = getUserSessionData();
@@ -56,88 +71,71 @@ async function FurniturePage(id) {
     }
     /****** Furniture ******/
 
-    if (currentUser) {
-        try {
-            furniture = await callAPI(
-                API_BASE_URL + id,
-                "GET",
-                userData.token,
-                undefined);
-        } catch (err) {
-            console.error("FurniturePage::get furniture", err);
-            PrintError(err);
-        }
-    } else {
-        try {
-            furniture = await callAPI(
-                API_BASE_URL + "public/" + id,
-                "GET",
-                undefined,
-                undefined);
-        } catch (err) {
-            console.error("FurniturePage::get furniture", err);
-            PrintError(err);
-        }
+    try {
+        furniture = await callAPI(
+            API_BASE_URL + id,
+            "GET",
+            userData.token,
+            undefined);
+    } catch (err) {
+        console.error("FurniturePage::get furniture", err);
+        PrintError(err);
     }
 
     /****** nbOfDays ******/
 
-    if (currentUser) {
-        let idFurniture = furniture.id;
-        try {
-            nbOfDay = await callAPI(
-                API_BASE_URL + idFurniture + "/getSumOfOptionDays",
-                "GET",
-                userData.token,
-                undefined,
-            );
-        } catch (err) {
-            console.error("FurniturePage::onNbOfDay", err);
+    let idFurniture = furniture.id;
+    try {
+        nbOfDay = await callAPI(
+            API_BASE_URL + idFurniture + "/getSumOfOptionDays",
+            "GET",
+            userData.token,
+            undefined,
+        );
+    } catch (err) {
+        console.error("FurniturePage::onNbOfDay", err);
+        PrintError(err);
+    }
+
+    /****** Option ******/
+
+    try {
+        option = await callAPI(
+            API_BASE_URL + idFurniture + "/getOption",
+            "GET",
+            userData.token,
+            undefined,
+        );
+    } catch (err) {
+        if (err !== "SyntaxError: Unexpected end of JSON input") {
+            console.error("FurniturePage::onGetOption", err);
             PrintError(err);
-        }
-
-        /****** Option ******/
-
-        try {
-            option = await callAPI(
-                API_BASE_URL + idFurniture + "/getOption",
-                "GET",
-                userData.token,
-                undefined,
-            );
-        } catch (err) {
-            //ugly and terrible idea but it works!
-            if (err !== "SyntaxError: Unexpected end of JSON input") {
-                console.error("FurniturePage::onGetOption", err);
-                PrintError(err);
-            }
         }
     }
 
     page.innerHTML = `
-        <div id="furniture-container">
-                    <div id="furniture-pictures">
-                        <div id="furniture-small-images">
+                        <div id="furniture-container">
+                            <div id="furniture-pictures">
+                                <div id="furniture-small-images">
+                                </div>
+                            </div>
+                            <div class="condensed small-caps" id="furniture-type">
+                                ${furniture.type}
+                            </div>
+                            <div id="editImage"></div>
+                            <div class="condensed" id="furniture-description">
+                                ${furniture.description}
+                            </div>
+                            <div class="furniture-price-inline">
+                                <div id="price-div">
+                                    <div id="furniture-price">${furniture.offeredSellingPrice === 0 ? "N/A" : furniture.offeredSellingPrice}</div>
+                                    <div class="currency">euro</div>
+                                </div>
+                                <br>
+                                <div id="sellingDiv"></div>  
+                            </div>
                         </div>
-                    </div>
-                    <div class="condensed small-caps" id="furniture-type">
-                        ${furniture.type}
-                    </div>
-                    <div id="editImage"></div>
-                    <div class="condensed" id="furniture-description">
-                        ${furniture.description}
-                    </div>
-                    <div class="furniture-price-inline">
-                        <div id="price-div">
-                            <div id="furniture-price">${furniture.offeredSellingPrice === 0 ? "N/A" : furniture.offeredSellingPrice}</div>
-                            <div class="currency">euro</div>
-                        </div>
-                        <br>
-                        <div id="sellingDiv"></div>
-                        
-                    </div>
-                </div>
-        `;
+                        `;
 
     let smallImages = document.getElementById("furniture-small-images");
     furniturePhotos.map((element) => {
@@ -151,22 +149,25 @@ async function FurniturePage(id) {
             image.dataset.photoid = element.id
             document.getElementById("furniture-pictures").appendChild(image);
         }
-        smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
+        if (element.isAClientPhoto && currentUser.role === "ADMIN")
+            smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image" style="border: red; border-style: dotted">`;
+        else if (element.isVisible && currentUser.role !== "ADMIN")
+            smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
     })
-    if (currentUser != null && (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE")) {
+    if (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE") {
         if (furniture.condition === "SOUS_OPTION") {
 
             if (option.idUser !== currentUser.id) {
                 page.innerHTML += `<div class="option-days condensed small-caps">Ce meuble est sous option, repassez plus tard</div>`;
             } else {
                 page.innerHTML += `
-                <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
-                <div class="option-days-below">
-                    <p>Raison de l'annulation</p>
-                    <input type="text" id="cancelOption">
-                    <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
-                </div>
-                `;
+                                    <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
+                                    <div class="option-days-below">
+                                        <p>Raison de l'annulation</p>
+                                        <input type="text" id="cancelOption">
+                                        <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+                                    </div>
+                                    `;
                 let cancelOptionBtn = document.getElementById("cancelOptionBtn");
                 cancelOptionBtn.addEventListener("click", onCancelOption);
             }
@@ -180,15 +181,15 @@ async function FurniturePage(id) {
                     <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>`;
                 }
                 page.innerHTML += `
-                <div>
-                    <p>Durée de l'option</p>
-                    <div class="plus-minus">
-                            <button class="btn minus-btn disabled" type="button">-</button>
-                            <input type="text" id="optionTerm" value="1" readonly="readonly">
-                            <button class="btn plus-btn" type="button">+</button>
-                    </div>
-                <button class="btn-dark" id="introduceOptionBtn">Introduire une option</button>
-                </div>`;
+                                    <div>
+                                        <p>Durée de l'option</p>
+                                        <div class="plus-minus">
+                                                <button class="btn minus-btn disabled" type="button">-</button>
+                                                <input type="text" id="optionTerm" value="1" readonly="readonly">
+                                                <button class="btn plus-btn" type="button">+</button>
+                                        </div>
+                                        <button class="btn-dark" id="introduceOptionBtn">Introduire une option</button>
+                                    </div>`;
                 //option counter
                 document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
                 document.querySelector(".plus-btn").addEventListener("click", incrementCounter);
@@ -198,7 +199,7 @@ async function FurniturePage(id) {
                 introduceOptionBtn.addEventListener("click", onIntroduceOption);
             }
         }
-    } else if (currentUser != null && currentUser.role === "ADMIN") {
+    } else if (currentUser.role === "ADMIN") {
         let editIcon = document.createElement("img");
         editIcon.width = 40;
         editIcon.height = 40;
@@ -212,53 +213,53 @@ async function FurniturePage(id) {
 
         if (furniture.condition === "ACHETE") {
             menuDeroulant = `
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${furniture.condition}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button id="buttonEnRestauration" class="dropdown-item" type="button">En restauration</button>
-                    <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
-                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
-                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
-                </div>
-            </div>
-        `;
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    ${furniture.condition}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <button id="buttonEnRestauration" class="dropdown-item" type="button">En restauration</button>
+                                    <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
+                                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
+                                </div>
+                            </div>
+                        `;
         } else if (furniture.condition === "EN_RESTAURATION") {
             menuDeroulant = `
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${furniture.condition}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
-                    <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
-                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
-                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
-                </div>
-            </div>
-        `;
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    ${furniture.condition}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                                    <button id="buttonMagasin" class="dropdown-item" type="button">Déposé en magasin</button>
+                                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
+                                </div>
+                            </div>
+                        `;
         } else if (furniture.condition === "DEPOSE_EN_MAGASIN") {
             menuDeroulant = `
-            <div id="price-inline">
-                        <input type="number"  min="0" id="price" required/>
-                        Entrez un prix de vente
-            </div>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${furniture.condition}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
-                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
-                    <button id="buttonEnVente" class="dropdown-item" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
-                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
-                </div>
-            </div>
-        `;
+                                <div id="price-inline">
+                                            <input type="number"  min="0" id="price" required/>
+                                            Entrez un prix de vente
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ${furniture.condition}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                        <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                                        <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                                        <button id="buttonEnVente" class="dropdown-item" type="button">En vente</button>
+                                        <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                                        <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
+                                    </div>
+                                </div>
+                            `;
         } else if (furniture.condition === "EN_VENTE") {
             let divSelling = document.getElementById("sellingDiv");
             let clients;
@@ -275,30 +276,30 @@ async function FurniturePage(id) {
 
             divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      Vendre      </button>`
             document.getElementById("popups").innerHTML = `
-            <div class="hover_bkgr_fricc" id="popupSell" >
-                <span class="helper"></span>
-                <div>
-                    <div class="popupCloseButton" id="closeBtnPop">
-                        &times;
-                    </div>
-                    <h2>Vendre</h2>
-                    <div>
-                        <span class="titre">Prix indiqué: </span> ${furniture.offeredSellingPrice}<br>
-                        <div id="sellingPrice" style="display: none;" contenteditable="true"> ${furniture.offeredSellingPrice} </div>
-                        <h4>Client: </h4>
-                        <datalist id="clients-list">
-                        </datalist>
-                        <input id="input-client" list="clients-list">
-                        <h4>Vente anonyme ? <input type="checkbox" id="unknownBuyerSell"> </h4><br>
-                        <div class="container">
-                            <div class="row">
-                                <button class="btn btn-outline-success col-6 confirmSellBtn" id="confirmSellBtn" " type="submit">Confirmer</button>
-                                <button class="btn btn-outline-danger col-6 cancelSellBtn" id="cancelSellBtn" type="submit">Annuler</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
+                            <div class="hover_bkgr_fricc" id="popupSell" >
+                                <span class="helper"></span>
+                                <div>
+                                    <div class="popupCloseButton" id="closeBtnPop">
+                                        &times;
+                                    </div>
+                                    <h2>Vendre</h2>
+                                    <div>
+                                        <span class="titre">Prix indiqué: </span> ${furniture.offeredSellingPrice}<br>
+                                        <div id="sellingPrice" style="display: none;" contenteditable="true"> ${furniture.offeredSellingPrice} </div>
+                                        <h4>Client: </h4>
+                                        <datalist id="clients-list">
+                                        </datalist>
+                                        <input id="input-client" list="clients-list">
+                                        <h4>Vente anonyme ? <input type="checkbox" id="unknownBuyerSell"> </h4><br>
+                                        <div class="container">
+                                            <div class="row">
+                                                <button class="btn btn-outline-success col-6 confirmSellBtn" id="confirmSellBtn" " type="submit">Confirmer</button>
+                                                <button class="btn btn-outline-danger col-6 cancelSellBtn" id="cancelSellBtn" type="submit">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
 
             let dataListClient = document.getElementById("clients-list");
             clients.map((element) => {
@@ -307,71 +308,71 @@ async function FurniturePage(id) {
             })
 
             menuDeroulant = `
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${furniture.condition}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
-                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
-                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
-                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
-                </div>
-            </div>
-        `;
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ${furniture.condition}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                        <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                                        <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                                        <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                                        <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                                        <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
+                                    </div>
+                                </div>
+                            `;
         } else if (furniture.condition === "SOUS_OPTION") {
             page.innerHTML += `
-                <div class="option-days-below">
-                <p>Raison de l'annulation</p>
-                <input type="text" id="cancelOption">
-                <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
-                </div>
-                `;
+                                <div class="option-days-below">
+                                    <p>Raison de l'annulation</p>
+                                    <input type="text" id="cancelOption">
+                                    <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+                                </div>
+                                `;
             menuDeroulant = `
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${furniture.condition}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
-                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
-                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
-                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
-                </div>
-            </div>
-        `;
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ${furniture.condition}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                        <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                                        <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                                        <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                                        <button id="buttonRetire" class="dropdown-item" type="button">Retiré de la vente</button>
+                                        <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
+                                    </div>
+                                </div>
+                            `;
         } else if (furniture.condition === "RETIRE" || furniture.condition === "REFUSE") {
             menuDeroulant = `
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${furniture.condition}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
-                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
-                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
-                    <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
-                </div>
-            </div>
-        `;
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ${furniture.condition}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                        <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                                        <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                                        <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                                        <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                                        <button id="buttonVendu" class="dropdown-item disabled" type="button">Vendu</button>
+                                    </div>
+                                </div>
+                            `;
         } else if (furniture.condition === "VENDU") {
             menuDeroulant = `
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ${furniture.condition}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
-                    <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
-                    <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
-                    <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
-                    <button id="buttonVendu" class="dropdown-item" type="button">Vendu</button>
-                </div>
-            </div>
-         `;
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ${furniture.condition}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                        <button id="buttonEnRestauration" class="dropdown-item disabled" type="button">En restauration</button>
+                                        <button id="buttonMagasin" class="dropdown-item disabled" type="button">Déposé en magasin</button>
+                                        <button id="buttonEnVente" class="dropdown-item disabled" type="button">En vente</button>
+                                        <button id="buttonRetire" class="dropdown-item disabled" type="button">Retiré de la vente</button>
+                                        <button id="buttonVendu" class="dropdown-item" type="button">Vendu</button>
+                                    </div>
+                                </div>
+                             `;
         }
         page.innerHTML += menuDeroulant;
 
@@ -438,8 +439,8 @@ const onEdit = async () => {
     desc = descElem.innerText;
 
     typeElem.innerHTML = `
-            <label for="furniture-types">Type de meuble:</label>
-            <select class="form-select" id="furniture-types"></select>`
+                        <label for="furniture-types">Type de meuble:</label>
+                        <select class="form-select" id="furniture-types"></select>`
     let furnitureTypesElem = document.getElementById("furniture-types");
     furnitureTypes.map((e) => {
         if (e.label === furniture.type)
@@ -480,7 +481,7 @@ const onEdit = async () => {
     else
         edit_btns += `<img src="../assets/star_empty.png" alt="Non avoris" id="star-image">`
     edit_btns += `<br><br>`
-    if (furniturePhotos[0].isVisible == true)
+    if (furniturePhotos[0].isVisible)
         edit_btns += `<img src="../assets/eye_open.png" alt="Visible" id="eye-image">`
     else
         edit_btns += `<img src="../assets/eye_close.png" alt="Non visible" id="eye-image">`
@@ -569,7 +570,7 @@ const onStarImg = () => {
             message: "Action impossible, veuillez choisir une nouvelle image favorite au préalable",
         }
         PrintError(err);
-    } else if (document.getElementById("eye-image").src.includes("eye_close.png")){
+    } else if (document.getElementById("eye-image").src.includes("eye_close.png")) {
         let err = {
             message: "Action impossible, l'image n'est pas visible",
         }
@@ -582,8 +583,6 @@ const onStarImg = () => {
         else
             edition.favouritePhotoId = clickedId;
     }
-
-
 }
 
 const onPlusImage = () => {
@@ -829,6 +828,14 @@ const onOfferedForSale = async () => {
         PrintError(error);
         return;
     }
+    if (!furniture.favouritePhotoId) {
+        let error = {
+            message: "Veuillez d'abord choisir une photo favorite",
+        }
+        console.error(error);
+        PrintError(error);
+        return;
+    }
     try {
         await callAPI(
             API_BASE_URL + id + '/offeredForSale/',
@@ -908,18 +915,6 @@ const onIntroduceOption = async () => {
     }
     await FurniturePage(id_furniture);
 };
-
-
-/*function gallerySlides(smallImg) {
-    let bigImg = document.getElementById("big-img");
-    bigImg.src = smallImg.src;
-}*/
-
-/*smallImg1.addEventListener("mouseover", () => { gallerySlides(smallImg1); });
-smallImg2.addEventListener("mouseover", () => { gallerySlides(smallImg2); });
-smallImg3.addEventListener("mouseover", () => { gallerySlides(smallImg3); });
-smallImg4.addEventListener("mouseover", () => { gallerySlides(smallImg4); });
-smallImg5.addEventListener("mouseover", () => { gallerySlides(smallImg5); });*/
 
 let valueCount;
 

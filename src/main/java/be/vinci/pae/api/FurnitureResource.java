@@ -74,7 +74,7 @@ public class FurnitureResource {
    * Get a list of furnitures for the logged users.
    * 
    * @param request the request
-   * @return a list of furniture adapted if it's the user is a client or an admin, wrapped in a
+   * @return a list of furnitures adapted if it's the user is a client or an admin, wrapped in a
    *         Response
    */
   @GET
@@ -115,6 +115,36 @@ public class FurnitureResource {
     return responseOkWithEntity(r);
   }
   
+
+  /**
+   * Get a list of furnitures of a certain type.
+   * 
+   * @param idType the id of the furniture's type
+   * @return a list of furnitures of a certain type adapted if it's the user is a client or an
+   *         admin, wrapped in a Response
+   * 
+   */
+  @GET
+  @Authorize
+  @Path("type/{idType}")
+  public Response getFurnituresListByType(@Context ContainerRequest request,
+      @PathParam("idType") int idType) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureListByType(user, idType);
+
+    String r = null;
+    try {
+      if (user.getRole().equals(Role.ADMIN)) {
+        r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+      } else {
+        r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+      }
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
 
   /**
    * Get a specific furniture for unlogged users by giving its id.

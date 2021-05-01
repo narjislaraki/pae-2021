@@ -1,4 +1,4 @@
--- Last modification date : 26/04/2021 --
+-- Last modification date : 01/05/2021 --
 DROP SCHEMA IF EXISTS pae CASCADE;
 CREATE SCHEMA pae;
 
@@ -69,7 +69,6 @@ CREATE TABLE pae.photos(
 	id_photo SERIAL PRIMARY KEY,
 	photo text NOT NULL,
 	is_visible BOOLEAN NOT NULL,
-	--description VARCHAR(200),
 	is_a_client_photo BOOLEAN NOT NULL, 
 	id_furniture INTEGER REFERENCES pae.furnitures(id_furniture) NOT NULL
 );	

@@ -30,6 +30,8 @@ public interface FurnitureUCC {
 
   List<FurnitureDTO> getFurnitureList(UserDTO user);
 
+  List<FurnitureDTO> getFurnitureListByType(UserDTO user, int idType);
+
   FurnitureDTO getFurnitureById(int id);
 
   FurnitureDTO getFurnitureWithPhotosById(int id);

@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import be.vinci.pae.domain.address.Address;
+
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -267,8 +266,10 @@ public class FurnitureDAOImpl implements FurnitureDAO {
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
           + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
           + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
-          + "ON p.id_photo = f.favorite_photo;";
+          + "ON p.id_photo = f.favorite_photo WHERE f.condition != ? AND f.condition != ?;";
       ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_ATTENTE.toString());
+      ps.setString(2, Condition.REFUSE.toString());
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
@@ -336,11 +337,58 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures) {
-    // TODO Auto-generated method stub
-
+  public List<FurnitureDTO> getFurnitureListByType(int idType) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
+          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo WHERE f.id_type = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, idType);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        furnitureDTO.setFavouritePhoto(rs.getString(13));
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
   }
+
+
+
+  @Override
+  public List<FurnitureDTO> getPublicFurnitureListByType(int idType) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
+          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo WHERE (f.condition = ? "
+          + "OR f.condition = ?) AND f.id_type = ? ;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_VENTE.toString());
+      ps.setString(2, Condition.SOUS_OPTION.toString());
+      ps.setInt(3, idType);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        furnitureDTO.setFavouritePhoto(rs.getString(13));
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
 
   /**
    * Returns the type of the furniture based on its id.
@@ -485,16 +533,22 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void addAdminPhoto(PhotoDTO photo, int idFurniture) {
+  public int addAdminPhoto(PhotoDTO photo, int idFurniture) {
+    int response = -1;
     try {
-      String sql = "INSERT INTO pae.photos VALUES (default, ?, false, false, ?);";
+      String sql =
+          "INSERT INTO pae.photos VALUES (default, ?, false, false, ?) RETURNING id_furniture;";
       PreparedStatement ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, photo.getPhoto());
       ps.setInt(2, idFurniture);
-      ps.execute();
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
@@ -524,7 +578,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void edit(int id, String description, int idType, double offeredSellingPrice,
+  public boolean edit(int id, String description, int idType, double offeredSellingPrice,
       int favouritePhoto) {
     try {
       String sql = "UPDATE pae.furnitures SET description = ?, id_type = ?, "
@@ -540,45 +594,60 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return true;
   }
 
   @Override
-  public void deletePhoto(int id) {
+  public int deletePhoto(int id) {
+    int response = -1;
     try {
-      String sql = "DELETE FROM pae.photos WHERE id_photo = ?;";
+      String sql = "DELETE FROM pae.photos WHERE id_photo = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
-
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
-  public void displayPhoto(int id) {
+  public int displayPhoto(int id) {
+    int response = -1;
     try {
-      String sql = "UPDATE pae.photos SET is_visible = TRUE WHERE id_photo = ?;";
+      String sql =
+          "UPDATE pae.photos SET is_visible = TRUE WHERE id_photo = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
-
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
-  public void hidePhoto(int id) {
+  public int hidePhoto(int id) {
+    int response = -1;
     try {
-      String sql = "UPDATE pae.photos SET is_visible = FALSE WHERE id_photo = ?;";
+      String sql =
+          "UPDATE pae.photos SET is_visible = FALSE WHERE id_photo = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
-      ps.execute();
-
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        response = rs.getInt(1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return response;
   }
 
   @Override
