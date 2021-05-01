@@ -32,4 +32,5 @@ public interface UserDAO {
   UserDTO setUser(ResultSet rs, UserDTO user);
 
   List<UserDTO> getValidatedUsers();
+
 }
