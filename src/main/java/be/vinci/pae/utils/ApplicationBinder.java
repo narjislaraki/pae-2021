@@ -16,6 +16,8 @@ import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureFactoryImpl;
 import be.vinci.pae.domain.sale.SaleFactory;
 import be.vinci.pae.domain.sale.SaleFactoryImpl;
+import be.vinci.pae.domain.sale.SaleUCC;
+import be.vinci.pae.domain.sale.SaleUCCImpl;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
 import be.vinci.pae.domain.user.UserUCC;
@@ -66,6 +68,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(SaleDAOImpl.class).to(SaleDAO.class).in(Singleton.class);
     bind(SaleFactoryImpl.class).to(SaleFactory.class).in(Singleton.class);
     bind(EditionFactoryImpl.class).to(EditionFactory.class).in(Singleton.class);
+    bind(SaleUCCImpl.class).to(SaleUCC.class).in(Singleton.class);
     bind(APILogger.getLogger()).to(Logger.class);
   }
 }

@@ -10,8 +10,9 @@ let userData = getUserSessionData();
 let clientMode = true;
 let typeList;
 let menu, advancedSearchesBar, advancedSearchesPageClient,  advancedSearchesPageFurniture;
-let furnList;
-let saleList;
+let furnList = [];
+let saleList = [];
+let clientList = [];
 
 let AdvancedSearchesPage = async () =>{
     if (!typeList) {
@@ -152,7 +153,6 @@ const onSearch = async (e) => {
         let name = document.getElementById("searchUsername").value;
         let postcode = document.getElementById("searchUserPostCode").value;
         AdvancedSearchesPage();
-        let clientList = [];
         try{
             clientList = await callAPI(
                 "/api/users/validatedList",
@@ -188,7 +188,6 @@ const onSearch = async (e) => {
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
         AdvancedSearchesPage();
-        furnList = [];
         try{
             furnList = await callAPI(
                 "/api/furnitures",
@@ -226,7 +225,28 @@ async function SearchFurn (nameClient, type, maxAmount, minAmount) {
 
 }
 
-const onShowFurnitureList = (data) => {
+const onShowFurnitureList = async (data) => {
+    try{
+        clientList = await callAPI(
+            "/api/users/validatedList",
+            "GET",
+            userData.token,
+            undefined,
+        );
+
+        saleList = await callAPI(
+            "/api/sales",
+            "GET",
+            userData.token,
+            undefined
+        )
+    } catch(err){
+        if (err == "Error: Admin only") {
+            err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+        }
+        console.error("AdvancedSearchesPage::onSearchClients", err);
+        PrintError(err);
+    }
     let furnitureList = `
     <div class="clientHandles">
         <div id="pseudoHandle" class="condensed">TYPE</div>
@@ -254,7 +274,11 @@ const onShowFurnitureList = (data) => {
         <div class="furnInfo">
             <div class="furnInfo-cat">
                 <p class="small-caps">Acheté à:</p>
-                <div>${furniture.seller == null? "N/A" : furniture.seller}</div>
+                <div>${furniture.seller == null? "N/A" : clientList.filter(e=>e.id == furniture.seller)[0].username}</div>
+            </div>
+            <div class="furnInfo-cat">
+            <p class="small-caps">Vendu à:</p>
+                <div>${saleList.filter(s=>s.idFurniture == furniture.id).length == 0 ? "N/A" : clientList.filter(c=>c.id == saleList.filter(s=>s.idFurniture == furniture.id)[0].idBuyer)[0].username}</div>
             </div>
             <div class="furnInfo-cat">
                 <p class="small-caps">Photo préférée :</p>
@@ -283,8 +307,6 @@ const onShowClientList = async (data) =>  {
     
       `;
       console.log(data);
-        furnList = [];
-        saleList = [];
         try{
             furnList = await callAPI(
                 "/api/furnitures",
@@ -323,7 +345,7 @@ const onShowClientList = async (data) =>  {
         <div class="advancedSearchClientItem_moreInfo">
             <div class="asci-signUpDate">Inscrit depuis: ${user.registrationDate}</div>
             <div class="asci-role">Role: ${user.role} </div>
-            <div class="asci-amountBought">Nbr achats:</div>
+            <div class="asci-amountBought">Nbr achats: ${saleList.filter(e=>e.idBuyer == user.id).length}</div>
             <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
         </div>
     </div>

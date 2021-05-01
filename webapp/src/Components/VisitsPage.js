@@ -32,11 +32,11 @@ let VisitsPage = () => {
     confirmRegister.addEventListener("click", onConfirmRegister);
 
     let btnWaiting = document.getElementById("btnWaiting");
-    btnWaiting.addEventListener("click", onVisitsWainting);
+    btnWaiting.addEventListener("click", onVisitsWaiting);
 
     let btnToTreat = document.getElementById("btnToTreat");
     btnToTreat.addEventListener("click", onVisitsToTreat);
-    onVisitsWainting();
+    onVisitsWaiting();
 
 };
 

@@ -47,7 +47,7 @@ public class SaleDAOImpl implements SaleDAO {
     List<SaleDTO> list = new ArrayList<SaleDTO>();
     try {
       String sql = "SELECT s.id_sales, s.selling_price, s.id_furniture, s.id_buyer, s.date_of_sale"
-          + " FROM pae.sales ";
+          + " FROM pae.sales s";
 
       ps = dalBackendService.getPreparedStatement(sql);
       ResultSet rs = ps.executeQuery();
