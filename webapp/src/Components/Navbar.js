@@ -123,8 +123,6 @@ const Navbar = async () => {
 
 
 const onFurnitureListPage = (idTypeOfFurniture, title) => {
-  console.log(idTypeOfFurniture);
-  console.log(title);
   RedirectUrl("/furnitures", {idTypeOfFurniture, title});
 };
 const onHomePage = (e) => {

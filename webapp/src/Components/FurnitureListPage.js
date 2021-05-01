@@ -10,9 +10,6 @@ const API_BASE_URL = "/api/furnitures/";
 
 let furnitureListTab;
 
-//console.log(typeOfFurnitureId);
-//console.log(title);
-
 let furnitureListPage =
   `
         <div class="all-furn-title small-caps" id="titlePage">Tous les meubles</div>
