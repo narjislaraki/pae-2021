@@ -3,6 +3,7 @@ import {RedirectUrl} from "./Router";
 import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError";
 import Navbar from "./Navbar";
+import WaitingSpinner from "./WaitingSpinner.js"
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -24,6 +25,17 @@ let VisitsPage = () => {
     </div>`;
     page.innerHTML = menu + visitPage;
 
+    let advancedSearches = document.getElementById("advancedSearches");
+    advancedSearches.addEventListener("click", onAdvancedSearches);
+
+    let confirmRegister = document.getElementById("confirmRegister");
+    confirmRegister.addEventListener("click", onConfirmRegister);
+
+    let btnWaiting = document.getElementById("btnWaiting");
+    btnWaiting.addEventListener("click", onVisitsWaiting);
+
+    let btnToTreat = document.getElementById("btnToTreat");
+    btnToTreat.addEventListener("click", onVisitsToTreat);
     onVisitsWaiting();
 
 };
@@ -65,7 +77,6 @@ const onVisitsWaiting = async () => {
             userData.token,
             undefined,
         );
-
     } catch (err) {
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
@@ -90,7 +101,7 @@ const onVisitsWaiting = async () => {
         .map((visit) =>
             `<tr>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
-                <td>x</td>
+                <td>${visit.amountOfFurnitures}</td>
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
@@ -189,6 +200,7 @@ async function onClickVisit(e) {
     `;
 
     document.getElementById("popups").innerHTML = popupVisit;
+    WaitingSpinner(document.getElementById("allFurnitures"))
     Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
         if (element.dataset.id == idVisit) {
             element.style.display = "block";

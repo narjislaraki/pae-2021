@@ -1,5 +1,4 @@
 import callAPI from "../utils/api.js";
-import {RedirectUrl} from "../Components/Router.js"
 
 var currentUser;
 
@@ -25,33 +24,27 @@ return currentUser;
 
 const STORE_NAME = "user";
 
-const THEME = "theme";
-
 const getUserSessionData = () => {
-  const retrievedUser = localStorage.getItem(STORE_NAME);
-  if (!retrievedUser) return;
+  let retrievedUser = localStorage.getItem(STORE_NAME);
+  if (!retrievedUser) {
+    retrievedUser = sessionStorage.getItem(STORE_NAME);
+  }
   return JSON.parse(retrievedUser);
 };
 
 const setUserSessionData = (user) => {
   const storageValue = JSON.stringify(user);
+  sessionStorage.setItem(STORE_NAME, storageValue);
+};
+
+const setUserStorageData = (user) => {
+  const storageValue = JSON.stringify(user);
   localStorage.setItem(STORE_NAME, storageValue);
-};
-
-const getTheme = () => {
-  const theme = localStorage.getItem(THEME);
-  if (!theme) return;
-  return JSON.parse(theme);
-};
-
-const setTheme = (theme) => {
-  const storageValue = JSON.stringify(theme);
-  localStorage.setItem(THEME, storageValue);
 };
 
 const removeSessionData = () => {
   localStorage.removeItem(STORE_NAME);
-  localStorage.removeItem(THEME);
+  sessionStorage.removeItem(STORE_NAME);
 };
 
 const resetCurrentUser = () => {
@@ -61,9 +54,8 @@ const resetCurrentUser = () => {
 export {
   getUserSessionData,
   setUserSessionData,
+  setUserStorageData,
   removeSessionData,
-  getTheme,
-  setTheme,
   getCurrentUser,
   currentUser,
   resetCurrentUser

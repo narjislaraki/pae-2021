@@ -75,8 +75,8 @@ public class FurnitureUCCTest {
   @BeforeEach
   public void reset() {
     Mockito.reset(furnitureDAO);
-    goodFurniture = ObjectDistributor.getFurniture();
-    badFurniture = ObjectDistributor.getFurniture();
+    goodFurniture = ObjectDistributor.getFurnitureForFurnitureUCCTest();
+    badFurniture = ObjectDistributor.getFurnitureForFurnitureUCCTest();
     goodOption = ObjectDistributor.getGoodOption();
     photo = ObjectDistributor.createPhoto();
     goodUser = ObjectDistributor.getGoodValidatedUser();

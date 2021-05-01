@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserDTO;
 
 @JsonDeserialize(as = VisitImpl.class)
 public interface VisitDTO {
@@ -44,9 +44,9 @@ public interface VisitDTO {
 
   void setVisitCondition(String visitCondition);
 
-  User getClient();
+  UserDTO getClient();
 
-  void setClient(User client);
+  void setClient(UserDTO userDTO);
 
   int getIdClient();
 
@@ -63,5 +63,9 @@ public interface VisitDTO {
   ArrayList<FurnitureDTO> getFurnitureList();
 
   void setFurnitureList(ArrayList<FurnitureDTO> furnitureList);
+
+  int getAmountOfFurnitures();
+
+  void setAmountOfFurnitures(int amountOfFurnitures);
 
 }
