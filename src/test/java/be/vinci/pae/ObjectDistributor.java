@@ -284,7 +284,7 @@ public class ObjectDistributor {
   }
 
   /**
-   * Construct a photo
+   * Construct a photo.
    * 
    * @return the photo
    */
@@ -313,7 +313,7 @@ public class ObjectDistributor {
 
 
   /**
-   * Construct a sale with a sold furniture
+   * Construct a sale with a sold furniture.
    * 
    * @return the bad sale
    */

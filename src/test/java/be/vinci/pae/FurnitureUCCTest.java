@@ -269,7 +269,7 @@ public class FurnitureUCCTest {
         () -> furnitureUCC.cancelOption(goodReason, id, goodUser));
   }
 
-  @DisplayName("Test to cancel an option with a good id option but with a different id option than the id user")
+  @DisplayName("Test to cancel an option with a different id user")
   @Test
   public void cancelOptionTest2() {
     int id = goodUser.getId() + 1;
@@ -281,13 +281,17 @@ public class FurnitureUCCTest {
   }
 
   @DisplayName("Test to cancel an option with a similar id")
+  @Test
   public void cancelOptionTest3() {
     int id = goodUser.getId();
     goodOption.setIdUser(id);
     goodUser.setRole("client");
     Mockito.when(furnitureDAO.getOption(goodOption.getId())).thenReturn(goodOption);
-    assertThrows(BusinessException.class,
-        () -> furnitureUCC.cancelOption(goodReason, goodOption.getId(), goodUser));
+    Mockito.when(furnitureDAO.getFurnitureById(goodOption.getIdFurniture()))
+        .thenReturn(goodFurniture);
+    Mockito.when(furnitureDAO.cancelOption(goodReason, goodOption.getId()))
+        .thenReturn(goodOption.getIdFurniture());
+    assertDoesNotThrow(() -> furnitureUCC.cancelOption(goodReason, goodOption.getId(), goodUser));
   }
 
   @DisplayName("Test to cancel an option when user is admin")
