@@ -198,7 +198,7 @@ public class ObjectDistributor {
 
 
   /**
-   * Construct a visit with no furniture
+   * Construct a visit with no furniture.
    * 
    * @return the visit
    */
@@ -209,7 +209,7 @@ public class ObjectDistributor {
   }
 
   /**
-   * Construct a furniture
+   * Construct a furniture.
    * 
    * @return the furniture
    */
@@ -219,7 +219,7 @@ public class ObjectDistributor {
   }
 
   /**
-   * Construct a photo
+   * Construct a photo.
    * 
    * @return the photo
    */
