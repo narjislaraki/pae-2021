@@ -2,6 +2,7 @@ package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.exceptions.BusinessException;
@@ -38,15 +39,19 @@ public class VisitUCCImpl implements VisitUCC {
   }
 
   @Override
+  public List<VisitDTO> getVisitsToBeProcessed() {
+    dalServices.getBizzTransaction(true);
+    List<VisitDTO> list = visitDAO.getVisitsToBeProcessed();
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
   public boolean submitRequestOfVisit(VisitDTO visit) {
     dalServices.getBizzTransaction(false);
     // TODO vérifier autrement que l'adresse est différente de celle du client
     visit.setClient((User) userDAO.getUserFromId(visit.getIdClient()));
     if (visit.getWarehouseAddress().getStreet().isEmpty()) {
-      System.out.println(visit.getWarehouseAddress());
-      System.out.println(visit.getClient());
-      System.out.println(visit.getClient().getAddress());
-      System.out.println(visit.getClient().getAddress().getId());
       visit.getWarehouseAddress().setId(visit.getClient().getAddress().getId());
       visit.setWarehouseAddressId(visit.getClient().getAddress().getId());
     } else {
@@ -59,7 +64,7 @@ public class VisitUCCImpl implements VisitUCC {
       int idFurniture =
           furnitureDAO.addFurniture(furniture, idRequestForVisit, visit.getIdClient());
       for (PhotoDTO photo : furniture.getListPhotos()) {
-        furnitureDAO.addPhoto(photo, idFurniture);
+        furnitureDAO.addClientPhoto(photo, idFurniture);
       }
     }
     dalServices.commitBizzTransaction();
@@ -68,7 +73,6 @@ public class VisitUCCImpl implements VisitUCC {
 
   @Override
   public boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime) {
-    System.out.println("acceptVisit ucc");
     if (scheduledDateTime == null) {
       throw new BusinessException("Scheduled date time is needed");
     }
@@ -124,7 +128,5 @@ public class VisitUCCImpl implements VisitUCC {
     dalServices.stopBizzTransaction();
     return list;
   }
-
-
 
 }

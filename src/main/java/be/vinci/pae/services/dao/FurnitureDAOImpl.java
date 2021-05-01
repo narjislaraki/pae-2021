@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -308,11 +306,58 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void introduceRequestForVisite(String timeSlot, Address address,
-      Map<Integer, List<String>> furnitures) {
-    // TODO Auto-generated method stub
-
+  public List<FurnitureDTO> getFurnitureListByType(int idType) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
+          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo WHERE f.id_type = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, idType);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        furnitureDTO.setFavouritePhoto(rs.getString(13));
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
   }
+
+
+
+  @Override
+  public List<FurnitureDTO> getPublicFurnitureListByType(int idType) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
+          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo WHERE (f.condition = ? "
+          + "OR f.condition = ?) AND f.id_type = ? ;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_VENTE.toString());
+      ps.setString(2, Condition.SOUS_OPTION.toString());
+      ps.setInt(3, idType);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        furnitureDTO.setFavouritePhoto(rs.getString(13));
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
 
   /**
    * Returns the type of the furniture based on its id.
@@ -378,7 +423,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
         ps.setString(2, Condition.SOUS_OPTION.toString());
         ps.setString(3, State.EN_COURS.toString());
         ps.executeUpdate();
-        System.out.println(ps.executeUpdate() + " / =?= / " + val);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -445,9 +489,22 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public void addPhoto(PhotoDTO photo, int idFurniture) {
+  public void addClientPhoto(PhotoDTO photo, int idFurniture) {
     try {
       String sql = "INSERT INTO pae.photos VALUES (default, ?, false, true, ?);";
+      PreparedStatement ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, photo.getPhoto());
+      ps.setInt(2, idFurniture);
+      ps.execute();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public void addAdminPhoto(PhotoDTO photo, int idFurniture) {
+    try {
+      String sql = "INSERT INTO pae.photos VALUES (default, ?, false, false, ?);";
       PreparedStatement ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, photo.getPhoto());
       ps.setInt(2, idFurniture);
@@ -483,6 +540,89 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return list;
   }
 
+  @Override
+  public void edit(int id, String description, int idType, double offeredSellingPrice,
+      int favouritePhoto) {
+    try {
+      String sql = "UPDATE pae.furnitures SET description = ?, id_type = ?, "
+          + "offered_selling_price = ?, favorite_photo = ? WHERE id_furniture = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, description);
+      ps.setInt(2, idType);
+      ps.setDouble(3, offeredSellingPrice);
+      ps.setInt(4, favouritePhoto);
+      ps.setInt(5, id);
+      ps.execute();
 
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public void deletePhoto(int id) {
+    try {
+      String sql = "DELETE FROM pae.photos WHERE id_photo = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, id);
+      ps.execute();
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public void displayPhoto(int id) {
+    try {
+      String sql = "UPDATE pae.photos SET is_visible = TRUE WHERE id_photo = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, id);
+      ps.execute();
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public void hidePhoto(int id) {
+    try {
+      String sql = "UPDATE pae.photos SET is_visible = FALSE WHERE id_photo = ?;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, id);
+      ps.execute();
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  @Override
+  public void processFurniture(int id, String condition, double purchasePrice,
+      LocalDateTime pickUpDate) {
+    try {
+      if (condition.equals(Condition.ACHETE.toString())) {
+        String sql = "UPDATE pae.furnitures SET condition = ? , purchase_price = ? "
+            + ", pick_up_date = ? WHERE id_furniture = ?;";
+        ps = dalBackendService.getPreparedStatement(sql);
+        ps.setString(1, condition);
+        ps.setDouble(2, purchasePrice);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Timestamp date = Timestamp.valueOf(pickUpDate.format(formatter));
+        ps.setTimestamp(3, date);
+        ps.setInt(4, id);
+        ps.execute();
+      } else if (condition.equals(Condition.REFUSE.toString())) {
+        String sql = "UPDATE pae.furnitures SET condition = ? WHERE id_furniture = ?;";
+        ps = dalBackendService.getPreparedStatement(sql);
+        ps.setString(1, condition);
+        ps.setInt(2, id);
+        ps.execute();
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
 
 }

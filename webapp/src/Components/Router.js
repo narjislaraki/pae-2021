@@ -3,6 +3,7 @@ import LoginRegisterPage from "./LoginRegisterPage.js";
 import LogoutComponent from "./LogoutComponent.js";
 import ErrorPage from "./ErrorPage.js";
 import VisitsPage from "./VisitsPage.js";
+import VisitsToBeProcessedPage from "./VisitsToBeProcessedPage.js"
 import AdvancedSearchesPage from "./AdvancedSearchesPage.js";
 import ConfirmRegistrationPage from "./ConfirmRegistrationPage.js";
 import FurnitureListPage from "./FurnitureListPage.js";
@@ -13,6 +14,7 @@ const routes = {
   "/logout": LogoutComponent,
   "/visits" : VisitsPage,
   "/advancedSearches" : AdvancedSearchesPage,
+  "/visitsToBeProcessed" : VisitsToBeProcessedPage,
   "/confirmRegistration": ConfirmRegistrationPage,
   "/furnitures": FurnitureListPage,
   "/error": ErrorPage,
@@ -73,7 +75,7 @@ const RedirectUrl = (uri, data) => {
   // for the components that include JS, we want to assure that the JS included is not runned when the JS file is charged by the browser
   // therefore, those components have to be either a function or a class
   componentToRender = routes[uri];
-  if (routes[uri]) {
+  if (componentToRender) {
     if(!data){
       componentToRender();
     }else{

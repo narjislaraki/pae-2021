@@ -10,7 +10,8 @@ let userData = getUserSessionData();
 let clientMode = true;
 let typeList;
 let menu, advancedSearchesBar, advancedSearchesPageClient,  advancedSearchesPageFurniture;
-
+let furnList;
+let saleList;
 
 let AdvancedSearchesPage = async () =>{
     if (!typeList) {
@@ -187,7 +188,7 @@ const onSearch = async (e) => {
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
         AdvancedSearchesPage();
-        let furnList = [];
+        furnList = [];
         try{
             furnList = await callAPI(
                 "/api/furnitures",
@@ -271,7 +272,7 @@ const onShowFurnitureList = (data) => {
     return page;
 }
   
-const onShowClientList = (data) => {
+const onShowClientList = async (data) =>  {
     let clientList =
       `<div class="clientHandles">
       <div id="pseudoHandle" class="condensed">PSEUDO</div>
@@ -279,10 +280,36 @@ const onShowClientList = (data) => {
       <div id="emailHandle" class="condensed">EMAIL</div>
       <div id="moreInfoHandle" class="condensed">INFORMATIONS SUPPL.</div>
   </div>
-         
-          
+    
       `;
       console.log(data);
+        furnList = [];
+        saleList = [];
+        try{
+            furnList = await callAPI(
+                "/api/furnitures",
+                "GET",
+                userData.token,
+                undefined,
+            );
+
+            saleList = await callAPI(
+                "/api/sales",
+                "GET",
+                userData.token,
+                undefined
+            )
+        } catch(err){
+            if (err == "Error: Admin only") {
+                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+            }
+            console.error("AdvancedSearchesPage::onSearchClients", err);
+            PrintError(err);
+        }
+
+
+        console.log(furnList);
+        console.log(saleList);
       clientList += data
       .map((user) =>
      `<div class="advancedSearchClientItem-container">
@@ -297,7 +324,7 @@ const onShowClientList = (data) => {
             <div class="asci-signUpDate">Inscrit depuis: ${user.registrationDate}</div>
             <div class="asci-role">Role: ${user.role} </div>
             <div class="asci-amountBought">Nbr achats:</div>
-            <div class="asci-amountSold">Nbr ventes:</div>
+            <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
         </div>
     </div>
         <div class="furnInfo">

@@ -1,9 +1,13 @@
 package be.vinci.pae.services.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import be.vinci.pae.domain.sale.SaleDTO;
+import be.vinci.pae.domain.sale.SaleFactory;
 import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
@@ -12,6 +16,9 @@ public class SaleDAOImpl implements SaleDAO {
 
   @Inject
   private DalBackendServices dalBackendService;
+
+  @Inject
+  private SaleFactory saleFactory;
 
   PreparedStatement ps;
 
@@ -33,5 +40,39 @@ public class SaleDAOImpl implements SaleDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+  }
+
+  @Override
+  public List<SaleDTO> getSalesList() {
+    List<SaleDTO> list = new ArrayList<SaleDTO>();
+    try {
+      String sql = "SELECT s.id_sales, s.selling_price, s.id_furniture, s.id_buyer, s.date_of_sale"
+          + " FROM pae.sales ";
+
+      ps = dalBackendService.getPreparedStatement(sql);
+      ResultSet rs = ps.executeQuery();
+      SaleDTO sale = null;
+      while (rs.next()) {
+        sale = setSale(rs, sale);
+        list.add(sale);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
+  private SaleDTO setSale(ResultSet rs, SaleDTO sale) {
+    try {
+      sale = saleFactory.getSaleDTO();
+      sale.setId(rs.getInt(1));
+      sale.setSellingPrice(rs.getDouble(2));
+      sale.setIdFurniture(rs.getInt(3));
+      sale.setIdBuyer(rs.getInt(4));
+      sale.setDateOfSale(rs.getTimestamp(5).toLocalDateTime());
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return sale;
   }
 }

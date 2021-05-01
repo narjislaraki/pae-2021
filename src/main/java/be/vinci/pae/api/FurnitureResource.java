@@ -12,7 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureUCC;
 import be.vinci.pae.domain.furniture.OptionDTO;
 import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
@@ -20,6 +22,7 @@ import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserDTO.Role;
 import be.vinci.pae.domain.visit.PhotoDTO;
+import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -71,7 +74,7 @@ public class FurnitureResource {
    * Get a list of furnitures for the logged users.
    * 
    * @param request the request
-   * @return a list of furniture adapted if it's the user is a client or an admin, wrapped in a
+   * @return a list of furnitures adapted if it's the user is a client or an admin, wrapped in a
    *         Response
    */
   @GET
@@ -92,6 +95,36 @@ public class FurnitureResource {
     }
     return responseOkWithEntity(r);
   }
+
+  /**
+   * Get a list of furnitures of a certain type.
+   * 
+   * @param idType the id of the furniture's type
+   * @return a list of furnitures of a certain type adapted if it's the user is a client or an
+   *         admin, wrapped in a Response
+   * 
+   */
+  @GET
+  @Authorize
+  @Path("type/{idType}")
+  public Response getFurnituresListByType(@Context ContainerRequest request,
+      @PathParam("idType") int idType) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureListByType(user, idType);
+
+    String r = null;
+    try {
+      if (user.getRole().equals(Role.ADMIN)) {
+        r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+      } else {
+        r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+      }
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
 
   /**
    * Get a specific furniture for unlogged users by giving its id.
@@ -332,4 +365,55 @@ public class FurnitureResource {
     return orderedList;
   }
 
+  /**
+   * It will change the state of the furniture on the list to "purchased" or "refused" and if the
+   * furniture is purchased, update its purchase price and date of shipment.
+   * 
+   * @param request the request
+   * @param visit the visit that contains the list of furnitures to update
+   * @return true
+   */
+  @AdminAuthorize
+  @POST
+  @Path("furnituresListToBeProcessed")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response processVisit(@Context ContainerRequest request, VisitDTO visit) {
+    System.out.println(visit);
+    if (!checkFieldsProcess(visit)) {
+      return responseWithStatus(Status.UNAUTHORIZED, "Missing fields or uncorrect fields");
+    }
+    return responseWithStatus(Status.CREATED, furnitureUCC.processVisit(visit.getFurnitureList()));
+  }
+
+  private boolean checkFieldsProcess(VisitDTO visit) {
+    for (FurnitureDTO furniture : visit.getFurnitureList()) {
+      if (furniture.getCondition().equals(Condition.ACHETE) && (furniture.getPurchasePrice() <= 0
+          || furniture.getPickUpDate() == null || furniture.getPickUpDate() == null)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+
+  /**
+   * Allows to edit a furniture such as: description, type id, offered selling price and favourite
+   * photo ID. Also allows to deal with photos with id's lists for: display, hide, delete. Finally,
+   * allows to add photos to a furniture.
+   * 
+   * @param request the request
+   * @param idFurniture the furniture's id
+   * @param edition the data to be edited
+   * @return true if OK
+   */
+  @POST
+  @Path("/{idFurniture}/edit")
+  @AdminAuthorize
+  @Produces(MediaType.APPLICATION_JSON)
+  public boolean edit(@Context ContainerRequest request, @PathParam("idFurniture") int idFurniture,
+      EditionDTO edition) {
+    edition.setIdFurniture(idFurniture);
+    return furnitureUCC.edit(edition);
+  }
 }

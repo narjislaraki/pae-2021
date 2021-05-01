@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.visit.VisitDTO;
@@ -71,15 +72,43 @@ public class VisitDAOImpl implements VisitDAO {
   public List<VisitDTO> getNotConfirmedVisits() {
     List<VisitDTO> list = new ArrayList<VisitDTO>();
     try {
-      String sql = "SELECT id_request, time_slot, condition, "
-          + "explanatory_note, scheduled_date_time, warehouse_address, client "
-          + "FROM pae.requests_for_visits WHERE condition = ?;";
+      String sql = "SELECT r.id_request, r.time_slot, r.condition, "
+          + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
+          + "r.client, COUNT(f.id_furniture) "
+          + "FROM pae.requests_for_visits r, pae.furnitures f WHERE r.condition = ? AND"
+          + " r.id_request = f.request_visit GROUP BY r.id_request;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setString(1, VisitCondition.EN_ATTENTE.toString());
       ResultSet rs = ps.executeQuery();
       VisitDTO visit = null;
       while (rs.next()) {
         VisitDTO visitDTO = setVisit(rs, visit);
+        visitDTO.setAmountOfFurnitures(rs.getInt(8));
+        list.add(visitDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
+  @Override
+  public List<VisitDTO> getVisitsToBeProcessed() {
+    List<VisitDTO> list = new ArrayList<VisitDTO>();
+    try {
+      String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
+          + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
+          + "r.client, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
+          + "WHERE r.id_request = f.request_visit AND r.condition=?" + "AND f.condition = ? "
+          + "GROUP BY r.id_request;";
+      ps = dalBackendServices.getPreparedStatement(sql);
+      ps.setString(1, VisitCondition.ACCEPTEE.toString());
+      ps.setString(2, Condition.EN_ATTENTE.toString());
+      ResultSet rs = ps.executeQuery();
+      VisitDTO visit = null;
+      while (rs.next()) {
+        VisitDTO visitDTO = setVisit(rs, visit);
+        visitDTO.setAmountOfFurnitures(rs.getInt(8));
         list.add(visitDTO);
       }
     } catch (SQLException e) {
@@ -96,7 +125,6 @@ public class VisitDAOImpl implements VisitDAO {
       ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, visit.getTimeSlot());
       ps.setString(2, VisitCondition.EN_ATTENTE.toString());
-      System.out.println(visit.getWarehouseAddressId());
       ps.setInt(3, visit.getWarehouseAddressId());
       ps.setInt(4, visit.getIdClient());
       ps.execute();
@@ -112,7 +140,6 @@ public class VisitDAOImpl implements VisitDAO {
 
   @Override
   public boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime) {
-    System.out.println("acceptVisit dao");
     try {
       String sql = "UPDATE pae.requests_for_visits SET condition = ?, scheduled_date_time = ? "
           + "WHERE id_request = ?;";

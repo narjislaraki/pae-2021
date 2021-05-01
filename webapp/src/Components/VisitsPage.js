@@ -3,6 +3,7 @@ import {RedirectUrl} from "./Router";
 import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError";
 import Navbar from "./Navbar";
+import WaitingSpinner from "./WaitingSpinner.js"
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -13,9 +14,10 @@ let VisitsPage = () => {
     userData = getUserSessionData();
     let menu = `
     <div class="menuAdmin">
-        <div id="visits" class="condensed small-caps menuAdminOn">Visites</div>
-        <div id="advancedSearches" class="condensed small-caps">Recherche avancées</div>
-        <div id="confirmRegister" class="condensed small-caps">Confirmation des inscriptions</div>
+        <button class="menuAdminOn" id="visits">Visites en attente</button>
+        <button id="visitsToBeProcessed">Visites à traiter</button>
+        <button id="advancedSearches">Recherche avancées</button>
+        <button id="confirmRegister">Confirmation des inscriptions</button>
     </div>
     `;
     let visitPage = `<div class="visits-title small-caps">
@@ -43,6 +45,12 @@ const onVisits = (e) => {
     console.log("to visits");
     RedirectUrl("/visits");
 };
+
+const onVisitsToBeProcessed = (e) => {
+    e.preventDefault();
+    console.log("to visits to be processed");
+    RedirectUrl("/visitsToBeProcessed");
+}
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
@@ -93,7 +101,7 @@ const onVisitsWaiting = async () => {
         .map((visit) =>
             `<tr>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
-                <td>x</td>
+                <td>${visit.amountOfFurnitures}</td>
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
@@ -134,6 +142,9 @@ const onVisitsWaiting = async () => {
 
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
+
+    let visitsATraiter = document.getElementById("visitsToBeProcessed");
+    visitsATraiter.addEventListener("click", onVisitsToBeProcessed);
 
     let advancedSearches = document.getElementById("advancedSearches");
     advancedSearches.addEventListener("click", onAdvancedSearches);
@@ -189,6 +200,7 @@ async function onClickVisit(e) {
     `;
 
     document.getElementById("popups").innerHTML = popupVisit;
+    WaitingSpinner(document.getElementById("allFurnitures"))
     Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
         if (element.dataset.id == idVisit) {
             element.style.display = "block";
@@ -210,7 +222,7 @@ async function onClickVisit(e) {
 
     let allFurnitures = document.getElementById("allFurnitures");
     let toAdd = `
-        <div class=allFurnituresForOnVisit>
+        <div class="allFurnituresForOnVisit">
             <ol>
     `;
     let listFurnituresForOnVisit;

@@ -171,7 +171,7 @@ public class UserUCCTest {
     assertTrue(userUCC.deleteUser(id));
   }
 
-  @DisplayName("Test user's vaidation with an invalid id and a valid role")
+  @DisplayName("Test user's validation with an invalid id and a valid role")
   @Test
   public void acceptUserTest1() {
     int id = -5;
@@ -180,7 +180,7 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with an invalid id and an invalid role")
+  @DisplayName("Test user's validation with an invalid id and an invalid role")
   @Test
   public void acceptUserTest2() {
     int id = -5;
@@ -196,7 +196,7 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with valid id, valid role but the user is validated")
+  @DisplayName("Test user's validation with valid id, valid role but the user is validated")
   @Test
   public void acceptUserTest4() {
     int id = goodUser.getId();
@@ -205,7 +205,7 @@ public class UserUCCTest {
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with valid id, valid role and the user is not validated")
+  @DisplayName("Test user's validation with valid id, valid role and the user is not validated")
   @Test
   public void acceptUserTest5() {
     int id = goodUserNotValidated.getId();
@@ -214,7 +214,7 @@ public class UserUCCTest {
     assertTrue(userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with valid id,a valid role and the user is not validated")
+  @DisplayName("Test user's validation with valid id,a valid role and the user is not validated")
   @Test
   public void acceptUserTest6() {
     int id = goodUserNotValidated.getId();
@@ -223,7 +223,7 @@ public class UserUCCTest {
     assertTrue(userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with valid id, valid role and the user is not validated")
+  @DisplayName("Test user's validation with valid id, valid role and the user is not validated")
   @Test
   public void acceptUserTest7() {
     int id = goodUserNotValidated.getId();
@@ -232,12 +232,52 @@ public class UserUCCTest {
     assertTrue(userUCC.acceptUser(id, role));
   }
 
-  @DisplayName("Test user's vaidation with valid id, invalid role and the user is not validated")
+  @DisplayName("Test user's validation with valid id, invalid role and the user is not validated")
   @Test
   public void acceptUserTest8() {
     int id = goodUserNotValidated.getId();
     String role = "wrong";
     assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test user's validation with valid id, null role and the user is not validated")
+  @Test
+  public void acceptUserTest9() {
+    int id = goodUserNotValidated.getId();
+    String role = null;
+    assertThrows(BusinessException.class, () -> userUCC.acceptUser(id, role));
+  }
+
+  @DisplayName("Test getting list of validated users when there are no validated user")
+  @Test
+  public void getValidatedUsersTest1() {
+    List<UserDTO> listA = new ArrayList<UserDTO>();
+    Mockito.when(userDAO.getValidatedUsers()).thenReturn(listA);
+    List<UserDTO> listB = userUCC.getValidatedUsers();
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(0, listB.size()));
+  }
+
+  @DisplayName("Test getting list of validated users when there is one validated user")
+  @Test
+  public void getValidatedUsersTest2() {
+    List<UserDTO> listA = new ArrayList<UserDTO>();
+    listA.add(goodUser);
+    Mockito.when(userDAO.getValidatedUsers()).thenReturn(listA);
+    List<UserDTO> listB = userUCC.getValidatedUsers();
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(1, listB.size()));
+
+  }
+
+  @DisplayName("Test getting list of validated users when there is three validated users")
+  @Test
+  public void getValidatedUsersTest3() {
+    List<UserDTO> listA = new ArrayList<UserDTO>();
+    listA.add(goodUser);
+    listA.add(goodUser);
+    listA.add(goodUser);
+    Mockito.when(userDAO.getValidatedUsers()).thenReturn(listA);
+    List<UserDTO> listB = userUCC.getValidatedUsers();
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(3, listB.size()));
   }
 
   @DisplayName("Test getting list of not yet validated users when there are no unvalidated user")
@@ -259,7 +299,7 @@ public class UserUCCTest {
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(1, listB.size()));
   }
 
-  @DisplayName("Test getting list of not yet validated users when there is three unvalidated user")
+  @DisplayName("Test getting list of not yet validated users when there is three unvalidated users")
   @Test
   public void getUnvalidatedUsersTest3() {
     List<UserDTO> listA = new ArrayList<UserDTO>();

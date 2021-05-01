@@ -4,7 +4,7 @@ import { removeSessionData, currentUser, resetCurrentUser, getUserSessionData } 
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
 import { RedirectUrl } from "./Router.js";
-let userData = getUserSessionData;
+let userData;
 let idFurniture = 1;
 let mapPhotos = new Map();
 let typesOfFurniture;
@@ -12,7 +12,7 @@ let typesOfFurniture;
 const Navbar = async () => {
   let nb;
   let user = currentUser;
-
+  userData = getUserSessionData;
   if (user) {
     
     nb = `
@@ -26,16 +26,7 @@ const Navbar = async () => {
         <button id="all-furnitures-navbar" class="condensed small-caps">
           Voir tous les meubles
         </button>
-        <div id="category" class="dropdown">
-          <span class=" dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Types de meuble
-          </span>
-          <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-toggle-item" href="#">Type1</a></li>
-            <li><a class="dropdown-toggle-item" href="#">Type2</a></li>
-            <li><a class="dropdown-toggle-item" href="#">Type3</a></li>
-          </ul>
-        </div>
+        <div id="category" class="dropdown"></div>
         <button id="btnIntroduceVisit" class="btn btn-dark btn-navbar condensed small-caps">
           Demander une visite
         </button>
@@ -63,6 +54,22 @@ const Navbar = async () => {
     navBar.innerHTML = nb;
 
     let introduceBtn = document.getElementById("introduceBtn");
+    try {
+      typesOfFurniture = await callAPI(
+        "/api/furnitures/typeOfFurnitureList",
+        "GET",
+        undefined,
+        undefined);
+     
+    } catch (err) {
+      console.error("Navbar::onIntroduceVisit", err);
+      PrintError(err);
+    }
+    onTypesOfFurnituresFilter(typesOfFurniture);
+    let listOfType = document.getElementsByClassName("typeOfFurniture");
+    Array.from(listOfType).forEach((e) => {
+      e.addEventListener("click", () => onFurnitureListPage(e.getAttribute("data-id"), e.innerHTML));
+    });
     //introduceBtn.addEventListener("click", onIntroduceRequest);
     
     
@@ -93,18 +100,6 @@ const Navbar = async () => {
         <img class="logo-writing" src="assets/lvs.svg" alt="logo">
       </a>
     </div>
-    <button id="all-furnitures-navbar" class="condensed small-caps">
-        Voir tous les meubles
-    </button>
-    <div id="category" class="dropdown">
-      <span class=" dropdown-toggle condensed small-caps" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        Types de meuble
-      </span>
-      <ul class="dropdown-menu condensed" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-toggle-item" href="#">Type1</a></li>
-        <li><a class="dropdown-toggle-item" href="#">Type2</a></li>
-        <li><a class="dropdown-toggle-item" href="#">Type3</a></li>
-      </ul>
     </div>
 
     <a class="btn btn-dark btn-navbar condensed small-caps" href="#" data-uri="/login">S'identifier</a>`;
@@ -117,9 +112,11 @@ const Navbar = async () => {
 
     let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
     btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
+
+    let voir = document.getElementById("all-furnitures-navbar");
+    voir.addEventListener("click", onFurnitureListPage);
   }
-  let voir = document.getElementById("all-furnitures-navbar");
-  voir.addEventListener("click", onFurnitureListPage);
+  
 
   let home = document.getElementById("home");
   home.addEventListener("click", onHomePage);
@@ -127,9 +124,8 @@ const Navbar = async () => {
 };
 
 
-const onFurnitureListPage = (e) => {
-  e.preventDefault();
-  RedirectUrl("/furnitures");
+const onFurnitureListPage = (idTypeOfFurniture, title) => {
+  RedirectUrl("/furnitures", {idTypeOfFurniture, title});
 };
 const onHomePage = (e) => {
   e.preventDefault();
@@ -210,17 +206,8 @@ const onIntroduceVisit = async (e)=> {
   document.getElementById("popupCloseButtonNavbar").addEventListener("click", onCloseVisit);
   let btnPlus = document.getElementById("btnPlus");
   btnPlus.addEventListener("click", onAddFurniture);
-  try {
-    typesOfFurniture = await callAPI(
-      "/api/furnitures/typeOfFurnitureList",
-      "GET",
-      undefined,
-      undefined);
-    onTypesOfFurniture(typesOfFurniture);
-  } catch (err) {
-    console.error("Navbar::onIntroduceVisit", err);
-    PrintError(err);
-  }
+  onTypesOfFurniture(typesOfFurniture);
+  
 }
 
 const onCloseVisit = (e) => {
@@ -238,6 +225,21 @@ const onTypesOfFurniture = (data) => {
   let tousLesTypes = document.getElementById("tousLesTypes"+idFurniture);
   tousLesTypes.innerHTML = eachType;
   tousLesTypes.innerHTML += `</select>`
+}
+
+const onTypesOfFurnituresFilter = (data) => {
+  console.log("types");
+  let filter = `<span class="dropdown-toggle condensed small-caps" id="selectType" type="button" id="dropdownMenuButton1"data-bs-toggle="dropdown" aria-expanded="false">
+                  Types de meuble
+                </span>
+                <ul class="dropdown-menu condensed" id="menuType" aria-labelledby="dropdownMenuButton1">` ;
+  filter += data
+    .map((type) => 
+      `<li><a class="dropdown-toggle-item typeOfFurniture" data-id="${type.id}" href="#">${type.label}</a></li>`
+    ).join("");
+  let category = document.getElementById("category");
+  category.innerHTML = filter;
+  category.innerHTML += `</ul>`;
 }
 
 
@@ -303,7 +305,7 @@ const onIntroduceRequest = async (e) => {
       postCode: e.target.elements.postcode.value,
       country: e.target.elements.country.value,
       city: e.target.elements.city.value,
-      unitNumber: e.target.elements.unitnumber?.value,
+      unitNumber: e.target.elements.unitnumber.value,
     },
     idClient: currentUser.id,
     furnitureList:[],
@@ -342,6 +344,5 @@ const onIntroduceRequest = async (e) => {
     PrintError(err);
   }
 }
-
 
 export default Navbar;

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -206,6 +207,19 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
+  public List<FurnitureDTO> getFurnitureListByType(UserDTO user, int idType) {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list = null;
+    if (user != null && user.getRole() == Role.ADMIN) {
+      list = furnitureDao.getFurnitureListByType(idType);
+    } else {
+      list = furnitureDao.getPublicFurnitureListByType(idType);
+    }
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
   public FurnitureDTO getFurnitureById(int id) {
     dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
@@ -264,6 +278,40 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
+  public boolean edit(EditionDTO edition) {
+    dalServices.getBizzTransaction(false);
+    if (!(edition.getDescription().isEmpty() && edition.getIdType() == -1
+        && edition.getOfferedSellingPrice() == -1 && edition.getFavouritePhotoId() == -1)) {
+
+      FurnitureDTO furniture = furnitureDao.getFurnitureById(edition.getIdFurniture());
+      String description = edition.getDescription().isEmpty() ? furniture.getDescription()
+          : edition.getDescription();
+
+      int idType = edition.getIdType() == -1 ? furniture.getTypeId() : edition.getIdType();
+
+      double offeredSellingPrice =
+          edition.getOfferedSellingPrice() == -1 ? furniture.getOfferedSellingPrice()
+              : edition.getOfferedSellingPrice();
+
+      int favouritePhoto = edition.getFavouritePhotoId() == -1 ? furniture.getFavouritePhotoId()
+          : edition.getFavouritePhotoId();
+      furnitureDao.edit(furniture.getId(), description, idType, offeredSellingPrice,
+          favouritePhoto);
+    }
+
+    edition.getPhotosToAdd().forEach(e -> furnitureDao.addAdminPhoto(e, edition.getIdFurniture()));
+
+    edition.getPhotosToDelete().forEach(e -> furnitureDao.deletePhoto(e));
+
+    edition.getPhotosToDisplay().forEach(e -> furnitureDao.displayPhoto(e));
+
+    edition.getPhotosToHide().forEach(e -> furnitureDao.hidePhoto(e));
+
+    dalServices.commitBizzTransaction();
+    return true;
+  }
+
+  @Override
   public FurnitureDTO getFurnitureWithPhotosById(int id) {
     dalServices.getBizzTransaction(true);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
@@ -283,5 +331,18 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.stopBizzTransaction();
     return furniture;
   }
+
+  @Override
+  public boolean processVisit(List<FurnitureDTO> listFurnitures) {
+    dalServices.getBizzTransaction(false);
+    for (FurnitureDTO furniture : listFurnitures) {
+      furnitureDao.processFurniture(furniture.getId(), furniture.getCondition().toString(),
+          furniture.getPurchasePrice(), furniture.getPickUpDate());
+    }
+    dalServices.commitBizzTransaction();
+    return true;
+  }
+
+
 
 }
