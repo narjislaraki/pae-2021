@@ -16,10 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
+import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
 import be.vinci.pae.domain.visit.VisitUCC;
 import be.vinci.pae.exceptions.BusinessException;
+import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.dao.VisitDAO;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
@@ -28,10 +30,12 @@ public class VisitUCCTest {
 
   private static VisitUCC visitUCC;
   private static VisitDAO visitDAO;
+  private static UserDAO userDAO;
   private static VisitDTO goodVisit;
   private static VisitDTO goodVisitWithoutAddress;
-  private LocalDateTime goodScheduledDateTime;
-  private LocalDateTime badScheduledDateTime;
+  private static UserDTO goodValidatedUser;
+  private static LocalDateTime goodScheduledDateTime;
+  private static LocalDateTime badScheduledDateTime;
   private static String goodExplanatoryNote;
   private static String badExplanatoryNote;
   private static String emptyExplanatoryNote;
@@ -49,6 +53,8 @@ public class VisitUCCTest {
     visitUCC = locator.getService(VisitUCC.class);
 
     visitDAO = locator.getService(VisitDAO.class);
+
+    userDAO = locator.getService(UserDAO.class);
   }
 
   /**
@@ -64,6 +70,7 @@ public class VisitUCCTest {
     badExplanatoryNote = ObjectDistributor.getBadExplanatoryNote();
     emptyExplanatoryNote = ObjectDistributor.getEmptyExplanatoryNote();
     goodVisitWithoutAddress = ObjectDistributor.getGoodVisitWithoutWarehouseAddress();
+    goodValidatedUser = ObjectDistributor.getGoodValidatedUser();
   }
 
   @DisplayName("Test getNotConfirmedVisits with empty list")
@@ -278,13 +285,18 @@ public class VisitUCCTest {
   @DisplayName("Test submit a request for visit")
   @Test
   public void submitARequestOfVisitTest1() {
+    Mockito.when(visitDAO.submitRequestOfVisit(goodVisit)).thenReturn(1);
     assertTrue(visitUCC.submitRequestOfVisit(goodVisit));
   }
 
   @DisplayName("Test submit a request for visit without warehouse address")
   @Test
   public void submitARequestOfVisitTest2() {
-    assertTrue(visitUCC.submitRequestOfVisit(goodVisit));
+    System.out.println(goodVisitWithoutAddress.getIdClient());
+    Mockito.when(userDAO.getUserFromId(goodVisitWithoutAddress.getIdClient()))
+        .thenReturn(goodValidatedUser);
+    Mockito.when(visitDAO.submitRequestOfVisit(goodVisitWithoutAddress)).thenReturn(1);
+    assertTrue(visitUCC.submitRequestOfVisit(goodVisitWithoutAddress));
   }
 
 

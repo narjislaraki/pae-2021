@@ -4,6 +4,7 @@ package be.vinci.pae;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
@@ -14,6 +15,7 @@ import be.vinci.pae.domain.furniture.FurnitureFactoryImpl;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserFactory;
 import be.vinci.pae.domain.user.UserFactoryImpl;
+import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.domain.visit.VisitDTO;
 import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
 import be.vinci.pae.domain.visit.VisitFactory;
@@ -50,7 +52,7 @@ public class ObjectDistributor {
     goodUser.setFirstName("Nina");
     goodUser.setEmail(goodEmail);
     goodUser.setRole("admin");
-
+    goodUser.setAddress(getAddress());
     LocalDateTime dateTime = getLocalDateTime("2021-01-05 00:00");
     goodUser.setRegistrationDate(dateTime);
     goodUser.setValidated(true);
@@ -246,7 +248,10 @@ public class ObjectDistributor {
     goodVisit.setExplanatoryNote(null);
     goodVisit.setScheduledDateTime(LocalDateTime.now());
     goodVisit.setFurnitureList(new ArrayList<FurnitureDTO>());
+    goodVisit.getFurnitureList().add(getFurniture());
     goodVisit.setAmountOfFurnitures(0);
+    List<PhotoDTO> list = new ArrayList<PhotoDTO>();
+    goodVisit.getFurnitureList().get(0).setListPhotos(list);
     return goodVisit;
   }
 
@@ -260,12 +265,14 @@ public class ObjectDistributor {
     goodVisit.setIdRequest(1);
     goodVisit.setTimeSlot("maintenant");
     goodVisit.setVisitCondition(VisitCondition.ACCEPTEE.toString());
-    goodVisit.setClient(getGoodValidatedUser());
     goodVisit.setIdClient(getGoodValidatedUser().getId());
     goodVisit.setExplanatoryNote(null);
     goodVisit.setScheduledDateTime(LocalDateTime.now());
     goodVisit.setFurnitureList(new ArrayList<FurnitureDTO>());
+    goodVisit.getFurnitureList().add(getFurniture());
     goodVisit.setAmountOfFurnitures(0);
+    List<PhotoDTO> list = new ArrayList<PhotoDTO>();
+    goodVisit.getFurnitureList().get(0).setListPhotos(list);
     return goodVisit;
   }
 
