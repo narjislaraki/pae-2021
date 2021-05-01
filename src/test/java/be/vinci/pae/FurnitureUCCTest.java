@@ -491,7 +491,10 @@ public class FurnitureUCCTest {
   @DisplayName("Test to process a list of visit")
   @Test
   public void processVisitTest1() {
-
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    list.add(goodFurniture);
+    list.add(goodFurniture);
+    assertTrue(furnitureUCC.processVisit(list));
   }
 
   @DisplayName("Test edit with empty furniture id")
