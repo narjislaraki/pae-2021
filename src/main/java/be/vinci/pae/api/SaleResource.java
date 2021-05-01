@@ -34,7 +34,7 @@ public class SaleResource {
 
 
   /**
-   * Get a list of all the sales
+   * Get a list of all the sales.
    * 
    * @param request the request
    * @return a list of sales wrapped in a Response
