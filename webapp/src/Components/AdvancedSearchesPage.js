@@ -23,6 +23,13 @@ let AdvancedSearchesPage = async () =>{
             undefined
         )  
    
+        clientList = await callAPI(
+            "/api/users/validatedList",
+            "GET",
+            userData.token,
+            undefined,
+        );
+
     menu = `
     <div class="menuAdmin">
         <div id="visits" class="condensed small-caps ">Visites</div>
@@ -52,38 +59,44 @@ let AdvancedSearchesPage = async () =>{
 
     advancedSearchesPageClient = `
         <p>Recherche:</p>
-        <input type="text" class="form-control" id="searchUsername" placeholder="Nom">
-        <input type="text" class="form-control" id="searchUserCity" placeholder="Ville">
-        <input type="text" class="form-control" id="searchUserPostCode" placeholder="Code Postal">
+        <datalist id="names-list">
+        </datalist>
+        <input id="input-name" class="form-control" list="names-list" placeholder ="Nom">
+        <datalist id="cities-list">
+        </datalist>
+        <input id="input-city" class="form-control" list="cities-list" placeholder ="Ville">
+        <datalist id="postCode-list">
+        </datalist>
+        <input id="input-postCode" class="form-control" list="postCode-list" placeholder ="Code Postal">
     </div>
     `;
 
     advancedSearchesPageFurniture = `
         <p>Recherche:</p>
-        <input type="text" class="form-control" id="searchClientName" placeholder="Nom du client">
+        <datalist id="names-list">
+        </datalist>
+        <input id="input-name" class="form-control" list="names-list" placeholder ="Nom">
         <datalist id="types-list">
         </datalist>
-        <input id="input-type" list="types-list">
+        <input id="input-type" class="form-control" list="types-list" placeholder="Type">
         <div class="searchMontant">
             <p>Montant</p>
         <input type="text" class="form-control" id="montantMin" placeholder="Min.">
         <input type="text" class="form-control" id="montantMax" placeholder="Max.">
         </div>
+       
     </div>
     `;
 
 
     if(clientMode){
         page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
+        initializeDSClient();
     }
 
     else {
         page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
-        let dataListTypes = document.getElementById("types-list");
-        typeList.map((element) => {
-            dataListTypes.innerHTML +=
-            `<option data-label="${element.label}" data-typeId="${element.id}" value="${element.label}">${element.label}</option>`;
-        })
+        initializeDSFur();
     }
 
    btns();
@@ -92,6 +105,41 @@ let AdvancedSearchesPage = async () =>{
    return;
 };
 
+function initializeDSClient() {
+
+    let dataListNames = document.getElementById("names-list");
+        clientList.map((client) => {
+            dataListNames.innerHTML += 
+            `<option data-name="${client.lastName}" data-userId="${client.id}" value="${client.lastName}"></option>`;
+        })
+
+        let dataListCities = document.getElementById("cities-list");
+        clientList.map((client) => {
+            dataListCities.innerHTML += 
+            `<option data-city="${client.address.city}" data-userId="${client.id}" value="${client.address.city}"></option>`;
+        })
+
+        let dataListPostCode = document.getElementById("postCode-list");
+        clientList.map((client) => {
+            dataListPostCode.innerHTML += 
+            `<option data-postCode="${client.address.postCode}" data-userId="${client.id}" value="${client.address.postCode}"></option>`;
+        })
+
+}
+
+function initializeDSFur() {
+    let dataListNames = document.getElementById("names-list");
+        clientList.map((client) => {
+            dataListNames.innerHTML += 
+            `<option data-name="${client.lastName}" data-userId="${client.id}" value="${client.lastName}"></option>`;
+        })
+
+    let dataListTypes = document.getElementById("types-list");
+    typeList.map((element) => {
+        dataListTypes.innerHTML +=
+        `<option data-label="${element.label}" data-typeId="${element.id}" value="${element.label}">${element.label}</option>`;
+    })
+}
 let btns = () => {
     document.body.addEventListener('change', function(e){
         let target = e.target;
@@ -99,15 +147,12 @@ let btns = () => {
             case 'client':
                 page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
                 clientMode = true;
+                initializeDSClient();
                 break;
             case 'furn':
                 page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageFurniture;
-                let dataListTypes = document.getElementById("types-list");
-                typeList.map((element) => {
-                    dataListTypes.innerHTML +=
-                    `<option data-label="${element.label}" data-typeId="${element.id}" value="${element.label}">${element.label}</option>`;
-                })
                 clientMode = false;
+                initializeDSFur();
                 break;
             default:
                 break;
@@ -148,9 +193,12 @@ const onConfirmRegister = (e) => {
 const onSearch = async (e) => {
     e.preventDefault();
     if (clientMode){
-        let city = document.getElementById("searchUserCity").value;
-        let name = document.getElementById("searchUsername").value;
-        let postcode = document.getElementById("searchUserPostCode").value;
+        let inputCity = document.getElementById("input-city").value;
+        let city = document.querySelector("#cities-list option[value='" + inputCity + "']");
+        let inputName = document.getElementById("input-name").value;
+        let name = document.querySelector("#names-list option[value='" + inputName + "']");
+        let inputPostCode = document.getElementById("input-postCode").value;
+        let postcode =  document.querySelector("#postCode-list option[value='" + inputPostCode + "']");
         AdvancedSearchesPage();
         try{
             clientList = await callAPI(
@@ -159,18 +207,25 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
-            
+        
             if (name){
-                clientList = clientList.filter(e => e.lastName.toLowerCase().startsWith(name.toLowerCase()));
+                clientList = clientList.filter(e => e.lastName.toLowerCase() == name.dataset.name.toLowerCase());
+            } else if(inputName){
+                clientList = clientList.filter(e => e.lastName.toLowerCase().startsWith(inputName.toLowerCase()));
+
             } if (city) {
-                clientList = clientList.filter(e => e.address.city.toLowerCase().startsWith(city.toLowerCase()));
-            } if (postcode) {
-                clientList = clientList.filter(e => e.address.postCode.toLowerCase().startsWith(postcode.toLowerCase()));
+                clientList = clientList.filter(e => e.address.city.toLowerCase() == city.dataset.city.toLowerCase());
+            } else if(inputCity) {
+                clientList = clientList.filter(e => e.address.city.toLowerCase().startsWith(inputCity.toLowerCase()));
+
+            }if (postcode) {
+                clientList = clientList.filter(e => e.address.postCode.toLowerCase() == postcode.dataset.postcode.toLowerCase());
+            } else if(inputPostCode) {
+                clientList = clientList.filter(e => e.address.postCode.toLowerCase().startsWith(inputPostCode.toLowerCase()));
             }
 
             
             onShowClientList(clientList);
-            
             btns();
             addEL();
         } catch(err){
@@ -182,7 +237,8 @@ const onSearch = async (e) => {
         }
     }
     else {
-        let username = document.getElementById("searchClientName").value;
+        let inputName = document.getElementById("input-name").value;
+        let name = document.querySelector("#names-list option[value='" + inputName + "']");
         let inputType = document.getElementById("input-type").value;
         let type = document.querySelector("#types-list option[value='" + inputType + "']");
         let minAmount = document.getElementById("montantMin").value;
@@ -195,12 +251,19 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
-            if (username){
-                furnList = furnList.filter(e => e.username.toLowerCase().startsWith(username.toLowerCase()));
-            } if (type != null) {
-    
-                furnList = furnList.filter(e => e.type != null && e.type.toLowerCase() == type.dataset.label.toLowerCase());
+          
+            if (name){
+                furnList = furnList.filter(f => f.idBuyer == clientList.filter(c => c.lastName.toLowerCase() == name.dataset.name.toLowerCase()));
+            } else if(inputName){
+                furnList = furnList.filter(f => f.idBuyer == clientList.filter(c => c.lastName.toLowerCase().startsWith(inputName.toLowerCase())));
+            }
+            if (type) {
+                furnList = furnList.filter(f => f.type != null && f.type.toLowerCase() == type.dataset.label.toLowerCase());
             } 
+            else if(inputType){
+                console.log(inputType);
+                furnList = furnList.filter(f => f.type != null && f.type.toLowerCase().startsWith(inputType.toLowerCase()));
+            }
             if (maxAmount) {
                 furnList = furnList.filter(e => e.offeredSellingPrice <= maxAmount);
             } if (minAmount) {
@@ -280,8 +343,14 @@ const onShowFurnitureList = async (data) => {
             <p class="small-caps">Vendu à:</p>
                 <div>${saleList.filter(s=>s.idFurniture == furniture.id).length == 0 ? "N/A" : clientList.filter(c=>c.id == saleList.filter(s=>s.idFurniture == furniture.id)[0].idBuyer)[0].username}</div>
             </div>
-            <div id = "photosMeuble${furniture.id}" class="furnInfo-cat">
+            <div class="furnInfo-cat">
                 <p  class="small-caps">Photos du meuble:</p>
+                <div id = "photosMeuble${furniture.id}"></div>
+            </div>
+            <div class="furnInfo-cat">
+                <p  class="small-caps">Photo préférée:</p>
+                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto}" alt="Petite image"  width = 60px
+                height= 60px>
             </div>
         </div>
     </div>`).join("");
@@ -291,7 +360,7 @@ const onShowFurnitureList = async (data) => {
     let furniturePhotos;
     for (let i = 0; i < data.length; i++) {
         let photosMeubles = document.getElementById("photosMeuble"+data[i].id);
-        let photosAAjouter = "";
+        let photosAAjouter = "<br>";
         furniturePhotos = await callAPI(
             "/api/furnitures/" + data[i].id + "/photos",
             "GET",
@@ -343,31 +412,60 @@ const onShowClientList = async (data) =>  {
             PrintError(err);
         }
 
-
-        console.log(furnList);
-        console.log(saleList);
       clientList += data
       .map((user) =>
-     `<div class="advancedSearchClientItem-container">
-        <div class="advancedSearchClientItem condensed">
-        <div class="advancedSearchClientItem_pseudo">${user.username}</div>
-        <div class="advancedSearchClientItem_fullName">
-            <div class="asci-name">${user.firstName}</div>
-            <div class="asci-surname">${user.lastName}</div>
+        `<div class="advancedSearchClientItem-container">
+            <div class="advancedSearchClientItem condensed">
+                <div class="advancedSearchClientItem_pseudo">${user.username}</div>
+                <div class="advancedSearchClientItem_fullName">
+                    <div class="asci-name">${user.firstName}</div>
+                    <div class="asci-surname">${user.lastName}</div>
+                </div>
+                <div class="advancedSearchClientItem_email">${user.email}</div>
+                <div class="advancedSearchClientItem_moreInfo">
+                    <div class="asci-signUpDate">Inscrit depuis: ${user.registrationDate}</div>
+                    <div class="asci-role">Role: ${user.role} </div>
+                    <div class="asci-amountBought">Nbr achats: ${saleList.filter(e=>e.idBuyer == user.id).length}</div>
+                    <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
+                </div>
+            </div>
+            <div class="furnInfo">
+            <div class="advancedSearchClientItem-soldFurn">
+                <p class="condensed">MEUBLES VENDUS : </p>
+                <div id= "meublesVendus${user.id}" ></div>
+            </div>
+            <div class="advancedSearchClientItem-boughtFurn">
+                <p class="condensed">MEUBLES ACHETÉS :</p>
+                <div id= "meublesAchetes${user.id}" ></div>
+            </div>
         </div>
-        <div class="advancedSearchClientItem_email">${user.email}</div>
-        <div class="advancedSearchClientItem_moreInfo">
-            <div class="asci-signUpDate">Inscrit depuis: ${user.registrationDate}</div>
-            <div class="asci-role">Role: ${user.role} </div>
-            <div class="asci-amountBought">Nbr achats: ${saleList.filter(e=>e.idBuyer == user.id).length}</div>
-            <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
-        </div>
-    </div>
         </div> `)
-                              
+                                
       .join("");
 
     page.innerHTML += clientList;    
+
+    for (let i = 0; i < data.length; i++){
+        let meublesVendusHTML = document.getElementById("meublesVendus"+data[i].id);
+        let meublesAchetesHTML = document.getElementById("meublesAchetes"+data[i].id);
+        let mAchetesList =saleList.filter(s=>s.idBuyer == data[i].id);
+        let mVendusList = furnList.filter(f=>f.seller == data[i].id);
+        let meublesVAjouter = "";
+        let meublesAAjouter = "";
+
+        mAchetesList.map((m) => {
+            let meuble = furnList.find(e=>e.id == m.id);
+            console.log(meuble);
+            meublesAAjouter += `<br><div>${meuble.description}</div>`
+        })
+
+        mVendusList.map((m) => {
+            meublesVAjouter += `<br><div>${m.description}</div>`
+        })
+
+        meublesVendusHTML.innerHTML = meublesVAjouter;
+        meublesAchetesHTML.innerHTML = meublesAAjouter;
+    }
     page.innerHTML+= `
     <div class="white-space"></div>
     `

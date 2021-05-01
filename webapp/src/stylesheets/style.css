@@ -201,7 +201,25 @@ input[type="checkbox"]:focus,
 
 #input-type {
     margin-top: 52px;
+    margin-right: 20px;
+
 }
+
+#input-name {
+    margin-top: 52px;
+    margin-right: 20px;
+}
+
+#input-city {
+    margin-top: 52px;
+
+}
+
+#input-postCode {
+    margin-top: 52px;
+    width: 150px;
+}
+
 .text-user{
     /*position: absolute;
     right: 55px;
@@ -1338,7 +1356,7 @@ footer{
 }
 
 .furnInfo div :not(.furnInfo-cat){
-    display: grid;
+    display: inline;
     grid-template-columns: 20% 20% 20% 20% 20%;
     grid-template-rows: 50% 50%;
 }
