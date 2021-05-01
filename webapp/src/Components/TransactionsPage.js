@@ -109,11 +109,11 @@ async function TransactionsPage() {
             `
             <div data-id="${element.furniture.id}" class="item-card furniture">
                 <div data-id="${element.furniture.id}" class="item-img-container">
-                    <img data-id="${element.furniture.id}" src="${element.furniture.favouritePhoto}" alt="" class="item-img">
+                    <img data-id="${element.furniture.id}" src="${element.furniture.favoritePhoto}" alt="" class="item-img">
                     <h3 data-id="${element.id}" class="item-img-hover condensed">Voir<br>article</h3>
                 </div>
                 <div data-id="${element.furniture.id}" class="item-name">${element.furniture.description}</div>
-                <div data-id="${element.furniture.id}" class="item-price condensed">${element.furniture.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
+                <div data-id="${element.furniture.id}" class="item-price condensed">${element.furniture.offeredSellingPrice == 0 ? "N/A" : element.furniture.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
             </div>
         `;
     
