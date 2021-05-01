@@ -6,10 +6,6 @@ import waitingSpinner from "./WaitingSpinner.js";
 
 const API_BASE_URL = "/api/furnitures/slider";
 
-let homePage = `<h4 id="pageTitle">Home</h4>
-<p>Homepage</p>
-`;
-
 const VENDU = `<h4><span class="badge bg-danger small-caps">VENDU</span></h4></div></div>`;
 const SOUS_OPTION = `<h4><span class="badge bg-warning small-caps">OPTION</span></h4></div></div>`;
 const EN_VENTE = `<h4><span class="badge bg-success small-caps">EN VENTE</span></h4></div></div>`;
@@ -76,23 +72,36 @@ if(furnitures.length >= 1){
                       
                       <p>${furnitures[index].description}</p>
     `;
-    if(furnitures[0].condition == "EN_VENTE"){
+    if(furnitures[index].condition == "EN_VENTE"){
       carousel2 += EN_VENTE;
     }
-    else if(furnitures[0].condition == "VENDU"){
+    else if(furnitures[index].condition == "VENDU"){
       carousel2 += VENDU;
     }
-    else if(furnitures[0].condition == "SOUS_OPTION"){
+    else if(furnitures[index].condition == "SOUS_OPTION"){
       carousel2 += SOUS_OPTION;
     }
-
-    
   }
 
   carousel1 += carousel2;
+  carousel1 += `
+  </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselHomepage" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselHomepage" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+
+        </div>
+  `;
+  page.innerHTML = homepageTitle + carousel1;
 }
 
-page.innerHTML = homepageTitle;
+
 
 };
 
