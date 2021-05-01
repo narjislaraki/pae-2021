@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -265,8 +266,10 @@ public class FurnitureDAOImpl implements FurnitureDAO {
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
           + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
           + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
-          + "ON p.id_photo = f.favorite_photo;";
+          + "ON p.id_photo = f.favorite_photo WHERE f.condition != ? AND f.condition != ?;";
       ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_ATTENTE.toString());
+      ps.setString(2, Condition.REFUSE.toString());
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
