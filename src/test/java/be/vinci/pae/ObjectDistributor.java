@@ -3,7 +3,7 @@ package be.vinci.pae;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.ArrayList;
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
@@ -31,6 +31,11 @@ public class ObjectDistributor {
   private static String badEmail = "test.test@test.com";
   private static String badPassword = "5678";
   private static String goodEmailNotValidated = "test3@test.com";
+  private static LocalDateTime goodScheduledDateTime = LocalDateTime.now();
+  private static LocalDateTime badScheduledDateTime = null;
+  private static String goodExplanatoryNote = "good explanatory";
+  private static String badExplanatoryNote = null;
+  private static String emptyExplanatoryNote = "";
 
   /**
    * Construct a user considered as "a good user model that is validated", and return it.
@@ -101,6 +106,26 @@ public class ObjectDistributor {
     return goodEmailNotValidated;
   }
 
+  public static LocalDateTime getGoodScheduledDateTime() {
+    return goodScheduledDateTime;
+  }
+
+  public static LocalDateTime getBadScheduledDateTime() {
+    return badScheduledDateTime;
+  }
+
+  public static String getGoodExplanatoryNote() {
+    return goodExplanatoryNote;
+  }
+
+  public static String getBadExplanatoryNote() {
+    return badExplanatoryNote;
+  }
+
+  public static String getEmptyExplanatoryNote() {
+    return emptyExplanatoryNote;
+  }
+
   private static Address getAddress() {
     Address address = addressFactory.getAddress();
     address.setBuildingNumber("10");
@@ -141,6 +166,52 @@ public class ObjectDistributor {
     return visit;
   }
 
+  /**
+   * Construct a visit who has furniture not yet treated.
+   * 
+   * @return the visit
+   */
+  public static VisitDTO getVisitsToBeProcessedDTO() {
+    VisitDTO visit = visitFactory.getVisitDTO();
+    visit.setIdRequest(1);
+    visit.setClient(getGoodNotValidatedUser());
+    visit.setIdClient(getGoodValidatedUser().getId());
+    visit.setIdRequest((int) (Math.random() * 100));
+    visit.setTimeSlot("Du 10 au 25 avril de 17h à 21h");
+    visit.setWarehouseAddress(getAddress());
+    visit.setWarehouseAddressId(getAddress().getId());
+    visit.setVisitCondition(VisitCondition.ACCEPTEE.toString());
+    FurnitureDTO furniture = furnitureFactory.getFurnitureDTO();
+    furniture.setId(1);
+    furniture.setCondition(Condition.EN_ATTENTE.toString());
+    furniture.setRequestForVisitId(1);
+    ArrayList<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    list.add(furniture);
+    visit.setFurnitureList(list);
+    return visit;
+  }
+
+
+  /**
+   * Construct a visit with no furniture
+   * 
+   * @return the visit
+   */
+  public static VisitDTO getVisitWithNoFurniture() {
+    VisitDTO visit = visitFactory.getVisitDTO();
+    visit.setIdClient(1);
+    return visit;
+  }
+
+  /**
+   * Construct a furniture
+   * 
+   * @return the furniture
+   */
+  public static FurnitureDTO getFurniture() {
+    FurnitureDTO furniture = furnitureFactory.getFurnitureDTO();
+    return furniture;
+  }
 
   /**
    * Construct a furniture in sale.
@@ -156,5 +227,29 @@ public class ObjectDistributor {
     // TODO to complete with the tests
     return furniture;
   }
+
+
+  /**
+   * Construct a visit considered as"a good visit",and return it.**@return the good visit
+   * 
+   * @return the visit
+   */
+  public static VisitDTO getGoodVisit() {
+    VisitDTO goodVisit = visitFactory.getVisitDTO();
+    goodVisit.setIdRequest(1);
+    goodVisit.setTimeSlot("maintenant");
+    goodVisit.setWarehouseAddressId(1);
+    goodVisit.setWarehouseAddress(getAddress());
+    goodVisit.setVisitCondition(VisitCondition.ACCEPTEE.toString());
+    goodVisit.setClient(getGoodValidatedUser());
+    goodVisit.setIdClient(getGoodValidatedUser().getId());
+    goodVisit.setExplanatoryNote(null);
+    goodVisit.setScheduledDateTime(LocalDateTime.now());
+    goodVisit.setFurnitureList(new ArrayList<FurnitureDTO>());
+    goodVisit.setAmountOfFurnitures(0);
+    return goodVisit;
+  }
+
+
 
 }

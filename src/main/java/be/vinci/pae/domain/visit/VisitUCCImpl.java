@@ -2,7 +2,6 @@ package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.exceptions.BusinessException;
@@ -126,6 +125,9 @@ public class VisitUCCImpl implements VisitUCC {
       furniture.setListPhotos(furnitureDAO.getFurniturePhotos(furniture.getId()));
     }
     dalServices.stopBizzTransaction();
+    if (list == null) {
+      throw new BusinessException("Invalid id");
+    }
     return list;
   }
 
