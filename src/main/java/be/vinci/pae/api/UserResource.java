@@ -2,16 +2,12 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.util.List;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.sale.SaleDTO;
@@ -120,21 +116,23 @@ public class UserResource {
   public boolean refuseUser(@Context ContainerRequest request, @PathParam("id") int id) {
     return userUCC.deleteUser(id);
   }
-  
+
   @GET
   @Path("{id}/transactionsBuyer")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public List<SaleDTO> getTransactionsBuyer(@Context ContainerRequest request, @PathParam("id") int id) {
-	  return userUCC.getTransactionsBuyer(id);
+  public List<SaleDTO> getTransactionsBuyer(@Context ContainerRequest request,
+      @PathParam("id") int id) {
+    return userUCC.getTransactionsBuyer(id);
   }
-  
+
   @GET
   @Path("{id}/transactionsSeller")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public List<SaleDTO> getTransactionsSeller(@Context ContainerRequest request, @PathParam("id") int id) {
-	  return userUCC.getTransactionsSeller(id);
+  public List<SaleDTO> getTransactionsSeller(@Context ContainerRequest request,
+      @PathParam("id") int id) {
+    return userUCC.getTransactionsSeller(id);
   }
 
 }

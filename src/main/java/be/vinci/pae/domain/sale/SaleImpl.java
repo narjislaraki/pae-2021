@@ -1,7 +1,6 @@
 package be.vinci.pae.domain.sale;
 
 import java.time.LocalDateTime;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 
 public class SaleImpl implements SaleDTO {
@@ -47,17 +46,17 @@ public class SaleImpl implements SaleDTO {
   public int getIdBuyer() {
     return idBuyer;
   }
-  
+
 
   public FurnitureDTO getFurniture() {
-	return furniture;
+    return furniture;
   }
 
   public void setFurniture(FurnitureDTO furniture) {
-	 this.furniture = furniture;
+    this.furniture = furniture;
   }
 
-@Override
+  @Override
   public void setIdBuyer(int idBuyer) {
     this.idBuyer = idBuyer;
   }
@@ -71,7 +70,7 @@ public class SaleImpl implements SaleDTO {
   public void setDateOfSale(LocalDateTime dateOfSale) {
     this.dateOfSale = dateOfSale;
   }
-  
-  
+
+
 
 }
