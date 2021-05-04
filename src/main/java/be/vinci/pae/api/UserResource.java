@@ -117,6 +117,13 @@ public class UserResource {
     return userUCC.deleteUser(id);
   }
 
+  /**
+   * Get a list populated with sales whose buyer id is the one passed in the URI.
+   * 
+   * @param request the request
+   * @param id the id of the buyer
+   * @return a list of SaleDTO
+   */
   @GET
   @Path("{id}/transactionsBuyer")
   @Authorize
@@ -126,6 +133,13 @@ public class UserResource {
     return userUCC.getTransactionsBuyer(id);
   }
 
+  /**
+   * Returns a list populated with the sales made by the user whose id is the one passed in the URI.
+   * 
+   * @param request the request
+   * @param id the id of the seller
+   * @return a list of SaleDTO
+   */
   @GET
   @Path("{id}/transactionsSeller")
   @Authorize

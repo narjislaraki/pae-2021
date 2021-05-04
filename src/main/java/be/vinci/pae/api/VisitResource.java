@@ -2,17 +2,13 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
@@ -47,7 +43,7 @@ public class VisitResource {
   }
 
   /**
-   * Get a list of not confirmed requests of visits.
+   * Get a list of requests for visits with the status "en attente".
    * 
    * @param request the request
    * @return a list of not confirmed requests of visits wrapped in a Response
@@ -88,7 +84,7 @@ public class VisitResource {
   }
 
   /**
-   * Get a list of furnitures for one request for visits.
+   * Get a list of furnitures for one request for visit.
    * 
    * @param request the request
    * @return a list of furnitures for one requests for visits wrapped in a Response
@@ -147,13 +143,13 @@ public class VisitResource {
   }
 
   /**
-   * Get a specific furniture for logger users by giving its id.
+   * Get a specific visit for logged users by giving its id.
    * 
-   * @param id the furniture's id
-   * @return the furniture wrapped in a Response
+   * @param id the visit's id
+   * @return the visit wrapped in a Response
    */
   @GET
-  @Authorize
+  @AdminAuthorize
   @Path("{id}")
   public Response getVisit(@Context ContainerRequest request, @PathParam("id") int id) {
     VisitDTO visit = visitUCC.getVisitById(id);
@@ -175,9 +171,9 @@ public class VisitResource {
    * @param visit the request for visit converted from json
    * @return Response 401 Or 409 if KO; token if OK
    */
+  @Authorize
   @POST
   @Path("introduce")
-  // TODO pas fini
   public Response introduceRequestForVisit(VisitDTO visit) {
     if (!checkFieldsIntroduce(visit)) {
       return responseWithStatus(Status.UNAUTHORIZED, "Missing fields");
@@ -186,7 +182,6 @@ public class VisitResource {
   }
 
   private boolean checkFieldsIntroduce(VisitDTO visit) {
-    // TODO à peaufiner
     if (isAnOtherAddress(visit)) {
       if (visit.getTimeSlot() == null || visit.getWarehouseAddress().getStreet() == null
           || visit.getWarehouseAddress().getBuildingNumber() == null
@@ -210,13 +205,7 @@ public class VisitResource {
   }
 
   private boolean isAnOtherAddress(VisitDTO visit) {
-    if (/*
-         * visit.getWarehouseAddress().getStreet() != null ||
-         * visit.getWarehouseAddress().getBuildingNumber() != null ||
-         * visit.getWarehouseAddress().getCity() != null ||
-         * visit.getWarehouseAddress().getPostCode() != null ||
-         * visit.getWarehouseAddress().getCountry() != null ||
-         */ !visit.getWarehouseAddress().getStreet().isEmpty()
+    if (!visit.getWarehouseAddress().getStreet().isEmpty()
         || !visit.getWarehouseAddress().getBuildingNumber().isEmpty()
         || !visit.getWarehouseAddress().getCity().isEmpty()
         || !visit.getWarehouseAddress().getPostCode().isEmpty()
