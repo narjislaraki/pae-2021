@@ -59,6 +59,16 @@
 </tr>
 
 <tr>
+    <td style="border:1px solid black;">users/{id}</td>
+    <td style="border:1px solid black;">GET</td>
+    <td style="border:1px solid black;">Yes</td>
+	<td style="border:1px solid black;">Yes</td>
+    <td style="border:1px solid black;">
+    Returns a user with their id, username and role
+    </td>
+</tr>
+
+<tr>
     <td style="border:1px solid black;">users/unvalidatedList</td>
     <td style="border:1px solid black;">GET</td>
     <td style="border:1px solid black;">Yes</td>
@@ -495,6 +505,26 @@
 
 ---
 ## Properties
+### JWTSecret
+
+<p>A custom string not to share to encrypt the token</p>
+
+### BaseUri
+
+<p>The base url of the application</p>
+
+### url
+
+<p>The database's url</p>
+
+### user
+
+<p>The database's user</p>
+
+### password
+
+<p>The database's password</p>
+
 ### Logger options
 
 #### Two fields exist in the properties file
@@ -520,3 +550,11 @@ Are going to log in <b>A:/a/custom/folder/myPersonnalLogs.log</b></p>
 <p><b>logPath=default/</b><br>
 <b>logFileName=logs.log</b><br><br>
 Are going to log in <b>X:/the/project/location/Logs/logs.log</b></p>
+
+### SendStackTraceToClient
+
+<p>Boolean to set to TRUE if the stacktrace from the backend's errors has to be sent with the errors</p>
+
+### connectionQuantity
+
+<p>The maximum amount of connection to be able to stay open in the connection pool.</p>
