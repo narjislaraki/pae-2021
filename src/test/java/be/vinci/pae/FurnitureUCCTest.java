@@ -553,7 +553,7 @@ public class FurnitureUCCTest {
     assertThrows(BusinessException.class, () -> furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and nothing else")
+  @DisplayName("Test edit w/ valid furn. id, and nothing else")
   @Test
   public void editTest2() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -562,7 +562,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a valid price of 0")
+  @DisplayName("Test edit w/ valid furn. id, and a valid price of 0")
   @Test
   public void editTest3() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -572,7 +572,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a valid price of 100")
+  @DisplayName("Test edit w/ valid furn. id, and a valid price of 100")
   @Test
   public void editTest4() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -582,7 +582,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an invalid negative price")
+  @DisplayName("Test edit w/ valid furn. id, and an invalid negative price")
   @Test
   public void editTest5() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -592,7 +592,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a valid id type of 1")
+  @DisplayName("Test edit w/ valid furn. id, and a valid id type of 1")
   @Test
   public void editTest6() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -602,7 +602,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an invalid id type < 1 (0)")
+  @DisplayName("Test edit w/ valid furn. id, and an invalid id type < 1 (0)")
   @Test
   public void editTest7() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -612,7 +612,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an invalid id type < 1 (-1)")
+  @DisplayName("Test edit w/ valid furn. id, and an invalid id type < 1 (-1)")
   @Test
   public void editTest8() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -622,7 +622,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an empty endition")
+  @DisplayName("Test edit w/ valid furn. id, and an empty endition")
   @Test
   public void editTest9() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -633,7 +633,7 @@ public class FurnitureUCCTest {
         () -> assertTrue(furnitureUCC.edit(edition)));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a valid description != to the original")
+  @DisplayName("Test edit w/ valid furn. id, and a valid description != to the original")
   @Test
   public void editTest10() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -644,7 +644,7 @@ public class FurnitureUCCTest {
         () -> assertTrue(furnitureUCC.edit(edition)));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a valid description == to the original")
+  @DisplayName("Test edit w/ valid furn. id, and a valid description == to the original")
   @Test
   public void editTest11() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -655,7 +655,7 @@ public class FurnitureUCCTest {
         () -> assertTrue(furnitureUCC.edit(edition)));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a valid favourite id")
+  @DisplayName("Test edit w/ valid furn. id, and a valid favourite id")
   @Test
   public void editTest12() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -666,7 +666,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an invalid favourite id")
+  @DisplayName("Test edit w/ valid furn. id, and an invalid favourite id")
   @Test
   public void editTest13() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -679,7 +679,7 @@ public class FurnitureUCCTest {
   }
 
 
-  @DisplayName("Test edit with valid furniture id, and an empty photo list to add")
+  @DisplayName("Test edit w/ valid furn. id, and an empty photo list to add")
   @Test
   public void editTest14() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -689,7 +689,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add but ! related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list to add but ! related")
   @Test
   public void editTest15() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -703,7 +703,7 @@ public class FurnitureUCCTest {
     assertThrows(BusinessException.class, () -> furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list to add related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list to add related")
   @Test
   public void editTest16() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -716,7 +716,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an empty photo list id to delete")
+  @DisplayName("Test edit w/ valid furn. id, and an empty photo list id to delete")
   @Test
   public void editTest17() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -726,7 +726,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list id to delete but ! related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list id to delete but ! related")
   @Test
   public void editTest18() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -738,7 +738,7 @@ public class FurnitureUCCTest {
     assertThrows(BusinessException.class, () -> furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list id to delete related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list id to delete related")
   @Test
   public void editTest19() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -751,7 +751,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an empty photo list id to display")
+  @DisplayName("Test edit w/ valid furn. id, and an empty photo list id to display")
   @Test
   public void editTest20() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -761,7 +761,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list id to display but ! related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list id to display but ! related")
   @Test
   public void editTest21() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -773,7 +773,7 @@ public class FurnitureUCCTest {
     assertThrows(BusinessException.class, () -> furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list id to display related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list id to display related")
   @Test
   public void editTest22() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -786,7 +786,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and an empty photo list id to hide")
+  @DisplayName("Test edit w/ valid furn. id, and an empty photo list id to hide")
   @Test
   public void editTest23() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -796,7 +796,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list id to hide but ! related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list id to hide but ! related")
   @Test
   public void editTest24() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
@@ -808,7 +808,7 @@ public class FurnitureUCCTest {
     assertThrows(BusinessException.class, () -> furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit with valid furniture id, and a non empty photo list id to hide related")
+  @DisplayName("Test edit w/ valid furn. id, and a non empty photo list id to hide related")
   @Test
   public void editTest25() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
