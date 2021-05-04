@@ -33,7 +33,8 @@ let AdvancedSearchesPage = async () =>{
 
     menu = `
     <div class="menuAdmin">
-        <div id="visits" class="condensed small-caps ">Visites</div>
+        <div id="visits" class="condensed small-caps ">Visites en attentes</div>
+        <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
         <div id="advancedSearches" class="condensed small-caps menuAdminOn">Recherche avancées</div>
         <div id="confirmRegister" class="condensed small-caps">Confirmation des inscriptions</div>
     </div>
@@ -174,12 +175,21 @@ function addEL () {
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
+    
+    let btnToTreat = document.getElementById("visitsToBeProcessed");
+    btnToTreat.addEventListener("click", onVisitsToBeProcessed);
 }
 
 const onVisits = (e) => {
     e.preventDefault();
     RedirectUrl("/visits");
 };
+
+const onVisitsToBeProcessed = (e) => {
+    e.preventDefault();
+    console.log("to visits to be processed");
+    RedirectUrl("/visitsToBeProcessed");
+}
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
