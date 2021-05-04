@@ -170,10 +170,10 @@ public class VisitUCCTest {
   @Test
   public void getVisitsListForAClientTest3() {
     List<VisitDTO> listA = new ArrayList<VisitDTO>();
+    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
+    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
+    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
     UserDTO user = ObjectDistributor.getGoodValidatedUser();
-    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
-    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
-    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
     Mockito.when(visitDAO.getVisitsListForAClient(user.getId())).thenReturn(listA);
     List<VisitDTO> listB = visitUCC.getVisitsListForAClient(user.getId());
     assertEquals(listA, listB);
