@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -28,7 +31,6 @@ import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dao.FurnitureDAO;
-import be.vinci.pae.services.dao.SaleDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
@@ -40,7 +42,6 @@ public class FurnitureUCCTest {
   private static FurnitureDTO goodFurniture;
   private static FurnitureDTO badFurniture;
   private static OptionDTO goodOption;
-  private static SaleDAO saleDAO;
   private static SaleDTO sale;
   private static PhotoDTO photo;
   private static UserDTO goodUser;
@@ -61,8 +62,6 @@ public class FurnitureUCCTest {
     furnitureUCC = locator.getService(FurnitureUCC.class);
 
     furnitureDAO = locator.getService(FurnitureDAO.class);
-
-    saleDAO = locator.getService(SaleDAO.class);
 
     userDAO = locator.getService(UserDAO.class);
   }
@@ -431,7 +430,6 @@ public class FurnitureUCCTest {
   @DisplayName("Testing a sale which condition is 'VENDU' ")
   @Test
   public void addSaleTest1() {
-    SaleDTO saleDTO = sale;
     sale.setIdFurniture(1);
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
     badFurniture.setCondition(Condition.VENDU.toString());
