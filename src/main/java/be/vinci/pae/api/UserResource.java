@@ -165,11 +165,15 @@ public class UserResource {
   @Path("{id}")
   @AdminAuthorize
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getUserById(@Context ContainerRequest request, @PathParam("id") int id)
-      throws JsonProcessingException {
-    return Response.ok(
-        jsonMapper.writerWithView(Views.Public.class).writeValueAsString(userUCC.getUserFromId(id)))
-        .build();
+  public Response getUserById(@Context ContainerRequest request, @PathParam("id") int id) {
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class)
+          .writeValueAsString(userUCC.getUserFromId(id));
+    } catch (JsonProcessingException e) {
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
   }
 
 }
