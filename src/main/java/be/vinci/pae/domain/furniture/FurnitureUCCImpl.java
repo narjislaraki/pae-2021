@@ -329,9 +329,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
             : edition.getOfferedSellingPrice();
     int favouritePhoto = edition.getFavouritePhotoId() <= 0 ? furniture.getFavouritePhotoId()
         : edition.getFavouritePhotoId();
-
     if (!description.equals(furniture.getDescription()) || idType != furniture.getTypeId()
-        || offeredSellingPrice != furniture.getFavouritePhotoId()
+        || offeredSellingPrice != furniture.getOfferedSellingPrice()
         || favouritePhoto != furniture.getFavouritePhotoId()) {
       furnitureDao.edit(id, description, idType, offeredSellingPrice, favouritePhoto);
     }
@@ -354,7 +353,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     }
 
     if (furnitureIds.size() != 1) {
-      System.out.println(furnitureIds);
       throw new BusinessException("Some images ids are not related to the given furniture");
     }
 

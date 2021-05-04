@@ -176,13 +176,23 @@ async function FurniturePage(id) {
 
         } else if (furniture.condition === "EN_VENTE") {
             if (nbOfDay >= 5) {
-                page.innerHTML += `<div class="option-days condensed small-caps">Vous avez atteint la limite d'option pour cet objet</div>`;
+                page.innerHTML += `<div id="optiondiv"><div class="option-days condensed small-caps">Vous avez atteint la limite d'option pour cet objet</div></div>`;
             } else {
                 if (nbOfDay > 0) {
                     page.innerHTML += `
-                    <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>`;
+                                    <div id="optiondiv">
+                                    <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
+                                        <p>Durée de l'option</p>
+                                        <div class="plus-minus">
+                                                <button class="btn minus-btn disabled" type="button">-</button>
+                                                <input type="text" id="optionTerm" value="1" readonly="readonly">
+                                                <button class="btn plus-btn" type="button">+</button>
+                                        </div>
+                                        <button class="btn-dark" id="introduceOptionBtn">Introduire une option</button>
+                                    </div>`;
                 }
-                page.innerHTML += `
+                else {
+                    page.innerHTML += `
                                     <div id="optiondiv">
                                         <p>Durée de l'option</p>
                                         <div class="plus-minus">
@@ -192,6 +202,7 @@ async function FurniturePage(id) {
                                         </div>
                                         <button class="btn-dark" id="introduceOptionBtn">Introduire une option</button>
                                     </div>`;
+                }
                 //option counter
                 document.querySelector(".minus-btn").setAttribute("disabled", "disabled");
                 document.querySelector(".plus-btn").addEventListener("click", incrementCounter);
@@ -892,7 +903,7 @@ const incrementCounter = () => {
         document.querySelector(".minus-btn").removeAttribute("disabled");
         document.querySelector(".minus-btn").classList.remove("disabled");
     }
-    if (valueCount === 5) {
+    if (valueCount === 5 - nbOfDay) {
         document.querySelector(".plus-btn").setAttribute("disabled", "disabled");
     }
 }

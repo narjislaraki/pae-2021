@@ -295,7 +295,6 @@ public class VisitUCCTest {
   @DisplayName("Test submit a request for visit without warehouse address")
   @Test
   public void submitARequestOfVisitTest2() {
-    System.out.println(goodVisitWithoutAddress.getIdClient());
     Mockito.when(userDAO.getUserFromId(goodVisitWithoutAddress.getIdClient()))
         .thenReturn(goodValidatedUser);
     Mockito.when(visitDAO.submitRequestOfVisit(goodVisitWithoutAddress)).thenReturn(1);
