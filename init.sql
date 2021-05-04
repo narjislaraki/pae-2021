@@ -196,9 +196,7 @@ SELECT id_photo, photo, is_visible, is_a_client_photo, id_furniture FROM pae.pho
 SELECT id_sales, selling_price, id_furniture, id_buyer, date_of_sale FROM pae.sales;
 	
 SELECT COUNT(id_photo) FROM pae.photos WHERE is_visible = true;
-SELECT COUNT(e.id_furniture) AS "Nombre de meubles en vente", COUNT(o.id_furniture) AS "Nombre de meubles sous options" FROM pae.furnitures e, pae.furnitures o WHERE e.condition = 'en vente' AND o.condition = 'sous option';
+SELECT f.condition, COUNT(f.id_furniture) FROM pae.furnitures f WHERE f.condition = 'en vente' OR f.condition = 'sous option' OR f.condition='vendu' GROUP BY f.condition;
 SELECT COUNT(p.id_photo) FROM pae.photos p, pae.furnitures f WHERE p.id_furniture = f.id_furniture AND f.favorite_photo = p.id_photo;
-
-
 
 
