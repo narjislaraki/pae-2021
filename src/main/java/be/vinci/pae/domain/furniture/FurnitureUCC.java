@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.furniture;
 
 import java.util.List;
+
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -46,7 +47,7 @@ public interface FurnitureUCC {
 
   boolean addSale(SaleDTO sale);
 
-  List<PhotoDTO> getFurniturePhotos(int idFurniture);
+  List<PhotoDTO> getFurniturePhotos(int idFurniture, UserDTO user);
 
   boolean processVisit(List<FurnitureDTO> listFurnitures);
 
