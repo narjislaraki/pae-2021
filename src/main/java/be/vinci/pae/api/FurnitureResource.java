@@ -389,29 +389,10 @@ public class FurnitureResource {
   public List<PhotoDTO> getPhotos(@Context ContainerRequest request,
       @PathParam("idFurniture") int idFurniture) {
 
-    List<PhotoDTO> list = furnitureUCC.getFurniturePhotos(idFurniture);
+    List<PhotoDTO> list =
+        furnitureUCC.getFurniturePhotos(idFurniture, (UserDTO) request.getProperty("user"));
 
-    FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
-
-    // Placing the favourite photo first
-    List<PhotoDTO> orderedList = new ArrayList<>();
-    for (PhotoDTO p : list) {
-      if (p.getId() == furniture.getFavouritePhotoId()) {
-        orderedList.add(0, p);
-      } else {
-        orderedList.add(p);
-      }
-    }
-
-    UserDTO user = (UserDTO) request.getProperty("user");
-
-    if (!user.getRole().equals(Role.ADMIN)) {
-      orderedList = orderedList.stream()
-          .filter(
-              e -> e.isVisible() || user.getId() == furniture.getSellerId() && e.isAClientPhoto())
-          .collect(Collectors.toList());
-    }
-    return orderedList;
+    return list;
   }
 
   /**

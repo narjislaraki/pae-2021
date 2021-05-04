@@ -458,7 +458,8 @@ public class FurnitureUCCTest {
     listA.add(photo);
     listA.add(photo);
     Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
-    List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id);
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
   }
 

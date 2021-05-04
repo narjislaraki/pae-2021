@@ -150,22 +150,24 @@ async function FurniturePage(id) {
             document.getElementById("furniture-pictures").appendChild(image);
         }
         if (element.isAClientPhoto && currentUser.role === "ADMIN")
-            smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image" style="border: red; border-style: dotted">`;
-        else if (element.isVisible && currentUser.role !== "ADMIN")
-            smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto++}" src="${element.photo}" alt="Petite image">`;
+            smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto}" src="${element.photo}" alt="Petite image" style="border: red; border-style: dotted">`;
+        else if ((!element.isVisible && currentUser.role === "ADMIN") || (element.isVisible))
+            smallImages.innerHTML += `<img data-id="${nbPhoto}" data-photoid=${element.id} id="small-img${nbPhoto}" src="${element.photo}" alt="Petite image">`;
+        nbPhoto++;
     })
     if (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE") {
         if (furniture.condition === "SOUS_OPTION") {
 
             if (option.idUser !== currentUser.id) {
-                page.innerHTML += `<div class="option-days condensed small-caps">Ce meuble est sous option, repassez plus tard</div>`;
+                page.innerHTML += `<div id="optiondiv"> <div class="option-days condensed small-caps">Ce meuble est sous option, repassez plus tard</div></div>`;
             } else {
-                page.innerHTML += `
-                                    <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
-                                    <div class="option-days-below">
-                                        <p>Raison de l'annulation</p>
-                                        <input type="text" id="cancelOption">
-                                        <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+                page.innerHTML += `<div id="optiondiv">
+                                        <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
+                                        <div class="option-days-below">
+                                            <p>Raison de l'annulation</p>
+                                            <input type="text" id="cancelOption">
+                                            <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+                                        </div>
                                     </div>
                                     `;
                 let cancelOptionBtn = document.getElementById("cancelOptionBtn");
@@ -181,7 +183,7 @@ async function FurniturePage(id) {
                     <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>`;
                 }
                 page.innerHTML += `
-                                    <div>
+                                    <div id="optiondiv">
                                         <p>Durée de l'option</p>
                                         <div class="plus-minus">
                                                 <button class="btn minus-btn disabled" type="button">-</button>
@@ -322,11 +324,12 @@ async function FurniturePage(id) {
                                 </div>
                             `;
         } else if (furniture.condition === "SOUS_OPTION") {
-            page.innerHTML += `
-                                <div class="option-days-below">
-                                    <p>Raison de l'annulation</p>
-                                    <input type="text" id="cancelOption">
-                                    <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+            page.innerHTML += `<div id="optiondiv">
+                                    <div class="option-days-below">
+                                        <p>Raison de l'annulation</p>
+                                        <input type="text" id="cancelOption">
+                                        <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
+                                    </div>
                                 </div>
                                 `;
             menuDeroulant = `
@@ -419,6 +422,8 @@ const onEdit = async () => {
         document.getElementById("price-inline").style.display = "none";
     if (furniture.condition === "EN_VENTE")
         document.getElementById("sellingDiv").style.display = "none";
+    if (furniture.condition === "SOUS_OPTION")
+        document.getElementById("optiondiv").style.display = "none";
     document.getElementById("editIcon").style.display = "none"
     document.getElementById("dropdownMenu2").style.display = "none"
 
@@ -669,6 +674,8 @@ function stopEdition() {
         document.getElementById("price-inline").style.display = "block";
     if (furniture.condition === "EN_VENTE")
         document.getElementById("sellingDiv").style.display = "block";
+    if (furniture.condition === "SOUS_OPTION")
+        document.getElementById("optiondiv").style.display = "block";
     document.getElementById("editIcon").style.display = "inline"
     document.getElementById("dropdownMenu2").style.display = "block"
 }
