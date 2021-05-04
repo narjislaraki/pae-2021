@@ -11,6 +11,7 @@ let furniture;
 let userData;
 let nbOfDay;
 let option;
+let optionUser;
 let menuDeroulant = '';
 
 let typeElem;
@@ -110,6 +111,21 @@ async function FurniturePage(id) {
         if (err !== "SyntaxError: Unexpected end of JSON input") {
             console.error("FurniturePage::onGetOption", err);
             PrintError(err);
+        }
+    }
+    if(option) {
+        try {
+            optionUser = await callAPI(
+                "api/users/" + option.idUser,
+                "GET",
+                userData.token,
+                undefined,
+            );
+        } catch (err) {
+            if (err !== "SyntaxError: Unexpected end of JSON input") {
+                console.error("FurniturePage::onGetOption", err);
+                PrintError(err);
+            }
         }
     }
 
@@ -294,8 +310,10 @@ async function FurniturePage(id) {
                                 </div>
                             `;
         } else if (furniture.condition === "SOUS_OPTION") {
+            console.log(option, optionUser)
             page.innerHTML += `<div id="optiondiv">
                                     <div class="option-days-below">
+                                        <p>Utilisateur: ${optionUser.username}</p>
                                         <p>Raison de l'annulation</p>
                                         <input type="text" id="cancelOption">
                                         <button class="btn-dark" id="cancelOptionBtn">Annuler l'option</button>
