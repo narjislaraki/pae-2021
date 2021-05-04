@@ -491,6 +491,7 @@
 	</td>
 </tr>
 
+</table>
 
 ---
 ## Properties
