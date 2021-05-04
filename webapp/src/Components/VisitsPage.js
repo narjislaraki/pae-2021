@@ -14,10 +14,10 @@ let VisitsPage = () => {
     userData = getUserSessionData();
     let menu = `
     <div class="menuAdmin">
-        <button class="menuAdminOn" id="visits">Visites en attente</button>
-        <button id="visitsToBeProcessed">Visites à traiter</button>
-        <button id="advancedSearches">Recherche avancées</button>
-        <button id="confirmRegister">Confirmation des inscriptions</button>
+        <div class="condensed small-caps menuAdminOn" id="visits">Visites en attente</div>
+        <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
+        <div class="condensed small-caps" id="advancedSearches">Recherche avancées</div>
+        <div class="condensed small-caps" id="confirmRegister">Confirmation des inscriptions</div>
     </div>
     `;
     let visitPage = `<div class="visits-title small-caps">
@@ -31,11 +31,11 @@ let VisitsPage = () => {
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
 
-    let btnWaiting = document.getElementById("btnWaiting");
+    let btnWaiting = document.getElementById("visits");
     btnWaiting.addEventListener("click", onVisitsWaiting);
 
-    let btnToTreat = document.getElementById("btnToTreat");
-    btnToTreat.addEventListener("click", onVisitsToTreat);
+    let btnToTreat = document.getElementById("visitsToBeProcessed");
+    btnToTreat.addEventListener("click", onVisitsToBeProcessed);
     onVisitsWaiting();
 
 };
@@ -64,12 +64,7 @@ const onConfirmRegister = (e) => {
     RedirectUrl("/confirmRegistration");
 };
 
-const onVisitsWaiting = async () => {
-    //todo
-    //btnToTreat.disabled = true;
-    //btnWaiting.disabled = false;
-
-    
+const onVisitsWaiting = async () => {    
     try {
         listVisitsWaiting = await callAPI(
             API_BASE_URL + "notConfirmedVisits",
@@ -110,27 +105,6 @@ const onVisitsWaiting = async () => {
 
             `
         ).join("");
-    
-    
-    /*let listPhotosForOnFurniture;
-    
-    
-    
-    let eachFurniture = document.getElementsByClassName("furniture");
-    
-    try{
-        listPhotosForOnFurniture = await callAPI(
-            "/api/furnitures/" + idFurniture + "/photos",
-            "GET",
-            userData.token,
-            undefined);
-    }catch (err) {
-        if (err == "Error: Admin only") {
-            err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-        }
-        console.error("VisitsPage::onVisitsWaiting", err);
-        PrintError(err);
-    }*/
 
     page.innerHTML += visitsWaiting;
     page.innerHTML += `</tbody></table></div>`;

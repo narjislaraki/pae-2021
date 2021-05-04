@@ -15,10 +15,10 @@ let VisitsToBeProcessedPage = () => {
     userData = getUserSessionData();
     let menu = `
     <div class="menuAdmin">
-        <button id="visits">Visites en attente</button>
-        <button class="menuAdminOn" id="visitsToBeProcessed">Visites à traiter</button>
-        <button id="advancedSearches">Recherche avancées</button>
-        <button id="confirmRegister">Confirmation des inscriptions</button>
+        <div class="condensed small-caps" id="visits">Visites en attente</div>
+        <div class="condensed small-caps menuAdminOn" id="visitsToBeProcessed">Visites à traiter</div>
+        <div class="condensed small-caps" id="advancedSearches">Recherche avancées</div>
+        <div class="condensed small-caps" id="confirmRegister">Confirmation des inscriptions</div>
     </div>
     `;
     let visitToBeProcessedPage = `<div class="visits-title small-caps">

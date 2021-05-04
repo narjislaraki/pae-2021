@@ -1067,13 +1067,6 @@ footer{
     border-radius:  12px 12px 12px 12px;
 }
 
-.eachVisit tr:hover{
-    background-color: gray;
-    color: white;
-    cursor: pointer;
-}
-
-
 #explanatoryNote{
     height: 60px;
     width: 200px;

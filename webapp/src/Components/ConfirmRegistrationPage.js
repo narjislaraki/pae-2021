@@ -6,12 +6,12 @@ let userData;
 let adresse = ``;
 const API_BASE_URL = "/api/users/";
 let menu = `
-    <div class="menuAdmin">
-        <button  id="visits">Visites en attente</button>
-        <button id="visitsToBeProcessed">Visites à traiter</button>
-        <button id="advancedSearches">Recherche avancées</button>
-        <button class="menuAdminOn" id="confirmRegister">Confirmation des inscriptions</button>
-    </div>
+<div class="menuAdmin">
+<div class="condensed small-caps" id="visits">Visites en attente</div>
+<div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
+<div class="condensed small-caps" id="advancedSearches">Recherche avancées</div>
+<div class="condensed small-caps menuAdminOn" id="confirmRegister">Confirmation des inscriptions</div>
+</div>
     `;
 let confirmRegistrationPage = `<div class="all-furn-title small-caps">Confirmer l'inscription</div>`;
 
