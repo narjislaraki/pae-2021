@@ -223,7 +223,7 @@ public class FurnitureResource {
    * given by idFurniture.
    * 
    * @param request the request
-   * @param idFurniture
+   * @param idFurniture the furniture id
    * @return the number of days
    */
   @Authorize
@@ -349,8 +349,8 @@ public class FurnitureResource {
   /**
    * Add a sale and change the state of the furniture from the sale to "vendu".
    * 
-   * @param request
-   * @param sale
+   * @param request the request
+   * @param sale the sale
    * @return
    */
   @AdminAuthorize
