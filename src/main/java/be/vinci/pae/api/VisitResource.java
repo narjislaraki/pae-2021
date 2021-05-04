@@ -149,7 +149,7 @@ public class VisitResource {
    * @return the visit wrapped in a Response
    */
   @GET
-  @Authorize
+  @AdminAuthorize
   @Path("{id}")
   public Response getVisit(@Context ContainerRequest request, @PathParam("id") int id) {
     VisitDTO visit = visitUCC.getVisitById(id);

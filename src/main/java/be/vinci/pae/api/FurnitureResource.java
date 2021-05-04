@@ -353,7 +353,7 @@ public class FurnitureResource {
    * @param sale
    * @return
    */
-  @Authorize
+  @AdminAuthorize
   @POST
   @Path("sale")
   @Produces(MediaType.APPLICATION_JSON)
