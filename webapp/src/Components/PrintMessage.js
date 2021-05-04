@@ -1,7 +1,7 @@
 let id = Math.random();
 const PrintMessage = (msg) => {
     if (!msg) return;
-    let page = document.querySelector("#page");
+    let page = document.body;
     const div = document.createElement("div");
     div.className = "alert alert-success mt-2";
     div.id = "messageBoard" + id;

@@ -13,7 +13,7 @@ let typesOfFurniture;
 const Navbar = async () => {
     let nb;
     let user = currentUser;
-    userData = getUserSessionData;
+    userData = getUserSessionData();
     if (user) {
 
         nb = `
@@ -71,13 +71,6 @@ const Navbar = async () => {
         Array.from(listOfType).forEach((e) => {
             e.addEventListener("click", () => onFurnitureListPage(e.getAttribute("data-id"), e.innerHTML));
         });
-        //introduceBtn.addEventListener("click", onIntroduceRequest);
-
-
-        //inputImage = document.getElementById("files"+idFurniture);
-        //console.log(document.getElementById("files"+idFurniture).files);
-        //inputImage.addEventListener("change", encodeImagetoBase64(document.getElementById("files"+idFurniture).files));
-
 
         if (user.role == "ADMIN") {
             let adminTools = document.getElementById("adminToolsIcon");
@@ -108,8 +101,8 @@ const Navbar = async () => {
     profil.addEventListener("click", onProfil);
     //todo
 
-    let logout = document.querySelector("#logout");
-    logout.addEventListener("click", onLogout);
+        let logout = document.querySelector("#logout");
+        logout.addEventListener("click", onLogout);
 
     let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
     btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
@@ -152,7 +145,62 @@ const onClickTools = (e) => {
 
 const onIntroduceVisit = async (e) => {
     e.preventDefault();
-    let popUpVisit = `
+    let popUpVisit
+    if (currentUser.role === "ADMIN") {
+        popUpVisit = `
+  <div class="hover_bkgr_fricc" id="hover_bkgr_friccNavbar">
+        <span class="helper"></span>
+  <div id="popupRequestForVisit">
+  <div class="popupCloseButton" id="popupCloseButtonNavbar">&times;</div>
+  <h2>Introduire une demande de visite</h2>
+<form id="formRequest" class="RequestVisitForm">
+<div>
+  <h4>Plage horaire *: </h4><input type="text" id="timeSlot" name="timeSlot" placeholder="exemple : le lundi de 18h à 22h" required><br>
+  <br><h4>Client: </h4><datalist id="clients-list">
+   </datalist>
+  <input id="input-client" list="clients-list">
+  <h4>Adresse : (uniquement si elle est différente de celle du client)</h4>
+</div>
+<div>
+  <input type="text" class="form-control input-card" id="street" name="street" placeholder="Rue">
+
+  <input type="text" class="form-control input-card" id="number" name="number" placeholder="Numéro">
+        
+  <input type="text" class="form-control input-card" id="unitnumber" name="unitnumber" placeholder="Boite">
+        
+  <input type="text" class="form-control input-card" id="postcode" name="postcode" placeholder="Code Postal">
+        
+  <input type="text" class="form-control input-card" id="city" name="city" placeholder="Commune">
+        
+  <input type="text" class="form-control input-card" id="country" name="country" placeholder="Pays">
+    
+</div><br>
+<h4>Meuble(s) *: </h4><br>
+  <div id="eachFurniture">
+    <div>
+      ${idFurniture}. <textarea class="description" id="furniture${idFurniture}" name="furniture${idFurniture}" required></textarea> 
+      <label for="files${idFurniture}" class="bi bi-upload"></label>
+      <input id="files${idFurniture}" name="files${idFurniture}" class="images" type="file" accept="image/*" multiple required>
+      <div id="typeFurniture" class="dropdown">
+        <label for="type">Type du meuble : </label>
+        <div id="tousLesTypes${idFurniture}"></div>
+      </div>
+    </div>
+  </div>
+
+<br>
+<button class="bi bi-plus-circle" id="btnPlus" type="button"></button>
+
+<br>
+<button class="btn btn-outline-success" id="introduceBtn" name="introduceBtn" type="submit">Confirmer</button>
+<button class="btn btn-outline-danger" id="cancelBtn" name="cancelBtn" type="button">Annuler</button>
+</form>
+
+<span class="btnClose"></span>
+</div>
+  `
+    } else {
+        popUpVisit = `
   <div class="hover_bkgr_fricc" id="hover_bkgr_friccNavbar">
         <span class="helper"></span>
   <div id="popupRequestForVisit">
@@ -201,6 +249,7 @@ const onIntroduceVisit = async (e) => {
 <span class="btnClose"></span>
 </div>
   `;
+    }
     document.getElementById("popups").innerHTML = popUpVisit;
 
     document.getElementById("hover_bkgr_friccNavbar").style.display = "block";
@@ -213,6 +262,24 @@ const onIntroduceVisit = async (e) => {
     btnPlus.addEventListener("click", onAddFurniture);
     onTypesOfFurniture(typesOfFurniture);
 
+    if (currentUser.role === "ADMIN") {
+        let clients;
+        try {
+            clients = await callAPI(
+                "/api/users/validatedList",
+                "GET",
+                userData.token,
+                undefined);
+        } catch (err) {
+            console.error("FurniturePage::get listClients", err);
+            PrintError(err);
+        }
+        let dataListClient = document.getElementById("clients-list");
+        clients.map((element) => {
+            dataListClient.innerHTML +=
+                `<option data-role="${element.role}" data-userId="${element.id}" value="${element.username}">${element.role}</option>`;
+        })
+    }
 }
 
 const onCloseVisit = (e) => {
@@ -296,12 +363,13 @@ const onAddFurniture = (e) => {
 const onIntroduceRequest = async (e) => {
     e.preventDefault();
     document.getElementById("hover_bkgr_friccNavbar").style.display = "none";
-    /*for (let i = 1; i<= idFurniture; i++){
-      let files = document.getElementById("files"+idFurniture);
-      console.log(files.value);
-      encodeImagetoBase64(files.value, idFurniture)
-    }*/
 
+    let data;
+    if (currentUser.role === "ADMIN"){
+        let inputClient = document.getElementById("input-client").value;
+        data = document.querySelector("#clients-list option[value='" + inputClient + "']");
+    }
+    let clientID = data ? data.dataset.userid : currentUser.id;
     let request = {
         timeSlot: e.target.elements.timeSlot.value,
         warehouseAddress: {
@@ -312,11 +380,10 @@ const onIntroduceRequest = async (e) => {
             city: e.target.elements.city.value,
             unitNumber: e.target.elements.unitnumber.value,
         },
-        idClient: currentUser.id,
+        idClient: clientID,
         furnitureList: [],
 
     };
-    console.log(mapPhotos);
     for (let i = 1; i <= idFurniture; i++) {
         let furniture = {
             id: i,
@@ -326,7 +393,6 @@ const onIntroduceRequest = async (e) => {
         }
         request.furnitureList[i - 1] = furniture;
     }
-    console.log(request);
 
     try {
         const requestVisit = await callAPI(

@@ -2,14 +2,16 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.stream.Collectors;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.edition.EditionDTO;
@@ -390,29 +392,10 @@ public class FurnitureResource {
   public List<PhotoDTO> getPhotos(@Context ContainerRequest request,
       @PathParam("idFurniture") int idFurniture) {
 
-    List<PhotoDTO> list = furnitureUCC.getFurniturePhotos(idFurniture);
+    List<PhotoDTO> list =
+        furnitureUCC.getFurniturePhotos(idFurniture, (UserDTO) request.getProperty("user"));
 
-    FurnitureDTO furniture = furnitureUCC.getFurnitureById(idFurniture);
-
-    // Placing the favourite photo first
-    List<PhotoDTO> orderedList = new ArrayList<>();
-    for (PhotoDTO p : list) {
-      if (p.getId() == furniture.getFavouritePhotoId()) {
-        orderedList.add(0, p);
-      } else {
-        orderedList.add(p);
-      }
-    }
-
-    UserDTO user = (UserDTO) request.getProperty("user");
-
-    if (!user.getRole().equals(Role.ADMIN)) {
-      orderedList = orderedList.stream()
-          .filter(
-              e -> e.isVisible() || user.getId() == furniture.getSellerId() && e.isAClientPhoto())
-          .collect(Collectors.toList());
-    }
-    return orderedList;
+    return list;
   }
 
   /**
