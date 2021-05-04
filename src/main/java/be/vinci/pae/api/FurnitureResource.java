@@ -52,10 +52,10 @@ public class FurnitureResource {
   }
 
   /**
-   * Get a list of furniture for the unlogged users.
+   * Get a list of furnitures for the unlogged users.
    * 
    * @param request the request
-   * @return a list of furniture wrapped in a Response
+   * @return a list of furnitures wrapped in a Response
    */
   @GET
   @Path("public")
@@ -95,9 +95,9 @@ public class FurnitureResource {
     }
     return responseOkWithEntity(r);
   }
-  
+
   /**
-   * Get a list of furniture for the homepage (sold, available and under options).
+   * Get a list of furniture to be placed in the carousel (on sale, sold and under options).
    * 
    * @param request the request
    * @return a list of furniture wrapped in a Response
@@ -114,7 +114,7 @@ public class FurnitureResource {
     }
     return responseOkWithEntity(r);
   }
-  
+
 
   /**
    * Get a list of furnitures of a certain type.
@@ -218,6 +218,14 @@ public class FurnitureResource {
     return responseOkWithEntity(r);
   }
 
+  /**
+   * Getting the sum of days of options that the logged user has already taken for the furniture.
+   * given by idFurniture.
+   * 
+   * @param request the request
+   * @param idFurniture
+   * @return the number of days
+   */
   @Authorize
   @GET
   @Path("{idFurniture}/getSumOfOptionDays")
@@ -228,6 +236,13 @@ public class FurnitureResource {
     return furnitureUCC.getSumOfOptionDaysForAUserAboutAFurniture(idFurniture, idUser);
   }
 
+  /**
+   * Changes the state of the furniture given by its id to "en restauration".
+   * 
+   * @param request the request
+   * @param id the furniture id
+   * @return true
+   */
   @AdminAuthorize
   @POST
   @Path("{id}/workShop")
@@ -237,6 +252,13 @@ public class FurnitureResource {
     return true;
   }
 
+  /**
+   * Changes the state of the furniture given by its id to "déposé en magasin".
+   * 
+   * @param request the request
+   * @param id the furniture id
+   * @return true
+   */
   @AdminAuthorize
   @POST
   @Path("{id}/dropOfStore")
@@ -247,7 +269,8 @@ public class FurnitureResource {
   }
 
   /**
-   * Set a furniture to a sold state.
+   * Changes the state of the furniture given by its id to "en vente" and set the offered selling
+   * price.
    * 
    * @param request the request
    * @param id the furniture id
@@ -323,6 +346,13 @@ public class FurnitureResource {
     return true;
   }
 
+  /**
+   * Add a sale and change the state of the furniture from the sale to "vendu".
+   * 
+   * @param request
+   * @param sale
+   * @return
+   */
   @Authorize
   @POST
   @Path("sale")
@@ -342,7 +372,6 @@ public class FurnitureResource {
   @Produces(MediaType.APPLICATION_JSON)
   public List<TypeOfFurnitureDTO> getTypeOfFurnitureList(@Context ContainerRequest request) {
     List<TypeOfFurnitureDTO> list = furnitureUCC.getTypesOfFurnitureList();
-
     return list;
   }
 
