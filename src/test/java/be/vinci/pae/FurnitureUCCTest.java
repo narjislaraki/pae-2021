@@ -451,13 +451,13 @@ public class FurnitureUCCTest {
   @DisplayName("Testing getting a photo of a furniture by an id, as an admin")
   @Test
   public void getFurniturePhotosTest1() {
-    int id = goodFurniture.getId();
-    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
     photo1.setId(3);
     photo2.setId(5);
     goodFurniture.setFavouritePhotoId(3);
+    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
     listA.add(photo1);
     listA.add(photo2);
+    int id = goodFurniture.getId();
     Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
     Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
     List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
@@ -467,14 +467,14 @@ public class FurnitureUCCTest {
   @DisplayName("Testing getting a photo of a furniture by an id, as a user")
   @Test
   public void getFurniturePhotosTest2() {
-    int id = goodFurniture.getId();
-    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
     photo1.setId(3);
     photo2.setId(5);
     goodFurniture.setFavouritePhotoId(3);
     goodUser.setRole(Role.CLIENT.toString());
+    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
     listA.add(photo1);
     listA.add(photo2);
+    int id = goodFurniture.getId();
     Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
     Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
     List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
