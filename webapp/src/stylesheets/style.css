@@ -885,6 +885,12 @@ footer{
 .furniture-options{
     
 }
+
+#optiondiv {
+    position: absolute;
+    top: 45%;
+    left: 55%;
+}
 .option-duration{
     width:max-content;
     position: absolute;
@@ -917,7 +923,6 @@ footer{
     width: 18rem;
 }
 .option-days{
-    position: absolute;
     top: 46%;
     right: 21.5%;
     font-size: 16px;
@@ -931,7 +936,6 @@ footer{
     padding: 0.4rem;
 }
 .option-days-below{
-    position: absolute;
     top: 58%;
     right: 21.5%;
     font-size: 16px;
@@ -939,7 +943,6 @@ footer{
     letter-spacing: 0.002em;
     color: #FFFFFF;
     background: grey;
-    border-radius: 12px 12px 0px 0px;
     width: 16rem;
     text-align: center;
     padding: 0.4rem;
