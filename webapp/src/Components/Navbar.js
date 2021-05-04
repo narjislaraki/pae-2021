@@ -40,7 +40,7 @@ const Navbar = async () => {
             <div class="dropleft" id="head-menu">
               <i id="user" class="bi bi-person-circle dropdown-toggle-user"></i>
               <ul class="dropdown-menu dropdown-menu-left condensed" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" id="transactions" href="#">Transactions</a></li>
+                <li><a class="dropdown-item" id="profil" href="#">Profil</a></li>
                 <li><a class="dropdown-item" id="logout" href="#">Se déconnecter</a></li>
               </ul>
             </div>
@@ -104,17 +104,18 @@ const Navbar = async () => {
     }
 
   if (user) {
-    let transactions = document.getElementById("transactions");
-    transactions.addEventListener("click", onTransactions);
+    let profil = document.getElementById("profil");
+    profil.addEventListener("click", onProfil);
+    //todo
 
     let logout = document.querySelector("#logout");
     logout.addEventListener("click", onLogout);
 
-        let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
-        btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
+    let btnIntroduceVisit = document.getElementById("btnIntroduceVisit");
+    btnIntroduceVisit.addEventListener("click", onIntroduceVisit);
 
-        let voir = document.getElementById("all-furnitures-navbar");
-        voir.addEventListener("click", onFurnitureListPage);
+    let voir = document.getElementById("all-furnitures-navbar");
+    voir.addEventListener("click", onFurnitureListPage);
     }
 
 
@@ -139,9 +140,9 @@ const onLogout = (e) => {
     RedirectUrl("/");
     Navbar();
 };
-const onTransactions = (e) => {
+const onProfil = (e) => {
   e.preventDefault();
-  RedirectUrl("/transactions");
+  RedirectUrl("/visitsForClient");
 }
 
 const onClickTools = (e) => {

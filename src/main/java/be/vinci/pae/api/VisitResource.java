@@ -87,6 +87,7 @@ public class VisitResource {
    * Get a list of furnitures for one request for visit.
    * 
    * @param request the request
+   * @param idVisit the id of the request for visit
    * @return a list of furnitures for one requests for visits wrapped in a Response
    */
   @GET
@@ -99,6 +100,28 @@ public class VisitResource {
     try {
       r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
 
+    } catch (JsonProcessingException e) {
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+  /**
+   * Get a list of requests for visits introduced by the client given by his id.
+   * 
+   * @param request the request
+   * @param idClient the client id
+   * @return a list of requests for visits introduced by the client given by his id
+   */
+  @GET
+  @Path("{idClient}/myVisits")
+  @Authorize
+  public Response getVisitsListForAClient(@Context ContainerRequest request,
+      @PathParam("idClient") int idClient) {
+    List<VisitDTO> list = visitUCC.getVisitsListForAClient(idClient);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
     } catch (JsonProcessingException e) {
       return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }

@@ -8,6 +8,7 @@ import AdvancedSearchesPage from "./AdvancedSearchesPage.js";
 import TransactionsPage from "./TransactionsPage.js";
 import ConfirmRegistrationPage from "./ConfirmRegistrationPage.js";
 import FurnitureListPage from "./FurnitureListPage.js";
+import VisitsForClientPage from "./VisitsForClientPage.js";
 
 const routes = {
   "/": HomePage,
@@ -17,6 +18,7 @@ const routes = {
   "/visitsToBeProcessed" : VisitsToBeProcessedPage,
   "/advancedSearches" : AdvancedSearchesPage,
   "/transactions" : TransactionsPage,
+  "/visitsForClient": VisitsForClientPage,
   "/confirmRegistration": ConfirmRegistrationPage,
   "/furnitures": FurnitureListPage,
   "/error": ErrorPage,

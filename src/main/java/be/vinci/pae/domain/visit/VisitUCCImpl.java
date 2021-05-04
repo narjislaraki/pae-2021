@@ -46,6 +46,14 @@ public class VisitUCCImpl implements VisitUCC {
   }
 
   @Override
+  public List<VisitDTO> getVisitsListForAClient(int idClient) {
+    dalServices.getBizzTransaction(true);
+    List<VisitDTO> list = visitDAO.getVisitsListForAClient(idClient);
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
   public boolean submitRequestOfVisit(VisitDTO visit) {
     dalServices.getBizzTransaction(false);
     // TODO vérifier autrement que l'adresse est différente de celle du client
