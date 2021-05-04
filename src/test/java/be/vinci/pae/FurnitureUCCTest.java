@@ -6,10 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -495,6 +492,36 @@ public class FurnitureUCCTest {
     list.add(goodFurniture);
     list.add(goodFurniture);
     assertTrue(furnitureUCC.processVisit(list));
+  }
+
+  @DisplayName("Test getSliderFurnitureList with empty list")
+  @Test
+  public void getSliderFurnitureListTest1() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    Mockito.when(furnitureDAO.getSliderFurnitureList(10)).thenReturn(list);
+    assertEquals(list, furnitureUCC.getSliderFurnitureList(10));
+  }
+
+  @DisplayName("Test getSliderFurnitureList with one furniture")
+  @Test
+  public void getSliderFurnitureListTest2() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    Mockito.when(furnitureDAO.getSliderFurnitureList(10)).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getSliderFurnitureList(10);
+    assertEquals(listA, listB);
+  }
+
+  @DisplayName("Test getSliderFurnitureList with ten furnitures")
+  @Test
+  public void getSliderFurnitureListTest3() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    for (int i = 0; i < 10; i++) {
+      listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    }
+    Mockito.when(furnitureDAO.getSliderFurnitureList(10)).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getSliderFurnitureList(10);
+    assertEquals(listA, listB);
   }
 
   @DisplayName("Test edit with empty furniture id")
