@@ -958,11 +958,9 @@ async function populateSellingDiv() {
         console.error("FurniturePage::get listClients", err);
         PrintError(err);
     }
-    console.log(clients)
     if (furniture.condition !== "EN_VENTE") {
         clients = clients.filter(e => e.role === "ANTIQUAIRE");
     }
-    console.log(clients)
 
     divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      Vendre      </button>`
     document.getElementById("popups").innerHTML = `
