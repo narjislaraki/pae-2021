@@ -2,9 +2,7 @@ package be.vinci.pae.domain.visit;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.UserDTO;

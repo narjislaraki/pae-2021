@@ -148,6 +148,7 @@ public class FurnitureResource {
   }
 
 
+  // This method is ultimately not used, but kept in the event that a change request needs it.
   /**
    * Get a specific furniture for unlogged users by giving its id.
    * 

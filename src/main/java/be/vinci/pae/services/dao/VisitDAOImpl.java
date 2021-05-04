@@ -118,6 +118,29 @@ public class VisitDAOImpl implements VisitDAO {
   }
 
   @Override
+  public List<VisitDTO> getVisitsListForAClient(int idClient) {
+    List<VisitDTO> list = new ArrayList<VisitDTO>();
+    try {
+      String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
+          + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
+          + "r.client, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
+          + "WHERE r.id_request = f.request_visit AND r.client=? GROUP BY r.id_request;";
+      ps = dalBackendServices.getPreparedStatement(sql);
+      ps.setInt(1, idClient);
+      ResultSet rs = ps.executeQuery();
+      VisitDTO visit = null;
+      while (rs.next()) {
+        VisitDTO visitDTO = setVisit(rs, visit);
+        visitDTO.setAmountOfFurnitures(rs.getInt(8));
+        list.add(visitDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
+
+  @Override
   public int submitRequestOfVisit(VisitDTO visit) {
     int key = 0;
     try {
@@ -192,7 +215,7 @@ public class VisitDAOImpl implements VisitDAO {
   public List<FurnitureDTO> getListFurnituresForOnVisit(int idVisit) {
     List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
     try {
-      String sql = "SELECT id_furniture, description, id_type, request_visit "
+      String sql = "SELECT id_furniture, description, id_type, request_visit, condition "
           + "FROM pae.furnitures WHERE request_visit = ?";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setInt(1, idVisit);
@@ -215,6 +238,7 @@ public class VisitDAOImpl implements VisitDAO {
       furniture.setDescription(rs.getString(2));
       furniture.setTypeId(rs.getInt(3));
       furniture.setRequestForVisitId(rs.getInt(4));
+      furniture.setCondition(rs.getString(5));
     } catch (SQLException e) {
       throw new FatalException(e);
     }
