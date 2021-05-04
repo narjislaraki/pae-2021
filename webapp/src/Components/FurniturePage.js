@@ -40,7 +40,7 @@ let edition = {
 let page = document.querySelector("#page");
 
 async function FurniturePage(id) {
-    if (!id){
+    if (!id) {
         RedirectUrl("/");
         let err = {
             message: "Id invalide",
@@ -214,6 +214,7 @@ async function FurniturePage(id) {
                         <div class="currency-paid">euro</div>`
 
         if (furniture.condition === "ACHETE") {
+            await populateSellingDiv();
             menuDeroulant = `
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -229,6 +230,7 @@ async function FurniturePage(id) {
                             </div>
                         `;
         } else if (furniture.condition === "EN_RESTAURATION") {
+            await populateSellingDiv();
             menuDeroulant = `
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -244,6 +246,7 @@ async function FurniturePage(id) {
                             </div>
                         `;
         } else if (furniture.condition === "DEPOSE_EN_MAGASIN") {
+            await populateSellingDiv();
             menuDeroulant = `
                                 <div id="price-inline">
                                             <input type="number"  min="0" id="price" required/>
@@ -263,51 +266,7 @@ async function FurniturePage(id) {
                                 </div>
                             `;
         } else if (furniture.condition === "EN_VENTE") {
-            let divSelling = document.getElementById("sellingDiv");
-            let clients;
-            try {
-                clients = await callAPI(
-                    "/api/users/validatedList",
-                    "GET",
-                    userData.token,
-                    undefined);
-            } catch (err) {
-                console.error("FurniturePage::get listClients", err);
-                PrintError(err);
-            }
-
-            divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      Vendre      </button>`
-            document.getElementById("popups").innerHTML = `
-                            <div class="hover_bkgr_fricc" id="popupSell" >
-                                <span class="helper"></span>
-                                <div>
-                                    <div class="popupCloseButton" id="closeBtnPop">
-                                        &times;
-                                    </div>
-                                    <h2>Vendre</h2>
-                                    <div>
-                                        <span class="titre">Prix indiqué: </span> ${furniture.offeredSellingPrice}<br>
-                                        <div id="sellingPrice" style="display: none;" contenteditable="true"> ${furniture.offeredSellingPrice} </div>
-                                        <h4>Client: </h4>
-                                        <datalist id="clients-list">
-                                        </datalist>
-                                        <input id="input-client" list="clients-list">
-                                        <h4>Vente anonyme ? <input type="checkbox" id="unknownBuyerSell"> </h4><br>
-                                        <div class="container">
-                                            <div class="row">
-                                                <button class="btn btn-outline-success col-6 confirmSellBtn" id="confirmSellBtn" " type="submit">Confirmer</button>
-                                                <button class="btn btn-outline-danger col-6 cancelSellBtn" id="cancelSellBtn" type="submit">Annuler</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
-
-            let dataListClient = document.getElementById("clients-list");
-            clients.map((element) => {
-                dataListClient.innerHTML +=
-                    `<option data-role="${element.role}" data-userId="${element.id}" value="${element.username}">${element.role}</option>`;
-            })
+            await populateSellingDiv();
 
             menuDeroulant = `
                                 <div class="dropdown">
@@ -397,21 +356,21 @@ async function FurniturePage(id) {
         } catch (err) {
 
         }
-        if (furniture.condition === "EN_VENTE") {
-            let sellingBtn = document.getElementById("sell");
-            let btnPopup = document.getElementById("closeBtnPop");
-            let inputClient = document.getElementById("input-client");
-            let cancelSellBtn = document.getElementById("cancelSellBtn");
-            let confirmSellBtn = document.getElementById("confirmSellBtn");
-            let sellingAnonCheck = document.getElementById("unknownBuyerSell");
-            sellingBtn.addEventListener("click", onClickSell);
-            inputClient.addEventListener("input", onClientSelection);
-            btnPopup.addEventListener("click", onCloseSell);
-            cancelSellBtn.addEventListener("click", onCloseSell);
-            confirmSellBtn.addEventListener("click", onSell);
-            sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
-        }
+        let sellingBtn = document.getElementById("sell");
+        let btnPopup = document.getElementById("closeBtnPop");
+        let inputClient = document.getElementById("input-client");
+        let cancelSellBtn = document.getElementById("cancelSellBtn");
+        let confirmSellBtn = document.getElementById("confirmSellBtn");
+        let sellingAnonCheck = document.getElementById("unknownBuyerSell");
+        sellingBtn.addEventListener("click", onClickSell);
+        inputClient.addEventListener("input", onClientSelection);
+        btnPopup.addEventListener("click", onCloseSell);
+        cancelSellBtn.addEventListener("click", onCloseSell);
+        confirmSellBtn.addEventListener("click", onSell);
+        sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
 
+        if (furniture.condition !== "EN_VENTE")
+            document.getElementById("anonymousdiv").style.display = "none";
     }
 }
 
@@ -973,6 +932,59 @@ async function encodeFiles(files) {
         }
     }
     return returnedFiles;
+}
+
+async function populateSellingDiv() {
+    let divSelling = document.getElementById("sellingDiv");
+    let clients;
+    try {
+        clients = await callAPI(
+            "/api/users/validatedList",
+            "GET",
+            userData.token,
+            undefined);
+    } catch (err) {
+        console.error("FurniturePage::get listClients", err);
+        PrintError(err);
+    }
+    console.log(clients)
+    if (furniture.condition !== "EN_VENTE") {
+        clients = clients.filter(e => e.role === "ANTIQUAIRE");
+    }
+    console.log(clients)
+
+    divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      Vendre      </button>`
+    document.getElementById("popups").innerHTML = `
+                            <div class="hover_bkgr_fricc" id="popupSell" >
+                                <span class="helper"></span>
+                                <div>
+                                    <div class="popupCloseButton" id="closeBtnPop">
+                                        &times;
+                                    </div>
+                                    <h2>Vendre</h2>
+                                    <div>
+                                        <span class="titre">Prix indiqué: </span> ${furniture.offeredSellingPrice}<br>
+                                        <div id="sellingPrice" style="display: none;" contenteditable="true"> ${furniture.offeredSellingPrice} </div>
+                                        <h4>Client: </h4>
+                                        <datalist id="clients-list">
+                                        </datalist>
+                                        <input id="input-client" list="clients-list">
+                                        <div id="anonymousdiv"><h4>Vente anonyme ? <input type="checkbox" id="unknownBuyerSell"> </h4></div><br><br>
+                                        <div class="container">
+                                            <div class="row">
+                                                <button class="btn btn-outline-success col-6 confirmSellBtn" id="confirmSellBtn" " type="submit">Confirmer</button>
+                                                <button class="btn btn-outline-danger col-6 cancelSellBtn" id="cancelSellBtn" type="submit">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+
+    let dataListClient = document.getElementById("clients-list");
+    clients.map((element) => {
+        dataListClient.innerHTML +=
+            `<option data-role="${element.role}" data-userId="${element.id}" value="${element.username}">${element.role}</option>`;
+    })
 }
 
 export {FurniturePage};
