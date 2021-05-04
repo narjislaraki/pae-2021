@@ -4,11 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.user.UserDTO;
@@ -149,6 +146,38 @@ public class VisitUCCTest {
     });
   }
 
+  @DisplayName("Test getVisitsListForAClient with empty list")
+  @Test
+  public void getVisitsListForAClientTest1() {
+    List<VisitDTO> list = new ArrayList<VisitDTO>();
+    UserDTO user = ObjectDistributor.getGoodValidatedUser();
+    Mockito.when(visitDAO.getVisitsListForAClient(user.getId())).thenReturn(list);
+    assertEquals(list, visitUCC.getVisitsListForAClient(user.getId()));
+  }
+
+  @DisplayName("Test getVisitsListForAClient with one visit")
+  @Test
+  public void getVisitsListForAClientTest2() {
+    List<VisitDTO> listA = new ArrayList<VisitDTO>();
+    UserDTO user = ObjectDistributor.getGoodValidatedUser();
+    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
+    Mockito.when(visitDAO.getVisitsListForAClient(user.getId())).thenReturn(listA);
+    List<VisitDTO> listB = visitUCC.getVisitsListForAClient(user.getId());
+    assertEquals(listA, listB);
+  }
+
+  @DisplayName("Test getVisitsListForAClient with three visit")
+  @Test
+  public void getVisitsListForAClientTest3() {
+    List<VisitDTO> listA = new ArrayList<VisitDTO>();
+    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
+    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
+    listA.add(ObjectDistributor.getVisitsToBeProcessedDTO());
+    UserDTO user = ObjectDistributor.getGoodValidatedUser();
+    Mockito.when(visitDAO.getVisitsListForAClient(user.getId())).thenReturn(listA);
+    List<VisitDTO> listB = visitUCC.getVisitsListForAClient(user.getId());
+    assertEquals(listA, listB);
+  }
 
 
   @DisplayName("Test getListFurnituresForOneVisit with empty list")

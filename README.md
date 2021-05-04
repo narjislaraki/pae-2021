@@ -425,6 +425,17 @@
 </tr>
 
 <tr>
+	<td style="border:1px solid black;">visits/{idClient}/myVisits</td>
+	<td style="border:1px solid black;">GET</td>
+	<td style="border:1px solid black;">Yes</td>
+	<td style="border:1px solid black;">No</td>
+	<td style="border:1px solid black;">
+	Returns a list of requests for visits introduced by the client given by his id.
+	{idClient} is the client id;
+	</td>
+</tr>
+
+<tr>
 	<td style="border:1px solid black;">visits/{idVisit}/furnitures</td>
 	<td style="border:1px solid black;">GET</td>
 	<td style="border:1px solid black;">Yes</td>
