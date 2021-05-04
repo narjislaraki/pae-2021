@@ -159,7 +159,6 @@ public class UserResource {
    * @param request the request
    * @param id the id of the seller
    * @return a userDTO
-   * @throws JsonProcessingException
    */
   @GET
   @Path("{id}")
