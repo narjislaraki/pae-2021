@@ -1,6 +1,7 @@
 import callAPI from "../utils/api";
 import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
+import {FurniturePage} from "./FurniturePage.js";
 import PrintError from "./PrintError";
 
 
@@ -33,9 +34,10 @@ let AdvancedSearchesPage = async () =>{
 
     menu = `
     <div class="menuAdmin">
-        <div id="visits" class="condensed small-caps ">Visites</div>
-        <div id="advancedSearches" class="condensed small-caps menuAdminOn">Recherche avancées</div>
-        <div id="confirmRegister" class="condensed small-caps">Confirmation des inscriptions</div>
+    <div class="condensed small-caps" id="visits">Visites en attente</div>
+    <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
+    <div class="condensed small-caps menuAdminOn" id="advancedSearches">Recherche avancées</div>
+    <div class="condensed small-caps" id="confirmRegister">Confirmation des inscriptions</div>
     </div>
     `;
 
@@ -168,6 +170,9 @@ function addEL () {
 
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
+  
+    let visitsATraiter = document.getElementById("visitsToBeProcessed");
+    visitsATraiter.addEventListener("click", onVisitsToBeProcessed);
 
     let advancedSearches = document.getElementById("advancedSearches");
     advancedSearches.addEventListener("click", onAdvancedSearches);
@@ -189,6 +194,11 @@ const onAdvancedSearches = (e) => {
 const onConfirmRegister = (e) => {
     e.preventDefault();
     RedirectUrl("/confirmRegistration");
+};
+
+const onVisitsToBeProcessed = (e) => {
+    e.preventDefault();
+    RedirectUrl("/visitsToBeProcessed");
 };
 
 const onSearch = async (e) => {
@@ -226,9 +236,16 @@ const onSearch = async (e) => {
             }
 
             
-            onShowClientList(clientList);
+            await onShowClientList(clientList);
             btns();
             addEL();
+            let list = document.getElementsByClassName("furnituresClient");
+            console.log(list.length);
+            Array.from(list).map((e,i,a) => {
+                console.log("bloop");
+                e.addEventListener("click", onFurniture);
+            });
+            
         } catch(err){
             if (err == "Error: Admin only") {
                 err.message = "Seuls les administrateurs peuvent accéder à cette page !";
@@ -474,21 +491,29 @@ const onShowClientList = async (data) =>  {
 
         mAchetesList.map((m) => {
             let meuble = furnList.find(e=>e.id == m.id);
-            meublesAAjouter += `<br><div>${meuble.description}</div>`
+            meublesAAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${meuble.description}</div>`
         })
 
         mVendusList.map((m) => {
-            meublesVAjouter += `<br><div>${m.description}</div>`
+            meublesVAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${m.description}</div>`
         })
 
         meublesVendusHTML.innerHTML = meublesVAjouter;
         meublesAchetesHTML.innerHTML = meublesAAjouter;
+
+        
     }
     page.innerHTML+= `
     <div class="white-space"></div>
-    `
+    `;
+
     return page;
   }
+
+const onFurniture = (e) => {
+    let id = e.target.dataset.id;
+    FurniturePage(id);
+};
 
 function onSwitch(switchElement, clientDiv, furnDiv, menuDiv){
     console.log("dans onSwitch")
