@@ -3,6 +3,7 @@ import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
 import {FurniturePage} from "./FurniturePage.js";
 import PrintError from "./PrintError";
+import {convertDateTimeToStringDate, convertDateTimeToStringTime} from "../utils/tools.js";
 
 
 const API_BASE_URL = "/api/searches/";
@@ -36,7 +37,7 @@ let AdvancedSearchesPage = async () =>{
     <div class="menuAdmin">
     <div class="condensed small-caps" id="visits">Visites en attente</div>
     <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
-    <div class="condensed small-caps menuAdminOn" id="advancedSearches">Recherche avancées</div>
+    <div class="condensed small-caps menuAdminOn" id="advancedSearches">Recherches avancées</div>
     <div class="condensed small-caps" id="confirmRegister">Confirmation des inscriptions</div>
     </div>
     `;
@@ -307,7 +308,7 @@ const onSearch = async (e) => {
             }
 
             
-            onShowFurnitureList(furnList);
+            await onShowFurnitureList(furnList);
             btns();
             addEL();
         } catch(err){
@@ -366,7 +367,7 @@ const onShowFurnitureList = async (data) => {
                 <div>Prix de vente: ${furniture.offeredSellingPrice == null ? "N/A" : furniture.offeredSellingPrice}</div>
             </div>
             <div class="advancedSearchFurnItem_moreInfo2">
-                <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : furniture.pickUpDate}</div>
+                <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : convertDateTimeToStringDate(furniture.pickUpDate) + " à " + convertDateTimeToStringTime(furniture.pickUpDate)}</div>
                 <div>Date dépot: ${furniture.depositDate== null ? "N/A" : furniture.depositDate}</div>
             </div>
         </div>
@@ -459,7 +460,7 @@ const onShowClientList = async (data) =>  {
                 </div>
                 <div class="advancedSearchClientItem_email">${user.email}</div>
                 <div class="advancedSearchClientItem_moreInfo">
-                    <div class="asci-signUpDate">Inscrit depuis: ${user.registrationDate}</div>
+                    <div class="asci-signUpDate">Inscrit depuis: ${convertDateTimeToStringDate(user.registrationDate)}</div>
                     <div class="asci-role">Role: ${user.role} </div>
                     <div class="asci-amountBought">Nbr achats: ${saleList.filter(e=>e.idBuyer == user.id).length}</div>
                     <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
