@@ -277,7 +277,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
-        System.out.println(rs.getInt(11));
         FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
         furnitureDTO.setFavouritePhoto(rs.getString(13));
         list.add(furnitureDTO);
@@ -682,6 +681,37 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+  }
+
+
+  @Override
+  public List<FurnitureDTO> getSliderFurnitureListByType(int limit, int idType) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
+          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo WHERE (f.condition = ? "
+          + "OR f.condition = ? OR f.condition = ?) AND f.id_type = ?"
+          + " ORDER BY random() LIMIT ?";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_VENTE.toString());
+      ps.setString(2, Condition.SOUS_OPTION.toString());
+      ps.setString(3, Condition.VENDU.toString());
+      ps.setInt(5, limit);
+      ps.setInt(4, idType);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        furnitureDTO.setFavouritePhoto(rs.getString(13));
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
   }
 
 }

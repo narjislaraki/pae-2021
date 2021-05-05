@@ -403,6 +403,11 @@ footer{
     /*z-index: 2;*/
 }
 
+.disabled{
+    pointer-events:none;
+    opacity:0.6;
+}
+
 
 /*
 *=================================

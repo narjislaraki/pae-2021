@@ -7,10 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -821,5 +818,42 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
+  @DisplayName("Test getSliderFurnitureListByType with empty list")
+  @Test
+  public void getSliderFurnitureListByTypeTest1() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    TypeOfFurnitureDTO type = goodType;
+    Mockito.when(furnitureDAO.getSliderFurnitureListByType(10, type.getId())).thenReturn(list);
+    assertEquals(list, furnitureUCC.getSliderFurnitureListByType(10, type.getId()));
+  }
+
+  @DisplayName("Test getSliderFurnitureListByType with one furniture")
+  @Test
+  public void getSliderFurnitureListByTypeTest2() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    TypeOfFurnitureDTO type = goodType;
+    listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    Mockito.when(furnitureDAO.getSliderFurnitureListByType(10, type.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getSliderFurnitureListByType(10, type.getId());
+    assertAll(() -> assertEquals(listA, listB),
+        () -> assertEquals(listB.get(0).getTypeId(), type.getId()));
+  }
+
+  @DisplayName("Test getSliderFurnitureListByType with ten furnitures")
+  @Test
+  public void getSliderFurnitureListByTypeTest3() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    TypeOfFurnitureDTO type = goodType;
+    for (int i = 0; i < 10; i++) {
+      listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    }
+    Mockito.when(furnitureDAO.getSliderFurnitureListByType(10, type.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getSliderFurnitureListByType(10, type.getId());
+    assertAll(() -> assertEquals(listA, listB), () -> {
+      for (int i = 0; i < 10; i++) {
+        assertEquals(listB.get(i).getTypeId(), type.getId());
+      }
+    });
+  }
 
 }

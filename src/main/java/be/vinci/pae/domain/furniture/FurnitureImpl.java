@@ -14,7 +14,7 @@ public class FurnitureImpl implements FurnitureDTO {
   private int id;
 
   // on peut faire comme pour adresse get avec un int
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Public.class)
   private int typeId;
   @JsonView(Views.Public.class)
   private String type;

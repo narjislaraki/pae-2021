@@ -40,7 +40,6 @@ async function FurnitureListPage(pageData) {
                 "GET",
                 userData.token,
                 undefined);
-            console.log(furnitures);
         } catch (err) {
             console.error("FurnitureListPage::get listfurnitures", err);
             PrintError(err);
