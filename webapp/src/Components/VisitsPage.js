@@ -4,6 +4,7 @@ import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError";
 import Navbar from "./Navbar";
 import WaitingSpinner from "./WaitingSpinner.js"
+import {convertDateTimeToStringDate} from "../utils/tools.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -64,7 +65,7 @@ const onConfirmRegister = (e) => {
     RedirectUrl("/confirmRegistration");
 };
 
-const onVisitsWaiting = async () => {    
+const onVisitsWaiting = async () => {
     try {
         listVisitsWaiting = await callAPI(
             API_BASE_URL + "notConfirmedVisits",
@@ -84,6 +85,7 @@ const onVisitsWaiting = async () => {
         <table class="table table-light">
             <thead>
                 <tr>
+                    <th scope="col">Date de la demande</th>
                     <th scope="col">Client</th>
                     <th scope="col">Nombres de meubles</th>
                     <th scope="col">Adresse</th>
@@ -95,6 +97,7 @@ const onVisitsWaiting = async () => {
     visitsWaiting += listVisitsWaiting
         .map((visit) =>
             `<tr>
+                 <td>${convertDateTimeToStringDate(visit.requestDateTime)}</td>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
                 <td>${visit.amountOfFurnitures}</td>
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
