@@ -10,6 +10,8 @@ public interface VisitUCC {
 
   List<VisitDTO> getVisitsToBeProcessed();
 
+  List<VisitDTO> getVisitsListForAClient(int idClient);
+
   boolean submitRequestOfVisit(VisitDTO visit);
 
   boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime);

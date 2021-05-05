@@ -3,12 +3,14 @@ package be.vinci.pae.domain.furniture;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -207,7 +209,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.stopBizzTransaction();
     return list;
   }
-  
+
   @Override
   public List<FurnitureDTO> getSliderFurnitureList(int limit) {
     dalServices.getBizzTransaction(true);
@@ -281,9 +283,29 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
-  public List<PhotoDTO> getFurniturePhotos(int idFurniture) {
+  public List<PhotoDTO> getFurniturePhotos(int idFurniture, UserDTO user) {
     dalServices.getBizzTransaction(true);
     List<PhotoDTO> list = furnitureDao.getFurniturePhotos(idFurniture);
+
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(idFurniture);
+
+    // Placing the favourite photo first
+    List<PhotoDTO> orderedList = new ArrayList<>();
+    for (PhotoDTO p : list) {
+      if (p.getId() == furniture.getFavouritePhotoId()) {
+        orderedList.add(0, p);
+      } else {
+        orderedList.add(p);
+      }
+    }
+
+    // Filtering photos if the user is not an admin
+    if (!user.getRole().equals(Role.ADMIN)) {
+      orderedList = orderedList.stream()
+          .filter(
+              e -> e.isVisible() || user.getId() == furniture.getSellerId() && e.isAClientPhoto())
+          .collect(Collectors.toList());
+    }
     dalServices.stopBizzTransaction();
     return list;
   }
@@ -307,9 +329,8 @@ public class FurnitureUCCImpl implements FurnitureUCC {
             : edition.getOfferedSellingPrice();
     int favouritePhoto = edition.getFavouritePhotoId() <= 0 ? furniture.getFavouritePhotoId()
         : edition.getFavouritePhotoId();
-
     if (!description.equals(furniture.getDescription()) || idType != furniture.getTypeId()
-        || offeredSellingPrice != furniture.getFavouritePhotoId()
+        || offeredSellingPrice != furniture.getOfferedSellingPrice()
         || favouritePhoto != furniture.getFavouritePhotoId()) {
       furnitureDao.edit(id, description, idType, offeredSellingPrice, favouritePhoto);
     }
@@ -332,7 +353,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     }
 
     if (furnitureIds.size() != 1) {
-      System.out.println(furnitureIds);
       throw new BusinessException("Some images ids are not related to the given furniture");
     }
 

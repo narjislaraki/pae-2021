@@ -11,6 +11,8 @@ public interface VisitDAO {
 
   List<VisitDTO> getVisitsToBeProcessed();
 
+  List<VisitDTO> getVisitsListForAClient(int idClient);
+
   int submitRequestOfVisit(VisitDTO visit);
 
   boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime);
