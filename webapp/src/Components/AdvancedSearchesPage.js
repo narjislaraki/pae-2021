@@ -1,7 +1,9 @@
 import callAPI from "../utils/api";
 import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
+import {FurniturePage} from "./FurniturePage.js";
 import PrintError from "./PrintError";
+import {convertDateTimeToStringDate, convertDateTimeToStringTime} from "../utils/tools.js";
 
 
 const API_BASE_URL = "/api/searches/";
@@ -33,10 +35,10 @@ let AdvancedSearchesPage = async () =>{
 
     menu = `
     <div class="menuAdmin">
-        <div id="visits" class="condensed small-caps ">Visites en attentes</div>
-        <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
-        <div id="advancedSearches" class="condensed small-caps menuAdminOn">Recherches avancées</div>
-        <div id="confirmRegister" class="condensed small-caps">Confirmation des inscriptions</div>
+    <div class="condensed small-caps" id="visits">Visites en attente</div>
+    <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
+    <div class="condensed small-caps menuAdminOn" id="advancedSearches">Recherches avancées</div>
+    <div class="condensed small-caps" id="confirmRegister">Confirmation des inscriptions</div>
     </div>
     `;
 
@@ -133,7 +135,7 @@ function initializeDSFur() {
     let dataListNames = document.getElementById("names-list");
         clientList.map((client) => {
             dataListNames.innerHTML += 
-            `<option data-name="${client.lastName}" data-userId="${client.id}" value="${client.lastName}"></option>`;
+            `<option data-name="${client.firstName}" data-userId="${client.id}" value="${client.firstName}"></option>`;
         })
 
     let dataListTypes = document.getElementById("types-list");
@@ -169,27 +171,21 @@ function addEL () {
 
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
+  
+    let visitsATraiter = document.getElementById("visitsToBeProcessed");
+    visitsATraiter.addEventListener("click", onVisitsToBeProcessed);
 
     let advancedSearches = document.getElementById("advancedSearches");
     advancedSearches.addEventListener("click", onAdvancedSearches);
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
-    
-    let btnToTreat = document.getElementById("visitsToBeProcessed");
-    btnToTreat.addEventListener("click", onVisitsToBeProcessed);
 }
 
 const onVisits = (e) => {
     e.preventDefault();
     RedirectUrl("/visits");
 };
-
-const onVisitsToBeProcessed = (e) => {
-    e.preventDefault();
-    console.log("to visits to be processed");
-    RedirectUrl("/visitsToBeProcessed");
-}
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
@@ -199,6 +195,11 @@ const onAdvancedSearches = (e) => {
 const onConfirmRegister = (e) => {
     e.preventDefault();
     RedirectUrl("/confirmRegistration");
+};
+
+const onVisitsToBeProcessed = (e) => {
+    e.preventDefault();
+    RedirectUrl("/visitsToBeProcessed");
 };
 
 const onSearch = async (e) => {
@@ -236,9 +237,16 @@ const onSearch = async (e) => {
             }
 
             
-            onShowClientList(clientList);
+            await onShowClientList(clientList);
             btns();
             addEL();
+            let list = document.getElementsByClassName("furnituresClient");
+            console.log(list.length);
+            Array.from(list).map((e,i,a) => {
+                console.log("bloop");
+                e.addEventListener("click", onFurniture);
+            });
+            
         } catch(err){
             if (err == "Error: Admin only") {
                 err.message = "Seuls les administrateurs peuvent accéder à cette page !";
@@ -262,11 +270,29 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
+            
+            saleList = await callAPI(
+                "/api/sales",
+                "GET",
+                userData.token,
+                undefined
+            )
           
             if (name){
-                furnList = furnList.filter(f => f.idBuyer == clientList.filter(c => c.lastName.toLowerCase() == name.dataset.name.toLowerCase()));
+                let client = clientList.filter(c=> c.firstName.toLowerCase() == name.dataset.name.toLowerCase());
+                let salesWithClient = saleList.filter(s => s.idBuyer == client[0].id);
+                let idFurOfSales = salesWithClient.map(s => s.idFurniture);
+                console.log(furnList);
+                furnList = furnList.filter ( f => f.seller == client[0].id || idFurOfSales.includes(f.id));
+                console.log(furnList);
+                
             } else if(inputName){
-                furnList = furnList.filter(f => f.idBuyer == clientList.filter(c => c.lastName.toLowerCase().startsWith(inputName.toLowerCase())));
+                let client = clientList.filter(c=> c.firstName.toLowerCase().startsWith(inputName.toLowerCase()));
+                let salesWithClient = saleList.filter(s => s.idBuyer == client[0].id);
+                console.log(salesWithClient);
+                let idFurOfSales = salesWithClient.map(s => s.idFurniture);
+                furnList = furnList.filter ( f => f.seller == client[0].id || idFurOfSales.includes(f.id));
+                console.log(furnList);
             }
             if (type) {
                 furnList = furnList.filter(f => f.type != null && f.type.toLowerCase() == type.dataset.label.toLowerCase());
@@ -282,7 +308,7 @@ const onSearch = async (e) => {
             }
 
             
-            onShowFurnitureList(furnList);
+            await onShowFurnitureList(furnList);
             btns();
             addEL();
         } catch(err){
@@ -341,7 +367,7 @@ const onShowFurnitureList = async (data) => {
                 <div>Prix de vente: ${furniture.offeredSellingPrice == null ? "N/A" : furniture.offeredSellingPrice}</div>
             </div>
             <div class="advancedSearchFurnItem_moreInfo2">
-                <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : furniture.pickUpDate}</div>
+                <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : convertDateTimeToStringDate(furniture.pickUpDate) + " à " + convertDateTimeToStringTime(furniture.pickUpDate)}</div>
                 <div>Date dépot: ${furniture.depositDate== null ? "N/A" : furniture.depositDate}</div>
             </div>
         </div>
@@ -434,7 +460,7 @@ const onShowClientList = async (data) =>  {
                 </div>
                 <div class="advancedSearchClientItem_email">${user.email}</div>
                 <div class="advancedSearchClientItem_moreInfo">
-                    <div class="asci-signUpDate">Inscrit depuis: ${user.registrationDate}</div>
+                    <div class="asci-signUpDate">Inscrit depuis: ${convertDateTimeToStringDate(user.registrationDate)}</div>
                     <div class="asci-role">Role: ${user.role} </div>
                     <div class="asci-amountBought">Nbr achats: ${saleList.filter(e=>e.idBuyer == user.id).length}</div>
                     <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
@@ -466,22 +492,29 @@ const onShowClientList = async (data) =>  {
 
         mAchetesList.map((m) => {
             let meuble = furnList.find(e=>e.id == m.id);
-            console.log(meuble);
-            meublesAAjouter += `<br><div>${meuble.description}</div>`
+            meublesAAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${meuble.description}</div>`
         })
 
         mVendusList.map((m) => {
-            meublesVAjouter += `<br><div>${m.description}</div>`
+            meublesVAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${m.description}</div>`
         })
 
         meublesVendusHTML.innerHTML = meublesVAjouter;
         meublesAchetesHTML.innerHTML = meublesAAjouter;
+
+        
     }
     page.innerHTML+= `
     <div class="white-space"></div>
-    `
+    `;
+
     return page;
   }
+
+const onFurniture = (e) => {
+    let id = e.target.dataset.id;
+    FurniturePage(id);
+};
 
 function onSwitch(switchElement, clientDiv, furnDiv, menuDiv){
     console.log("dans onSwitch")

@@ -20,7 +20,7 @@ public class FurnitureImpl implements FurnitureDTO {
   private String type;
   @JsonView(Views.Internal.class)
   private int requestForVisitId;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private int sellerId;
   @JsonView(Views.Private.class)
   private UserDTO seller;
