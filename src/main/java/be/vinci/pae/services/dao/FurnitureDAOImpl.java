@@ -277,7 +277,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
-        System.out.println(rs.getInt(11));
         FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
         furnitureDTO.setFavouritePhoto(rs.getString(13));
         list.add(furnitureDTO);

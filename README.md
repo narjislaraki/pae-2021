@@ -176,6 +176,18 @@
 </tr>
 
 <tr>
+	<td style="border:1px solid black;">furnitures/slider/{idType}</td>
+	<td style="border:1px solid black;">GET</td>
+	<td style="border:1px solid black;">No</td>
+	<td style="border:1px solid black;">No</td>
+	<td style="border:1px solid black;">
+	Returns a list of furnitures having the type provided in parameter by its is, to be placed int the carousel.
+	These furnitures are the furnitures <i>en vente</i>, <i>sous option</i> or <i>vendus</i>.
+	{idType} is the id of type of furnitures.
+	</td>
+</tr>
+
+<tr>
 	<td style="border:1px solid black;">furnitures/type/{idType}</td>
 	<td style="border:1px solid black;">GET</td>
 	<td style="border:1px solid black;">Yes</td>
