@@ -4,6 +4,7 @@ import {removeSessionData, currentUser, resetCurrentUser, getUserSessionData} fr
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
 import {RedirectUrl} from "./Router.js";
+import {encodeFiles} from "../utils/tools.js";
 
 let userData;
 let idFurniture = 1;
@@ -313,30 +314,6 @@ const onTypesOfFurnituresFilter = (data) => {
     category.innerHTML += `</ul>`;
 }
 
-
-function encodeFile(file) {
-    return new Promise((resolve, reject) => {
-        var fileReader = new FileReader();
-        fileReader.onload = function (fileLoadedEvent) {
-            let base64 = fileLoadedEvent.target.result;
-            resolve(base64);
-        }
-        fileReader.readAsDataURL(file)
-    });
-}
-
-async function encodeFiles(files) {
-    const returnedFiles = [];
-    if (files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-            let photo = await encodeFile(files[i])
-            returnedFiles[i] = {
-                photo: photo,
-            }
-        }
-    }
-    return returnedFiles;
-}
 
 const onAddFurniture = (e) => {
     idFurniture++;

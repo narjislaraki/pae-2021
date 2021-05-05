@@ -4,7 +4,7 @@ import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError";
 import Navbar from "./Navbar";
 import WaitingSpinner from "./WaitingSpinner.js"
-import {convertDateTime} from "../utils/tools.js";
+import {convertDateTimeToStringDate} from "../utils/tools.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -97,7 +97,7 @@ const onVisitsWaiting = async () => {
     visitsWaiting += listVisitsWaiting
         .map((visit) =>
             `<tr>
-                 <td>${convertDateTime(visit.requestDateTime)}</td>
+                 <td>${convertDateTimeToStringDate(visit.requestDateTime)}</td>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
                 <td>${visit.amountOfFurnitures}</td>
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>

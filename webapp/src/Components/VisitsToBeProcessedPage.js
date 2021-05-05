@@ -4,7 +4,7 @@ import {getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
 import WaitingSpinner from "./WaitingSpinner.js";
-import {convertDateTime} from "../utils/tools.js";
+import {convertDateTimeToStringDate} from "../utils/tools.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -91,10 +91,10 @@ const onVisitsToBeProcessed = async() => {
             `
             <div data-id="${visit.idRequest}">
             <tr>
-                <td>${convertDateTime(visit.requestDateTime)}</td>
+                <td>${convertDateTimeToStringDate(visit.requestDateTime)}</td>
                 <td>${visit.client.firstName} ${visit.client.lastName}</td>
                 <td>${visit.amountOfFurnitures}</td>
-                <td>${convertDateTime(visit.scheduledDateTime)}
+                <td>${convertDateTimeToStringDate(visit.scheduledDateTime)}
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
