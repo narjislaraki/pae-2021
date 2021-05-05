@@ -113,7 +113,7 @@ async function FurniturePage(id) {
             PrintError(err);
         }
     }
-    if(option) {
+    if(option && currentUser.role === "ADMIN") {
         try {
             optionUser = await callAPI(
                 "api/users/" + option.idUser,

@@ -1163,7 +1163,9 @@ footer{
 }
 .tableConfirmRegistration{
     margin-left: 20%;
+    max-width: 80%;
 }
+
 
 /*ADVANCED SEARCHES PAGE*/
 .searchBar-advanced{

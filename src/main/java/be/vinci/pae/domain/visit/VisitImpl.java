@@ -10,7 +10,7 @@ import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.views.Views;
 
-public class VisitImpl implements Visit {
+public class VisitImpl implements VisitDTO {
 
   @JsonView(Views.Public.class)
   private int idRequest;
@@ -31,9 +31,21 @@ public class VisitImpl implements Visit {
   @JsonView(Views.Public.class)
   private LocalDateTime scheduledDateTime;
   @JsonView(Views.Public.class)
+  private LocalDateTime requestDateTime;
+  @JsonView(Views.Public.class)
   private List<FurnitureDTO> furnitureList;
   @JsonView(Views.Public.class)
   private int amountOfFurnitures;
+
+  @Override
+  public LocalDateTime getRequestDateTime() {
+    return requestDateTime;
+  }
+
+  @Override
+  public void setRequestDateTime(LocalDateTime requestDateTime) {
+    this.requestDateTime = requestDateTime;
+  }
 
   @Override
   public int getIdRequest() {

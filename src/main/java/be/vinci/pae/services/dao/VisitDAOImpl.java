@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import be.vinci.pae.domain.address.Address;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -38,35 +39,6 @@ public class VisitDAOImpl implements VisitDAO {
   @Inject
   private UserDAO userDAO;
 
-  /**
-   * Method to set a visit from a resultset.
-   * 
-   * @param rs the resultset
-   * @param visit a null visit
-   * @return a visitDTO
-   */
-  public VisitDTO setVisit(ResultSet rs, VisitDTO visit) {
-    try {
-      visit = visitFactory.getVisitDTO();
-      visit.setIdRequest(rs.getInt(1));
-      visit.setTimeSlot(rs.getString(2));
-      visit.setVisitCondition(rs.getString(3));
-      if (rs.getString(4) != null) {
-        visit.setExplanatoryNote(rs.getString(4));
-      }
-      if (rs.getTimestamp(5) != null) {
-        visit.setScheduledDateTime(rs.getTimestamp(5).toLocalDateTime());
-      }
-      User client = (User) userDAO.getUserFromId(rs.getInt(7));
-      visit.setClient(client);
-      Address address = addressDAO.getAddress(rs.getInt(6));
-      visit.setWarehouseAddress(address);
-      visit.setIdClient(rs.getInt(7));
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return visit;
-  }
 
   @Override
   public List<VisitDTO> getNotConfirmedVisits() {
@@ -74,7 +46,7 @@ public class VisitDAOImpl implements VisitDAO {
     try {
       String sql = "SELECT r.id_request, r.time_slot, r.condition, "
           + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
-          + "r.client, COUNT(f.id_furniture) "
+          + "r.client, r.request_date, COUNT(f.id_furniture) "
           + "FROM pae.requests_for_visits r, pae.furnitures f WHERE r.condition = ? AND"
           + " r.id_request = f.request_visit GROUP BY r.id_request;";
       ps = dalBackendServices.getPreparedStatement(sql);
@@ -83,7 +55,7 @@ public class VisitDAOImpl implements VisitDAO {
       VisitDTO visit = null;
       while (rs.next()) {
         VisitDTO visitDTO = setVisit(rs, visit);
-        visitDTO.setAmountOfFurnitures(rs.getInt(8));
+        visitDTO.setAmountOfFurnitures(rs.getInt(9));
         list.add(visitDTO);
       }
     } catch (SQLException e) {
@@ -98,7 +70,7 @@ public class VisitDAOImpl implements VisitDAO {
     try {
       String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
           + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
-          + "r.client, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
+          + "r.client, r.request_date, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
           + "WHERE r.id_request = f.request_visit AND r.condition=?" + "AND f.condition = ? "
           + "GROUP BY r.id_request;";
       ps = dalBackendServices.getPreparedStatement(sql);
@@ -108,7 +80,7 @@ public class VisitDAOImpl implements VisitDAO {
       VisitDTO visit = null;
       while (rs.next()) {
         VisitDTO visitDTO = setVisit(rs, visit);
-        visitDTO.setAmountOfFurnitures(rs.getInt(8));
+        visitDTO.setAmountOfFurnitures(rs.getInt(9));
         list.add(visitDTO);
       }
     } catch (SQLException e) {
@@ -123,7 +95,7 @@ public class VisitDAOImpl implements VisitDAO {
     try {
       String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
           + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
-          + "r.client, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
+          + "r.client, r.request_date, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
           + "WHERE r.id_request = f.request_visit AND r.client=? GROUP BY r.id_request;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setInt(1, idClient);
@@ -131,7 +103,7 @@ public class VisitDAOImpl implements VisitDAO {
       VisitDTO visit = null;
       while (rs.next()) {
         VisitDTO visitDTO = setVisit(rs, visit);
-        visitDTO.setAmountOfFurnitures(rs.getInt(8));
+        visitDTO.setAmountOfFurnitures(rs.getInt(9));
         list.add(visitDTO);
       }
     } catch (SQLException e) {
@@ -144,12 +116,14 @@ public class VisitDAOImpl implements VisitDAO {
   public int submitRequestOfVisit(VisitDTO visit) {
     int key = 0;
     try {
-      String sql = "INSERT INTO pae.requests_for_visits VALUES (default, ?, ?, null, null, ?, ?);";
+      String sql =
+          "INSERT INTO pae.requests_for_visits VALUES (default, ?, ?, null, null, ?, ?, ?);";
       ps = dalBackendServices.getPreparedStatementWithGeneratedReturn(sql);
       ps.setString(1, visit.getTimeSlot());
       ps.setString(2, VisitCondition.EN_ATTENTE.toString());
       ps.setInt(3, visit.getWarehouseAddressId());
       ps.setInt(4, visit.getIdClient());
+      ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
       ps.execute();
       ResultSet rs = ps.getGeneratedKeys();
       if (rs.next()) {
@@ -198,7 +172,7 @@ public class VisitDAOImpl implements VisitDAO {
     try {
       ps = dalBackendServices.getPreparedStatement(
           "SELECT id_request, time_slot, condition, explanatory_note, scheduled_date_time,"
-              + " warehouse_address, client "
+              + " warehouse_address, client, request_date "
               + "FROM pae.requests_for_visits WHERE id_request= ?;");
       ps.setInt(1, idVisit);
       ResultSet rs = ps.executeQuery();
@@ -231,6 +205,13 @@ public class VisitDAOImpl implements VisitDAO {
     return list;
   }
 
+  /**
+   * Function to set a furniture grom a resultset.
+   * 
+   * @param rs
+   * @param furniture
+   * @return
+   */
   private FurnitureDTO setFurniture(ResultSet rs, FurnitureDTO furniture) {
     try {
       furniture = furnitureFactory.getFurnitureDTO();
@@ -244,26 +225,36 @@ public class VisitDAOImpl implements VisitDAO {
     }
     return furniture;
   }
-  // private int addPhoto(PhotoDTO photo) {
-  // int key = 0;
-  // try {
-  // String sql = "INSERT INTO pae.photos VALUES (default, ?, ?, ?, ?);";
-  // ps = dalBackendServices.getPreparedStatement(sql);
-  // ps.setString(1, photo.getPhoto());
-  // ps.setBoolean(2, photo.isVisible());
-  // ps.setBoolean(3, photo.isAClientPhoto());
-  // ps.setInt(4, photo.getIdFurniture());
-  // ps.execute();
-  // ResultSet rs = ps.getGeneratedKeys();
-  // if (rs.next()) {
-  // key = rs.getInt(1);
-  // }
-  // } catch (SQLException e) {
-  // throw new FatalException(e);
-  // }
-  // return key;
-  // }
 
-
+  /**
+   * Function to set a visit from a resultset.
+   * 
+   * @param rs the resultset
+   * @param visit a null visit
+   * @return a visitDTO
+   */
+  private VisitDTO setVisit(ResultSet rs, VisitDTO visit) {
+    try {
+      visit = visitFactory.getVisitDTO();
+      visit.setIdRequest(rs.getInt(1));
+      visit.setTimeSlot(rs.getString(2));
+      visit.setVisitCondition(rs.getString(3));
+      if (rs.getString(4) != null) {
+        visit.setExplanatoryNote(rs.getString(4));
+      }
+      if (rs.getTimestamp(5) != null) {
+        visit.setScheduledDateTime(rs.getTimestamp(5).toLocalDateTime());
+      }
+      User client = (User) userDAO.getUserFromId(rs.getInt(7));
+      visit.setClient(client);
+      Address address = addressDAO.getAddress(rs.getInt(6));
+      visit.setWarehouseAddress(address);
+      visit.setIdClient(rs.getInt(7));
+      visit.setRequestDateTime(rs.getTimestamp(8).toLocalDateTime());
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return visit;
+  }
 
 }

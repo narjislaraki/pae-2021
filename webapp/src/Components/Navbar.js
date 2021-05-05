@@ -300,7 +300,6 @@ const onTypesOfFurniture = (data) => {
 }
 
 const onTypesOfFurnituresFilter = (data) => {
-    console.log("types");
     let filter = `<span class="dropdown-toggle condensed small-caps" id="selectType" type="button" id="dropdownMenuButton1"data-bs-toggle="dropdown" aria-expanded="false">
                   Types de meuble
                 </span>
