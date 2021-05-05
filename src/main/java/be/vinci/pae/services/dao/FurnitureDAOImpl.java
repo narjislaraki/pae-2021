@@ -35,6 +35,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Inject
   private PhotoFactory photoFactory;
 
+  @Inject
+  private UserDAO userDao;
+
   PreparedStatement ps;
 
   /**
@@ -105,8 +108,12 @@ public class FurnitureDAOImpl implements FurnitureDAO {
           .setDepositDate(rs.getTimestamp(7) == null ? null : rs.getTimestamp(7).toLocalDateTime());
       furniture.setOfferedSellingPrice(rs.getDouble(8));
       furniture.setTypeId(rs.getInt(9));
+      furniture.setType(getFurnitureTypeById(rs.getInt(9)));
       furniture.setRequestForVisitId(rs.getInt(10));
       furniture.setSellerId(rs.getInt(11));
+      System.out.println(rs.getString(11));
+
+      furniture.setSeller(userDao.getUserFromId(rs.getInt(11)));
       furniture.setFavouritePhotoId(rs.getInt(12));
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -410,6 +417,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
     return label;
   }
+
 
   /**
    * Returns the favourite photo based on its id.

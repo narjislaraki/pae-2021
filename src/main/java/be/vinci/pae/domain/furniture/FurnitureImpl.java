@@ -2,9 +2,7 @@ package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonView;
-
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.BusinessException;
@@ -22,7 +20,7 @@ public class FurnitureImpl implements FurnitureDTO {
   private String type;
   @JsonView(Views.Internal.class)
   private int requestForVisitId;
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Private.class)
   private int sellerId;
   @JsonView(Views.Private.class)
   private UserDTO seller;

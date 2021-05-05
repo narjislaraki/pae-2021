@@ -33,8 +33,7 @@ let AdvancedSearchesPage = async () =>{
 
     menu = `
     <div class="menuAdmin">
-        <div id="visits" class="condensed small-caps ">Visites en attentes</div>
-        <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
+        <div id="visits" class="condensed small-caps ">Visites</div>
         <div id="advancedSearches" class="condensed small-caps menuAdminOn">Recherche avancées</div>
         <div id="confirmRegister" class="condensed small-caps">Confirmation des inscriptions</div>
     </div>
@@ -133,7 +132,7 @@ function initializeDSFur() {
     let dataListNames = document.getElementById("names-list");
         clientList.map((client) => {
             dataListNames.innerHTML += 
-            `<option data-name="${client.lastName}" data-userId="${client.id}" value="${client.lastName}"></option>`;
+            `<option data-name="${client.firstName}" data-userId="${client.id}" value="${client.firstName}"></option>`;
         })
 
     let dataListTypes = document.getElementById("types-list");
@@ -175,21 +174,12 @@ function addEL () {
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
-    
-    let btnToTreat = document.getElementById("visitsToBeProcessed");
-    btnToTreat.addEventListener("click", onVisitsToBeProcessed);
 }
 
 const onVisits = (e) => {
     e.preventDefault();
     RedirectUrl("/visits");
 };
-
-const onVisitsToBeProcessed = (e) => {
-    e.preventDefault();
-    console.log("to visits to be processed");
-    RedirectUrl("/visitsToBeProcessed");
-}
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
@@ -262,11 +252,29 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
+            
+            saleList = await callAPI(
+                "/api/sales",
+                "GET",
+                userData.token,
+                undefined
+            )
           
             if (name){
-                furnList = furnList.filter(f => f.idBuyer == clientList.filter(c => c.lastName.toLowerCase() == name.dataset.name.toLowerCase()));
+                let client = clientList.filter(c=> c.firstName.toLowerCase() == name.dataset.name.toLowerCase());
+                let salesWithClient = saleList.filter(s => s.idBuyer == client[0].id);
+                let idFurOfSales = salesWithClient.map(s => s.idFurniture);
+                console.log(furnList);
+                furnList = furnList.filter ( f => f.seller == client[0].id || idFurOfSales.includes(f.id));
+                console.log(furnList);
+                
             } else if(inputName){
-                furnList = furnList.filter(f => f.idBuyer == clientList.filter(c => c.lastName.toLowerCase().startsWith(inputName.toLowerCase())));
+                let client = clientList.filter(c=> c.firstName.toLowerCase().startsWith(inputName.toLowerCase()));
+                let salesWithClient = saleList.filter(s => s.idBuyer == client[0].id);
+                console.log(salesWithClient);
+                let idFurOfSales = salesWithClient.map(s => s.idFurniture);
+                furnList = furnList.filter ( f => f.seller == client[0].id || idFurOfSales.includes(f.id));
+                console.log(furnList);
             }
             if (type) {
                 furnList = furnList.filter(f => f.type != null && f.type.toLowerCase() == type.dataset.label.toLowerCase());
@@ -466,7 +474,6 @@ const onShowClientList = async (data) =>  {
 
         mAchetesList.map((m) => {
             let meuble = furnList.find(e=>e.id == m.id);
-            console.log(meuble);
             meublesAAjouter += `<br><div>${meuble.description}</div>`
         })
 
