@@ -1,4 +1,4 @@
--- Last modification date : 01/05/2021 --
+-- Last modification date : 05/05/2021 --
 DROP SCHEMA IF EXISTS pae CASCADE;
 CREATE SCHEMA pae;
 
@@ -37,9 +37,9 @@ CREATE TABLE pae.requests_for_visits(
 	explanatory_note VARCHAR(150),
 	scheduled_date_time TIMESTAMP,
 	warehouse_address INTEGER REFERENCES pae.addresses(id_address),
-	client INTEGER REFERENCES pae.users(id_user) NOT NULL
+	client INTEGER REFERENCES pae.users(id_user) NOT NULL,
+	request_date TIMESTAMP NOT NULL
 );
-
 
 CREATE TABLE pae.furnitures(
 	id_furniture SERIAL PRIMARY KEY,
@@ -105,11 +105,11 @@ INSERT INTO pae.users VALUES
 		(default, 'charline', 'Line', 'Charles', 'charline@proximus.be', 'client', '20210422', true, '$2a$10$WBnq36heX0KGTfyZCI/Gb.jmlUX244MwhpDajKiwMpQgonnn/wYx2', 6); --mdpusr.4 
 
 INSERT INTO pae.requests_for_visits VALUES
-		(default, 'lundi de 18h à 22h', 'acceptée', null, '2021-03-29 20:00:00', 4, 4),
-		(default, 'lundi de 18h à 22h', 'annulée', 'Meuble trop récent', null, 4, 4),
-		(default, 'tous les jours de 15h à 18h', 'acceptée', null, '2021-03-29 15:00:00', 5, 5),
-		(default, 'tous les matins de 9h à 13h', 'en attente', null, null, 7, 6),
-		(default, 'tout les jours de 16h à 19h', 'acceptée', null, '2021-04-26 18:00:00', 3, 3);
+		(default, 'lundi de 18h à 22h', 'acceptée', null, '2021-03-29 20:00:00', 4, 4, '2021-03-24 00:00:00'),
+		(default, 'lundi de 18h à 22h', 'annulée', 'Meuble trop récent', null, 4, 4, '2021-03-25 00:00:00'),
+		(default, 'tous les jours de 15h à 18h', 'acceptée', null, '2021-03-29 15:00:00', 5, 5, '2021-03-25 00:00:00'),
+		(default, 'tous les matins de 9h à 13h', 'en attente', null, null, 7, 6, '2021-04-21 00:00:00'),
+		(default, 'tout les jours de 16h à 19h', 'acceptée', null, '2021-04-26 18:00:00', 3, 3, '2021-04-22 00:00:00');
 	
 INSERT INTO pae.types_of_furnitures VALUES
 		(default, 'Armoire'),
