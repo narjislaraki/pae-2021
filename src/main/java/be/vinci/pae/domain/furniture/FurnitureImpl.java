@@ -2,9 +2,7 @@ package be.vinci.pae.domain.furniture;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonView;
-
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.visit.PhotoDTO;
 import be.vinci.pae.exceptions.BusinessException;
@@ -16,7 +14,7 @@ public class FurnitureImpl implements FurnitureDTO {
   private int id;
 
   // on peut faire comme pour adresse get avec un int
-  @JsonView(Views.Internal.class)
+  @JsonView(Views.Public.class)
   private int typeId;
   @JsonView(Views.Public.class)
   private String type;

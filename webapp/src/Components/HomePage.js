@@ -8,12 +8,22 @@ import { FurniturePage } from "./FurniturePage.js";
 const API_BASE_URL = "/api/furnitures/slider";
 
 const VENDU = `<h4><span class="badge bg-danger small-caps">VENDU</span></h4></div></div>`;
-const SOUS_OPTION = `<h4><span class="badge bg-warning small-caps">OPTION</span></h4></div></div>`;
+const SOUS_OPTION = `<h4><span class="badge bg-warning small-caps">SOUS OPTION</span></h4></div></div>`;
 const EN_VENTE = `<h4><span class="badge bg-success small-caps">EN VENTE</span></h4></div></div>`;
+
+let idType;
+let title;
+let typesOfFurnitures;
 
 let homepageTitle = `
 <div class="homepageTitle">
-  <div class="all-furn-title small-caps">Accueil</div>
+  <div class="all-furn-title small-caps" id="title">Accueil</div>
+  <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="buttonType" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Choisir un type de meuble
+    </button>
+    <div class="dropdown-menu" id="type" aria-labelledby="dropdownMenuButton"></div>
+  </div>
 </div>
 `;
 
@@ -29,13 +39,27 @@ const HomePage = async () => {
       undefined,
       undefined);
 
-} catch (err) {
+    } catch (err) {
     console.error("Homepage::get list", err);
     PrintError(err);
-}
-if(furnitures.length >= 1){
-  let carousel1 = `
-  <div class="container-carousel">
+  }
+  if(idType != null && idType != "all"){
+    furnitures = furnitures.filter(e => e.typeId == idType);
+  }
+  try{
+    typesOfFurnitures = await callAPI(
+      "/api/furnitures/typeOfFurnitureList",
+      "GET",
+      undefined,
+      undefined,);
+  } catch(err){
+    console.error("HomePage::get list of types of furnitures", err);
+    PrintError(err);
+  }
+
+  if(furnitures.length >= 1){
+    let carousel1 = `
+    <div class="container-carousel">
             <div id="carouselHomepage" class="carousel slide condensed" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                   <button type="button" data-bs-target="#carouselHomepage" data-bs-slide-to="0" class="active" aria-current="true"></button>
@@ -99,6 +123,23 @@ if(furnitures.length >= 1){
         </div>
   `;
   page.innerHTML = homepageTitle + carousel1;
+  let menuDeroulant = document.getElementById("type");
+  let title = document.getElementById("title");
+  menuDeroulant.innerHTML += `<a id="all" class="dropdown-item typeOfFurniture" href="#">Voir tous les meubles</a>`;
+  let typesOfFurnituresList = document.getElementsByClassName("typeOfFurniture");
+
+  for (let i = 0; i < typesOfFurnitures.length; i++){
+    menuDeroulant.innerHTML += `<a id="type${typesOfFurnitures[i].id}" data-id="${typesOfFurnitures[i].id}" class="dropdown-item typeOfFurniture" href="#">${typesOfFurnitures[i].label}</a>`;
+  }
+
+  
+  for (let index = 0; index < typesOfFurnituresList.length; index++) {
+    Array.from(typesOfFurnituresList)[index].addEventListener("click", ()=>{
+      idType=typesOfFurnituresList[index].getAttribute("data-id");
+      title.innerHTML = "Accueil : "+ typesOfFurnituresList[index].innerText;
+    });
+  }
+ 
 
 if(currentUser){
   let list = document.getElementsByClassName("carousel-item");
@@ -111,7 +152,6 @@ if(currentUser){
 }
 
 };
-
 
 
 export default HomePage;

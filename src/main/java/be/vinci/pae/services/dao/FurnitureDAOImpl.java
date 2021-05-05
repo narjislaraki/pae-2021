@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -106,6 +105,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
           .setDepositDate(rs.getTimestamp(7) == null ? null : rs.getTimestamp(7).toLocalDateTime());
       furniture.setOfferedSellingPrice(rs.getDouble(8));
       furniture.setTypeId(rs.getInt(9));
+      furniture.setType(getFurnitureTypeById(rs.getInt(9)));
       furniture.setRequestForVisitId(rs.getInt(10));
       furniture.setSellerId(rs.getInt(11));
       furniture.setFavouritePhotoId(rs.getInt(12));
