@@ -70,7 +70,8 @@ public class VisitDAOImpl implements VisitDAO {
     try {
       String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
           + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
-          + "r.client, r.request_date, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
+          + "r.client, r.request_date, COUNT(f.id_furniture)"
+          + "FROM pae.requests_for_visits r, pae.furnitures f "
           + "WHERE r.id_request = f.request_visit AND r.condition=?" + "AND f.condition = ? "
           + "GROUP BY r.id_request;";
       ps = dalBackendServices.getPreparedStatement(sql);
@@ -95,7 +96,8 @@ public class VisitDAOImpl implements VisitDAO {
     try {
       String sql = "SELECT DISTINCT r.id_request, r.time_slot, r.condition, "
           + "r.explanatory_note, r.scheduled_date_time, r.warehouse_address, "
-          + "r.client, r.request_date, COUNT(f.id_furniture) FROM pae.requests_for_visits r, pae.furnitures f "
+          + "r.client, r.request_date, COUNT(f.id_furniture) "
+          + "FROM pae.requests_for_visits r, pae.furnitures f "
           + "WHERE r.id_request = f.request_visit AND r.client=? GROUP BY r.id_request;";
       ps = dalBackendServices.getPreparedStatement(sql);
       ps.setInt(1, idClient);
@@ -208,9 +210,9 @@ public class VisitDAOImpl implements VisitDAO {
   /**
    * Function to set a furniture grom a resultset.
    * 
-   * @param rs
-   * @param furniture
-   * @return
+   * @param rs the resultset
+   * @param furniture a null FurnitureDTO
+   * @return a furnitureDTO
    */
   private FurnitureDTO setFurniture(ResultSet rs, FurnitureDTO furniture) {
     try {
@@ -230,7 +232,7 @@ public class VisitDAOImpl implements VisitDAO {
    * Function to set a visit from a resultset.
    * 
    * @param rs the resultset
-   * @param visit a null visit
+   * @param visit a null VisitDTO
    * @return a visitDTO
    */
   private VisitDTO setVisit(ResultSet rs, VisitDTO visit) {
