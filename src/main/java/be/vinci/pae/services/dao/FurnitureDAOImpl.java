@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.FurnitureFactory;
@@ -35,6 +34,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   private TypeOfFurnitureFactory typeOfFurnitureFactory;
   @Inject
   private PhotoFactory photoFactory;
+
+  @Inject
+  private UserDAO userDao;
 
   PreparedStatement ps;
 
@@ -106,8 +108,10 @@ public class FurnitureDAOImpl implements FurnitureDAO {
           .setDepositDate(rs.getTimestamp(7) == null ? null : rs.getTimestamp(7).toLocalDateTime());
       furniture.setOfferedSellingPrice(rs.getDouble(8));
       furniture.setTypeId(rs.getInt(9));
+      furniture.setType(getFurnitureTypeById(rs.getInt(9)));
       furniture.setRequestForVisitId(rs.getInt(10));
       furniture.setSellerId(rs.getInt(11));
+      furniture.setSeller(userDao.getUserFromId(rs.getInt(11)));
       furniture.setFavouritePhotoId(rs.getInt(12));
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -273,6 +277,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
+        System.out.println(rs.getInt(11));
         FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
         furnitureDTO.setFavouritePhoto(rs.getString(13));
         list.add(furnitureDTO);
@@ -379,6 +384,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       ResultSet rs = ps.executeQuery();
       FurnitureDTO furniture = null;
       while (rs.next()) {
+        System.out.println(rs.getInt(11));
         FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
         furnitureDTO.setFavouritePhoto(rs.getString(13));
         list.add(furnitureDTO);
@@ -411,6 +417,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
     return label;
   }
+
 
   /**
    * Returns the favourite photo based on its id.

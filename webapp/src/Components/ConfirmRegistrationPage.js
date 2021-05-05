@@ -9,7 +9,7 @@ let menu = `
 <div class="menuAdmin">
 <div class="condensed small-caps" id="visits">Visites en attente</div>
 <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
-<div class="condensed small-caps" id="advancedSearches">Recherche avancées</div>
+<div class="condensed small-caps" id="advancedSearches">Recherches avancées</div>
 <div class="condensed small-caps menuAdminOn" id="confirmRegister">Confirmation des inscriptions</div>
 </div>
     `;
