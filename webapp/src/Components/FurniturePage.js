@@ -4,6 +4,7 @@ import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import PrintMessage from "./PrintMessage.js";
 import waitingSpinner from "./WaitingSpinner.js";
+import {encodeFiles} from "../utils/tools.js";
 
 const API_BASE_URL = "api/furnitures/";
 
@@ -113,7 +114,7 @@ async function FurniturePage(id) {
             PrintError(err);
         }
     }
-    if(option) {
+    if(option && currentUser.role === "ADMIN") {
         try {
             optionUser = await callAPI(
                 "api/users/" + option.idUser,
@@ -937,30 +938,6 @@ const decrementCounter = () => {
         document.querySelector(".plus-btn").removeAttribute("disabled");
         document.querySelector(".plus-btn").classList.remove("disabled");
     }
-}
-
-function encodeFile(file) {
-    return new Promise((resolve, reject) => {
-        var fileReader = new FileReader();
-        fileReader.onload = function (fileLoadedEvent) {
-            let base64 = fileLoadedEvent.target.result;
-            resolve(base64);
-        }
-        fileReader.readAsDataURL(file)
-    });
-}
-
-async function encodeFiles(files) {
-    const returnedFiles = [];
-    if (files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-            let photo = await encodeFile(files[i])
-            returnedFiles[i] = {
-                photo: photo,
-            }
-        }
-    }
-    return returnedFiles;
 }
 
 async function populateSellingDiv() {

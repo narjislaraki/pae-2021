@@ -1,6 +1,5 @@
 import {getUserSessionData, currentUser} from "../utils/session.js";
 import {RedirectUrl} from "./Router.js";
-import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
 import PrintError from "./PrintError.js";
 import {FurniturePage} from "./FurniturePage.js";
@@ -63,7 +62,7 @@ async function FurnitureListPage(pageData) {
 
     let data;
     if (furnitures.length === 0) {
-        data = "Aucun meuble actueellement";
+        data = "Aucun meuble actuellement";
     } else {
         furnitures.map((element) => {
             if (element.favouritePhoto)
@@ -90,7 +89,6 @@ async function FurnitureListPage(pageData) {
                             <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
                         </div>
                     `;
-
         });
     }
 
