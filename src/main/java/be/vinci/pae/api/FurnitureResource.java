@@ -2,16 +2,12 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.util.List;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.edition.EditionDTO;
@@ -108,6 +104,27 @@ public class FurnitureResource {
   @Path("slider")
   public Response getSliderFurnituresList(@Context ContainerRequest request) {
     List<FurnitureDTO> list = furnitureUCC.getSliderFurnitureList(10);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+  /**
+   * Get a list of furniture by type to be placed in the carousel (on sale, sold and under options).
+   * 
+   * @param request the request
+   * @param idType the id type
+   * @return a list of furniture wrapped in a Response
+   */
+  @GET
+  @Path("slider/{idType}")
+  public Response getSliderFurnituresListByType(@Context ContainerRequest request,
+      @PathParam("idType") int idType) {
+    List<FurnitureDTO> list = furnitureUCC.getSliderFurnitureListByType(10, idType);
     String r = null;
     try {
       r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
