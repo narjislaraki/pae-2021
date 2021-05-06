@@ -2,16 +2,12 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.util.List;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.edition.EditionDTO;
@@ -92,6 +88,26 @@ public class FurnitureResource {
       } else {
         r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
       }
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+  /**
+   * Get a list of furnitures for research purposes.
+   * 
+   * @param request the request
+   * @return a list of furnitures adapted if wrapped in a Response
+   */
+  @GET
+  @Path("research")
+  @AdminAuthorize
+  public Response getFurnituresListForResearch(@Context ContainerRequest request) {
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureListForResearch();
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
     } catch (JsonProcessingException e) {
       responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }

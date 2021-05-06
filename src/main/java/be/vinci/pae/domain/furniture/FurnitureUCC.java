@@ -1,7 +1,6 @@
 package be.vinci.pae.domain.furniture;
 
 import java.util.List;
-
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -30,6 +29,8 @@ public interface FurnitureUCC {
   void cancelOption(String cancellationReason, int idOption, UserDTO user);
 
   List<FurnitureDTO> getFurnitureList(UserDTO user);
+
+  List<FurnitureDTO> getFurnitureListForResearch();
 
   List<FurnitureDTO> getFurnitureListByType(UserDTO user, int idType);
 

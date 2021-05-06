@@ -11,7 +11,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
@@ -206,6 +205,14 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     } else {
       list = furnitureDao.getPublicFurnitureList();
     }
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
+  public List<FurnitureDTO> getFurnitureListForResearch() {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list = furnitureDao.getFurnitureListForResearch();
     dalServices.stopBizzTransaction();
     return list;
   }
