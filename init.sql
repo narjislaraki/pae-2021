@@ -189,11 +189,10 @@ UPDATE pae.furnitures
 SELECT id_address, street, building_number, unit_number, city, postcode, country FROM pae.addresses;
 SELECT id_user, username, last_name, first_name, email, role, registration_date, is_validated, password, address FROM pae.users;
 SELECT id_type, label FROM pae.types_of_furnitures;
-SELECT id_request, time_slot, condition, explanatory_note, scheduled_date_time, warehouse_address, client FROM pae.requests_for_visits;
-SELECT id_furniture, condition, description, purchase_price, pick_up_date, store_deposit, deposit_date, offered_selling_price, id_type, request_visit, seller, favorite_photo FROM pae.furnitures;
-SELECT id_option, date, option_term, cancellation_reason, condition, id_user, id_furniture FROM pae.options;
-SELECT id_photo, photo, is_visible, is_a_client_photo, id_furniture FROM pae.photos;
-SELECT id_sales, selling_price, id_furniture, id_buyer, date_of_sale FROM pae.sales;
+SELECT id_request, time_slot, request_date, condition, explanatory_note, scheduled_date_time, warehouse_address, r.client,  u.username FROM pae.requests_for_visits r, pae.users u WHERE r.client = u.id_user;
+SELECT f.id_furniture, f.condition, f.description, f.purchase_price, f.pick_up_date, f.store_deposit, f.deposit_date, f.offered_selling_price, f.id_type, t.label, f.request_visit, f.seller, u.username, f.favorite_photo FROM pae.types_of_furnitures t, pae.furnitures f LEFT OUTER JOIN pae.users u ON f.seller = u.id_user WHERE t.id_type = f.id_type;
+SELECT id_photo, photo, is_visible, is_a_client_photo, p.id_furniture, f.description FROM pae.photos p, pae.furnitures f WHERE p.id_furniture = f.id_furniture;
+SELECT id_sales, selling_price, s.id_furniture, f.description, s.id_buyer, u.username, date_of_sale FROM pae.sales s, pae.furnitures f, pae.users u WHERE s.id_furniture = f.id_furniture AND s.id_buyer = u.id_user;
 	
 SELECT COUNT(id_photo) FROM pae.photos WHERE is_visible = true;
 SELECT f.condition, COUNT(f.id_furniture) FROM pae.furnitures f WHERE f.condition = 'en vente' OR f.condition = 'sous option' OR f.condition='vendu' GROUP BY f.condition;
