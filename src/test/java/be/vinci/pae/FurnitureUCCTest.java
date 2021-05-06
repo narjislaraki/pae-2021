@@ -501,7 +501,7 @@ public class FurnitureUCCTest {
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
   }
 
-  @DisplayName("Testing getting a photo of a furniture by an id, as a user, when the user is the seller")
+  @DisplayName("Test get a photo of a furniture by an id, as a user, when the user is the seller")
   @Test
   public void getFurniturePhotosTest3() {
     photo1.setId(3);
@@ -522,6 +522,26 @@ public class FurnitureUCCTest {
     List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
   }
+
+  @DisplayName("Test get a photo of a furniture by an id, as a user, when the photos are visibles")
+  @Test
+  public void getFurniturePhotosTest4() {
+    photo1.setId(3);
+    photo2.setId(5);
+    photo1.setVisible(true);
+    photo2.setVisible(true);
+    goodFurniture.setFavouritePhotoId(3);
+    goodUser.setRole(Role.CLIENT.toString());
+    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
+    listA.add(photo1);
+    listA.add(photo2);
+    int id = goodFurniture.getId();
+    Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
+  }
+
 
   @DisplayName("Test getting furniture with photo by an id with a null furniture")
   @Test
