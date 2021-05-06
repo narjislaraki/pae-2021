@@ -48,7 +48,7 @@ public class APILogger {
     return logger;
   }
 
-  private static void getFileHandler() throws SecurityException, IOException {
+  public static FileHandler getFileHandler() throws SecurityException, IOException {
     if (fh == null) {
       String path = Config.getStringProperty("logPath");
       String fileName = Config.getStringProperty("logFileName");
@@ -65,12 +65,6 @@ public class APILogger {
 
       fullLogPath = path + fileName;
       fh = new FileHandler(fullLogPath, true);
-    }
-  }
-
-  public static FileHandler getFh() throws SecurityException, IOException {
-    if (fh == null) {
-      getFileHandler();
     }
     return fh;
   }

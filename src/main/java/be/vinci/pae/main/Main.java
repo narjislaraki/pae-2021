@@ -45,7 +45,7 @@ public class Main {
 
     /* Logger FileHanlder init and path validity check */
     try {
-      APILogger.getFh();
+      APILogger.getFileHandler();
     } catch (NoSuchFileException e) {
       System.err.println(
           "Logger folder does not exists.\n\tCreate the folder.\n\tChange the path in the properties file.");
