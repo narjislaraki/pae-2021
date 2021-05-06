@@ -409,11 +409,11 @@ async function FurniturePage(id) {
 
 const onEdit = async () => {
     editionMode = true;
-    if (furniture.condition === "DEPOSE_EN_MAGASIN")
+    if (document.getElementById("price-inline"))
         document.getElementById("price-inline").style.display = "none";
-    if (furniture.condition === "EN_VENTE")
+    if (document.getElementById("sellingDiv"))
         document.getElementById("sellingDiv").style.display = "none";
-    if (furniture.condition === "SOUS_OPTION")
+    if (document.getElementById("optiondiv"))
         document.getElementById("optiondiv").style.display = "none";
     document.getElementById("editIcon").style.display = "none"
     document.getElementById("dropdownMenu2").style.display = "none"
@@ -662,10 +662,10 @@ function stopEdition() {
         photosToHide: [],
     }
     if (furniture.condition === "DEPOSE_EN_MAGASIN")
-        document.getElementById("price-inline").style.display = "block";
-    if (furniture.condition === "EN_VENTE")
         document.getElementById("sellingDiv").style.display = "block";
-    if (furniture.condition === "SOUS_OPTION")
+    if (document.getElementById("sellingDiv"))
+        document.getElementById("sellingDiv").style.display = "block";
+    if (document.getElementById("optiondiv"))
         document.getElementById("optiondiv").style.display = "block";
     document.getElementById("editIcon").style.display = "inline"
     document.getElementById("dropdownMenu2").style.display = "block"
