@@ -403,6 +403,11 @@ footer{
     /*z-index: 2;*/
 }
 
+.disabled{
+    pointer-events:none;
+    opacity:0.6;
+}
+
 
 /*
 *=================================
@@ -1163,7 +1168,9 @@ footer{
 }
 .tableConfirmRegistration{
     margin-left: 20%;
+    max-width: 80%;
 }
+
 
 /*ADVANCED SEARCHES PAGE*/
 .searchBar-advanced{

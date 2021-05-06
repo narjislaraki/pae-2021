@@ -9,7 +9,7 @@ let menu = `
 <div class="menuAdmin">
 <div class="condensed small-caps" id="visits">Visites en attente</div>
 <div class="condensed small-caps" id="visitsToBeProcessed">Visites à traiter</div>
-<div class="condensed small-caps" id="advancedSearches">Recherche avancées</div>
+<div class="condensed small-caps" id="advancedSearches">Recherches avancées</div>
 <div class="condensed small-caps menuAdminOn" id="confirmRegister">Confirmation des inscriptions</div>
 </div>
     `;
@@ -61,7 +61,7 @@ const ConfirmRegistrationPage = async () => {
 
 const onUnregisteredUsersList = (data) => {
   let onUnregisteredUsersListPage =
-    `<table class="table table-light tableConfirmRegistration">
+    `<table class="table table-light tableConfirmRegistration" id="confirmRegistrationTable">
       <thead>
         <tr>
           <th scope="col">Pseudo</th>
@@ -95,8 +95,7 @@ const onUnregisteredUsersList = (data) => {
                             <label for="client${user.id}" data-id="${user.id}">Client</label><br></td>
                             <td><button name="accept" class="btn btn-dark condensed small-caps block-display btn-accept" data-id="${user.id}" type="submit">Accepter</button><br>
                             <button name="refuse" class="btn btn-dark condensed small-caps block-display btn-refuse" data-id="${user.id}" type="submit">Refuser</button></td>
-                            </tr>
-                           
+                            </tr>                           
                             `)
                             
     .join("");

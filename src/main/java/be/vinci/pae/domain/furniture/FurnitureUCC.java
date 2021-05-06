@@ -1,7 +1,6 @@
 package be.vinci.pae.domain.furniture;
 
 import java.util.List;
-
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -54,5 +53,7 @@ public interface FurnitureUCC {
   boolean edit(EditionDTO edition);
 
   List<FurnitureDTO> getSliderFurnitureList(int limit);
+
+  List<FurnitureDTO> getSliderFurnitureListByType(int limit, int idType);
 
 }

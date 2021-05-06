@@ -4,6 +4,7 @@ import {currentUser, getUserSessionData} from "../utils/session.js";
 import PrintError from "./PrintError";
 import Navbar from "./Navbar";
 import WaitingSpinner from "./WaitingSpinner.js"
+import {convertDateTimeToStringDate} from "../utils/tools.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -93,13 +94,13 @@ const onVisitsForClient = async () => {
     visits += listVisitsOfAClient
         .map((visit) =>
             `<tr>
-                <td>à rajouter</td>
+                <td>${convertDateTimeToStringDate(visit.requestDateTime)}</td>
                 <td>${visit.amountOfFurnitures}</td>
                 <td><p class="block-display">${visit.warehouseAddress.street} ${visit.warehouseAddress.buildingNumber} ${(visit.warehouseAddress.unitNumber == null ? "" : "/" + visit.warehouseAddress.unitNumber)}<br>
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country}</p></td>
                 <td><div id="condition${visit.idRequest}" value="${visit.visitCondition}"></div></td>
-                <td>${(visit.scheduledDateTime == null ? "/" : visit.scheduledDateTime)}</td>
+                <td>${(visit.scheduledDateTime == null ? "/" : convertDateTimeToStringDate(visit.scheduledDateTime))}</td>
                 <td>${(visit.explanatoryNote == null ? "/" : visit.explanatoryNote)}</td>
                 <td><button name="trigger_popup_fricc" class="btn btn-dark condensed small-caps block-display" data-id="${visit.idRequest}" type="submit">Consulter les meubles</button></td>
             </tr>

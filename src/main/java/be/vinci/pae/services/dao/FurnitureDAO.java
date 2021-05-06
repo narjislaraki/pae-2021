@@ -2,7 +2,6 @@ package be.vinci.pae.services.dao;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.furniture.OptionDTO;
@@ -71,5 +70,7 @@ public interface FurnitureDAO {
   int addAdminPhoto(PhotoDTO photo, int idFurniture);
 
   List<FurnitureDTO> getSliderFurnitureList(int limit);
+
+  List<FurnitureDTO> getSliderFurnitureListByType(int limit, int idType);
 
 }
