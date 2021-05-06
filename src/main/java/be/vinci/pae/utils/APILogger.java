@@ -8,6 +8,7 @@ import java.util.logging.SimpleFormatter;
 public class APILogger {
 
   public static final String APILOGS = "APILogs";
+  private static FileHandler fh;
   private static Logger logger;
 
   public APILogger() {
@@ -23,28 +24,14 @@ public class APILogger {
   public static Logger getLogger() {
     if (logger == null) {
       logger = Logger.getLogger(APILOGS);
-      FileHandler fh;
-
-      String path = Config.getStringProperty("logPath");
-      String fileName = Config.getStringProperty("logFileName");
-      String fullLogPath;
-
-      if (path.toLowerCase().equals("default")) {
-        path = System.getProperty("user.dir");
-        path += "/Logs";
-      }
-
-      if (!path.endsWith("/")) {
-        path += "/";
-      }
-
-      fullLogPath = path + fileName;
 
       try {
 
         // This block configure the logger with handler and formatter
         // The boolean value is to append to an existing file if exists
-        fh = new FileHandler(fullLogPath, true);
+
+        getFileHandler();
+
         logger.addHandler(fh);
         SimpleFormatter formatter = new SimpleFormatter();
         fh.setFormatter(formatter);
@@ -60,4 +47,32 @@ public class APILogger {
     }
     return logger;
   }
+
+  private static void getFileHandler() throws SecurityException, IOException {
+    if (fh == null) {
+      String path = Config.getStringProperty("logPath");
+      String fileName = Config.getStringProperty("logFileName");
+      String fullLogPath;
+
+      if (path.toLowerCase().equals("default")) {
+        path = System.getProperty("user.dir");
+        path += "/Logs";
+      }
+
+      if (!path.endsWith("/")) {
+        path += "/";
+      }
+
+      fullLogPath = path + fileName;
+      fh = new FileHandler(fullLogPath, true);
+    }
+  }
+
+  public static FileHandler getFh() throws SecurityException, IOException {
+    if (fh == null) {
+      getFileHandler();
+    }
+    return fh;
+  }
+
 }

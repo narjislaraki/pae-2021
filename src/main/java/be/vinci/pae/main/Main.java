@@ -3,7 +3,6 @@ package be.vinci.pae.main;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.NoSuchFileException;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -44,10 +43,20 @@ public class Main {
     }
 
 
-    if (!testLoggerPath()) {
+    /* Logger FileHanlder init and path validity check */
+    try {
+      APILogger.getFh();
+    } catch (NoSuchFileException e) {
+      System.err.println(
+          "Logger folder does not exists.\n\tCreate the folder.\n\tChange the path in the properties file.");
+      return;
+    } catch (SecurityException e1) {
+      e1.printStackTrace();
+      return;
+    } catch (IOException e1) {
+      e1.printStackTrace();
       return;
     }
-
 
     final HttpServer server = startServer();
 
@@ -63,35 +72,6 @@ public class Main {
       System.err.println(e.getMessage());
     }
     server.shutdownNow();
-  }
-
-  private static boolean testLoggerPath() {
-    String path = Config.getStringProperty("logPath");
-    String fileName = Config.getStringProperty("logFileName");
-
-    if (path.toLowerCase().equals("default")) {
-      path = System.getProperty("user.dir");
-      path += "/Logs";
-    }
-
-    if (!path.endsWith("/")) {
-      path += "/";
-    }
-    String fullPath = path + fileName;
-    try {
-      new FileHandler(fullPath);
-    } catch (NoSuchFileException e) {
-      System.err.println("Le dossier " + path
-          + " n'existe pas.\nVeuillez:\n\tLe créer\n\tModifier la destination dans le fichier properties");
-      return false;
-    } catch (SecurityException e) {
-      e.printStackTrace();
-      return false;
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
   }
 
   /**
