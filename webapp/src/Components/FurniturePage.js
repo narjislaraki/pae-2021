@@ -437,6 +437,7 @@ const onEdit = async () => {
     typeElem.innerHTML = `
                         <label for="furniture-types">Type de meuble:</label>
                         <select class="form-select" id="furniture-types"></select>`
+    typeElem.style.top = "0%"
     let furnitureTypesElem = document.getElementById("furniture-types");
     furnitureTypes.map((e) => {
         if (e.label === furniture.type)
@@ -667,8 +668,11 @@ function stopEdition() {
         document.getElementById("sellingDiv").style.display = "block";
     if (document.getElementById("optiondiv"))
         document.getElementById("optiondiv").style.display = "block";
+    if (document.getElementById("price-inline"))
+        document.getElementById("price-inline").style.display = "block";
     document.getElementById("editIcon").style.display = "inline"
     document.getElementById("dropdownMenu2").style.display = "block"
+    document.getElementById("furniture-type").style.top = "10%"
 }
 
 function removeEditElements() {
@@ -959,7 +963,7 @@ async function populateSellingDiv() {
         clients = clients.filter(e => e.role === "ANTIQUAIRE");
     }
 
-    divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      Vendre      </button>`
+    divSelling.innerHTML = `<button name="trigger_popup_fricc" class="btn btn-outline-dark" id="sell" type="button">      ${furniture.condition === "EN_VENTE" ? "Vendre" : "Vendre à un antiquaire"}      </button>`
     document.getElementById("popups").innerHTML = `
                             <div class="hover_bkgr_fricc" id="popupSell" >
                                 <span class="helper"></span>

@@ -843,6 +843,9 @@ footer{
 #price-space {
     display: inline;
 }
+#price {
+    margin-top: 100px;
+}
 
 #furniture-price-paid{
     display: inline;
