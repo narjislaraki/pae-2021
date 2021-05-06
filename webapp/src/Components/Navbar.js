@@ -380,6 +380,8 @@ const onIntroduceRequest = async (e) => {
         if (requestVisit) {
             if (window.location.pathname == "/visits") {
                 window.location.reload();
+            }else if (window.location.pathname == "/visitsForClient"){
+              window.location.reload();
             }
             PrintMessage("Votre demande de visite a bien été enregistrée. Elle est maintenant en attente de confirmation.");
         }
