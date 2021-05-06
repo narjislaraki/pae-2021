@@ -133,6 +133,27 @@ public class FurnitureResource {
     return responseOkWithEntity(r);
   }
 
+  /**
+   * Get a list of furniture by type to be placed in the carousel (on sale, sold and under options).
+   * 
+   * @param request the request
+   * @param idType the id type
+   * @return a list of furniture wrapped in a Response
+   */
+  @GET
+  @Path("slider/{idType}")
+  public Response getSliderFurnituresListByType(@Context ContainerRequest request,
+      @PathParam("idType") int idType) {
+    List<FurnitureDTO> list = furnitureUCC.getSliderFurnitureListByType(10, idType);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
 
   /**
    * Get a list of furnitures of a certain type.

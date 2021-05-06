@@ -73,4 +73,6 @@ public interface FurnitureDAO {
 
   List<FurnitureDTO> getSliderFurnitureList(int limit);
 
+  List<FurnitureDTO> getSliderFurnitureListByType(int limit, int idType);
+
 }

@@ -399,6 +399,15 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     return true;
   }
 
+  @Override
+  public List<FurnitureDTO> getSliderFurnitureListByType(int limit, int idType) {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list = null;
+    list = furnitureDao.getSliderFurnitureListByType(limit, idType);
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
 
 
 }
