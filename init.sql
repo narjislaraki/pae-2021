@@ -100,7 +100,7 @@ INSERT INTO pae.users VALUES
 		(default, 'lau', 'Satcho', 'Laurent', 'laurent.satcho@gmail.be', 'admin', '20210322', true, '$2a$10$57whA09ftjlLqfKN9T4ei.Mzq/FYvNFxzlDt07DpTK2tNRxKsSF0a', 2),--Mauve;7?
 		(default, 'Caro', 'Line', 'Caroline', 'caro.line@hotmail.com', 'antiquaire', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 3),--mdpusr.2
 		(default, 'achil', 'Ile', 'Achille', 'ach.ile@gmail.com', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 4),--mdpusr.2
-		(default, 'bazz', 'Ile', 'Basile', 'bazz.ile@gmail.be', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 5), --mdpusr.2
+		(default, 'bazz', 'Ile', 'Basile', 'bas.ile@gmail.be', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 5), --mdpusr.2
 		(default, 'Theo', 'Ile', 'Théophile','theo.phile@proximus.be', 'antiquaire', '20210330', true, '$2a$10$k4ZON1eho94PfXjULJHR7eIrWReVN54zKLIcob.2K.zN2.NTB293G', 4), --rouge;E6.
 		(default, 'charline', 'Line', 'Charles', 'charline@proximus.be', 'client', '20210422', true, '$2a$10$WBnq36heX0KGTfyZCI/Gb.jmlUX244MwhpDajKiwMpQgonnn/wYx2', 6); --mdpusr.4 
 
