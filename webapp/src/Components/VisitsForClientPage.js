@@ -40,11 +40,7 @@ let VisitsForClientPage = () => {
     </div>`;
     page.innerHTML = menu + visitClientPage;
 
-    let myTransactions = document.getElementById("myTransactions");
-    myTransactions.addEventListener("click", onMyTransactions);
-
-    let myVisits = document.getElementById("myVisits");
-    myVisits.addEventListener("click", onMyVisits);
+    
 
     onVisitsForClient();
 }
@@ -131,6 +127,11 @@ const onVisitsForClient = async () => {
         Array.from(listVisit).forEach((e) => {
             e.addEventListener("click", onClickVisit);
         });
+        let myTransactions = document.getElementById("myTransactions");
+        myTransactions.addEventListener("click", onMyTransactions);
+
+        let myVisits = document.getElementById("myVisits");
+        myVisits.addEventListener("click", onMyVisits);
 }
 
 async function onClickVisit(e) {

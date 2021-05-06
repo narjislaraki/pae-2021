@@ -392,7 +392,9 @@ async function FurniturePage(id) {
         let cancelSellBtn = document.getElementById("cancelSellBtn");
         let confirmSellBtn = document.getElementById("confirmSellBtn");
         let sellingAnonCheck = document.getElementById("unknownBuyerSell");
-        sellingBtn.addEventListener("click", onClickSell);
+        if(sellingBtn){
+            sellingBtn.addEventListener("click", onClickSell);
+        }
         inputClient.addEventListener("input", onClientSelection);
         btnPopup.addEventListener("click", onCloseSell);
         cancelSellBtn.addEventListener("click", onCloseSell);
