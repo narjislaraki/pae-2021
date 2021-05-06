@@ -48,6 +48,13 @@ public class APILogger {
     return logger;
   }
 
+  /**
+   * Getter and initializer for the FileHandler used with the logger.
+   * 
+   * @return the file handler
+   * @throws SecurityException
+   * @throws IOException
+   */
   public static FileHandler getFileHandler() throws SecurityException, IOException {
     if (fh == null) {
       String path = Config.getStringProperty("logPath");

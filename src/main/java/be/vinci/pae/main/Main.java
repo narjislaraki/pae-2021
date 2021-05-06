@@ -47,8 +47,8 @@ public class Main {
     try {
       APILogger.getFileHandler();
     } catch (NoSuchFileException e) {
-      System.err.println(
-          "Logger folder does not exists.\n\tCreate the folder.\n\tChange the path in the properties file.");
+      System.err.println("Logger folder does not exists." + "\n\tCreate the folder."
+          + "\n\tChange the path in the properties file.");
       return;
     } catch (SecurityException e1) {
       e1.printStackTrace();
