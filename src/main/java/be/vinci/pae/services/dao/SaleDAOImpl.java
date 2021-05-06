@@ -56,9 +56,8 @@ public class SaleDAOImpl implements SaleDAO {
       String sql = "SELECT s.id_sales, s.selling_price, s.id_furniture, s.id_buyer, "
           + "s.date_of_sale, f.id_furniture, f.description, f.purchase_price, "
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
-          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, " 
-          + "p.photo "
-          + "FROM pae.sales s, pae.furnitures f, pae.photos p "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo " + "FROM pae.sales s, pae.furnitures f, pae.photos p "
           + "WHERE p.id_photo = f.favorite_photo AND s.id_buyer = ? "
           + "AND f.id_furniture = s.id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
@@ -83,8 +82,7 @@ public class SaleDAOImpl implements SaleDAO {
           + " f.id_furniture, f.description, f.purchase_price, "
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
           + "f.offered_selling_price, f.id_type, " + "f.request_visit, f.seller, f.favorite_photo, "
-          + "p.photo "
-          + "FROM pae.sales s, pae.furnitures f, pae.photos p WHERE f.seller = ? "
+          + "p.photo " + "FROM pae.sales s, pae.furnitures f, pae.photos p WHERE f.seller = ? "
           + "AND f.id_furniture = s.id_furniture AND p.id_photo = f.favorite_photo;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
@@ -125,7 +123,7 @@ public class SaleDAOImpl implements SaleDAO {
       furniture.setSellerId(rs.getInt(15));
       furniture.setFavouritePhotoId(rs.getInt(16));
       furniture.setFavouritePhoto(rs.getString(17));
-      } catch (SQLException e) {
+    } catch (SQLException e) {
       throw new FatalException(e);
     }
     sale.setFurniture(furniture);
