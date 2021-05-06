@@ -241,6 +241,24 @@ public class VisitUCCTest {
     assertEquals(goodVisit, visitUCC.getVisitById(id));
   }
 
+  @DisplayName("Test getting visit by id with a valid id and a idAdress == 0")
+  @Test
+  public void getVisitByIdTest4() {
+    int id = goodVisit.getIdRequest();
+    goodVisit.setWarehouseAddressId(0);
+    Mockito.when(visitDAO.getVisitById(id)).thenReturn(goodVisit);
+    assertEquals(goodVisit, visitUCC.getVisitById(id));
+  }
+
+  @DisplayName("Test getting visit by id with a valid id and a idClient == 0")
+  @Test
+  public void getVisitByIdTest5() {
+    int id = goodVisit.getIdRequest();
+    goodVisit.setIdClient(0);
+    Mockito.when(visitDAO.getVisitById(id)).thenReturn(goodVisit);
+    assertEquals(goodVisit, visitUCC.getVisitById(id));
+  }
+
 
   @DisplayName("Test accept a visit with a invalid id and a non-null schduled date time")
   @Test
