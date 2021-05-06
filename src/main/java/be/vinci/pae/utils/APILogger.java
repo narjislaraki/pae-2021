@@ -52,8 +52,8 @@ public class APILogger {
    * Getter and initializer for the FileHandler used with the logger.
    * 
    * @return the file handler
-   * @throws SecurityException
-   * @throws IOException
+   * @throws SecurityException to indicate a security violation
+   * @throws IOException to indicate that I/O exception of some sort has occurred
    */
   public static FileHandler getFileHandler() throws SecurityException, IOException {
     if (fh == null) {
