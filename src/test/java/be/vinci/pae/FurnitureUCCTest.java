@@ -395,6 +395,20 @@ public class FurnitureUCCTest {
     assertEquals(goodFurniture, furnitureUCC.getFurnitureById(id));
   }
 
+  @DisplayName("Test getting furniture by id with valid id but no seller")
+  @Test
+  public void getFurnitureByIdTest6() {
+    int id = goodFurniture.getId();
+    goodFurniture.setSellerId(0);
+    photo1.setIdFurniture(goodFurniture.getId());
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    Mockito.when(furnitureDAO.getFavouritePhotoById(goodFurniture.getFavouritePhotoId()))
+        .thenReturn(photo1.getPhoto());
+    Mockito.when(furnitureDAO.getFurnitureTypeById(goodType.getId()))
+        .thenReturn(goodType.getLabel());
+    assertEquals(goodFurniture, furnitureUCC.getFurnitureById(id));
+  }
+
   @DisplayName("Test getting furniture by id with a valid id seller")
   @Test
   public void getFurnitureByIdTest4() {
