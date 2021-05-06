@@ -920,6 +920,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
+
   @DisplayName("Test getSliderFurnitureListByType with empty list")
   @Test
   public void getSliderFurnitureListByTypeTest1() {
