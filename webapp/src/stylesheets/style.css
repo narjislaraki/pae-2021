@@ -1725,9 +1725,9 @@ grid-template-rows: 20% 20% 20% 20% 20%;
     letter-spacing: 0.245em;
 }
 #accordion-transactions{
-    width: 90%;
+    width: 70%;
     margin-top: 2rem;
-    margin-left: 5%;
+    margin-left: 25%;
     border-radius: 50px !important;
 }
 .accordion-button{
