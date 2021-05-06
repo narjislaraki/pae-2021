@@ -210,6 +210,14 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   }
 
   @Override
+  public List<FurnitureDTO> getFurnitureListForResearch() {
+    dalServices.getBizzTransaction(true);
+    List<FurnitureDTO> list = furnitureDao.getFurnitureListForResearch();
+    dalServices.stopBizzTransaction();
+    return list;
+  }
+
+  @Override
   public List<FurnitureDTO> getSliderFurnitureList(int limit) {
     dalServices.getBizzTransaction(true);
     List<FurnitureDTO> list = null;

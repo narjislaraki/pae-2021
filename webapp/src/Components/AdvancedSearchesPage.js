@@ -1,37 +1,40 @@
 import callAPI from "../utils/api";
 import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
-import {FurniturePage} from "./FurniturePage.js";
+import { FurniturePage } from "./FurniturePage.js";
 import PrintError from "./PrintError";
-import {convertDateTimeToStringDate, convertDateTimeToStringTime} from "../utils/tools.js";
-
+import { convertDateTimeToStringDate, convertDateTimeToStringTime } from "../utils/tools.js";
+import waitingSpinner from "./WaitingSpinner";
 
 const API_BASE_URL = "/api/searches/";
 
 let page = document.querySelector("#page");
-let userData = getUserSessionData();
+let userData;
 let clientMode = true;
+let goSpin = true;
 let typeList = [];
-let menu, advancedSearchesBar, advancedSearchesPageClient,  advancedSearchesPageFurniture;
+let menu, advancedSearchesBar, advancedSearchesPageClient, advancedSearchesPageFurniture;
 let furnList = [];
 let saleList = [];
 let clientList = [];
 
-let AdvancedSearchesPage = async () =>{
+let AdvancedSearchesPage = async () => {
+    if(goSpin)
+        waitingSpinner();
+    userData = getUserSessionData();
+    typeList = await callAPI(
+        "/api/furnitures/typeOfFurnitureList",
+        "GET",
+        undefined,
+        undefined
+    )
 
-        typeList = await callAPI(
-            "/api/furnitures/typeOfFurnitureList",
-            "GET",
-            undefined,
-            undefined
-        )  
-   
-        clientList = await callAPI(
-            "/api/users/validatedList",
-            "GET",
-            userData.token,
-            undefined,
-        );
+    clientList = await callAPI(
+        "/api/users/validatedList",
+        "GET",
+        userData.token,
+        undefined,
+    );
 
     menu = `
     <div class="menuAdmin">
@@ -79,12 +82,12 @@ let AdvancedSearchesPage = async () =>{
         <p>Recherche:</p>
         <datalist id="names-list">
         </datalist>
-        <input id="input-name" class="form-control" list="names-list" placeholder ="Nom">
+        <input id="input-name" class="form-control" list="names-list" placeholder ="Prénom">
         <datalist id="types-list">
         </datalist>
         <input id="input-type" class="form-control" list="types-list" placeholder="Type">
         <div class="searchMontant">
-            <p>Montant</p>
+            <p>Montant de vente</p>
         <input type="text" class="form-control" id="montantMin" placeholder="Min.">
         <input type="text" class="form-control" id="montantMax" placeholder="Max.">
         </div>
@@ -93,7 +96,7 @@ let AdvancedSearchesPage = async () =>{
     `;
 
 
-    if(clientMode){
+    if (clientMode) {
         page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
         initializeDSClient();
     }
@@ -103,51 +106,51 @@ let AdvancedSearchesPage = async () =>{
         initializeDSFur();
     }
 
-   btns();
-   addEL();
+    btns();
+    addEL();
 
-   return;
+    return;
 };
 
 function initializeDSClient() {
 
     let dataListNames = document.getElementById("names-list");
-        clientList.map((client) => {
-            dataListNames.innerHTML += 
+    clientList.map((client) => {
+        dataListNames.innerHTML +=
             `<option data-name="${client.lastName}" data-userId="${client.id}" value="${client.lastName}"></option>`;
-        })
+    })
 
-        let dataListCities = document.getElementById("cities-list");
-        clientList.map((client) => {
-            dataListCities.innerHTML += 
+    let dataListCities = document.getElementById("cities-list");
+    clientList.map((client) => {
+        dataListCities.innerHTML +=
             `<option data-city="${client.address.city}" data-userId="${client.id}" value="${client.address.city}"></option>`;
-        })
+    })
 
-        let dataListPostCode = document.getElementById("postCode-list");
-        clientList.map((client) => {
-            dataListPostCode.innerHTML += 
+    let dataListPostCode = document.getElementById("postCode-list");
+    clientList.map((client) => {
+        dataListPostCode.innerHTML +=
             `<option data-postCode="${client.address.postCode}" data-userId="${client.id}" value="${client.address.postCode}"></option>`;
-        })
+    })
 
 }
 
 function initializeDSFur() {
     let dataListNames = document.getElementById("names-list");
-        clientList.map((client) => {
-            dataListNames.innerHTML += 
+    clientList.map((client) => {
+        dataListNames.innerHTML +=
             `<option data-name="${client.firstName}" data-userId="${client.id}" value="${client.firstName}"></option>`;
-        })
+    })
 
     let dataListTypes = document.getElementById("types-list");
     typeList.map((element) => {
         dataListTypes.innerHTML +=
-        `<option data-label="${element.label}" data-typeId="${element.id}" value="${element.label}">${element.label}</option>`;
+            `<option data-label="${element.label}" data-typeId="${element.id}" value="${element.label}">${element.label}</option>`;
     })
 }
 let btns = () => {
-    document.body.addEventListener('change', function(e){
+    document.body.addEventListener('change', function (e) {
         let target = e.target;
-        switch(target.value){
+        switch (target.value) {
             case 'client':
                 page.innerHTML = menu + advancedSearchesBar + advancedSearchesPageClient;
                 clientMode = true;
@@ -165,13 +168,13 @@ let btns = () => {
     });
 }
 
-function addEL () {
+function addEL() {
     let search = document.getElementById("search");
     search.addEventListener("click", onSearch);
 
     let visits = document.getElementById("visits");
     visits.addEventListener("click", onVisits);
-  
+
     let visitsATraiter = document.getElementById("visitsToBeProcessed");
     visitsATraiter.addEventListener("click", onVisitsToBeProcessed);
 
@@ -204,50 +207,49 @@ const onVisitsToBeProcessed = (e) => {
 
 const onSearch = async (e) => {
     e.preventDefault();
-    if (clientMode){
+    goSpin = false;
+    if (clientMode) {
         let inputCity = document.getElementById("input-city").value;
         let city = document.querySelector("#cities-list option[value='" + inputCity + "']");
         let inputName = document.getElementById("input-name").value;
         let name = document.querySelector("#names-list option[value='" + inputName + "']");
         let inputPostCode = document.getElementById("input-postCode").value;
-        let postcode =  document.querySelector("#postCode-list option[value='" + inputPostCode + "']");
+        let postcode = document.querySelector("#postCode-list option[value='" + inputPostCode + "']");
         AdvancedSearchesPage();
-        try{
+        try {
             clientList = await callAPI(
                 "/api/users/validatedList",
                 "GET",
                 userData.token,
                 undefined,
             );
-        
-            if (name){
+
+            if (name) {
                 clientList = clientList.filter(e => e.lastName.toLowerCase() == name.dataset.name.toLowerCase());
-            } else if(inputName){
+            } else if (inputName) {
                 clientList = clientList.filter(e => e.lastName.toLowerCase().startsWith(inputName.toLowerCase()));
 
             } if (city) {
                 clientList = clientList.filter(e => e.address.city.toLowerCase() == city.dataset.city.toLowerCase());
-            } else if(inputCity) {
+            } else if (inputCity) {
                 clientList = clientList.filter(e => e.address.city.toLowerCase().startsWith(inputCity.toLowerCase()));
 
-            }if (postcode) {
+            } if (postcode) {
                 clientList = clientList.filter(e => e.address.postCode.toLowerCase() == postcode.dataset.postcode.toLowerCase());
-            } else if(inputPostCode) {
+            } else if (inputPostCode) {
                 clientList = clientList.filter(e => e.address.postCode.toLowerCase().startsWith(inputPostCode.toLowerCase()));
             }
 
-            
+
             await onShowClientList(clientList);
             btns();
             addEL();
             let list = document.getElementsByClassName("furnituresClient");
-            console.log(list.length);
-            Array.from(list).map((e,i,a) => {
-                console.log("bloop");
+            Array.from(list).map((e, i, a) => {
                 e.addEventListener("click", onFurniture);
             });
-            
-        } catch(err){
+
+        } catch (err) {
             if (err == "Error: Admin only") {
                 err.message = "Seuls les administrateurs peuvent accéder à cette page !";
             }
@@ -263,42 +265,39 @@ const onSearch = async (e) => {
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
         AdvancedSearchesPage();
-        try{
+        try {
             furnList = await callAPI(
-                "/api/furnitures",
+                "/api/furnitures/research",
                 "GET",
                 userData.token,
                 undefined,
             );
-            
+
             saleList = await callAPI(
                 "/api/sales",
                 "GET",
                 userData.token,
                 undefined
             )
-          
-            if (name){
-                let client = clientList.filter(c=> c.firstName.toLowerCase() == name.dataset.name.toLowerCase());
-                let salesWithClient = saleList.filter(s => s.idBuyer == client[0].id);
+
+            if (name) {
+                let clients = clientList.filter(c => c.firstName.toLowerCase() == name.dataset.name.toLowerCase());
+                let clientIds = clients.map(c => c.id);
+                let salesWithClient = saleList.filter(s => clientIds.includes(s.idBuyer));
                 let idFurOfSales = salesWithClient.map(s => s.idFurniture);
-                console.log(furnList);
-                furnList = furnList.filter ( f => f.seller == client[0].id || idFurOfSales.includes(f.id));
-                console.log(furnList);
-                
-            } else if(inputName){
-                let client = clientList.filter(c=> c.firstName.toLowerCase().startsWith(inputName.toLowerCase()));
-                let salesWithClient = saleList.filter(s => s.idBuyer == client[0].id);
-                console.log(salesWithClient);
+                furnList = furnList.filter(f => clientIds.includes(f.sellerId) || idFurOfSales.includes(f.id));
+
+            } else if (inputName) {
+                let clients = clientList.filter(c => c.firstName.toLowerCase().startsWith(inputName.toLowerCase()));
+                let clientIds = clients.map(c => c.id);
+                let salesWithClient = saleList.filter(s => clientIds.includes(s.idBuyer));
                 let idFurOfSales = salesWithClient.map(s => s.idFurniture);
-                furnList = furnList.filter ( f => f.seller == client[0].id || idFurOfSales.includes(f.id));
-                console.log(furnList);
+                furnList = furnList.filter(f => clientIds.includes(f.sellerId) || idFurOfSales.includes(f.id));
             }
             if (type) {
                 furnList = furnList.filter(f => f.type != null && f.type.toLowerCase() == type.dataset.label.toLowerCase());
-            } 
-            else if(inputType){
-                console.log(inputType);
+            }
+            else if (inputType) {
                 furnList = furnList.filter(f => f.type != null && f.type.toLowerCase().startsWith(inputType.toLowerCase()));
             }
             if (maxAmount) {
@@ -307,11 +306,11 @@ const onSearch = async (e) => {
                 furnList = furnList.filter(e => e.offeredSellingPrice >= minAmount);
             }
 
-            
+
             await onShowFurnitureList(furnList);
             btns();
             addEL();
-        } catch(err){
+        } catch (err) {
             if (err == "Error: Admin only") {
                 err.message = "Seuls les administrateurs peuvent accéder à cette page !";
             }
@@ -321,12 +320,8 @@ const onSearch = async (e) => {
     }
 }
 
-async function SearchFurn (nameClient, type, maxAmount, minAmount) {
-
-}
-
 const onShowFurnitureList = async (data) => {
-    try{
+    try {
         clientList = await callAPI(
             "/api/users/validatedList",
             "GET",
@@ -340,7 +335,7 @@ const onShowFurnitureList = async (data) => {
             userData.token,
             undefined
         )
-    } catch(err){
+    } catch (err) {
         if (err == "Error: Admin only") {
             err.message = "Seuls les administrateurs peuvent accéder à cette page !";
         }
@@ -356,8 +351,8 @@ const onShowFurnitureList = async (data) => {
     `;
 
     let nbPhoto = 1;
-    furnitureList += data.map((furniture) => 
-    `<div class="advancedSearchClientItem-container">
+    furnitureList += data.map((furniture) =>
+        `<div class="advancedSearchClientItem-container">
         <div class="advancedSearchClientItem condensed">
             <div class="advancedSearchClientItem_pseudo">${furniture.type == null ? "N/A" : furniture.type}</div>
             <div class="advancedSearchFurntItem_description">${furniture.description}</div>
@@ -368,17 +363,17 @@ const onShowFurnitureList = async (data) => {
             </div>
             <div class="advancedSearchFurnItem_moreInfo2">
                 <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : convertDateTimeToStringDate(furniture.pickUpDate) + " à " + convertDateTimeToStringTime(furniture.pickUpDate)}</div>
-                <div>Date dépot: ${furniture.depositDate== null ? "N/A" : furniture.depositDate}</div>
+                <div>Date dépot: ${furniture.depositDate == null ? "N/A" : furniture.depositDate}</div>
             </div>
         </div>
         <div class="furnInfo">
             <div class="furnInfo-cat">
                 <p class="small-caps">Acheté à:</p>
-                <div>${furniture.seller == null? "N/A" : clientList.filter(e=>e.id == furniture.seller)[0].username}</div>
+                <div>${furniture.seller == null ? "N/A" : clientList.filter(c => c.id == furniture.sellerId)[0].username}</div>
             </div>
             <div class="furnInfo-cat">
             <p class="small-caps">Vendu à:</p>
-                <div>${saleList.filter(s=>s.idFurniture == furniture.id).length == 0 ? "N/A" : clientList.filter(c=>c.id == saleList.filter(s=>s.idFurniture == furniture.id)[0].idBuyer)[0].username}</div>
+                <div>${saleList.filter(s => s.idFurniture == furniture.id).length == 0 ? "N/A" : clientList.filter(c => c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer)[0].username}</div>
             </div>
             <div class="furnInfo-cat">
                 <p  class="small-caps">Photos du meuble:</p>
@@ -392,11 +387,11 @@ const onShowFurnitureList = async (data) => {
         </div>
     </div>`).join("");
 
-    page.innerHTML += furnitureList;    
+    page.innerHTML += furnitureList;
 
     let furniturePhotos;
     for (let i = 0; i < data.length; i++) {
-        let photosMeubles = document.getElementById("photosMeuble"+data[i].id);
+        let photosMeubles = document.getElementById("photosMeuble" + data[i].id);
         let photosAAjouter = "<br>";
         furniturePhotos = await callAPI(
             "/api/furnitures/" + data[i].id + "/photos",
@@ -404,22 +399,22 @@ const onShowFurnitureList = async (data) => {
             userData.token,
             undefined
         );
-                
+
         furniturePhotos.map((p) => {
             photosAAjouter += `<img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${p.photo}" alt="Petite image"  width = 60px
             height= 60px>`
         })
         photosMeubles.innerHTML = photosAAjouter;
     }
-    page.innerHTML+= `
+    page.innerHTML += `
     <div class="white-space"></div>
     `
     return page;
 }
-  
-const onShowClientList = async (data) =>  {
+
+const onShowClientList = async (data) => {
     let clientList =
-      `<div class="clientHandles">
+        `<div class="clientHandles">
       <div id="pseudoHandle" class="condensed">PSEUDO</div>
       <div id="namesHandle" class="condensed">NOMS</div>
       <div id="emailHandle" class="condensed">EMAIL</div>
@@ -427,31 +422,31 @@ const onShowClientList = async (data) =>  {
   </div>
     
       `;
-        try{
-            furnList = await callAPI(
-                "/api/furnitures",
-                "GET",
-                userData.token,
-                undefined,
-            );
+    try {
+        furnList = await callAPI(
+            "/api/furnitures/research",
+            "GET",
+            userData.token,
+            undefined,
+        );
 
-            saleList = await callAPI(
-                "/api/sales",
-                "GET",
-                userData.token,
-                undefined
-            )
-        } catch(err){
-            if (err == "Error: Admin only") {
-                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-            }
-            console.error("AdvancedSearchesPage::onSearchClients", err);
-            PrintError(err);
+        saleList = await callAPI(
+            "/api/sales",
+            "GET",
+            userData.token,
+            undefined
+        )
+    } catch (err) {
+        if (err == "Error: Admin only") {
+            err.message = "Seuls les administrateurs peuvent accéder à cette page !";
         }
+        console.error("AdvancedSearchesPage::onSearchClients", err);
+        PrintError(err);
+    }
 
-      clientList += data
-      .map((user) =>
-        `<div class="advancedSearchClientItem-container">
+    clientList += data
+        .map((user) =>
+            `<div class="advancedSearchClientItem-container">
             <div class="advancedSearchClientItem condensed">
                 <div class="advancedSearchClientItem_pseudo">${user.username}</div>
                 <div class="advancedSearchClientItem_fullName">
@@ -462,8 +457,8 @@ const onShowClientList = async (data) =>  {
                 <div class="advancedSearchClientItem_moreInfo">
                     <div class="asci-signUpDate">Inscrit depuis: ${convertDateTimeToStringDate(user.registrationDate)}</div>
                     <div class="asci-role">Role: ${user.role} </div>
-                    <div class="asci-amountBought">Nbr achats: ${saleList.filter(e=>e.idBuyer == user.id).length}</div>
-                    <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e=>e.seller == user.id).length}</div>
+                    <div class="asci-amountBought">Nbr achats: ${saleList.filter(e => e.idBuyer == user.id).length}</div>
+                    <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e => e.seller == user.id).length}</div>
                 </div>
             </div>
             <div class="furnInfo">
@@ -477,21 +472,21 @@ const onShowClientList = async (data) =>  {
             </div>
         </div>
         </div> `)
-                                
-      .join("");
 
-    page.innerHTML += clientList;    
+        .join("");
 
-    for (let i = 0; i < data.length; i++){
-        let meublesVendusHTML = document.getElementById("meublesVendus"+data[i].id);
-        let meublesAchetesHTML = document.getElementById("meublesAchetes"+data[i].id);
-        let mAchetesList =saleList.filter(s=>s.idBuyer == data[i].id);
-        let mVendusList = furnList.filter(f=>f.seller == data[i].id);
+    page.innerHTML += clientList;
+
+    for (let i = 0; i < data.length; i++) {
+        let meublesVendusHTML = document.getElementById("meublesVendus" + data[i].id);
+        let meublesAchetesHTML = document.getElementById("meublesAchetes" + data[i].id);
+        let mAchetesList = saleList.filter(s => s.idBuyer == data[i].id);
+        let mVendusList = furnList.filter(f => f.seller == data[i].id);
         let meublesVAjouter = "";
         let meublesAAjouter = "";
 
         mAchetesList.map((m) => {
-            let meuble = furnList.find(e=>e.id == m.id);
+            let meuble = furnList.find(e => e.id == m.id);
             meublesAAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${meuble.description}</div>`
         })
 
@@ -502,26 +497,26 @@ const onShowClientList = async (data) =>  {
         meublesVendusHTML.innerHTML = meublesVAjouter;
         meublesAchetesHTML.innerHTML = meublesAAjouter;
 
-        
+
     }
-    page.innerHTML+= `
+    page.innerHTML += `
     <div class="white-space"></div>
     `;
 
     return page;
-  }
+}
 
 const onFurniture = (e) => {
     let id = e.target.dataset.id;
     FurniturePage(id);
 };
 
-function onSwitch(switchElement, clientDiv, furnDiv, menuDiv){
+function onSwitch(switchElement, clientDiv, furnDiv, menuDiv) {
     console.log("dans onSwitch")
-    if(switchElement.checked){
+    if (switchElement.checked) {
         page.innerHTML = menuDiv + clientDiv;
     }
-    else{
+    else {
         page.innerHTML = menuDiv + furnDiv;
     }
 }
