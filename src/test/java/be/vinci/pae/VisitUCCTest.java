@@ -362,20 +362,18 @@ public class VisitUCCTest {
   @Test
   public void submitARequestOfVisitTest4() {
     goodVisit.getWarehouseAddress().setStreet(null);
-    Mockito.when(userDAO.getUserFromId(goodVisitWithoutAddress.getIdClient()))
-        .thenReturn(goodValidatedUser);
-    Mockito.when(visitDAO.submitRequestOfVisit(goodVisitWithoutAddress)).thenReturn(1);
-    assertTrue(visitUCC.submitRequestOfVisit(goodVisitWithoutAddress));
+    Mockito.when(userDAO.getUserFromId(goodVisit.getIdClient())).thenReturn(goodValidatedUser);
+    Mockito.when(visitDAO.submitRequestOfVisit(goodVisit)).thenReturn(1);
+    assertTrue(visitUCC.submitRequestOfVisit(goodVisit));
   }
 
   @DisplayName("Test submit a request for visit whit a empty stree of warehouseAddress")
   @Test
   public void submitARequestOfVisitTest5() {
     goodVisit.getWarehouseAddress().setStreet("");
-    Mockito.when(userDAO.getUserFromId(goodVisitWithoutAddress.getIdClient()))
-        .thenReturn(goodValidatedUser);
-    Mockito.when(visitDAO.submitRequestOfVisit(goodVisitWithoutAddress)).thenReturn(1);
-    assertTrue(visitUCC.submitRequestOfVisit(goodVisitWithoutAddress));
+    Mockito.when(userDAO.getUserFromId(goodVisit.getIdClient())).thenReturn(goodValidatedUser);
+    Mockito.when(visitDAO.submitRequestOfVisit(goodVisit)).thenReturn(1);
+    assertTrue(visitUCC.submitRequestOfVisit(goodVisit));
   }
 
 
