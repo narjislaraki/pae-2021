@@ -64,6 +64,7 @@ const HomePage = async (pageData) => {
       }
       PrintError(err);
       RedirectUrl("/");
+      return;
     }
   }
 
@@ -146,11 +147,11 @@ const HomePage = async (pageData) => {
     page.innerHTML = homepageTitle + carousel1;
     let menuDeroulant = document.getElementById("type");
     let title = document.getElementById("title");
-    menuDeroulant.innerHTML += `<a id="all" class="dropdown-item typeOfFurniture" data-id="all" href="#">Voir tous les meubles</a>`;
-    let typesOfFurnituresList = document.getElementsByClassName("typeOfFurniture");
+    menuDeroulant.innerHTML += `<a id="all" class="dropdown-item typeOfFurniture2" data-id="all" href="#">Voir tous les meubles</a>`;
+    let typesOfFurnituresList = document.getElementsByClassName("typeOfFurniture2");
     //console.log(allFurnitures);
     for (let i = 0; i < typesOfFurnitures.length; i++) {
-        menuDeroulant.innerHTML += `<a id="type${typesOfFurnitures[i].id}" data-id="${typesOfFurnitures[i].id}" class="dropdown-item typeOfFurniture" href="#">${typesOfFurnitures[i].label}</a>`;
+        menuDeroulant.innerHTML += `<a id="type${typesOfFurnitures[i].id}" data-id="${typesOfFurnitures[i].id}" class="dropdown-item typeOfFurniture2" href="#">${typesOfFurnitures[i].label}</a>`;
       
     }
 

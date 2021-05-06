@@ -66,7 +66,8 @@ async function FurnitureListPage(pageData) {
     } else {
         let section = `<section class="furnitureListMenu">`;
         furnitures.map((element) => {
-            if (element.favouritePhoto)
+            if (element.favouritePhoto){
+
                 section +=
                     `
                         <div data-id="${element.id}" class="item-card furniture">
@@ -78,7 +79,8 @@ async function FurnitureListPage(pageData) {
                             <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="euro">euro</div>
                         </div>
                     `;
-            else
+        }else{
+
                 section +=
                     `
                         <div data-id="${element.id}" class="item-card furniture">
@@ -90,6 +92,7 @@ async function FurnitureListPage(pageData) {
                             <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="euro">euro</div>
                         </div>
                     `;
+            }
         });
         section +=`</section>`;
         page.innerHTML += section;
@@ -99,7 +102,9 @@ async function FurnitureListPage(pageData) {
     //close the div
     page.innerHTML += `</div>`;
     let list = document.getElementsByClassName("furniture");
+    console.log(list)
     Array.from(list).forEach((e) => {
+        console.log('click')
         e.addEventListener("click", onFurniture);
     });
     if (titleHtml) {
@@ -109,7 +114,9 @@ async function FurnitureListPage(pageData) {
 }
 
 const onFurniture = (e) => {
+    console.log(e)
     let id = e.srcElement.dataset.id;
+    console.log(id)
     FurniturePage(id);
 };
 
