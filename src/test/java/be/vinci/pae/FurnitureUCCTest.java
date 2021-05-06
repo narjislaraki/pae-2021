@@ -527,6 +527,43 @@ public class FurnitureUCCTest {
     assertEquals(goodFurniture, furnitureUCC.getFurnitureWithPhotosById(goodFurniture.getId()));
   }
 
+  @DisplayName("Test getting furniture with photo by id but without seller")
+  @Test
+  public void getFurnitureWithPhotosByIdTest3() {
+    goodFurniture.setSeller(null);
+    goodFurniture.setSellerId(0);
+    goodFurniture.setFavouritePhoto(photo1.getPhoto());
+    goodFurniture.setTypeId(goodType.getId());
+    goodFurniture.setType(goodType.getLabel());
+    int sellerId = goodFurniture.getSellerId();
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    Mockito.when(userDAO.getUserFromId(sellerId)).thenReturn(goodUser);
+    Mockito.when(furnitureDAO.getFavouritePhotoById(goodFurniture.getFavouritePhotoId()))
+        .thenReturn(photo1.getPhoto());
+    Mockito.when(furnitureDAO.getFurnitureTypeById(goodFurniture.getTypeId()))
+        .thenReturn(goodType.getLabel());
+    assertEquals(goodFurniture, furnitureUCC.getFurnitureWithPhotosById(goodFurniture.getId()));
+  }
+
+  @DisplayName("Test getting furniture with photo by id but without idPhoto")
+  @Test
+  public void getFurnitureWithPhotosByIdTest4() {
+    goodFurniture.setSeller(goodUser);
+    goodFurniture.setSellerId(goodUser.getId());
+    goodFurniture.setFavouritePhoto(null);
+    goodFurniture.setFavouritePhotoId(0);
+    goodFurniture.setTypeId(goodType.getId());
+    goodFurniture.setType(goodType.getLabel());
+    int sellerId = goodFurniture.getSellerId();
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    Mockito.when(userDAO.getUserFromId(sellerId)).thenReturn(goodUser);
+    Mockito.when(furnitureDAO.getFavouritePhotoById(goodFurniture.getFavouritePhotoId()))
+        .thenReturn(photo1.getPhoto());
+    Mockito.when(furnitureDAO.getFurnitureTypeById(goodFurniture.getTypeId()))
+        .thenReturn(goodType.getLabel());
+    assertEquals(goodFurniture, furnitureUCC.getFurnitureWithPhotosById(goodFurniture.getId()));
+  }
+
   @DisplayName("Test to process a list of visit")
   @Test
   public void processVisitTest1() {
