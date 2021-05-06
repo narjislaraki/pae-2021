@@ -62,6 +62,7 @@ const onMyVisits = (e) => {
 }
 
 const onVisitsForClient = async () => {
+    console.log(currentUser.id);
     try{
         listVisitsOfAClient = await callAPI(
             API_BASE_URL + "/" + currentUser.id +"/myVisits",
