@@ -124,7 +124,6 @@ public class SaleDAOImpl implements SaleDAO {
       furniture.setSellerId(rs.getInt(15));
       furniture.setFavouritePhotoId(rs.getInt(16));
       furniture.setFavouritePhoto(rs.getString(17));
-      
       } catch (SQLException e) {
       throw new FatalException(e);
     }
