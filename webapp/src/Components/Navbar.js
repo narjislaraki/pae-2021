@@ -136,7 +136,7 @@ const onLogout = (e) => {
 };
 const onProfil = (e) => {
   e.preventDefault();
-  RedirectUrl("/visitsForClient");
+  RedirectUrl("/transactions");
 }
 
 const onClickTools = (e) => {

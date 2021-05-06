@@ -95,6 +95,26 @@ public class FurnitureResource {
   }
 
   /**
+   * Get a list of furnitures for research purposes.
+   * 
+   * @param request the request
+   * @return a list of furnitures adapted if wrapped in a Response
+   */
+  @GET
+  @Path("research")
+  @AdminAuthorize
+  public Response getFurnituresListForResearch(@Context ContainerRequest request) {
+    List<FurnitureDTO> list = furnitureUCC.getFurnitureListForResearch();
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+    } catch (JsonProcessingException e) {
+      responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+  /**
    * Get a list of furniture to be placed in the carousel (on sale, sold and under options).
    * 
    * @param request the request
