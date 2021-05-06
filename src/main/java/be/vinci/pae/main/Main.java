@@ -2,6 +2,8 @@ package be.vinci.pae.main;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.NoSuchFileException;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -23,7 +25,7 @@ public class Main {
    * 
    * @param args command line arguments
    */
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     try {
       env = args[0];
@@ -41,6 +43,12 @@ public class Main {
         break;
     }
 
+
+    if (!testLoggerPath()) {
+      return;
+    }
+
+
     final HttpServer server = startServer();
 
     logger = APILogger.getLogger();
@@ -49,8 +57,41 @@ public class Main {
     System.out.println("Jersey app started at " + Config.getStringProperty("BaseUri"));
     // Listen to key press and shutdown server
     System.out.println("Hit enter to stop it...");
-    System.in.read();
+    try {
+      System.in.read();
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+    }
     server.shutdownNow();
+  }
+
+  private static boolean testLoggerPath() {
+    String path = Config.getStringProperty("logPath");
+    String fileName = Config.getStringProperty("logFileName");
+
+    if (path.toLowerCase().equals("default")) {
+      path = System.getProperty("user.dir");
+      path += "/Logs";
+    }
+
+    if (!path.endsWith("/")) {
+      path += "/";
+    }
+    String fullPath = path + fileName;
+    try {
+      new FileHandler(fullPath);
+    } catch (NoSuchFileException e) {
+      System.err.println("Le dossier " + path
+          + " n'existe pas.\nVeuillez:\n\tLe créer\n\tModifier la destination dans le fichier properties");
+      return false;
+    } catch (SecurityException e) {
+      e.printStackTrace();
+      return false;
+    } catch (IOException e) {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
   }
 
   /**

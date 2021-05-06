@@ -1,6 +1,7 @@
 package be.vinci.pae.exceptions;
 
 import java.util.logging.Logger;
+
 import be.vinci.pae.utils.APILogger;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;

@@ -1,7 +1,9 @@
 package be.vinci.pae.utils;
 
 import java.util.logging.Logger;
+
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
 import be.vinci.pae.domain.address.AddressFactory;
 import be.vinci.pae.domain.address.AddressFactoryImpl;
 import be.vinci.pae.domain.edition.EditionFactory;
