@@ -36,6 +36,8 @@ public interface FurnitureDAO {
 
   List<FurnitureDTO> getPublicFurnitureList();
 
+  List<FurnitureDTO> getFurnitureListForResearch();
+
   List<FurnitureDTO> getFurnitureListByType(int idType);
 
   List<FurnitureDTO> getPublicFurnitureListByType(int idType);
