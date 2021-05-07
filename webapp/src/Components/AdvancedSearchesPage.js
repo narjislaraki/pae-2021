@@ -512,7 +512,6 @@ const onFurniture = (e) => {
 };
 
 function onSwitch(switchElement, clientDiv, furnDiv, menuDiv) {
-    console.log("dans onSwitch")
     if (switchElement.checked) {
         page.innerHTML = menuDiv + clientDiv;
     }

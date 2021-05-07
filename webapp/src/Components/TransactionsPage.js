@@ -125,9 +125,6 @@ async function TransactionsPage() {
         console.error("TransactionsPage::get sales", err);
         PrintError(err);
     }
-
-    //console.log(salesAsBuyer);
-    //console.log(salesAsSeller);
     
     displayFurn(salesAsBuyer, soldFurnAcc);
 
