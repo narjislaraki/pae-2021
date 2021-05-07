@@ -126,26 +126,41 @@ async function TransactionsPage() {
         console.error("TransactionsPage::get sales", err);
         PrintError(err);
     }
-    
-    displayFurn(salesAsBuyer, boughtFurnAcc);
+    console.log(salesAsSeller)
+    console.log(salesAsBuyer)
+    displayFurnBuyer(salesAsBuyer, boughtFurnAcc);
 
-    displayFurn(salesAsSeller, soldFurnAcc);
+    displayFurnSeller(salesAsSeller, soldFurnAcc);
 
   };
 
-  const displayFurn = (list, destination) => {
+  const displayFurnSeller = (list, destination) => {
     const htmlString = list
         .map((element) => {
+          if (element.favouritePhoto){
             return `
-            <div data-id="${element.furniture.id}" class="item-card furniture">
-              <div data-id="${element.furniture.id}" class="item-img-container">
-                  <img data-id="${element.furniture.id}" src="${element.furniture.favouritePhoto}" alt="" class="item-img">
-                  <h3 data-id="${element.furniture.id}" class="item-img-hover condensed onFurniture">Voir<br>article</h3>
+            <div data-id="${element.id}" class="item-card furniture">
+              <div data-id="${element.id}" class="item-img-container">
+                  <img data-id="${element.id}" src="${element.favouritePhoto}" alt="" class="item-img">
+                  <h3 data-id="${element.id}" class="item-img-hover condensed onFurniture">Voir<br>article</h3>
               </div>
-              <div data-id="${element.furniture.id}" class="item-name">${element.furniture.description}</div>
-              <div data-id="${element.furniture.id}" class="item-price condensed">${element.furniture.offeredSellingPrice == 0 ? "N/A" : element.furniture.offeredSellingPrice}</div><div class="euro" >euro</div>
+              <div data-id="${element.id}" class="item-name">${element.description}</div>
+              <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="euro" >euro</div>
           </div>
         `;
+          }else{
+            return `
+            <div data-id="${element.id}" class="item-card furniture">
+              <div data-id="${element.id}" class="item-img-container">
+                  <img data-id="${element.id}" src="../assets/furniture_sketch.jpg" alt="" class="item-img">
+                  <h3 data-id="${element.id}" class="item-img-hover condensed onFurniture">Voir<br>article</h3>
+              </div>
+              <div data-id="${element.id}" class="item-name">${element.description}</div>
+              <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="euro" >euro</div>
+          </div>
+        `;
+          }
+            
         })
         .join('');
     destination.innerHTML = htmlString;
@@ -155,7 +170,45 @@ async function TransactionsPage() {
         console.log('click')
         e.addEventListener("click", onFurniture);
     });
-};
+  }
+
+    const displayFurnBuyer = (list, destination) => {
+      const htmlString = list
+          .map((element) => {
+            if (element.favouritePhoto){
+              return `
+              <div data-id="${element.furniture.id}" class="item-card furniture">
+                <div data-id="${element.furniture.id}" class="item-img-container">
+                    <img data-id="${element.furniture.id}" src="${element.furniture.favouritePhoto}" alt="" class="item-img">
+                    <h3 data-id="${element.id}" class="item-img-hover condensed onFurniture">Voir<br>article</h3>
+                </div>
+                <div data-id="${element.furniture.id}" class="item-name">${element.furniture.description}</div>
+                <div data-id="${element.furniture.id}" class="item-price condensed">${element.furniture.offeredSellingPrice == 0 ? "N/A" : element.furniture.offeredSellingPrice}</div><div class="euro" >euro</div>
+            </div>
+          `;
+            }else{
+              return `
+              <div data-id="${element.furniture.id}" class="item-card furniture">
+                <div data-id="${element.furniture.id}" class="item-img-container">
+                    <img data-id="${element.furniture.id}" src="../assets/furniture_sketch.jpg" alt="" class="item-img">
+                    <h3 data-id="${element.furniture.id}" class="item-img-hover condensed onFurniture">Voir<br>article</h3>
+                </div>
+                <div data-id="${element.furniture.id}" class="item-name">${element.furniture.description}</div>
+                <div data-id="${element.furniture.id}" class="item-price condensed">${element.furniture.offeredSellingPrice == 0 ? "N/A" : element.furniture.offeredSellingPrice}</div><div class="euro" >euro</div>
+              </div>
+              `;
+            }
+              
+          })
+          .join('');
+      destination.innerHTML = htmlString;
+      let listDesFurnitures = document.getElementsByClassName("onFurniture");
+      console.log(listDesFurnitures)
+      Array.from(listDesFurnitures).forEach((e) => {
+          console.log('click')
+          e.addEventListener("click", onFurniture);
+      });
+    } 
 
 const onMyTransactions = (e) => {
   e.preventDefault();

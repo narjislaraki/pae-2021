@@ -21,6 +21,7 @@ import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dao.AddressDAO;
+import be.vinci.pae.services.dao.FurnitureDAO;
 import be.vinci.pae.services.dao.SaleDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.ApplicationBinder;
@@ -41,6 +42,7 @@ public class UserUCCTest {
   private static UserDAO userDAO;
   private static AddressDAO addressDAO;
   private static SaleDAO saleDAO;
+  private static FurnitureDAO furnitureDAO;
 
   /**
    * Initialisation before every tests.
@@ -57,6 +59,8 @@ public class UserUCCTest {
     userDAO = locator.getService(UserDAO.class);
 
     addressDAO = locator.getService(AddressDAO.class);
+
+    furnitureDAO = locator.getService(FurnitureDAO.class);
 
     saleDAO = locator.getService(SaleDAO.class);
 
@@ -400,35 +404,34 @@ public class UserUCCTest {
   @DisplayName("Test getTransactionsSeller with a empty list")
   @Test
   public void getTransactionsSellerTest1() {
-    List<SaleDTO> listA = new ArrayList<SaleDTO>();
-    Mockito.when(saleDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
-    List<SaleDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    Mockito.when(furnitureDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(0, listB.size()));
   }
 
-  @DisplayName("Test getTransactionsSeller with a list of one sale")
+  @DisplayName("Test getTransactionsSeller with a list of one furniture")
   @Test
   public void getTransactionsSellerTest2() {
-    List<SaleDTO> listA = new ArrayList<SaleDTO>();
-    goodSale.setFurniture(goodFurniture);
-    goodSale.getFurniture().setSellerId(goodUser.getId());
-    listA.add(goodSale);
-    Mockito.when(saleDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
-    List<SaleDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    goodFurniture.setSellerId(goodUser.getId());
+    listA.add(goodFurniture);
+    Mockito.when(furnitureDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(1, listB.size()));
   }
 
-  @DisplayName("Test getTransactionsSeller with a list of threes sales")
+  @DisplayName("Test getTransactionsSeller with a list of threes furnitures")
   @Test
   public void getTransactionsSellerTest3() {
-    List<SaleDTO> listA = new ArrayList<SaleDTO>();
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
     goodSale.setFurniture(goodFurniture);
-    goodSale.getFurniture().setSellerId(goodUser.getId());
-    listA.add(goodSale);
-    listA.add(goodSale);
-    listA.add(goodSale);
-    Mockito.when(saleDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
-    List<SaleDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
+    goodFurniture.setSellerId(goodUser.getId());
+    listA.add(goodFurniture);
+    listA.add(goodFurniture);
+    listA.add(goodFurniture);
+    Mockito.when(furnitureDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(3, listB.size()));
   }
 

@@ -667,7 +667,7 @@ footer{
 }
 
 .parent-furnitures-container{
-    display: flex;
+    display: block;
     flex-wrap: wrap;
     margin-left: 1%;
     margin-right: 1%;
@@ -684,7 +684,7 @@ footer{
     margin-right: 1%;
     padding: 1%;
     height: 30%;
-    width: 30%;
+    width: 40%;
 }
 
 .item-img-container{

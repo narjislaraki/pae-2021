@@ -57,8 +57,8 @@ public class SaleDAOImpl implements SaleDAO {
           + "s.date_of_sale, f.id_furniture, f.description, f.purchase_price, "
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
           + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
-          + "p.photo " + "FROM pae.sales s, pae.furnitures f, pae.photos p "
-          + "WHERE p.id_photo = f.favorite_photo AND s.id_buyer = ? "
+          + "p.photo FROM pae.sales s, pae.furnitures f LEFT OUTER JOIN pae.photos p ON "
+          + "p.id_photo = f.favorite_photo WHERE s.id_buyer = ? "
           + "AND f.id_furniture = s.id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setInt(1, id);
@@ -74,29 +74,7 @@ public class SaleDAOImpl implements SaleDAO {
     return list;
   }
 
-  @Override
-  public List<SaleDTO> getTransactionsSeller(int id) {
-    List<SaleDTO> list = new ArrayList<SaleDTO>();
-    try {
-      String sql = "SELECT s.id_sales, s.selling_price, s.id_furniture, s.id_buyer, s.date_of_sale,"
-          + " f.id_furniture, f.description, f.purchase_price, "
-          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
-          + "f.offered_selling_price, f.id_type, " + "f.request_visit, f.seller, f.favorite_photo, "
-          + "p.photo " + "FROM pae.sales s, pae.furnitures f, pae.photos p WHERE f.seller = ? "
-          + "AND f.id_furniture = s.id_furniture AND p.id_photo = f.favorite_photo;";
-      ps = dalBackendService.getPreparedStatement(sql);
-      ps.setInt(1, id);
-      ResultSet rs = ps.executeQuery();
-      SaleDTO sale = null;
-      while (rs.next()) {
-        SaleDTO saleDTO = setTransaction(rs, sale);
-        list.add(saleDTO);
-      }
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return list;
-  }
+
 
   private SaleDTO setTransaction(ResultSet rs, SaleDTO sale) {
     sale = new SaleImpl();
