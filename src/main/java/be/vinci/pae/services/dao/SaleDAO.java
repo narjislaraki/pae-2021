@@ -10,7 +10,6 @@ public interface SaleDAO {
 
   List<SaleDTO> getTransactionsBuyer(int id);
 
-  List<SaleDTO> getTransactionsSeller(int id);
 
   List<SaleDTO> getSalesList();
 
