@@ -64,9 +64,11 @@ async function FurnitureListPage(pageData) {
     if (furnitures.length === 0) {
         data = "Aucun meuble actuellement";
     } else {
+        let section = `<section class="furnitureListMenu">`;
         furnitures.map((element) => {
-            if (element.favouritePhoto)
-                page.innerHTML +=
+            if (element.favouritePhoto){
+
+                section +=
                     `
                         <div data-id="${element.id}" class="item-card furniture">
                             <div data-id="${element.id}" class="item-img-container">
@@ -74,11 +76,12 @@ async function FurnitureListPage(pageData) {
                                 <h3 data-id="${element.id}" class="item-img-hover condensed">Voir<br>article</h3>
                             </div>
                             <div data-id="${element.id}" class="item-name">${element.description}</div>
-                            <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
+                            <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="euro">euro</div>
                         </div>
                     `;
-            else
-                page.innerHTML +=
+        }else{
+
+                section +=
                     `
                         <div data-id="${element.id}" class="item-card furniture">
                             <div data-id="${element.id}" class="item-img-container">
@@ -86,17 +89,22 @@ async function FurnitureListPage(pageData) {
                                 <h3 data-id="${element.id}" class="item-img-hover condensed">Voir<br>article</h3>
                             </div>
                             <div data-id="${element.id}" class="item-name">${element.description}</div>
-                            <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
+                            <div data-id="${element.id}" class="item-price condensed">${element.offeredSellingPrice == 0 ? "N/A" : element.offeredSellingPrice}</div><div class="euro">euro</div>
                         </div>
                     `;
+            }
         });
+        section +=`</section>`;
+        page.innerHTML += section;
     }
 
 
     //close the div
     page.innerHTML += `</div>`;
     let list = document.getElementsByClassName("furniture");
+    console.log(list)
     Array.from(list).forEach((e) => {
+        console.log('click')
         e.addEventListener("click", onFurniture);
     });
     if (titleHtml) {
@@ -106,7 +114,9 @@ async function FurnitureListPage(pageData) {
 }
 
 const onFurniture = (e) => {
+    console.log(e)
     let id = e.srcElement.dataset.id;
+    console.log(id)
     FurniturePage(id);
 };
 

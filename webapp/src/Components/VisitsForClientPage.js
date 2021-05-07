@@ -40,11 +40,7 @@ let VisitsForClientPage = () => {
     </div>`;
     page.innerHTML = menu + visitClientPage;
 
-    let myTransactions = document.getElementById("myTransactions");
-    myTransactions.addEventListener("click", onMyTransactions);
-
-    let myVisits = document.getElementById("myVisits");
-    myVisits.addEventListener("click", onMyVisits);
+    
 
     onVisitsForClient();
 }
@@ -63,9 +59,10 @@ const onMyVisits = (e) => {
 }
 
 const onVisitsForClient = async () => {
+    console.log(currentUser.id);
     try{
         listVisitsOfAClient = await callAPI(
-            API_BASE_URL + "/" + currentUser.id +"/myVisits",
+            API_BASE_URL + currentUser.id +"/myVisits",
             "GET",
             userData.token,
             undefined,
@@ -130,6 +127,11 @@ const onVisitsForClient = async () => {
         Array.from(listVisit).forEach((e) => {
             e.addEventListener("click", onClickVisit);
         });
+        let myTransactions = document.getElementById("myTransactions");
+        myTransactions.addEventListener("click", onMyTransactions);
+
+        let myVisits = document.getElementById("myVisits");
+        myVisits.addEventListener("click", onMyVisits);
 }
 
 async function onClickVisit(e) {

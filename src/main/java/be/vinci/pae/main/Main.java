@@ -2,6 +2,7 @@ package be.vinci.pae.main;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.NoSuchFileException;
 import java.util.logging.Logger;
 
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -23,7 +24,7 @@ public class Main {
    * 
    * @param args command line arguments
    */
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     try {
       env = args[0];
@@ -41,6 +42,22 @@ public class Main {
         break;
     }
 
+
+    /* Logger FileHanlder init and path validity check */
+    try {
+      APILogger.getFileHandler();
+    } catch (NoSuchFileException e) {
+      System.err.println("Logger folder does not exists." + "\n\tCreate the folder."
+          + "\n\tChange the path in the properties file.");
+      return;
+    } catch (SecurityException e1) {
+      e1.printStackTrace();
+      return;
+    } catch (IOException e1) {
+      e1.printStackTrace();
+      return;
+    }
+
     final HttpServer server = startServer();
 
     logger = APILogger.getLogger();
@@ -49,7 +66,11 @@ public class Main {
     System.out.println("Jersey app started at " + Config.getStringProperty("BaseUri"));
     // Listen to key press and shutdown server
     System.out.println("Hit enter to stop it...");
-    System.in.read();
+    try {
+      System.in.read();
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
+    }
     server.shutdownNow();
   }
 
