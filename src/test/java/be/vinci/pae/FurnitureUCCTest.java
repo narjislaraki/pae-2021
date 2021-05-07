@@ -959,4 +959,34 @@ public class FurnitureUCCTest {
     });
   }
 
+  @DisplayName("Test getFurnitureListForResearch with empty list")
+  @Test
+  public void getFurnitureListForResearchTest1() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    Mockito.when(furnitureDAO.getFurnitureListForResearch()).thenReturn(list);
+    assertEquals(list, furnitureUCC.getFurnitureListForResearch());
+  }
+
+  @DisplayName("Test getFurnitureListForResearch with one furniture")
+  @Test
+  public void getFurnitureListForResearchTest2() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    Mockito.when(furnitureDAO.getFurnitureListForResearch()).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getFurnitureListForResearch();
+    assertEquals(listA, listB);
+  }
+
+  @DisplayName("Test getFurnitureListForResearch with three furnitures")
+  @Test
+  public void getFurnitureListForResearchTest3() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    for (int i = 0; i < 3; i++) {
+      listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    }
+    Mockito.when(furnitureDAO.getFurnitureListForResearch()).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getFurnitureListForResearch();
+    assertEquals(listA, listB);
+  }
+
 }
