@@ -265,7 +265,7 @@ const onClose = (e) => {
     });
 }
 
-const onFurniture = (e, close) => {
+const onFurniture = (e) => {
     console.log(e);
     let id = e.srcElement.dataset.id;
     console.log(id);
@@ -273,4 +273,3 @@ const onFurniture = (e, close) => {
 };
 
 export default VisitsForClientPage;
-
