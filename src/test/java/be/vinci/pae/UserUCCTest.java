@@ -60,6 +60,8 @@ public class UserUCCTest {
 
     addressDAO = locator.getService(AddressDAO.class);
 
+    furnitureDAO = locator.getService(FurnitureDAO.class);
+
     saleDAO = locator.getService(SaleDAO.class);
 
 
