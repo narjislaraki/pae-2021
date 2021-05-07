@@ -100,7 +100,7 @@ INSERT INTO pae.users VALUES
 		(default, 'lau', 'Satcho', 'Laurent', 'laurent.satcho@gmail.be', 'admin', '20210322', true, '$2a$10$57whA09ftjlLqfKN9T4ei.Mzq/FYvNFxzlDt07DpTK2tNRxKsSF0a', 2),--Mauve;7?
 		(default, 'Caro', 'Line', 'Caroline', 'caro.line@hotmail.com', 'antiquaire', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 3),--mdpusr.2
 		(default, 'achil', 'Ile', 'Achille', 'ach.ile@gmail.com', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 4),--mdpusr.2
-		(default, 'bazz', 'Ile', 'Basile', 'bazz.ile@gmail.be', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 5), --mdpusr.2
+		(default, 'bazz', 'Ile', 'Basile', 'bas.ile@gmail.be', 'client', '20210323', true, '$2a$10$3vxTLk8nb5zADB2gJzov9.TnM42ythdFfxdzOyS5nIu8oyH94oduS', 5), --mdpusr.2
 		(default, 'Theo', 'Ile', 'Théophile','theo.phile@proximus.be', 'antiquaire', '20210330', true, '$2a$10$k4ZON1eho94PfXjULJHR7eIrWReVN54zKLIcob.2K.zN2.NTB293G', 4), --rouge;E6.
 		(default, 'charline', 'Line', 'Charles', 'charline@proximus.be', 'client', '20210422', true, '$2a$10$WBnq36heX0KGTfyZCI/Gb.jmlUX244MwhpDajKiwMpQgonnn/wYx2', 6); --mdpusr.4 
 
@@ -186,14 +186,13 @@ UPDATE pae.furnitures
 		WHERE id_furniture = 11;
 
 
-SELECT id_address, street, building_number, unit_number, city, postcode, country FROM pae.addresses;
-SELECT id_user, username, last_name, first_name, email, role, registration_date, is_validated, password, address FROM pae.users;
-SELECT id_type, label FROM pae.types_of_furnitures;
-SELECT id_request, time_slot, condition, explanatory_note, scheduled_date_time, warehouse_address, client FROM pae.requests_for_visits;
-SELECT id_furniture, condition, description, purchase_price, pick_up_date, store_deposit, deposit_date, offered_selling_price, id_type, request_visit, seller, favorite_photo FROM pae.furnitures;
-SELECT id_option, date, option_term, cancellation_reason, condition, id_user, id_furniture FROM pae.options;
-SELECT id_photo, photo, is_visible, is_a_client_photo, id_furniture FROM pae.photos;
-SELECT id_sales, selling_price, id_furniture, id_buyer, date_of_sale FROM pae.sales;
+SELECT id_address, street, building_number, unit_number, city, postcode, country FROM pae.addresses ORDER BY id_address;
+SELECT id_user, username, last_name, first_name, email, role, registration_date, is_validated, password, address FROM pae.users ORDER BY id_user;
+SELECT id_type, label FROM pae.types_of_furnitures ORDER BY id_type;
+SELECT id_request, time_slot, request_date, condition, explanatory_note, scheduled_date_time, warehouse_address, r.client,  u.username FROM pae.requests_for_visits r, pae.users u WHERE r.client = u.id_user ORDER BY id_request;
+SELECT f.id_furniture, f.condition, f.description, f.purchase_price, f.pick_up_date, f.store_deposit, f.deposit_date, f.offered_selling_price, f.id_type, t.label, f.request_visit, f.seller, u.username, f.favorite_photo FROM pae.types_of_furnitures t, pae.furnitures f LEFT OUTER JOIN pae.users u ON f.seller = u.id_user WHERE t.id_type = f.id_type ORDER BY f.id_furniture;
+SELECT id_photo, photo, is_visible, is_a_client_photo, p.id_furniture, f.description FROM pae.photos p, pae.furnitures f WHERE p.id_furniture = f.id_furniture ORDER BY id_photo;
+SELECT id_sales, selling_price, s.id_furniture, f.description, s.id_buyer, u.username, date_of_sale FROM pae.sales s, pae.furnitures f, pae.users u WHERE s.id_furniture = f.id_furniture AND s.id_buyer = u.id_user ORDER BY id_sales;
 	
 SELECT COUNT(id_photo) FROM pae.photos WHERE is_visible = true;
 SELECT f.condition, COUNT(f.id_furniture) FROM pae.furnitures f WHERE f.condition = 'en vente' OR f.condition = 'sous option' OR f.condition='vendu' GROUP BY f.condition;

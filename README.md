@@ -295,6 +295,16 @@
 	</td>
 </tr>
 
+<tr>
+	<td style="border:1px solid black;">furnitures/research</td>
+	<td style="border:1px solid black;">GET</td>
+	<td style="border:1px solid black;">Yes</td>
+	<td style="border:1px solid black;">Yes</td>
+	<td style="border:1px solid black;">
+	Get a list of furnitures for research purposes.
+	</td>
+</tr>
+
 </table>
 
 ### Operations associated with types of furnitures

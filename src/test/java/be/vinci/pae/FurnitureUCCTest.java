@@ -395,6 +395,7 @@ public class FurnitureUCCTest {
     assertEquals(goodFurniture, furnitureUCC.getFurnitureById(id));
   }
 
+
   @DisplayName("Test getting furniture by id with a valid id seller")
   @Test
   public void getFurnitureByIdTest4() {
@@ -403,10 +404,32 @@ public class FurnitureUCCTest {
     assertEquals(goodFurniture.getSellerId(), furnitureUCC.getFurnitureById(id).getSellerId());
   }
 
-  @DisplayName("Test getting furniture by id with a valid id photo")
+  @DisplayName("Test getting furniture by id with valid id but no seller")
   @Test
   public void getFurnitureByIdTest5() {
+    int id = goodFurniture.getId();
+    goodFurniture.setSellerId(0);
+    photo1.setIdFurniture(goodFurniture.getId());
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    Mockito.when(furnitureDAO.getFavouritePhotoById(goodFurniture.getFavouritePhotoId()))
+        .thenReturn(photo1.getPhoto());
+    Mockito.when(furnitureDAO.getFurnitureTypeById(goodType.getId()))
+        .thenReturn(goodType.getLabel());
+    assertEquals(goodFurniture, furnitureUCC.getFurnitureById(id));
+  }
 
+  @DisplayName("Test getting furniture by id with valid id but no idPhoto")
+  @Test
+  public void getFurnitureByIdTest6() {
+    int id = goodFurniture.getId();
+    goodFurniture.setFavouritePhotoId(0);
+    photo1.setIdFurniture(goodFurniture.getId());
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    Mockito.when(furnitureDAO.getFavouritePhotoById(goodFurniture.getFavouritePhotoId()))
+        .thenReturn(photo1.getPhoto());
+    Mockito.when(furnitureDAO.getFurnitureTypeById(goodType.getId()))
+        .thenReturn(goodType.getLabel());
+    assertEquals(goodFurniture, furnitureUCC.getFurnitureById(id));
   }
 
   @DisplayName("Test to cancel a option after his term")
@@ -478,6 +501,48 @@ public class FurnitureUCCTest {
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
   }
 
+  @DisplayName("Test get a photo of a furniture by an id, as a user, when the user is the seller")
+  @Test
+  public void getFurniturePhotosTest3() {
+    photo1.setId(3);
+    photo2.setId(5);
+    photo1.setIsAClientPhoto(true);
+    photo2.setIsAClientPhoto(true);
+    photo1.setVisible(false);
+    photo2.setVisible(false);
+    goodFurniture.setFavouritePhotoId(3);
+    goodUser.setRole(Role.CLIENT.toString());
+    goodFurniture.setSellerId(goodUser.getId());
+    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
+    listA.add(photo1);
+    listA.add(photo2);
+    int id = goodFurniture.getId();
+    Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
+  }
+
+  @DisplayName("Test get a photo of a furniture by an id, as a user, when the photos are visibles")
+  @Test
+  public void getFurniturePhotosTest4() {
+    photo1.setId(3);
+    photo2.setId(5);
+    photo1.setVisible(true);
+    photo2.setVisible(true);
+    goodFurniture.setFavouritePhotoId(3);
+    goodUser.setRole(Role.CLIENT.toString());
+    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
+    listA.add(photo1);
+    listA.add(photo2);
+    int id = goodFurniture.getId();
+    Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
+  }
+
+
   @DisplayName("Test getting furniture with photo by an id with a null furniture")
   @Test
   public void getFurnitureWithPhotosByIdTest1() {
@@ -492,6 +557,43 @@ public class FurnitureUCCTest {
     goodFurniture.setSeller(goodUser);
     goodFurniture.setSellerId(goodUser.getId());
     goodFurniture.setFavouritePhoto(photo1.getPhoto());
+    goodFurniture.setTypeId(goodType.getId());
+    goodFurniture.setType(goodType.getLabel());
+    int sellerId = goodFurniture.getSellerId();
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    Mockito.when(userDAO.getUserFromId(sellerId)).thenReturn(goodUser);
+    Mockito.when(furnitureDAO.getFavouritePhotoById(goodFurniture.getFavouritePhotoId()))
+        .thenReturn(photo1.getPhoto());
+    Mockito.when(furnitureDAO.getFurnitureTypeById(goodFurniture.getTypeId()))
+        .thenReturn(goodType.getLabel());
+    assertEquals(goodFurniture, furnitureUCC.getFurnitureWithPhotosById(goodFurniture.getId()));
+  }
+
+  @DisplayName("Test getting furniture with photo by id but without seller")
+  @Test
+  public void getFurnitureWithPhotosByIdTest3() {
+    goodFurniture.setSeller(null);
+    goodFurniture.setSellerId(0);
+    goodFurniture.setFavouritePhoto(photo1.getPhoto());
+    goodFurniture.setTypeId(goodType.getId());
+    goodFurniture.setType(goodType.getLabel());
+    int sellerId = goodFurniture.getSellerId();
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    Mockito.when(userDAO.getUserFromId(sellerId)).thenReturn(goodUser);
+    Mockito.when(furnitureDAO.getFavouritePhotoById(goodFurniture.getFavouritePhotoId()))
+        .thenReturn(photo1.getPhoto());
+    Mockito.when(furnitureDAO.getFurnitureTypeById(goodFurniture.getTypeId()))
+        .thenReturn(goodType.getLabel());
+    assertEquals(goodFurniture, furnitureUCC.getFurnitureWithPhotosById(goodFurniture.getId()));
+  }
+
+  @DisplayName("Test getting furniture with photo by id but without idPhoto")
+  @Test
+  public void getFurnitureWithPhotosByIdTest4() {
+    goodFurniture.setSeller(goodUser);
+    goodFurniture.setSellerId(goodUser.getId());
+    goodFurniture.setFavouritePhoto(null);
+    goodFurniture.setFavouritePhotoId(0);
     goodFurniture.setTypeId(goodType.getId());
     goodFurniture.setType(goodType.getLabel());
     int sellerId = goodFurniture.getSellerId();
@@ -818,6 +920,7 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
+
   @DisplayName("Test getSliderFurnitureListByType with empty list")
   @Test
   public void getSliderFurnitureListByTypeTest1() {
@@ -854,6 +957,36 @@ public class FurnitureUCCTest {
         assertEquals(listB.get(i).getTypeId(), type.getId());
       }
     });
+  }
+
+  @DisplayName("Test getFurnitureListForResearch with empty list")
+  @Test
+  public void getFurnitureListForResearchTest1() {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    Mockito.when(furnitureDAO.getFurnitureListForResearch()).thenReturn(list);
+    assertEquals(list, furnitureUCC.getFurnitureListForResearch());
+  }
+
+  @DisplayName("Test getFurnitureListForResearch with one furniture")
+  @Test
+  public void getFurnitureListForResearchTest2() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    Mockito.when(furnitureDAO.getFurnitureListForResearch()).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getFurnitureListForResearch();
+    assertEquals(listA, listB);
+  }
+
+  @DisplayName("Test getFurnitureListForResearch with three furnitures")
+  @Test
+  public void getFurnitureListForResearchTest3() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    for (int i = 0; i < 3; i++) {
+      listA.add(ObjectDistributor.getFurnitureForFurnitureUCCTest());
+    }
+    Mockito.when(furnitureDAO.getFurnitureListForResearch()).thenReturn(listA);
+    List<FurnitureDTO> listB = furnitureUCC.getFurnitureListForResearch();
+    assertEquals(listA, listB);
   }
 
 }

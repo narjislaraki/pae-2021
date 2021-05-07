@@ -115,7 +115,6 @@ const onUserLogin = async (userData) => {
   }
   else {
     setUserSessionData(user);
-    console.log("session")
   }
   await getCurrentUser();
   // re-render the navbar for the authenticated user
