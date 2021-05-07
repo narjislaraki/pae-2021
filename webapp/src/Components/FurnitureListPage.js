@@ -104,7 +104,6 @@ async function FurnitureListPage(pageData) {
     let list = document.getElementsByClassName("furniture");
     console.log(list)
     Array.from(list).forEach((e) => {
-        console.log('click')
         e.addEventListener("click", onFurniture);
     });
     if (titleHtml) {
@@ -114,9 +113,7 @@ async function FurnitureListPage(pageData) {
 }
 
 const onFurniture = (e) => {
-    console.log(e)
     let id = e.srcElement.dataset.id;
-    console.log(id)
     FurniturePage(id);
 };
 

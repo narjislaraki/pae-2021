@@ -5,6 +5,7 @@ import PrintError from "./PrintError";
 import Navbar from "./Navbar";
 import WaitingSpinner from "./WaitingSpinner.js"
 import {convertDateTimeToStringDate} from "../utils/tools.js";
+import {FurniturePage} from "./FurniturePage.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -192,7 +193,7 @@ async function onClickVisit(e) {
             toAdd += `
                 <li>
                     <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
-                        ${furniture.description}<br>
+                        <div class="toClick" data-id="${furniture.id}">${furniture.description}</div><br>
                         Etat : <div id="furnCondition${furniture.id}" value="${furniture.condition}"></div>
                         <div class="photoDiv">`;
             furniture.listPhotos.map(e => {
@@ -208,6 +209,12 @@ async function onClickVisit(e) {
     
 
     allFurnitures.innerHTML = toAdd;
+    let listDesFurnitures = document.getElementsByClassName("toClick");
+    console.log(listDesFurnitures)
+    Array.from(listDesFurnitures).forEach((e) => {
+        console.log('click')
+        e.addEventListener("click", onFurniture);
+    });
     for (let i = 0; i < listFurnituresForOnVisit.length; i++){
         let div = document.getElementById("furnCondition"+listFurnituresForOnVisit[i].id);
         let condition = "";
@@ -257,6 +264,13 @@ const onClose = (e) => {
         }
     });
 }
+
+const onFurniture = (e, close) => {
+    console.log(e);
+    let id = e.srcElement.dataset.id;
+    console.log(id);
+    FurniturePage(id);
+};
 
 export default VisitsForClientPage;
 

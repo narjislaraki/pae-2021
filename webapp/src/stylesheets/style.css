@@ -1067,7 +1067,14 @@ footer{
 }
 
 /*Visits Page**************************************************************/
+.toClick{
+   background-color: gray;
+   border-radius: 10px;
+}
 
+.toClick:hover{
+    background-color: #4A5761;
+ }
 
 .visit{
     margin-left: 25%;
