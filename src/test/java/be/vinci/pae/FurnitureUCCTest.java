@@ -547,7 +547,7 @@ public class FurnitureUCCTest {
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
   }
 
-  @DisplayName("Test get a photo of a furniture by an id, as a user, when the user is not the seller")
+  @DisplayName("Test get a furniture's photo by an id, as a user, when the user is ! the seller")
   @Test
   public void getFurniturePhotosTest5() {
     photo1.setId(3);
