@@ -458,7 +458,7 @@ const onShowClientList = async (data) => {
                     <div class="asci-signUpDate">Inscrit depuis: ${convertDateTimeToStringDate(user.registrationDate)}</div>
                     <div class="asci-role">Role: ${user.role} </div>
                     <div class="asci-amountBought">Nbr achats: ${saleList.filter(e => e.idBuyer == user.id).length}</div>
-                    <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e => e.seller == user.id).length}</div>
+                    <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e => e.sellerId == user.id).length}</div>
                 </div>
             </div>
             <div class="furnInfo">
@@ -481,7 +481,7 @@ const onShowClientList = async (data) => {
         let meublesVendusHTML = document.getElementById("meublesVendus" + data[i].id);
         let meublesAchetesHTML = document.getElementById("meublesAchetes" + data[i].id);
         let mAchetesList = saleList.filter(s => s.idBuyer == data[i].id);
-        let mVendusList = furnList.filter(f => f.seller == data[i].id);
+        let mVendusList = furnList.filter(f => f.sellerId == data[i].id);
         let meublesVAjouter = "";
         let meublesAAjouter = "";
 
@@ -491,7 +491,7 @@ const onShowClientList = async (data) => {
         })
 
         mVendusList.map((m) => {
-            meublesVAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${m.description}</div>`
+            meublesVAjouter += `<br><div data-id="${m.id}" class="furnituresClient">${m.description}</div>`
         })
 
         meublesVendusHTML.innerHTML = meublesVAjouter;

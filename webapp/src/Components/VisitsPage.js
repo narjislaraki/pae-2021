@@ -134,7 +134,13 @@ const onVisitsWaiting = async () => {
 
 const onClose = (e) => {
     e.preventDefault();
-    let idVisit = e.srcElement.dataset.id;
+    let idVisit;
+    if (e.srcElement.dataset.idrequest){
+        idVisit = e.srcElement.dataset.idrequest;
+    }else{
+        idVisit = e.srcElement.dataset.id;
+    }
+    
 
     Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
         if (element.dataset.id == idVisit) {
@@ -224,7 +230,7 @@ async function onClickVisit(e) {
             toAdd += `
                 <li>
                     <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
-                        <div class="toClick" data-id="${furniture.id}">${furniture.description}</div>
+                        <div class="toClick" data-id="${furniture.id}" data-idrequest="${visit.idRequest}">${furniture.description}</div>
                         <div class="photoDiv">`;
             furniture.listPhotos.map(e => {
                 toAdd += `<img class="imageVisits" src="${e.photo}">`
@@ -318,10 +324,11 @@ const onCancel = async (e) => {
     VisitsPage();
 }
 
-const onFurniture = (e, close) => {
+const onFurniture = (e) => {
     console.log(e);
     let id = e.srcElement.dataset.id;
     console.log(id);
+    onClose(e);
     FurniturePage(id);
 };
 

@@ -127,9 +127,9 @@ async function TransactionsPage() {
         PrintError(err);
     }
     
-    displayFurn(salesAsBuyer, soldFurnAcc);
+    displayFurn(salesAsBuyer, boughtFurnAcc);
 
-    displayFurn(salesAsSeller, boughtFurnAcc);
+    displayFurn(salesAsSeller, soldFurnAcc);
 
   };
 
@@ -143,7 +143,7 @@ async function TransactionsPage() {
                   <h3 data-id="${element.furniture.id}" class="item-img-hover condensed onFurniture">Voir<br>article</h3>
               </div>
               <div data-id="${element.furniture.id}" class="item-name">${element.furniture.description}</div>
-              <div data-id="${element.furniture.id}" class="item-price condensed">${element.furniture.offeredSellingPrice == 0 ? "N/A" : element.furniture.offeredSellingPrice}</div><div class="currency" style="font-size: 18px;">euro</div>
+              <div data-id="${element.furniture.id}" class="item-price condensed">${element.furniture.offeredSellingPrice == 0 ? "N/A" : element.furniture.offeredSellingPrice}</div><div class="euro" >euro</div>
           </div>
         `;
         })
@@ -173,5 +173,7 @@ const onFurniture = (e) => {
   console.log(id);
   FurniturePage(id);
 };
+
+
 
   export default TransactionsPage;

@@ -372,20 +372,27 @@ async function FurniturePage(id) {
         let buttonMagasin = document.getElementById("buttonMagasin");
         let buttonEnVente = document.getElementById("buttonEnVente");
         let buttonRetire = document.getElementById("buttonRetire");
-        buttonEnRestauration.addEventListener("click", onWorkShop);
-        buttonMagasin.addEventListener("click", onDropOfStore);
-        buttonEnVente.addEventListener("click", onOfferedForSale);
-        buttonRetire.addEventListener("click", onWithdrawSale)
+        if(buttonEnRestauration){
+            buttonEnRestauration.addEventListener("click", onWorkShop);
+        }
+        if (buttonMagasin){
+            buttonMagasin.addEventListener("click", onDropOfStore);
+        }
+        if(buttonEnVente){
+            buttonEnVente.addEventListener("click", onOfferedForSale);
+        }
+        if (buttonRetire){
+            buttonRetire.addEventListener("click", onWithdrawSale);
+        }
         document.getElementById("editIcon").addEventListener("click", onEdit);
         for (let i = 0; i < nbPhoto; i++) {
             document.getElementById("small-img" + i).addEventListener("click", onSmallImg)
         }
-        try {
-            let cancelOptionBtn = document.getElementById("cancelOptionBtn");
+        let cancelOptionBtn = document.getElementById("cancelOptionBtn");
+        if(cancelOptionBtn){
             cancelOptionBtn.addEventListener("click", onCancelOption);
-        } catch (err) {
-
         }
+        
         let sellingBtn = document.getElementById("sell");
         let btnPopup = document.getElementById("closeBtnPop");
         let inputClient = document.getElementById("input-client");
@@ -395,14 +402,25 @@ async function FurniturePage(id) {
         if(sellingBtn){
             sellingBtn.addEventListener("click", onClickSell);
         }
-        inputClient.addEventListener("input", onClientSelection);
-        btnPopup.addEventListener("click", onCloseSell);
-        cancelSellBtn.addEventListener("click", onCloseSell);
-        confirmSellBtn.addEventListener("click", onSell);
-        sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
-
-        if (furniture.condition !== "EN_VENTE")
-            document.getElementById("anonymousdiv").style.display = "none";
+        if(inputClient){
+            inputClient.addEventListener("input", onClientSelection);
+        }
+        if(btnPopup){
+            btnPopup.addEventListener("click", onCloseSell);
+        }
+        if (cancelSellBtn){
+            cancelSellBtn.addEventListener("click", onCloseSell);
+        }
+        if (confirmSellBtn){
+            confirmSellBtn.addEventListener("click", onSell);
+        }
+        if(sellingAnonCheck){
+            sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
+        }
+        let anonymousdiv = document.getElementById("anonymousdiv");
+        if (anonymousdiv){
+            anonymousdiv.style.display = "none";
+        }
     }
 }
 
