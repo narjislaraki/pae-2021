@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
 import be.vinci.pae.domain.sale.SaleDTO;
@@ -314,7 +315,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
           .collect(Collectors.toList());
     }
     dalServices.stopBizzTransaction();
-    return list;
+    return orderedList;
   }
 
   @Override
@@ -407,7 +408,5 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     dalServices.stopBizzTransaction();
     return list;
   }
-
-
 
 }

@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import be.vinci.pae.domain.edition.EditionDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
@@ -489,6 +492,8 @@ public class FurnitureUCCTest {
   public void getFurniturePhotosTest2() {
     photo1.setId(3);
     photo2.setId(5);
+    photo1.setVisible(true);
+    photo2.setVisible(true);
     goodFurniture.setFavouritePhotoId(3);
     goodUser.setRole(Role.CLIENT.toString());
     List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
@@ -540,6 +545,50 @@ public class FurnitureUCCTest {
     Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
     List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
     assertAll(() -> assertEquals(listA, listB), () -> assertEquals(2, listB.size()));
+  }
+
+  @DisplayName("Test get a furniture's photo by an id, as a user, when the user is ! the seller")
+  @Test
+  public void getFurniturePhotosTest5() {
+    photo1.setId(3);
+    photo2.setId(5);
+    photo1.setIsAClientPhoto(true);
+    photo2.setIsAClientPhoto(false);
+    photo1.setVisible(false);
+    photo2.setVisible(true);
+    goodFurniture.setFavouritePhotoId(3);
+    goodUser.setRole(Role.CLIENT.toString());
+    goodFurniture.setSellerId(goodUser.getId() + 1);
+    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
+    listA.add(photo1);
+    listA.add(photo2);
+    int id = goodFurniture.getId();
+    Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
+    assertNotEquals(listA, listB);
+  }
+
+  @DisplayName("Test get a photo of a furniture by an id, as a user, when the user is the seller")
+  @Test
+  public void getFurniturePhotosTest6() {
+    photo1.setId(3);
+    photo2.setId(5);
+    photo1.setIsAClientPhoto(false);
+    photo2.setIsAClientPhoto(false);
+    photo1.setVisible(false);
+    photo2.setVisible(false);
+    goodFurniture.setFavouritePhotoId(3);
+    goodUser.setRole(Role.CLIENT.toString());
+    goodFurniture.setSellerId(goodUser.getId());
+    List<PhotoDTO> listA = new ArrayList<PhotoDTO>();
+    listA.add(photo1);
+    listA.add(photo2);
+    int id = goodFurniture.getId();
+    Mockito.when(furnitureDAO.getFurniturePhotos(id)).thenReturn(listA);
+    Mockito.when(furnitureDAO.getFurnitureById(id)).thenReturn(goodFurniture);
+    List<PhotoDTO> listB = furnitureUCC.getFurniturePhotos(id, goodUser);
+    assertNotEquals(listA, listB);
   }
 
 
@@ -721,9 +770,19 @@ public class FurnitureUCCTest {
     assertTrue(furnitureUCC.edit(edition));
   }
 
-  @DisplayName("Test edit w/ valid furn. id, an empty endition")
+  @DisplayName("Test edit w/ valid furn. id, an id type similar to the actual furniture)")
   @Test
   public void editTest9() {
+    EditionDTO edition = ObjectDistributor.getEmptyEdition();
+    edition.setIdFurniture(goodFurniture.getId());
+    edition.setIdType(goodFurniture.getTypeId() + 1);
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
+    assertTrue(furnitureUCC.edit(edition));
+  }
+
+  @DisplayName("Test edit w/ valid furn. id, an empty endition")
+  @Test
+  public void editTest10() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setDescription("");
@@ -734,7 +793,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a valid description != to the original")
   @Test
-  public void editTest10() {
+  public void editTest11() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setDescription("Random description");
@@ -745,7 +804,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a valid description == to the original")
   @Test
-  public void editTest11() {
+  public void editTest12() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setDescription(goodFurniture.getDescription());
@@ -756,7 +815,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a valid favourite id")
   @Test
-  public void editTest12() {
+  public void editTest13() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     goodFurniture.setFavouritePhotoId(1);
@@ -767,7 +826,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, an invalid favourite id")
   @Test
-  public void editTest13() {
+  public void editTest14() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     goodFurniture.setFavouritePhotoId(photo1.getId());
@@ -780,7 +839,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, an empty photo list to add")
   @Test
-  public void editTest14() {
+  public void editTest15() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToAdd(new ArrayList<PhotoDTO>());
@@ -790,7 +849,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list to add but ! related")
   @Test
-  public void editTest15() {
+  public void editTest16() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToAdd(new ArrayList<PhotoDTO>());
@@ -804,7 +863,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list to add related")
   @Test
-  public void editTest16() {
+  public void editTest17() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToAdd(new ArrayList<PhotoDTO>());
@@ -817,7 +876,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, an empty photo list id to delete")
   @Test
-  public void editTest17() {
+  public void editTest18() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToDelete(new ArrayList<Integer>());
@@ -827,7 +886,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list id to delete but ! related")
   @Test
-  public void editTest18() {
+  public void editTest19() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToDelete(new ArrayList<Integer>());
@@ -839,7 +898,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list id to delete related")
   @Test
-  public void editTest19() {
+  public void editTest20() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToDelete(new ArrayList<Integer>());
@@ -852,7 +911,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, an empty photo list id to display")
   @Test
-  public void editTest20() {
+  public void editTest21() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToDisplay(new ArrayList<Integer>());
@@ -862,7 +921,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list id to display but !related")
   @Test
-  public void editTest21() {
+  public void editTest22() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToDisplay(new ArrayList<Integer>());
@@ -874,7 +933,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list id to display related")
   @Test
-  public void editTest22() {
+  public void editTest23() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToDisplay(new ArrayList<Integer>());
@@ -887,7 +946,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, an empty photo list id to hide")
   @Test
-  public void editTest23() {
+  public void editTest24() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToHide(new ArrayList<Integer>());
@@ -897,7 +956,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list id to hide but ! related")
   @Test
-  public void editTest24() {
+  public void editTest25() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToHide(new ArrayList<Integer>());
@@ -909,7 +968,7 @@ public class FurnitureUCCTest {
 
   @DisplayName("Test edit w/ valid furn. id, a non empty photo list id to hide related")
   @Test
-  public void editTest25() {
+  public void editTest26() {
     EditionDTO edition = ObjectDistributor.getEmptyEdition();
     edition.setIdFurniture(goodFurniture.getId());
     edition.setPhotosToHide(new ArrayList<Integer>());
