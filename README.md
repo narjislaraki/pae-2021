@@ -265,16 +265,6 @@
 </tr>
 
 <tr>
-	<td style="border:1px solid black;">furnitures/sale</td>
-	<td style="border:1px solid black;">POST</td>
-	<td style="border:1px solid black;">Yes</td>
-	<td style="border:1px solid black;">No</td>
-	<td style="border:1px solid black;">
-	Add a sale and change the state of the furniture from the sale to "<i>vendu</i>".
-	</td>
-</tr>
-
-<tr>
 	<td style="border:1px solid black;">furnitures/furnituresListToBeProcessed</td>
 	<td style="border:1px solid black;">POST</td>
 	<td style="border:1px solid black;">Yes</td>
@@ -531,6 +521,16 @@
 	<td style="border:1px solid black;">No</td>
 	<td style="border:1px solid black;">
 	Returns a list of all the sales.
+	</td>
+</tr>
+
+<tr>
+	<td style="border:1px solid black;">furnitures/sale</td>
+	<td style="border:1px solid black;">POST</td>
+	<td style="border:1px solid black;">Yes</td>
+	<td style="border:1px solid black;">No</td>
+	<td style="border:1px solid black;">
+	Add a sale and change the state of the furniture from the sale to "<i>vendu</i>".
 	</td>
 </tr>
 
