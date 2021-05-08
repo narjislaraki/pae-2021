@@ -355,7 +355,8 @@ const onShowFurnitureList = async (data) => {
     `;
 
     let nbPhoto = 1;
-    furnitureList += data.map((furniture) =>
+    furnitureList += data.map((furniture) =>{
+        if(furniture.favouritePhoto){
         `<div class="advancedSearchClientItem-container">
         <div class="advancedSearchClientItem condensed">
             <div class="advancedSearchClientItem_pseudo">${furniture.type == null ? "N/A" : furniture.type}</div>
@@ -389,7 +390,41 @@ const onShowFurnitureList = async (data) => {
                 height= 60px>
             </div>
         </div>
-    </div>`).join("");
+    </div>`}
+    else {
+            `<div class="advancedSearchClientItem-container">
+        <div class="advancedSearchClientItem condensed">
+            <div class="advancedSearchClientItem_pseudo">${furniture.type == null ? "N/A" : furniture.type}</div>
+            <div class="advancedSearchFurntItem_description">${furniture.description}</div>
+            <div class="advancedSearchFurnItem_moreInfo1">
+                <div>Statut: ${furniture.condition}</div>
+                <div>Prix d'achat: ${furniture.purchasePrice == null ? "N/A" : furniture.purchasePrice}</div>
+                <div>Prix de vente: ${furniture.offeredSellingPrice == null ? "N/A" : furniture.offeredSellingPrice}</div>
+            </div>
+            <div class="advancedSearchFurnItem_moreInfo2">
+                <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : convertDateTimeToStringDate(furniture.pickUpDate) + " à " + convertDateTimeToStringTime(furniture.pickUpDate)}</div>
+                <div>Date dépot: ${furniture.depositDate == null ? "N/A" : furniture.depositDate}</div>
+            </div>
+        </div>
+        <div class="furnInfo">
+            <div class="furnInfo-cat">
+                <p class="small-caps">Acheté à:</p>
+                <div>${furniture.seller == null ? "N/A" : furniture.seller.username}</div>
+            </div>
+            <div class="furnInfo-cat">
+            <p class="small-caps">Vendu à:</p>
+                <div>${saleList.filter(s => s.idFurniture == furniture.id).length == 0 ? "N/A" : (clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer).length == 0 ? "Vente anonyme" : clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer)[0].username)}</div>
+            </div>
+            <div class="furnInfo-cat">
+                <p  class="small-caps">Photos du meuble:</p>
+                <div id = "photosMeuble${furniture.id}"></div>
+            </div>
+            <div class="furnInfo-cat">
+                <p  class="small-caps">Pas de photo préférée</p>
+            </div>
+        </div>
+    </div>`
+        }}).join("");
     document.getElementById("searchspinner").innerHTML = ``;
     page.innerHTML += furnitureList;
 

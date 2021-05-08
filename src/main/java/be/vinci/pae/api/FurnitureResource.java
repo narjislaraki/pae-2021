@@ -2,24 +2,28 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
+
 import java.util.List;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.OptionDTO;
 import be.vinci.pae.domain.interfaces.PhotoDTO;
 import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
-import be.vinci.pae.domain.interfaces.VisitDTO;
-import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
+import be.vinci.pae.domain.interfaces.VisitDTO;
 import be.vinci.pae.ucc.FurnitureUCC;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
@@ -342,26 +346,6 @@ public class FurnitureResource {
   @Produces(MediaType.APPLICATION_JSON)
   public boolean withdrawSale(@Context ContainerRequest request, @PathParam("id") int id) {
     furnitureUCC.withdrawSale(id);
-    return true;
-  }
-
-  /**
-   * Cancel an option.
-   * 
-   * @param request the request
-   * @param id the option id
-   * @param json the json
-   * @return true
-   */
-  @Authorize
-  @POST
-  @Path("{id_option}/cancelOption")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public boolean cancelOption(@Context ContainerRequest request, @PathParam("id_option") int id,
-      JsonNode json) {
-    String reason = json.get("cancelReason").asText();
-    furnitureUCC.cancelOption(reason, id, (UserDTO) request.getProperty("user"));
     return true;
   }
 
