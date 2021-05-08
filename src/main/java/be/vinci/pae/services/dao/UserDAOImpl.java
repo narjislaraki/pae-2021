@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import be.vinci.pae.domain.interfaces.AddressDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.exceptions.FatalException;
@@ -29,12 +28,7 @@ public class UserDAOImpl implements UserDAO {
 
   PreparedStatement ps;
 
-  /**
-   * Searching through the database for the user, using his email.
-   * 
-   * @param email the email
-   * @return the user if he exists, otherwise null
-   */
+  @Override
   public UserDTO getUserFromEmail(String email) {
     UserDTO user = null;
     try {
@@ -54,12 +48,6 @@ public class UserDAOImpl implements UserDAO {
     return user;
   }
 
-  /**
-   * Searching through the database for the user, using his username.
-   * 
-   * @param username the username
-   * @return the user if he exists, otherwise throws error
-   */
   @Override
   public UserDTO getUserFromUsername(String username) {
     UserDTO user = null;
@@ -103,12 +91,6 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
-  /**
-   * Searching through the database for the user, using his id.
-   * 
-   * @param id the id
-   * @return the user if he exists, otherwise null
-   */
   @Override
   public UserDTO getUserFromId(int id) {
     UserDTO user = null;
@@ -132,23 +114,16 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public List<UserDTO> getUnvalidatedUsers() {
-    List<UserDTO> list = new ArrayList<UserDTO>();
+  public void setRole(int id, String role) {
     try {
-      String sql = "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
-          + "u.registration_date, u.is_validated, u.password, u.address "
-          + "FROM pae.users u WHERE u.is_validated = false;";
+      String sql = "UPDATE pae.users u SET u.role = ? WHERE u.id_user = ?; ";
       ps = dalBackendService.getPreparedStatement(sql);
-      ResultSet rs = ps.executeQuery();
-      UserDTO user = null;
-      while (rs.next()) {
-        UserDTO userDTO = setUser(rs, user);
-        list.add(userDTO);
-      }
+      ps.setString(1, role);
+      ps.setInt(2, id);
+      ps.execute();
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return list;
   }
 
   @Override
@@ -177,24 +152,6 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
-  @Override
-  public void setRole(int id, String role) {
-
-    try {
-      String sql = "UPDATE pae.users u SET u.role = ? WHERE u.id_user = ?; ";
-
-      ps = dalBackendService.getPreparedStatement(sql);
-      ps.setString(1, role);
-      ps.setInt(2, id);
-
-      ps.execute();
-
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-
-  }
-
   /**
    * Method to set a user from a resultset.
    * 
@@ -202,8 +159,7 @@ public class UserDAOImpl implements UserDAO {
    * @param user a null user
    * @return a userDTO
    */
-  @Override
-  public UserDTO setUser(ResultSet rs, UserDTO user) {
+  private UserDTO setUser(ResultSet rs, UserDTO user) {
     try {
       user = userFactory.getUserDTO();
       user.setId(rs.getInt(1));
@@ -221,6 +177,26 @@ public class UserDAOImpl implements UserDAO {
       throw new FatalException(e);
     }
     return user;
+  }
+
+  @Override
+  public List<UserDTO> getUnvalidatedUsers() {
+    List<UserDTO> list = new ArrayList<UserDTO>();
+    try {
+      String sql = "SELECT u.id_user, u.username, u.last_name, u.first_name, u.email, u.role, "
+          + "u.registration_date, u.is_validated, u.password, u.address "
+          + "FROM pae.users u WHERE u.is_validated = false;";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ResultSet rs = ps.executeQuery();
+      UserDTO user = null;
+      while (rs.next()) {
+        UserDTO userDTO = setUser(rs, user);
+        list.add(userDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
   }
 
   @Override
