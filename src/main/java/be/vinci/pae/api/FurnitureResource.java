@@ -22,8 +22,8 @@ import be.vinci.pae.domain.interfaces.PhotoDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
-import be.vinci.pae.ucc.interfaces.FurnitureUCC;
 import be.vinci.pae.domain.interfaces.VisitDTO;
+import be.vinci.pae.ucc.interfaces.FurnitureUCC;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -416,17 +416,16 @@ public class FurnitureResource {
   @Path("furnituresListToBeProcessed")
   @Produces(MediaType.APPLICATION_JSON)
   public Response processVisit(@Context ContainerRequest request, VisitDTO visit) {
-    System.out.println(visit);
     if (!checkFieldsProcess(visit)) {
-      return responseWithStatus(Status.UNAUTHORIZED, "Missing fields or uncorrect fields");
+      return responseWithStatus(Status.PRECONDITION_FAILED, "Missing fields or uncorrect fields");
     }
     return responseWithStatus(Status.CREATED, furnitureUCC.processVisit(visit.getFurnitureList()));
   }
 
   private boolean checkFieldsProcess(VisitDTO visit) {
     for (FurnitureDTO furniture : visit.getFurnitureList()) {
-      if (furniture.getCondition().equals(Condition.ACHETE) && (furniture.getPurchasePrice() <= 0
-          || furniture.getPickUpDate() == null || furniture.getPickUpDate() == null)) {
+      if (furniture.getCondition().equals(Condition.ACHETE)
+          && (furniture.getPurchasePrice() <= 0 || furniture.getPickUpDate() == null)) {
         return false;
       }
     }

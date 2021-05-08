@@ -6,6 +6,7 @@ import java.util.List;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.SaleDTO;
+import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
 import be.vinci.pae.services.dao.interfaces.SaleDAO;
@@ -33,8 +34,14 @@ public class SaleUCCImpl implements SaleUCC {
 
   @Override
   public boolean addSale(SaleDTO sale) {
+    if (sale == null) {
+      throw new BusinessException("The sale is invalid");
+    }
     dalServices.getBizzTransaction(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());
+    if (furniture == null) {
+      throw new BusinessException("The given furniture's id is invalid");
+    }
     if (furniture.getCondition().equals(Condition.VENDU)) {
       return false;
     }
