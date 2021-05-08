@@ -1400,6 +1400,7 @@ footer{
     grid-template-columns: 20% 20% 30% 30%;
     font-size: 15px;
     line-height: 18px;
+    grid-gap: 1%;
 }
 .furnInfo{
     background: var(--colormid);
@@ -1410,7 +1411,6 @@ footer{
     font-size: 15px;
     line-height: 18px;
     grid-template-columns: 50% 50%;
-    height: 120px;
 }
 
 .furnInfo div :not(.furnInfo-cat){
