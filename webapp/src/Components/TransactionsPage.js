@@ -30,7 +30,7 @@ let title = `
                     Meubles vendus
                 </button>
               </h2>
-              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-transactions">
                 <div class="accordion-body">
                     <div class="search-bar">
                         <input type="text" name="searchBar" id="searchBar-sold" class="search-bar-input" placeholder="Rechercher..." aria-label="search" />
@@ -48,7 +48,7 @@ let title = `
                     Meubles achetés
                 </button>
               </h2>
-              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion-transactions">
                 <div class="accordion-body">
                     <div class="search-bar">
                         <input type="text" name="searchBar" id="searchBar-bought" class="search-bar-input" placeholder="Rechercher..." aria-label="search" />
@@ -87,7 +87,7 @@ async function TransactionsPage() {
         return furn.furniture.description.toLowerCase().includes(searchValue);
     });
       waitingSpinner(soldFurnAcc);
-      displayFurn(filteredFurnitures, soldFurnAcc);
+      displayFurnSeller(filteredFurnitures, soldFurnAcc);
   });
 
     searchBought.addEventListener('keyup', (e) => {
@@ -99,7 +99,7 @@ async function TransactionsPage() {
       });
       
       waitingSpinner(boughtFurnAcc);
-      displayFurn(filteredFurnitures, boughtFurnAcc);
+      displayFurnBuyer(filteredFurnitures, boughtFurnAcc);
   });
     
     let userData = getUserSessionData();
@@ -130,7 +130,7 @@ async function TransactionsPage() {
 
     displayFurnSeller(salesAsSeller, soldFurnAcc);
 
-  };
+  }
 
   const displayFurnSeller = (list, destination) => {
     const htmlString = list

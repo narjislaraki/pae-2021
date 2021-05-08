@@ -4,11 +4,11 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.mockito.Mockito;
 
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.services.dao.AddressDAO;
-import be.vinci.pae.services.dao.FurnitureDAO;
-import be.vinci.pae.services.dao.SaleDAO;
-import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.dao.VisitDAO;
+import be.vinci.pae.services.dao.interfaces.AddressDAO;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.SaleDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
+import be.vinci.pae.services.dao.interfaces.VisitDAO;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider

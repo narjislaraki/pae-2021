@@ -1,4 +1,4 @@
-package be.vinci.pae.ucc;
+package be.vinci.pae.services.dao.interfaces;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.VisitDTO;
 
-public interface VisitUCC {
+public interface VisitDAO {
 
   List<VisitDTO> getNotConfirmedVisits();
 
@@ -14,15 +14,15 @@ public interface VisitUCC {
 
   List<VisitDTO> getVisitsListForAClient(int idClient);
 
-  boolean submitRequestOfVisit(VisitDTO visit);
+  int submitRequestOfVisit(VisitDTO visit);
 
   boolean acceptVisit(int idVisit, LocalDateTime scheduledDateTime);
 
   boolean cancelVisit(int idVisit, String explanatoryNote);
 
-  VisitDTO getVisitById(int id);
+  VisitDTO getVisitById(int idVisit);
 
-  List<FurnitureDTO> getListFurnituresForOneVisit(int idVisit);
+  List<FurnitureDTO> getListFurnituresForOnVisit(int idVisit);
 
 
 }

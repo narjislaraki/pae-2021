@@ -1,4 +1,4 @@
-package be.vinci.pae.ucc;
+package be.vinci.pae.ucc.interfaces;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.OptionDTO;
 import be.vinci.pae.domain.interfaces.PhotoDTO;
-import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
 
@@ -41,8 +40,6 @@ public interface FurnitureUCC {
   void cancelOvertimedOptions();
 
   List<TypeOfFurnitureDTO> getTypesOfFurnitureList();
-
-  boolean addSale(SaleDTO sale);
 
   List<PhotoDTO> getFurniturePhotos(int idFurniture, UserDTO user);
 

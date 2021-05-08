@@ -21,15 +21,14 @@ import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.OptionDTO;
 import be.vinci.pae.domain.interfaces.PhotoDTO;
-import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
-import be.vinci.pae.services.dao.FurnitureDAO;
-import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.ucc.FurnitureUCC;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
+import be.vinci.pae.ucc.interfaces.FurnitureUCC;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
@@ -40,7 +39,6 @@ public class FurnitureUCCTest {
   private static FurnitureDTO goodFurniture;
   private static FurnitureDTO badFurniture;
   private static OptionDTO goodOption;
-  private static SaleDTO sale;
   private static PhotoDTO photo1;
   private static PhotoDTO photo2;
   private static UserDTO goodUser;
@@ -78,7 +76,6 @@ public class FurnitureUCCTest {
     photo2 = ObjectDistributor.createPhoto();
     goodUser = ObjectDistributor.getGoodValidatedUser();
     goodType = ObjectDistributor.getGoodTypeOfFurniture();
-    sale = ObjectDistributor.getSale();
   }
 
   @DisplayName("Test getting the option by id with a valid id")
@@ -448,8 +445,6 @@ public class FurnitureUCCTest {
     List<TypeOfFurnitureDTO> listB = furnitureUCC.getTypesOfFurnitureList();
     assertAll(() -> assertEquals(list, listB), () -> assertEquals(2, listB.size()));
   }
-
-
 
   @DisplayName("Testing getting a photo of a furniture by an id, as an admin")
   @Test

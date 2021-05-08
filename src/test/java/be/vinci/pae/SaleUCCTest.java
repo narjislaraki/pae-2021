@@ -16,17 +16,15 @@ import org.mockito.Mockito;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.SaleDTO;
-import be.vinci.pae.services.dao.FurnitureDAO;
-import be.vinci.pae.services.dao.SaleDAO;
-import be.vinci.pae.ucc.FurnitureUCC;
-import be.vinci.pae.ucc.SaleUCC;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.SaleDAO;
+import be.vinci.pae.ucc.interfaces.SaleUCC;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 
 public class SaleUCCTest {
 
   private static SaleUCC saleUCC;
-  private static FurnitureUCC furnitureUCC;
   private static SaleDAO saleDAO;
   private static FurnitureDAO furnitureDAO;
   private static SaleDTO sale;
@@ -44,7 +42,6 @@ public class SaleUCCTest {
     ServiceLocator locator =
         ServiceLocatorUtilities.bind(new ApplicationBinder(), new ApplicationBinderTest());
     saleUCC = locator.getService(SaleUCC.class);
-    furnitureUCC = locator.getService(FurnitureUCC.class);
     saleDAO = locator.getService(SaleDAO.class);
     furnitureDAO = locator.getService(FurnitureDAO.class);
   }
@@ -97,7 +94,7 @@ public class SaleUCCTest {
     sale.setIdFurniture(1);
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
     badFurniture.setCondition(Condition.VENDU.toString());
-    assertFalse(furnitureUCC.addSale(sale));
+    assertFalse(saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition isn't 'VENDU' but 'EN_ATTENTE")
@@ -106,6 +103,6 @@ public class SaleUCCTest {
     sale.setIdFurniture(goodFurniture.getId());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
     goodFurniture.setCondition(Condition.EN_ATTENTE.toString());
-    assertTrue(furnitureUCC.addSale(sale));
+    assertTrue(saleUCC.addSale(sale));
   }
 }

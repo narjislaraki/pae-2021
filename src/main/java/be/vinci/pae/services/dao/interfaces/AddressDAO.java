@@ -1,4 +1,4 @@
-package be.vinci.pae.services.dao;
+package be.vinci.pae.services.dao.interfaces;
 
 import be.vinci.pae.domain.interfaces.AddressDTO;
 

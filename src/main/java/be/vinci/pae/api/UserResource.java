@@ -13,7 +13,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
-import be.vinci.pae.ucc.UserUCC;
+import be.vinci.pae.ucc.interfaces.UserUCC;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -226,7 +226,13 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
-
+        } catch (err) {
+            if (err == "Error: Admin only") {
+                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+            }
+            console.error("AdvancedSearchesPage::onSearchClients", err);
+            PrintError(err);
+        }
             if (name) {
                 clientList = clientList.filter(e => e.lastName.toLowerCase() == name.dataset.name.toLowerCase());
             } else if (inputName) {
@@ -252,13 +258,7 @@ const onSearch = async (e) => {
                 e.addEventListener("click", onFurniture);
             });
 
-        } catch (err) {
-            if (err == "Error: Admin only") {
-                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-            }
-            console.error("AdvancedSearchesPage::onSearchClients", err);
-            PrintError(err);
-        }
+
     }
     else {
         let inputName = document.getElementById("input-name").value;
@@ -283,7 +283,13 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined
             )
-
+        } catch (err) {
+            if (err == "Error: Admin only") {
+                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+            }
+            console.error("AdvancedSearchesPage::onSearchClients", err);
+            PrintError(err);
+        }
             if (name) {
                 let clients = clientList.filter(c => c.firstName.toLowerCase() == name.dataset.name.toLowerCase());
                 let clientIds = clients.map(c => c.id);
@@ -314,13 +320,7 @@ const onSearch = async (e) => {
             await onShowFurnitureList(furnList);
             btns();
             addEL();
-        } catch (err) {
-            if (err == "Error: Admin only") {
-                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-            }
-            console.error("AdvancedSearchesPage::onSearchClients", err);
-            PrintError(err);
-        }
+
     }
 }
 
@@ -385,7 +385,7 @@ const onShowFurnitureList = async (data) => {
             </div>
             <div class="furnInfo-cat">
                 <p  class="small-caps">Photo préférée:</p>
-                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto}" alt="Petite image"  width = 60px
+                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto ? furniture.favouritePhoto : "../assets/furniture_sketch.jpg"}" alt="Petite image"  width = 60px
                 height= 60px>
             </div>
         </div>
@@ -403,7 +403,6 @@ const onShowFurnitureList = async (data) => {
             userData.token,
             undefined
         );
-
         furniturePhotos.map((p) => {
             photosAAjouter += `<img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${p.photo}" alt="Petite image"  width = 60px
             height= 60px>`

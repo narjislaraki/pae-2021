@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.User;
 import be.vinci.pae.domain.interfaces.UserDTO;
-import be.vinci.pae.ucc.UserUCC;
+import be.vinci.pae.ucc.interfaces.UserUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;

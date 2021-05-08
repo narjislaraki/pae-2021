@@ -2,25 +2,28 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
+
 import java.util.List;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.OptionDTO;
 import be.vinci.pae.domain.interfaces.PhotoDTO;
-import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
-import be.vinci.pae.domain.interfaces.VisitDTO;
-import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
-import be.vinci.pae.ucc.FurnitureUCC;
+import be.vinci.pae.ucc.interfaces.FurnitureUCC;
+import be.vinci.pae.domain.interfaces.VisitDTO;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -346,26 +349,6 @@ public class FurnitureResource {
   }
 
   /**
-   * Cancel an option.
-   * 
-   * @param request the request
-   * @param id the option id
-   * @param json the json
-   * @return true
-   */
-  @Authorize
-  @POST
-  @Path("{id_option}/cancelOption")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  public boolean cancelOption(@Context ContainerRequest request, @PathParam("id_option") int id,
-      JsonNode json) {
-    String reason = json.get("cancelReason").asText();
-    furnitureUCC.cancelOption(reason, id, (UserDTO) request.getProperty("user"));
-    return true;
-  }
-
-  /**
    * Introduce an option related to a furniture and a user.
    * 
    * @param request the request
@@ -384,21 +367,6 @@ public class FurnitureResource {
     int optionTerm = json.get("duration").asInt();
     furnitureUCC.introduceOption(optionTerm, idUser, idFurniture);
     return true;
-  }
-
-  /**
-   * Add a sale and change the state of the furniture from the sale to "vendu".
-   * 
-   * @param request the request
-   * @param sale the sale
-   * @return
-   */
-  @AdminAuthorize
-  @POST
-  @Path("sale")
-  @Produces(MediaType.APPLICATION_JSON)
-  public boolean addSale(@Context ContainerRequest request, SaleDTO sale) {
-    return furnitureUCC.addSale(sale);
   }
 
   /**
