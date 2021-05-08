@@ -738,4 +738,27 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return list;
   }
 
+  @Override
+  public List<FurnitureDTO> getTransactionsSeller(int id) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
+          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
+          + "ON p.id_photo = f.favorite_photo WHERE f.seller = ? " + "AND f.condition!='refusé';";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setInt(1, id);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        furnitureDTO.setFavouritePhoto(rs.getString(13));
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
 }

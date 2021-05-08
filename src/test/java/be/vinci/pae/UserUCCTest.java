@@ -4,10 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,13 +13,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
+import be.vinci.pae.domain.furniture.FurnitureDTO;
+import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dao.AddressDAO;
+import be.vinci.pae.services.dao.FurnitureDAO;
+import be.vinci.pae.services.dao.SaleDAO;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
@@ -31,6 +32,8 @@ public class UserUCCTest {
   private static UserUCC userUCC;
   private static User goodUser;
   private static User goodUserNotValidated;
+  private static SaleDTO goodSale;
+  private static FurnitureDTO goodFurniture;
   private static String goodEmail;
   private static String badEmail;
   private static String goodPassword;
@@ -38,6 +41,8 @@ public class UserUCCTest {
   private static String goodEmailNotValidated;
   private static UserDAO userDAO;
   private static AddressDAO addressDAO;
+  private static SaleDAO saleDAO;
+  private static FurnitureDAO furnitureDAO;
 
   /**
    * Initialisation before every tests.
@@ -54,6 +59,12 @@ public class UserUCCTest {
     userDAO = locator.getService(UserDAO.class);
 
     addressDAO = locator.getService(AddressDAO.class);
+
+    furnitureDAO = locator.getService(FurnitureDAO.class);
+
+    saleDAO = locator.getService(SaleDAO.class);
+
+
   }
 
   /**
@@ -71,6 +82,8 @@ public class UserUCCTest {
     goodEmail = ObjectDistributor.getGoodEmail();
     goodUserNotValidated = ObjectDistributor.getGoodNotValidatedUser();
     goodEmailNotValidated = ObjectDistributor.getGoodEmailNotValidated();
+    goodSale = ObjectDistributor.getSale();
+    goodFurniture = ObjectDistributor.getFurnitureInSale();
   }
 
   @DisplayName("Test connection with right email and password")
@@ -353,6 +366,73 @@ public class UserUCCTest {
     Mockito.when(userDAO.getUserFromEmail(user.getEmail())).thenReturn(null);
     Mockito.when(userDAO.getUserFromUsername(user.getUsername())).thenReturn(null);
     assertTrue(userUCC.registration(user));
+  }
+
+  @DisplayName("Test getTransactionsBuyer with a empty list")
+  @Test
+  public void getTransactionsBuyerTest1() {
+    List<SaleDTO> listA = new ArrayList<SaleDTO>();
+    Mockito.when(saleDAO.getTransactionsBuyer(goodUser.getId())).thenReturn(listA);
+    List<SaleDTO> listB = userUCC.getTransactionsBuyer(goodUser.getId());
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(0, listB.size()));
+  }
+
+  @DisplayName("Test getTransactionsBuyer with a list of one sale")
+  @Test
+  public void getTransactionsBuyerTest2() {
+    List<SaleDTO> listA = new ArrayList<SaleDTO>();
+    goodSale.setIdBuyer(goodUser.getId());
+    listA.add(goodSale);
+    Mockito.when(saleDAO.getTransactionsBuyer(goodUser.getId())).thenReturn(listA);
+    List<SaleDTO> listB = userUCC.getTransactionsBuyer(goodUser.getId());
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(1, listB.size()));
+  }
+
+  @DisplayName("Test getTransactionsBuyer with a list of threes sales")
+  @Test
+  public void getTransactionsBuyerTest3() {
+    List<SaleDTO> listA = new ArrayList<SaleDTO>();
+    goodSale.setIdBuyer(goodUser.getId());
+    listA.add(goodSale);
+    listA.add(goodSale);
+    listA.add(goodSale);
+    Mockito.when(saleDAO.getTransactionsBuyer(goodUser.getId())).thenReturn(listA);
+    List<SaleDTO> listB = userUCC.getTransactionsBuyer(goodUser.getId());
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(3, listB.size()));
+  }
+
+  @DisplayName("Test getTransactionsSeller with a empty list")
+  @Test
+  public void getTransactionsSellerTest1() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    Mockito.when(furnitureDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(0, listB.size()));
+  }
+
+  @DisplayName("Test getTransactionsSeller with a list of one furniture")
+  @Test
+  public void getTransactionsSellerTest2() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    goodFurniture.setSellerId(goodUser.getId());
+    listA.add(goodFurniture);
+    Mockito.when(furnitureDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(1, listB.size()));
+  }
+
+  @DisplayName("Test getTransactionsSeller with a list of threes furnitures")
+  @Test
+  public void getTransactionsSellerTest3() {
+    List<FurnitureDTO> listA = new ArrayList<FurnitureDTO>();
+    goodSale.setFurniture(goodFurniture);
+    goodFurniture.setSellerId(goodUser.getId());
+    listA.add(goodFurniture);
+    listA.add(goodFurniture);
+    listA.add(goodFurniture);
+    Mockito.when(furnitureDAO.getTransactionsSeller(goodUser.getId())).thenReturn(listA);
+    List<FurnitureDTO> listB = userUCC.getTransactionsSeller(goodUser.getId());
+    assertAll(() -> assertEquals(listA, listB), () -> assertEquals(3, listB.size()));
   }
 
 }

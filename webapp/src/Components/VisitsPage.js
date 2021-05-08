@@ -5,6 +5,7 @@ import PrintError from "./PrintError";
 import Navbar from "./Navbar";
 import WaitingSpinner from "./WaitingSpinner.js"
 import {convertDateTimeToStringDate} from "../utils/tools.js";
+import {FurniturePage} from "./FurniturePage.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -133,7 +134,13 @@ const onVisitsWaiting = async () => {
 
 const onClose = (e) => {
     e.preventDefault();
-    let idVisit = e.srcElement.dataset.id;
+    let idVisit;
+    if (e.srcElement.dataset.idrequest){
+        idVisit = e.srcElement.dataset.idrequest;
+    }else{
+        idVisit = e.srcElement.dataset.id;
+    }
+    
 
     Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
         if (element.dataset.id == idVisit) {
@@ -223,7 +230,7 @@ async function onClickVisit(e) {
             toAdd += `
                 <li>
                     <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
-                        ${furniture.description}
+                        <div class="toClick" data-id="${furniture.id}" data-idrequest="${visit.idRequest}">${furniture.description}</div>
                         <div class="photoDiv">`;
             furniture.listPhotos.map(e => {
                 toAdd += `<img class="imageVisits" src="${e.photo}">`
@@ -239,6 +246,13 @@ async function onClickVisit(e) {
 
     allFurnitures.innerHTML = toAdd;
     
+    let listDesFurnitures = document.getElementsByClassName("toClick");
+    console.log(listDesFurnitures)
+    Array.from(listDesFurnitures).forEach((e) => {
+        console.log('click')
+        e.addEventListener("click", onFurniture);
+    });
+
     
 }
 
@@ -309,4 +323,13 @@ const onCancel = async (e) => {
     }
     VisitsPage();
 }
+
+const onFurniture = (e) => {
+    console.log(e);
+    let id = e.srcElement.dataset.id;
+    console.log(id);
+    onClose(e);
+    FurniturePage(id);
+};
+
 export default VisitsPage;

@@ -2,18 +2,15 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.util.List;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.domain.furniture.FurnitureDTO;
 import be.vinci.pae.domain.sale.SaleDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
@@ -148,7 +145,7 @@ public class UserResource {
   @Path("{id}/transactionsSeller")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public List<SaleDTO> getTransactionsSeller(@Context ContainerRequest request,
+  public List<FurnitureDTO> getTransactionsSeller(@Context ContainerRequest request,
       @PathParam("id") int id) {
     return userUCC.getTransactionsSeller(id);
   }

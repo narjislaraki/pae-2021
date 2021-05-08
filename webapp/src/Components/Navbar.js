@@ -38,7 +38,7 @@ const Navbar = async () => {
           <p class="text-user" id="bonjour">Bonjour,</p>
           
           <p id="username-menu" class="text-user">${user.username}</p>
-            <div class="dropleft" id="head-menu">
+            <div class="dropleft dropstart " id="head-menu">
               <i id="user" class="bi bi-person-circle dropdown-toggle-user"></i>
               <ul class="dropdown-menu dropdown-menu-left condensed" aria-labelledby="dropdownMenuButton1">
                 <li><a class="dropdown-item" id="profil" href="#">Profil</a></li>

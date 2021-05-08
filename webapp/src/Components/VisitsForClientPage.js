@@ -5,6 +5,7 @@ import PrintError from "./PrintError";
 import Navbar from "./Navbar";
 import WaitingSpinner from "./WaitingSpinner.js"
 import {convertDateTimeToStringDate} from "../utils/tools.js";
+import {FurniturePage} from "./FurniturePage.js";
 
 const API_BASE_URL = "/api/visits/";
 let page = document.querySelector("#page");
@@ -192,7 +193,7 @@ async function onClickVisit(e) {
             toAdd += `
                 <li>
                     <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
-                        ${furniture.description}<br>
+                        <div class="toClick" data-id="${furniture.id}" data-idrequest="${visit.idRequest}">${furniture.description}</div><br>
                         Etat : <div id="furnCondition${furniture.id}" value="${furniture.condition}"></div>
                         <div class="photoDiv">`;
             furniture.listPhotos.map(e => {
@@ -208,6 +209,12 @@ async function onClickVisit(e) {
     
 
     allFurnitures.innerHTML = toAdd;
+    let listDesFurnitures = document.getElementsByClassName("toClick");
+    console.log(listDesFurnitures)
+    Array.from(listDesFurnitures).forEach((e) => {
+        console.log('click')
+        e.addEventListener("click", onFurniture);
+    });
     for (let i = 0; i < listFurnituresForOnVisit.length; i++){
         let div = document.getElementById("furnCondition"+listFurnituresForOnVisit[i].id);
         let condition = "";
@@ -248,7 +255,12 @@ async function onClickVisit(e) {
 
 const onClose = (e) => {
     e.preventDefault();
-    let idVisit = e.srcElement.dataset.id;
+    let idVisit;
+    if (e.srcElement.dataset.idrequest){
+        idVisit = e.srcElement.dataset.idrequest;
+    }else{
+        idVisit = e.srcElement.dataset.id;
+    }
 
     Array.from(document.getElementsByClassName("hover_bkgr_fricc")).forEach((element) => {
         if (element.dataset.id == idVisit) {
@@ -258,5 +270,12 @@ const onClose = (e) => {
     });
 }
 
-export default VisitsForClientPage;
+const onFurniture = (e) => {
+    console.log(e);
+    let id = e.srcElement.dataset.id;
+    console.log(id);
+    onClose(e);
+    FurniturePage(id);
+};
 
+export default VisitsForClientPage;
