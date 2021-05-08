@@ -369,11 +369,11 @@ const onShowFurnitureList = async (data) => {
         <div class="furnInfo">
             <div class="furnInfo-cat">
                 <p class="small-caps">Acheté à:</p>
-                <div>${furniture.seller == null ? "N/A" : clientList.filter(c => c.id == furniture.sellerId)[0].username}</div>
+                <div>${furniture.seller == null ? "N/A" : furniture.seller.username}</div>
             </div>
             <div class="furnInfo-cat">
             <p class="small-caps">Vendu à:</p>
-                <div>${saleList.filter(s => s.idFurniture == furniture.id).length == 0 ? "N/A" : clientList.filter(c => c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer)[0].username}</div>
+                <div>${saleList.filter(s => s.idFurniture == furniture.id).length == 0 ? "N/A" : (clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer).length == 0 ? "Vente anonyme" : clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer)[0].username)}</div>
             </div>
             <div class="furnInfo-cat">
                 <p  class="small-caps">Photos du meuble:</p>
@@ -413,6 +413,8 @@ const onShowFurnitureList = async (data) => {
 }
 
 const onShowClientList = async (data) => {
+   
+
     let clientList =
         `<div class="clientHandles">
       <div id="pseudoHandle" class="condensed">PSEUDO</div>
@@ -458,7 +460,7 @@ const onShowClientList = async (data) => {
                     <div class="asci-signUpDate">Inscrit depuis: ${convertDateTimeToStringDate(user.registrationDate)}</div>
                     <div class="asci-role">Role: ${user.role} </div>
                     <div class="asci-amountBought">Nbr achats: ${saleList.filter(e => e.idBuyer == user.id).length}</div>
-                    <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e => e.seller == user.id).length}</div>
+                    <div class="asci-amountSold">Nbr ventes: ${furnList.filter(e => e.sellerId == user.id).length}</div>
                 </div>
             </div>
             <div class="furnInfo">
@@ -476,23 +478,24 @@ const onShowClientList = async (data) => {
         .join("");
 
     page.innerHTML += clientList;
-
     for (let i = 0; i < data.length; i++) {
         let meublesVendusHTML = document.getElementById("meublesVendus" + data[i].id);
         let meublesAchetesHTML = document.getElementById("meublesAchetes" + data[i].id);
         let mAchetesList = saleList.filter(s => s.idBuyer == data[i].id);
-        let mVendusList = furnList.filter(f => f.seller == data[i].id);
+        let mVendusList = furnList.filter(f => f.sellerId == data[i].id);
         let meublesVAjouter = "";
         let meublesAAjouter = "";
 
+        
         mAchetesList.map((m) => {
             let meuble = furnList.find(e => e.id == m.id);
             meublesAAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${meuble.description}</div>`
         })
 
         mVendusList.map((m) => {
-            meublesVAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${m.description}</div>`
+            meublesVAjouter += `<br><div data-id="${m.id}" class="furnituresClient">${m.description}</div>`
         })
+        
 
         meublesVendusHTML.innerHTML = meublesVAjouter;
         meublesAchetesHTML.innerHTML = meublesAAjouter;
@@ -511,14 +514,5 @@ const onFurniture = (e) => {
     FurniturePage(id);
 };
 
-function onSwitch(switchElement, clientDiv, furnDiv, menuDiv) {
-    console.log("dans onSwitch")
-    if (switchElement.checked) {
-        page.innerHTML = menuDiv + clientDiv;
-    }
-    else {
-        page.innerHTML = menuDiv + furnDiv;
-    }
-}
 
 export default AdvancedSearchesPage;
