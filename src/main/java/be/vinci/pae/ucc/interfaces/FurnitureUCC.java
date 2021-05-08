@@ -54,7 +54,7 @@ public interface FurnitureUCC {
    * Cancel an option.
    * 
    * @param cancellationReason the reason of the cancellation
-   * @param id the option id
+   * @param idOption the option id
    * @param user the user wanting to cancel that option
    */
   void cancelOption(String cancellationReason, int idOption, UserDTO user);
@@ -97,13 +97,13 @@ public interface FurnitureUCC {
   /**
    * Get a furniture by their id and get it with their photos and seller.
    * 
-   * @param id
+   * @param id of the furniture
    * @return the furniture
    */
   FurnitureDTO getFurnitureWithPhotosById(int id);
 
   /**
-   * Get an option associate to the id of a furniture
+   * Get an option associate to the id of a furniture.
    * 
    * @param idFurniture the id of the furniture
    * @return the option
@@ -160,7 +160,7 @@ public interface FurnitureUCC {
   /**
    * Get a list of furniture not exceeding the limit length.
    * 
-   * @param limit the amount of furniture
+   * @param limit the amount of furniture max
    * @return a list of furniture
    */
   List<FurnitureDTO> getSliderFurnitureList(int limit);
@@ -168,9 +168,9 @@ public interface FurnitureUCC {
   /**
    * Get a list of furniture not exceeding the limit length filtered by type.
    * 
-   * @param limit
-   * @param idType
-   * @return
+   * @param limit the amount of furniture max
+   * @param idType the id of a furniture type
+   * @return a list of furniture for a type
    */
   List<FurnitureDTO> getSliderFurnitureListByType(int limit, int idType);
 
