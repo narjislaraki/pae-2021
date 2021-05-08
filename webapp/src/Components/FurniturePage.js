@@ -775,7 +775,7 @@ const onSell = async () => {
 
     try {
         const registeredSale = await callAPI(
-            API_BASE_URL + "sale",
+            "api/sales/",
             "POST",
             userData.token,
             sale

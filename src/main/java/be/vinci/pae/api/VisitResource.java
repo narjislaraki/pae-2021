@@ -2,13 +2,17 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
@@ -114,7 +118,7 @@ public class VisitResource {
    * @return a list of requests for visits introduced by the client given by his id
    */
   @GET
-  @Path("{idClient}/myVisits")
+  @Path("myVisits/{idClient}")
   @Authorize
   public Response getVisitsListForAClient(@Context ContainerRequest request,
       @PathParam("idClient") int idClient) {

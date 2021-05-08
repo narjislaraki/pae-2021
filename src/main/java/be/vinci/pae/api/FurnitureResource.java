@@ -19,7 +19,6 @@ import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.OptionDTO;
 import be.vinci.pae.domain.interfaces.PhotoDTO;
-import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
@@ -368,21 +367,6 @@ public class FurnitureResource {
     int optionTerm = json.get("duration").asInt();
     furnitureUCC.introduceOption(optionTerm, idUser, idFurniture);
     return true;
-  }
-
-  /**
-   * Add a sale and change the state of the furniture from the sale to "vendu".
-   * 
-   * @param request the request
-   * @param sale the sale
-   * @return
-   */
-  @AdminAuthorize
-  @POST
-  @Path("sale")
-  @Produces(MediaType.APPLICATION_JSON)
-  public boolean addSale(@Context ContainerRequest request, SaleDTO sale) {
-    return furnitureUCC.addSale(sale);
   }
 
   /**

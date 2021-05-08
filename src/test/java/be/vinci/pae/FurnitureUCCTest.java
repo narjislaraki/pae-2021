@@ -21,12 +21,12 @@ import org.mockito.Mockito;
 
 import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.OptionDTO;
 import be.vinci.pae.domain.interfaces.PhotoDTO;
 import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
-import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
@@ -450,25 +450,6 @@ public class FurnitureUCCTest {
     Mockito.when(furnitureDAO.getTypesOfFurnitureList()).thenReturn(list);
     List<TypeOfFurnitureDTO> listB = furnitureUCC.getTypesOfFurnitureList();
     assertAll(() -> assertEquals(list, listB), () -> assertEquals(2, listB.size()));
-  }
-
-
-  @DisplayName("Testing a sale which condition is 'VENDU' ")
-  @Test
-  public void addSaleTest1() {
-    sale.setIdFurniture(1);
-    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    badFurniture.setCondition(Condition.VENDU.toString());
-    assertFalse(furnitureUCC.addSale(sale));
-  }
-
-  @DisplayName("Testing a sale which condition isn't 'VENDU' but 'EN_ATTENTE")
-  @Test
-  public void addSaleTest2() {
-    sale.setIdFurniture(goodFurniture.getId());
-    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
-    goodFurniture.setCondition(Condition.EN_ATTENTE.toString());
-    assertTrue(furnitureUCC.addSale(sale));
   }
 
   @DisplayName("Testing getting a photo of a furniture by an id, as an admin")

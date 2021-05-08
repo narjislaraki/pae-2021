@@ -60,7 +60,7 @@ const onMyVisits = (e) => {
 const onVisitsForClient = async () => {
     try{
         listVisitsOfAClient = await callAPI(
-            API_BASE_URL + currentUser.id +"/myVisits",
+            API_BASE_URL + "myVisits/" + currentUser.id,
             "GET",
             userData.token,
             undefined,

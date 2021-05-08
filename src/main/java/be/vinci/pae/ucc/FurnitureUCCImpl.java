@@ -14,12 +14,11 @@ import java.util.stream.Collectors;
 
 import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.OptionDTO;
 import be.vinci.pae.domain.interfaces.PhotoDTO;
-import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.domain.interfaces.UserDTO;
-import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
@@ -277,20 +276,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
     list = furnitureDao.getTypesOfFurnitureList();
     dalServices.stopBizzTransaction();
     return list;
-  }
-
-  @Override
-  public boolean addSale(SaleDTO sale) {
-    dalServices.getBizzTransaction(false);
-    FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());
-    if (furniture.getCondition().equals(Condition.VENDU)) {
-      return false;
-    }
-    furnitureDao.setFurnitureCondition(furniture, Condition.VENDU);
-    sale.setDateOfSale(LocalDateTime.now());
-    saleDao.addSale(sale);
-    dalServices.commitBizzTransaction();
-    return true;
   }
 
   @Override
