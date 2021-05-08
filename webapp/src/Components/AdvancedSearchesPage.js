@@ -226,7 +226,13 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined,
             );
-
+        } catch (err) {
+            if (err == "Error: Admin only") {
+                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+            }
+            console.error("AdvancedSearchesPage::onSearchClients", err);
+            PrintError(err);
+        }
             if (name) {
                 clientList = clientList.filter(e => e.lastName.toLowerCase() == name.dataset.name.toLowerCase());
             } else if (inputName) {
@@ -252,13 +258,7 @@ const onSearch = async (e) => {
                 e.addEventListener("click", onFurniture);
             });
 
-        } catch (err) {
-            if (err == "Error: Admin only") {
-                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-            }
-            console.error("AdvancedSearchesPage::onSearchClients", err);
-            PrintError(err);
-        }
+
     }
     else {
         let inputName = document.getElementById("input-name").value;
@@ -283,7 +283,13 @@ const onSearch = async (e) => {
                 userData.token,
                 undefined
             )
-
+        } catch (err) {
+            if (err == "Error: Admin only") {
+                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
+            }
+            console.error("AdvancedSearchesPage::onSearchClients", err);
+            PrintError(err);
+        }
             if (name) {
                 let clients = clientList.filter(c => c.firstName.toLowerCase() == name.dataset.name.toLowerCase());
                 let clientIds = clients.map(c => c.id);
@@ -314,13 +320,7 @@ const onSearch = async (e) => {
             await onShowFurnitureList(furnList);
             btns();
             addEL();
-        } catch (err) {
-            if (err == "Error: Admin only") {
-                err.message = "Seuls les administrateurs peuvent accéder à cette page !";
-            }
-            console.error("AdvancedSearchesPage::onSearchClients", err);
-            PrintError(err);
-        }
+
     }
 }
 
@@ -355,8 +355,7 @@ const onShowFurnitureList = async (data) => {
     `;
 
     let nbPhoto = 1;
-    furnitureList += data.map((furniture) =>{
-        if(furniture.favouritePhoto){
+    furnitureList += data.map((furniture) =>
         `<div class="advancedSearchClientItem-container">
         <div class="advancedSearchClientItem condensed">
             <div class="advancedSearchClientItem_pseudo">${furniture.type == null ? "N/A" : furniture.type}</div>
@@ -386,45 +385,11 @@ const onShowFurnitureList = async (data) => {
             </div>
             <div class="furnInfo-cat">
                 <p  class="small-caps">Photo préférée:</p>
-                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto}" alt="Petite image"  width = 60px
+                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto ? furniture.favouritePhoto : "../assets/furniture_sketch.jpg"}" alt="Petite image"  width = 60px
                 height= 60px>
             </div>
         </div>
-    </div>`}
-    else {
-            `<div class="advancedSearchClientItem-container">
-        <div class="advancedSearchClientItem condensed">
-            <div class="advancedSearchClientItem_pseudo">${furniture.type == null ? "N/A" : furniture.type}</div>
-            <div class="advancedSearchFurntItem_description">${furniture.description}</div>
-            <div class="advancedSearchFurnItem_moreInfo1">
-                <div>Statut: ${furniture.condition}</div>
-                <div>Prix d'achat: ${furniture.purchasePrice == null ? "N/A" : furniture.purchasePrice}</div>
-                <div>Prix de vente: ${furniture.offeredSellingPrice == null ? "N/A" : furniture.offeredSellingPrice}</div>
-            </div>
-            <div class="advancedSearchFurnItem_moreInfo2">
-                <div>Date de l'emport: ${furniture.pickUpDate == null ? "N/A" : convertDateTimeToStringDate(furniture.pickUpDate) + " à " + convertDateTimeToStringTime(furniture.pickUpDate)}</div>
-                <div>Date dépot: ${furniture.depositDate == null ? "N/A" : furniture.depositDate}</div>
-            </div>
-        </div>
-        <div class="furnInfo">
-            <div class="furnInfo-cat">
-                <p class="small-caps">Acheté à:</p>
-                <div>${furniture.seller == null ? "N/A" : furniture.seller.username}</div>
-            </div>
-            <div class="furnInfo-cat">
-            <p class="small-caps">Vendu à:</p>
-                <div>${saleList.filter(s => s.idFurniture == furniture.id).length == 0 ? "N/A" : (clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer).length == 0 ? "Vente anonyme" : clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer)[0].username)}</div>
-            </div>
-            <div class="furnInfo-cat">
-                <p  class="small-caps">Photos du meuble:</p>
-                <div id = "photosMeuble${furniture.id}"></div>
-            </div>
-            <div class="furnInfo-cat">
-                <p  class="small-caps">Pas de photo préférée</p>
-            </div>
-        </div>
-    </div>`
-        }}).join("");
+    </div>`).join("");
     document.getElementById("searchspinner").innerHTML = ``;
     page.innerHTML += furnitureList;
 
@@ -438,7 +403,6 @@ const onShowFurnitureList = async (data) => {
             userData.token,
             undefined
         );
-
         furniturePhotos.map((p) => {
             photosAAjouter += `<img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${p.photo}" alt="Petite image"  width = 60px
             height= 60px>`
