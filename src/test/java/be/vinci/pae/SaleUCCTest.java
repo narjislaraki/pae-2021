@@ -3,9 +3,12 @@ package be.vinci.pae;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,9 +16,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.SaleDTO;
+import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
 import be.vinci.pae.services.dao.interfaces.SaleDAO;
 import be.vinci.pae.ucc.interfaces.SaleUCC;
@@ -104,5 +109,22 @@ public class SaleUCCTest {
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
     goodFurniture.setCondition(Condition.EN_ATTENTE.toString());
     assertTrue(saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale with null sale")
+  @Test
+  public void addSaleTest3() {
+    sale.setIdFurniture(goodFurniture.getId());
+    goodFurniture.setCondition(Condition.EN_ATTENTE.toString());
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(null));
+  }
+
+  @DisplayName("Testing a sale with an invalid furniture id")
+  @Test
+  public void addSaleTest4() {
+    sale.setIdFurniture(-1);
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(null);
+    goodFurniture.setCondition(Condition.EN_ATTENTE.toString());
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 }
