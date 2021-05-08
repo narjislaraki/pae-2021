@@ -6,35 +6,35 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.vinci.pae.domain.address.Address;
-import be.vinci.pae.domain.address.AddressFactory;
-import be.vinci.pae.domain.address.AddressFactoryImpl;
-import be.vinci.pae.domain.edition.EditionDTO;
-import be.vinci.pae.domain.edition.EditionFactory;
-import be.vinci.pae.domain.edition.EditionFactoryImpl;
-import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
-import be.vinci.pae.domain.furniture.FurnitureFactory;
-import be.vinci.pae.domain.furniture.FurnitureFactoryImpl;
-import be.vinci.pae.domain.furniture.OptionDTO;
-import be.vinci.pae.domain.furniture.OptionFactory;
-import be.vinci.pae.domain.furniture.OptionFactoryImpl;
-import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
-import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
-import be.vinci.pae.domain.furniture.TypeOfFurnitureFactoryImpl;
-import be.vinci.pae.domain.sale.SaleDTO;
-import be.vinci.pae.domain.sale.SaleFactory;
-import be.vinci.pae.domain.sale.SaleFactoryImpl;
-import be.vinci.pae.domain.user.User;
-import be.vinci.pae.domain.user.UserFactory;
-import be.vinci.pae.domain.user.UserFactoryImpl;
-import be.vinci.pae.domain.visit.PhotoDTO;
-import be.vinci.pae.domain.visit.PhotoFactory;
-import be.vinci.pae.domain.visit.PhotoFactoryImpl;
-import be.vinci.pae.domain.visit.VisitDTO;
-import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
-import be.vinci.pae.domain.visit.VisitFactory;
-import be.vinci.pae.domain.visit.VisitFactoryImpl;
+import be.vinci.pae.domain.interfaces.AddressDTO;
+import be.vinci.pae.domain.interfaces.EditionDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
+import be.vinci.pae.domain.interfaces.OptionDTO;
+import be.vinci.pae.domain.interfaces.PhotoDTO;
+import be.vinci.pae.domain.interfaces.SaleDTO;
+import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
+import be.vinci.pae.domain.interfaces.User;
+import be.vinci.pae.domain.interfaces.VisitDTO;
+import be.vinci.pae.domain.interfaces.VisitDTO.VisitCondition;
+import be.vinci.pae.factories.AddressFactoryImpl;
+import be.vinci.pae.factories.EditionFactoryImpl;
+import be.vinci.pae.factories.FurnitureFactoryImpl;
+import be.vinci.pae.factories.OptionFactoryImpl;
+import be.vinci.pae.factories.PhotoFactoryImpl;
+import be.vinci.pae.factories.SaleFactoryImpl;
+import be.vinci.pae.factories.TypeOfFurnitureFactoryImpl;
+import be.vinci.pae.factories.UserFactoryImpl;
+import be.vinci.pae.factories.VisitFactoryImpl;
+import be.vinci.pae.factories.interfaces.AddressFactory;
+import be.vinci.pae.factories.interfaces.EditionFactory;
+import be.vinci.pae.factories.interfaces.FurnitureFactory;
+import be.vinci.pae.factories.interfaces.OptionFactory;
+import be.vinci.pae.factories.interfaces.PhotoFactory;
+import be.vinci.pae.factories.interfaces.SaleFactory;
+import be.vinci.pae.factories.interfaces.TypeOfFurnitureFactory;
+import be.vinci.pae.factories.interfaces.UserFactory;
+import be.vinci.pae.factories.interfaces.VisitFactory;
 
 public class ObjectDistributor {
 
@@ -149,8 +149,8 @@ public class ObjectDistributor {
     return emptyExplanatoryNote;
   }
 
-  private static Address getAddress() {
-    Address address = addressFactory.getAddress();
+  private static AddressDTO getAddress() {
+    AddressDTO address = addressFactory.getAddress();
     address.setBuildingNumber("10");
     address.setCity("Bruxelles");
     address.setCountry("Belgique");
@@ -257,7 +257,6 @@ public class ObjectDistributor {
     furniture.setDepositDate(LocalDateTime.now());
     furniture.setDescription("meuble");
     furniture.setId(1);
-    // TODO to complete with the tests
     return furniture;
   }
 

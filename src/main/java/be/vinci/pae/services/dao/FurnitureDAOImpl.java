@@ -8,17 +8,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
-import be.vinci.pae.domain.furniture.FurnitureFactory;
-import be.vinci.pae.domain.furniture.OptionDTO;
-import be.vinci.pae.domain.furniture.OptionDTO.State;
-import be.vinci.pae.domain.furniture.OptionFactory;
-import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
-import be.vinci.pae.domain.furniture.TypeOfFurnitureFactory;
-import be.vinci.pae.domain.visit.PhotoDTO;
-import be.vinci.pae.domain.visit.PhotoFactory;
+
+import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
+import be.vinci.pae.domain.interfaces.OptionDTO;
+import be.vinci.pae.domain.interfaces.OptionDTO.State;
+import be.vinci.pae.domain.interfaces.PhotoDTO;
+import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
 import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.factories.interfaces.FurnitureFactory;
+import be.vinci.pae.factories.interfaces.OptionFactory;
+import be.vinci.pae.factories.interfaces.PhotoFactory;
+import be.vinci.pae.factories.interfaces.TypeOfFurnitureFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
@@ -75,8 +76,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
    */
   @Override
   public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
-    // TODO on avait -1 mais 0 semble logique si aucune option n'existe.
-    // sinon, un user valide sur un meuble valide sans aucune option aura -1 comme réponse.
     int number = 0;
     try {
       String sql =

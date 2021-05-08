@@ -2,9 +2,9 @@ import callAPI from "../utils/api";
 import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
 import { FurniturePage } from "./FurniturePage.js";
-import PrintError from "./PrintError";
+import PrintError from "../utils/PrintError";
 import { convertDateTimeToStringDate, convertDateTimeToStringTime } from "../utils/tools.js";
-import waitingSpinner from "./WaitingSpinner.js";
+import waitingSpinner from "../utils/WaitingSpinner.js";
 
 const API_BASE_URL = "/api/searches/";
 

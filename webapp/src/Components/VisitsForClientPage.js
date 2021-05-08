@@ -1,9 +1,9 @@
 import callAPI from "../utils/api";
 import {RedirectUrl} from "./Router";
 import {currentUser, getUserSessionData} from "../utils/session.js";
-import PrintError from "./PrintError";
+import PrintError from "../utils/PrintError";
 import Navbar from "./Navbar";
-import WaitingSpinner from "./WaitingSpinner.js"
+import WaitingSpinner from "../utils/WaitingSpinner.js"
 import {convertDateTimeToStringDate} from "../utils/tools.js";
 import {FurniturePage} from "./FurniturePage.js";
 
@@ -49,18 +49,15 @@ let VisitsForClientPage = () => {
 
 const onMyTransactions = (e) => {
     e.preventDefault();
-    console.log("to my transactions");
     RedirectUrl("/transactions");
 }
 
 const onMyVisits = (e) => {
     e.preventDefault();
-    console.log("to my visits");
     RedirectUrl("/visitsForClient");
 }
 
 const onVisitsForClient = async () => {
-    console.log(currentUser.id);
     try{
         listVisitsOfAClient = await callAPI(
             API_BASE_URL + currentUser.id +"/myVisits",
@@ -109,7 +106,6 @@ const onVisitsForClient = async () => {
         page.innerHTML += `</tbody></table></div>`;
         for (let i = 0; i < listVisitsOfAClient.length; i++){
             let div = document.getElementById("condition"+listVisitsOfAClient[i].idRequest);
-            console.log(div);
             let condition = "";
             switch(div.getAttribute("value")){
                 case "EN_ATTENTE":
@@ -210,9 +206,7 @@ async function onClickVisit(e) {
 
     allFurnitures.innerHTML = toAdd;
     let listDesFurnitures = document.getElementsByClassName("toClick");
-    console.log(listDesFurnitures)
     Array.from(listDesFurnitures).forEach((e) => {
-        console.log('click')
         e.addEventListener("click", onFurniture);
     });
     for (let i = 0; i < listFurnituresForOnVisit.length; i++){
@@ -271,9 +265,7 @@ const onClose = (e) => {
 }
 
 const onFurniture = (e) => {
-    console.log(e);
     let id = e.srcElement.dataset.id;
-    console.log(id);
     onClose(e);
     FurniturePage(id);
 };

@@ -1,10 +1,10 @@
 package be.vinci.pae.services.dao;
 
-import be.vinci.pae.domain.address.Address;
+import be.vinci.pae.domain.interfaces.AddressDTO;
 
 public interface AddressDAO {
 
-  int addAddress(Address address);
+  int addAddress(AddressDTO address);
 
-  Address getAddress(int id);
+  AddressDTO getAddress(int id);
 }

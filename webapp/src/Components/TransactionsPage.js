@@ -1,8 +1,8 @@
 import callAPI from "../utils/api";
 import { RedirectUrl } from "./Router";
 import { currentUser, getUserSessionData } from "../utils/session.js";
-import PrintError from "./PrintError";
-import waitingSpinner from "./WaitingSpinner.js";
+import PrintError from "../utils/PrintError";
+import waitingSpinner from "../utils/WaitingSpinner.js";
 import {FurniturePage} from "./FurniturePage.js";
 
 const API_BASE_URL = "/api/users/";
@@ -126,8 +126,6 @@ async function TransactionsPage() {
         console.error("TransactionsPage::get sales", err);
         PrintError(err);
     }
-    console.log(salesAsSeller)
-    console.log(salesAsBuyer)
     displayFurnBuyer(salesAsBuyer, boughtFurnAcc);
 
     displayFurnSeller(salesAsSeller, soldFurnAcc);
@@ -165,9 +163,7 @@ async function TransactionsPage() {
         .join('');
     destination.innerHTML = htmlString;
     let listDesFurnitures = document.getElementsByClassName("onFurniture");
-    console.log(listDesFurnitures)
     Array.from(listDesFurnitures).forEach((e) => {
-        console.log('click')
         e.addEventListener("click", onFurniture);
     });
   }
@@ -203,9 +199,7 @@ async function TransactionsPage() {
           .join('');
       destination.innerHTML = htmlString;
       let listDesFurnitures = document.getElementsByClassName("onFurniture");
-      console.log(listDesFurnitures)
       Array.from(listDesFurnitures).forEach((e) => {
-          console.log('click')
           e.addEventListener("click", onFurniture);
       });
     } 
@@ -221,9 +215,7 @@ const onMyVisits = (e) => {
 }
 
 const onFurniture = (e) => {
-  console.log(e);
   let id = e.srcElement.dataset.id;
-  console.log(id);
   FurniturePage(id);
 };
 

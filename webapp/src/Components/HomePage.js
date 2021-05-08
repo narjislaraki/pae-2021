@@ -1,8 +1,8 @@
 import callAPI from "../utils/api";
 import { RedirectUrl } from "./Router";
 import { currentUser, getUserSessionData } from "../utils/session.js";
-import PrintError from "./PrintError";
-import waitingSpinner from "./WaitingSpinner.js";
+import PrintError from "../utils/PrintError";
+import waitingSpinner from "../utils/WaitingSpinner.js";
 import { FurniturePage } from "./FurniturePage.js";
 
 const API_BASE_URL = "/api/furnitures/slider";
@@ -27,9 +27,6 @@ const HomePage = async (pageData) => {
     console.error("HomePage::get list of types of furnitures", err);
     PrintError(err);
   }
-  //copie profonde
-  //let allFurnitures = [...furnitures];
-  //console.log(allFurnitures);
   if (!pageData || pageData.idType == "all") {
     try {
       furnitures = await callAPI(
@@ -149,7 +146,6 @@ const HomePage = async (pageData) => {
     let title = document.getElementById("title");
     menuDeroulant.innerHTML += `<a id="all" class="dropdown-item typeOfFurniture2" data-id="all" href="#">Voir tous les meubles</a>`;
     let typesOfFurnituresList = document.getElementsByClassName("typeOfFurniture2");
-    //console.log(allFurnitures);
     for (let i = 0; i < typesOfFurnitures.length; i++) {
         menuDeroulant.innerHTML += `<a id="type${typesOfFurnitures[i].id}" data-id="${typesOfFurnitures[i].id}" class="dropdown-item typeOfFurniture2" href="#">${typesOfFurnitures[i].label}</a>`;
       

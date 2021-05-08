@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.vinci.pae.domain.address.Address;
-import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
-import be.vinci.pae.domain.furniture.FurnitureFactory;
-import be.vinci.pae.domain.user.User;
-import be.vinci.pae.domain.visit.VisitDTO;
-import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
-import be.vinci.pae.domain.visit.VisitFactory;
+import be.vinci.pae.domain.interfaces.AddressDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.User;
+import be.vinci.pae.domain.interfaces.VisitDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
+import be.vinci.pae.domain.interfaces.VisitDTO.VisitCondition;
 import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.factories.interfaces.FurnitureFactory;
+import be.vinci.pae.factories.interfaces.VisitFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
@@ -249,7 +249,7 @@ public class VisitDAOImpl implements VisitDAO {
       }
       User client = (User) userDAO.getUserFromId(rs.getInt(7));
       visit.setClient(client);
-      Address address = addressDAO.getAddress(rs.getInt(6));
+      AddressDTO address = addressDAO.getAddress(rs.getInt(6));
       visit.setWarehouseAddress(address);
       visit.setIdClient(rs.getInt(7));
       visit.setRequestDateTime(rs.getTimestamp(8).toLocalDateTime());

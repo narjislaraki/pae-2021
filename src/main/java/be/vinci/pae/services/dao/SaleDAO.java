@@ -1,7 +1,8 @@
 package be.vinci.pae.services.dao;
 
 import java.util.List;
-import be.vinci.pae.domain.sale.SaleDTO;
+
+import be.vinci.pae.domain.interfaces.SaleDTO;
 
 public interface SaleDAO {
 

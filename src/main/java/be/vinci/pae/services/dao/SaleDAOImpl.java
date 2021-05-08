@@ -6,12 +6,13 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureFactory;
-import be.vinci.pae.domain.sale.SaleDTO;
-import be.vinci.pae.domain.sale.SaleFactory;
-import be.vinci.pae.domain.sale.SaleImpl;
+
+import be.vinci.pae.domain.SaleImpl;
+import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.factories.interfaces.FurnitureFactory;
+import be.vinci.pae.factories.interfaces.SaleFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 

@@ -1,5 +1,5 @@
 import callAPI from "../utils/api";
-import PrintError from "./PrintError.js";
+import PrintError from "../utils/PrintError.js";
 import { RedirectUrl } from "./Router";
 import { getUserSessionData , currentUser } from "../utils/session.js";
 let userData;
@@ -168,7 +168,6 @@ const onVisits = (e) => {
 
 const onVisitsToBeProcessed = (e) => {
   e.preventDefault();
-  console.log("to visits to be processed");
   RedirectUrl("/visitsToBeProcessed");
 }
 
@@ -180,18 +179,6 @@ const onAdanvancedSearches = (e) => {
 const onConfirmRegister = (e) => {
   e.preventDefault();
   RedirectUrl("/confirmRegistration");
-};
-
-const onError = (err) => {
-  console.error("ConfirmRegistrationPage::onError:", err);
-  let errorMessage;
-  if (err.message) {
-    errorMessage = err.message;
-  } else errorMessage = err;
-  if (errorMessage.includes("jwt expired"))
-    errorMessage += "<br> Please logout first, then login.";
-  RedirectUrl("/error", errorMessage);
-  //TODO
 };
 
 export default ConfirmRegistrationPage;
