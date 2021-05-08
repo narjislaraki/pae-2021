@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
@@ -137,6 +140,14 @@ public class FurnitureUCCTest {
     assertDoesNotThrow(() -> furnitureUCC.indicateSentToWorkshop(goodFurniture.getId()));
   }
 
+  @DisplayName("Test to indicate sentToWorkshop with an invalid furniture id")
+  @Test
+  public void indicateSentToWorkshopTest3() {
+    Mockito.when(furnitureDAO.getFurnitureById(-1)).thenReturn(null);
+    assertThrows(BusinessException.class,
+        () -> furnitureUCC.indicateSentToWorkshop(goodFurniture.getId()));
+  }
+
   @DisplayName("Test to indicate dropOfStore with a invalid condition furniture")
   @Test
   public void indicateDropOfStoreTest1() {
@@ -160,6 +171,13 @@ public class FurnitureUCCTest {
     goodFurniture.setCondition(Condition.ACHETE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
     assertDoesNotThrow(() -> furnitureUCC.indicateDropOfStore(goodFurniture.getId()));
+  }
+
+  @DisplayName("Test to indicate dropOfStore with an invalid furniture id")
+  @Test
+  public void indicateDropOfStoreTest4() {
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> furnitureUCC.indicateDropOfStore(-1));
   }
 
 
@@ -192,6 +210,14 @@ public class FurnitureUCCTest {
     assertDoesNotThrow(() -> furnitureUCC.indicateOfferedForSale(goodFurniture.getId(), price));
   }
 
+  @DisplayName("Test to indicate offerdForSale with an invalid furniture id")
+  @Test
+  public void indicateOfferedForSaleTest4() {
+    double price = 22;
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> furnitureUCC.indicateOfferedForSale(-1, price));
+  }
+
 
   @DisplayName("Test to withdraw a sale with a invalid condition furniture")
   @Test
@@ -215,6 +241,13 @@ public class FurnitureUCCTest {
     goodFurniture.setCondition(Condition.DEPOSE_EN_MAGASIN.toString());
     Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(goodFurniture);
     assertDoesNotThrow(() -> furnitureUCC.withdrawSale(goodFurniture.getId()));
+  }
+
+  @DisplayName("Test to withdraw a sale with a second valid condition furniture")
+  @Test
+  public void withdrawSaleTest4() {
+    Mockito.when(furnitureDAO.getFurnitureById(goodFurniture.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> furnitureUCC.withdrawSale(-1));
   }
 
   @DisplayName("Test  to introduce a option with a term <= 0")
@@ -251,6 +284,14 @@ public class FurnitureUCCTest {
     Mockito.when(furnitureDAO.getSumOfOptionDaysForAUserAboutAFurniture(goodFurniture.getId(),
         goodUser.getId())).thenReturn(3);
     assertDoesNotThrow(
+        () -> furnitureUCC.introduceOption(term, goodUser.getId(), goodFurniture.getId()));
+  }
+
+  @DisplayName("Test to introduce a option with an amount >5")
+  @Test
+  public void introduceOptionTest5() {
+    int term = 6;
+    assertThrows(UnauthorizedException.class,
         () -> furnitureUCC.introduceOption(term, goodUser.getId(), goodFurniture.getId()));
   }
 
@@ -298,6 +339,36 @@ public class FurnitureUCCTest {
     Mockito.when(furnitureDAO.cancelOption(goodReason, goodOption.getId()))
         .thenReturn(goodOption.getIdFurniture());
     assertDoesNotThrow(() -> furnitureUCC.cancelOption(goodReason, goodOption.getId(), goodUser));
+  }
+
+  @DisplayName("Test to cancel an option with invalid option id")
+  @Test
+  public void cancelOptionTest5() {
+    int id = goodUser.getId() + 1;
+    goodOption.setIdUser(id);
+    Mockito.when(furnitureDAO.getOption(goodOption.getId())).thenReturn(null);
+    assertThrows(BusinessException.class,
+        () -> furnitureUCC.cancelOption(goodReason, goodOption.getId(), goodUser));
+  }
+
+  @DisplayName("Test to cancel an option with null cancellationReason")
+  @Test
+  public void cancelOptionTest6() {
+    int id = goodUser.getId() + 1;
+    goodOption.setIdUser(id);
+    Mockito.when(furnitureDAO.getOption(goodOption.getId())).thenReturn(goodOption);
+    assertThrows(BusinessException.class,
+        () -> furnitureUCC.cancelOption(null, goodOption.getId(), goodUser));
+  }
+
+  @DisplayName("Test to cancel an option when user is admin")
+  @Test
+  public void cancelOptionTest7() {
+    int id = goodUser.getId() + 1;
+    goodOption.setIdUser(id);
+    Mockito.when(furnitureDAO.getOption(goodOption.getId())).thenReturn(goodOption);
+    assertThrows(BusinessException.class,
+        () -> furnitureUCC.cancelOption("", goodOption.getId(), goodUser));
   }
 
   @DisplayName("Test to get the furniture list with a null user")
