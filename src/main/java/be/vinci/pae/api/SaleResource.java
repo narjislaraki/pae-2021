@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.SaleDTO;
-import be.vinci.pae.ucc.SaleUCC;
+import be.vinci.pae.ucc.interfaces.SaleUCC;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

@@ -30,9 +30,9 @@ import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.domain.interfaces.UserDTO.Role;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
-import be.vinci.pae.services.dao.FurnitureDAO;
-import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.ucc.FurnitureUCC;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
+import be.vinci.pae.ucc.interfaces.FurnitureUCC;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 

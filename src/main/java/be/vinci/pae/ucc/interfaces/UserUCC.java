@@ -1,4 +1,4 @@
-package be.vinci.pae.ucc;
+package be.vinci.pae.ucc.interfaces;
 
 import java.util.List;
 

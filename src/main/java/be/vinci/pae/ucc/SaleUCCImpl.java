@@ -7,8 +7,9 @@ import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.SaleDTO;
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.services.dao.FurnitureDAO;
-import be.vinci.pae.services.dao.SaleDAO;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.SaleDAO;
+import be.vinci.pae.ucc.interfaces.SaleUCC;
 import jakarta.inject.Inject;
 
 public class SaleUCCImpl implements SaleUCC {

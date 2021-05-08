@@ -21,6 +21,8 @@ import be.vinci.pae.factories.interfaces.OptionFactory;
 import be.vinci.pae.factories.interfaces.PhotoFactory;
 import be.vinci.pae.factories.interfaces.TypeOfFurnitureFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
 import jakarta.inject.Inject;
 
 public class FurnitureDAOImpl implements FurnitureDAO {

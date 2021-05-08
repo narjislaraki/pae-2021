@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.UserDTO;
-import be.vinci.pae.ucc.FurnitureUCC;
+import be.vinci.pae.ucc.interfaces.FurnitureUCC;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;

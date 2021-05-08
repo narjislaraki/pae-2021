@@ -8,6 +8,7 @@ import be.vinci.pae.domain.interfaces.AddressDTO;
 import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.factories.interfaces.AddressFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.dao.interfaces.AddressDAO;
 import jakarta.inject.Inject;
 
 public class AddressDAOImpl implements AddressDAO {

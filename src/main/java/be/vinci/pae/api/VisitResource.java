@@ -17,7 +17,7 @@ import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.VisitDTO;
-import be.vinci.pae.ucc.VisitUCC;
+import be.vinci.pae.ucc.interfaces.VisitUCC;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

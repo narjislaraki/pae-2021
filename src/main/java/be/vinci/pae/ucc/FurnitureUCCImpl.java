@@ -23,9 +23,9 @@ import be.vinci.pae.domain.interfaces.UserDTO.Role;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dal.DalServices;
-import be.vinci.pae.services.dao.FurnitureDAO;
-import be.vinci.pae.services.dao.SaleDAO;
-import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
+import be.vinci.pae.ucc.interfaces.FurnitureUCC;
 import jakarta.inject.Inject;
 
 public class FurnitureUCCImpl implements FurnitureUCC {
@@ -42,8 +42,6 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Inject
   private Logger logger;
 
-  @Inject
-  private SaleDAO saleDao;
 
   public FurnitureUCCImpl() {
     scheduledTasksInit();

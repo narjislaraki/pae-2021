@@ -12,6 +12,8 @@ import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.factories.interfaces.UserFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.dao.interfaces.AddressDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
 import jakarta.inject.Inject;
 
 public class UserDAOImpl implements UserDAO {
