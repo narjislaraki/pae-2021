@@ -14,15 +14,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
-import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.visit.VisitDTO;
-import be.vinci.pae.domain.visit.VisitDTO.VisitCondition;
-import be.vinci.pae.domain.visit.VisitUCC;
+
+import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.UserDTO;
+import be.vinci.pae.domain.interfaces.VisitDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
+import be.vinci.pae.domain.interfaces.VisitDTO.VisitCondition;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.services.dao.UserDAO;
 import be.vinci.pae.services.dao.VisitDAO;
+import be.vinci.pae.ucc.VisitUCC;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 

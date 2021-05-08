@@ -2,7 +2,8 @@ package be.vinci.pae.services.dao;
 
 import java.sql.ResultSet;
 import java.util.List;
-import be.vinci.pae.domain.user.UserDTO;
+
+import be.vinci.pae.domain.interfaces.UserDTO;
 
 public interface UserDAO {
 

@@ -3,9 +3,10 @@ package be.vinci.pae.services.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import be.vinci.pae.domain.address.Address;
-import be.vinci.pae.domain.address.AddressFactory;
+
+import be.vinci.pae.domain.interfaces.AddressDTO;
 import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.factories.interfaces.AddressFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
@@ -21,7 +22,7 @@ public class AddressDAOImpl implements AddressDAO {
 
 
   @Override
-  public int addAddress(Address address) {
+  public int addAddress(AddressDTO address) {
     int key = 0;
     try {
       String sql = "INSERT INTO pae.addresses VALUES(default, ?, ?, ?, ?, ?, ?);";
@@ -29,7 +30,7 @@ public class AddressDAOImpl implements AddressDAO {
       ps.setString(1, address.getStreet());
       ps.setString(2, address.getBuildingNumber());
       if (address.getUnitNumber() == null || address.getUnitNumber().isEmpty()
-          || address.getUnitNumber().equals("")) { // TODO
+          || address.getUnitNumber().equals("")) {
         ps.setObject(3, null);
       } else {
         ps.setString(3, address.getUnitNumber());
@@ -52,8 +53,8 @@ public class AddressDAOImpl implements AddressDAO {
 
 
   @Override
-  public Address getAddress(int id) {
-    Address address = null;
+  public AddressDTO getAddress(int id) {
+    AddressDTO address = null;
     try {
       ps = dalBackendServices
           .getPreparedStatement("SELECT a.id_address, a.street, a.building_number, a.unit_number, "

@@ -2,9 +2,9 @@ import callAPI from "../utils/api";
 import { RedirectUrl } from "./Router";
 import { getUserSessionData } from "../utils/session.js";
 import { FurniturePage } from "./FurniturePage.js";
-import PrintError from "./PrintError";
+import PrintError from "../utils/PrintError";
 import { convertDateTimeToStringDate, convertDateTimeToStringTime } from "../utils/tools.js";
-import waitingSpinner from "./WaitingSpinner";
+import waitingSpinner from "../utils/WaitingSpinner.js";
 
 const API_BASE_URL = "/api/searches/";
 
@@ -76,6 +76,7 @@ let AdvancedSearchesPage = async () => {
         </datalist>
         <input id="input-postCode" class="form-control" list="postCode-list" placeholder ="Code Postal">
     </div>
+    <div id="searchspinner"></div>
     `;
 
     advancedSearchesPageFurniture = `
@@ -93,6 +94,7 @@ let AdvancedSearchesPage = async () => {
         </div>
        
     </div>
+    <div id="searchspinner"></div>
     `;
 
 
@@ -215,7 +217,8 @@ const onSearch = async (e) => {
         let name = document.querySelector("#names-list option[value='" + inputName + "']");
         let inputPostCode = document.getElementById("input-postCode").value;
         let postcode = document.querySelector("#postCode-list option[value='" + inputPostCode + "']");
-        AdvancedSearchesPage();
+        await AdvancedSearchesPage();
+        waitingSpinner(document.getElementById("searchspinner"))
         try {
             clientList = await callAPI(
                 "/api/users/validatedList",
@@ -264,7 +267,8 @@ const onSearch = async (e) => {
         let type = document.querySelector("#types-list option[value='" + inputType + "']");
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
-        AdvancedSearchesPage();
+        await AdvancedSearchesPage();
+        waitingSpinner(document.getElementById("searchspinner"))
         try {
             furnList = await callAPI(
                 "/api/furnitures/research",
@@ -369,11 +373,11 @@ const onShowFurnitureList = async (data) => {
         <div class="furnInfo">
             <div class="furnInfo-cat">
                 <p class="small-caps">Acheté à:</p>
-                <div>${furniture.seller == null ? "N/A" : clientList.filter(c => c.id == furniture.sellerId)[0].username}</div>
+                <div>${furniture.seller == null ? "N/A" : furniture.seller.username}</div>
             </div>
             <div class="furnInfo-cat">
             <p class="small-caps">Vendu à:</p>
-                <div>${saleList.filter(s => s.idFurniture == furniture.id).length == 0 ? "N/A" : clientList.filter(c => c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer)[0].username}</div>
+                <div>${saleList.filter(s => s.idFurniture == furniture.id).length == 0 ? "N/A" : (clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer).length == 0 ? "Vente anonyme" : clientList.filter(c=>c.id == saleList.filter(s => s.idFurniture == furniture.id)[0].idBuyer)[0].username)}</div>
             </div>
             <div class="furnInfo-cat">
                 <p  class="small-caps">Photos du meuble:</p>
@@ -386,7 +390,7 @@ const onShowFurnitureList = async (data) => {
             </div>
         </div>
     </div>`).join("");
-
+    document.getElementById("searchspinner").innerHTML = ``;
     page.innerHTML += furnitureList;
 
     let furniturePhotos;
@@ -413,6 +417,8 @@ const onShowFurnitureList = async (data) => {
 }
 
 const onShowClientList = async (data) => {
+   
+
     let clientList =
         `<div class="clientHandles">
       <div id="pseudoHandle" class="condensed">PSEUDO</div>
@@ -474,9 +480,8 @@ const onShowClientList = async (data) => {
         </div> `)
 
         .join("");
-
+    document.getElementById("searchspinner").innerHTML = ``;
     page.innerHTML += clientList;
-
     for (let i = 0; i < data.length; i++) {
         let meublesVendusHTML = document.getElementById("meublesVendus" + data[i].id);
         let meublesAchetesHTML = document.getElementById("meublesAchetes" + data[i].id);
@@ -485,6 +490,7 @@ const onShowClientList = async (data) => {
         let meublesVAjouter = "";
         let meublesAAjouter = "";
 
+        
         mAchetesList.map((m) => {
             let meuble = furnList.find(e => e.id == m.id);
             meublesAAjouter += `<br><div data-id="${meuble.id}" class="furnituresClient">${meuble.description}</div>`
@@ -493,6 +499,7 @@ const onShowClientList = async (data) => {
         mVendusList.map((m) => {
             meublesVAjouter += `<br><div data-id="${m.id}" class="furnituresClient">${m.description}</div>`
         })
+        
 
         meublesVendusHTML.innerHTML = meublesVAjouter;
         meublesAchetesHTML.innerHTML = meublesAAjouter;
@@ -511,13 +518,5 @@ const onFurniture = (e) => {
     FurniturePage(id);
 };
 
-function onSwitch(switchElement, clientDiv, furnDiv, menuDiv) {
-    if (switchElement.checked) {
-        page.innerHTML = menuDiv + clientDiv;
-    }
-    else {
-        page.innerHTML = menuDiv + furnDiv;
-    }
-}
 
 export default AdvancedSearchesPage;

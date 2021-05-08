@@ -1,4 +1,4 @@
-import PrintError from "./PrintError.js";
+import PrintError from "../utils/PrintError.js";
 
 const ErrorPage = (err) => {
   // deal with page title

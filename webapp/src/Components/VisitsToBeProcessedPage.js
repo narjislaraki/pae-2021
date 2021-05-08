@@ -1,9 +1,9 @@
 import callAPI from "../utils/api";
 import {RedirectUrl} from "./Router.js";
 import {getUserSessionData} from "../utils/session.js";
-import PrintError from "./PrintError.js";
-import PrintMessage from "./PrintMessage.js";
-import WaitingSpinner from "./WaitingSpinner.js";
+import PrintError from "../utils/PrintError.js";
+import PrintMessage from "../utils/PrintMessage.js";
+import WaitingSpinner from "../utils/WaitingSpinner.js";
 import {convertDateTimeToStringDate} from "../utils/tools.js";
 
 const API_BASE_URL = "/api/visits/";
@@ -33,25 +33,21 @@ let VisitsToBeProcessedPage = () => {
 
 const onVisits = (e) => {
     e.preventDefault();
-    console.log("to visits to be processed");
     RedirectUrl("/visits");
 };
 
 const onVisitsToBeProcessedPage = (e) => {
     e.preventDefault();
-    console.log("to visits to be processed");
     RedirectUrl("/visitsToBeProcessed");
 }
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
-    console.log("to advancedSearches")
     RedirectUrl("/advancedSearches");
 };
 
 const onConfirmRegister = (e) => {
     e.preventDefault();
-    console.log("toConfirmRegistration");
     RedirectUrl("/confirmRegistration");
 };
 

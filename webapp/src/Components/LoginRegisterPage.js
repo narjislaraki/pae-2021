@@ -5,8 +5,8 @@ import {setUserSessionData, getCurrentUser, currentUser, setUserStorageData} fro
 import { RedirectUrl } from "./Router.js";
 import Navbar from "./Navbar.js";
 import callAPI from "../utils/api.js";
-import PrintError from "./PrintError.js";
-import PrintMessage from "./PrintMessage.js"
+import PrintError from "../utils/PrintError.js";
+import PrintMessage from "../utils/PrintMessage.js"
 const API_BASE_URL = "/api/auths/";
 
 let loginPage = `<div class="register-card">
@@ -110,7 +110,6 @@ const onLogin = async (e) => {
 const onUserLogin = async (userData) => {
   const user = { ...userData, isAutenticated: true };
   if (document.getElementById("stayconnected").checked) {
-    console.log("storage")
     setUserStorageData(user)
   }
   else {

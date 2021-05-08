@@ -13,17 +13,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.sale.SaleDTO;
-import be.vinci.pae.domain.user.User;
-import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserUCC;
+
+import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.SaleDTO;
+import be.vinci.pae.domain.interfaces.User;
+import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.services.dao.AddressDAO;
 import be.vinci.pae.services.dao.FurnitureDAO;
 import be.vinci.pae.services.dao.SaleDAO;
 import be.vinci.pae.services.dao.UserDAO;
+import be.vinci.pae.ucc.UserUCC;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 

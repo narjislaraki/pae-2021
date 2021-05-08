@@ -6,10 +6,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import be.vinci.pae.domain.address.Address;
-import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserFactory;
+
+import be.vinci.pae.domain.interfaces.AddressDTO;
+import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.factories.interfaces.UserFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
 import jakarta.inject.Inject;
 
@@ -33,8 +34,6 @@ public class UserDAOImpl implements UserDAO {
    * @return the user if he exists, otherwise null
    */
   public UserDTO getUserFromEmail(String email) {
-    // TODO PS -> attribut?
-    // TODO fetch de l'adresse aussi
     UserDTO user = null;
     try {
       ps = dalBackendService.getPreparedStatement(
@@ -61,8 +60,6 @@ public class UserDAOImpl implements UserDAO {
    */
   @Override
   public UserDTO getUserFromUsername(String username) {
-    // TODO PS -> attribut?
-    // TODO fetch de l'adresse aussi
     UserDTO user = null;
 
     try {
@@ -112,8 +109,6 @@ public class UserDAOImpl implements UserDAO {
    */
   @Override
   public UserDTO getUserFromId(int id) {
-    // TODO PS -> attribut?
-    // TODO fetch de l'adresse aussi
     UserDTO user = null;
 
     try {
@@ -218,7 +213,7 @@ public class UserDAOImpl implements UserDAO {
       user.setRegistrationDate(rs.getTimestamp(7).toLocalDateTime());
       user.setValidated(rs.getBoolean(8));
       user.setPassword(rs.getString(9));
-      Address address = addressDAO.getAddress(rs.getInt(10)); // TODO à revoir
+      AddressDTO address = addressDAO.getAddress(rs.getInt(10));
       user.setAddress(address);
     } catch (SQLException e) {
       throw new FatalException(e);

@@ -2,11 +2,12 @@ package be.vinci.pae.services.dao;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import be.vinci.pae.domain.furniture.FurnitureDTO;
-import be.vinci.pae.domain.furniture.FurnitureDTO.Condition;
-import be.vinci.pae.domain.furniture.OptionDTO;
-import be.vinci.pae.domain.furniture.TypeOfFurnitureDTO;
-import be.vinci.pae.domain.visit.PhotoDTO;
+
+import be.vinci.pae.domain.interfaces.FurnitureDTO;
+import be.vinci.pae.domain.interfaces.OptionDTO;
+import be.vinci.pae.domain.interfaces.PhotoDTO;
+import be.vinci.pae.domain.interfaces.TypeOfFurnitureDTO;
+import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 
 public interface FurnitureDAO {
 

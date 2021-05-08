@@ -1,9 +1,9 @@
 import {getUserSessionData, currentUser} from "../utils/session.js";
 import {RedirectUrl} from "./Router.js";
 import callAPI from "../utils/api.js";
-import PrintError from "./PrintError.js";
+import PrintError from "../utils/PrintError.js";
 import {FurniturePage} from "./FurniturePage.js";
-import waitingSpinner from "./WaitingSpinner";
+import waitingSpinner from "../utils/WaitingSpinner";
 
 const API_BASE_URL = "/api/furnitures/";
 
@@ -102,7 +102,6 @@ async function FurnitureListPage(pageData) {
     //close the div
     page.innerHTML += `</div>`;
     let list = document.getElementsByClassName("furniture");
-    console.log(list)
     Array.from(list).forEach((e) => {
         e.addEventListener("click", onFurniture);
     });

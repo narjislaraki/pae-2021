@@ -1,9 +1,9 @@
 import {getUserSessionData, currentUser} from "../utils/session.js";
 import {RedirectUrl} from "./Router.js";
 import callAPI from "../utils/api.js";
-import PrintError from "./PrintError.js";
-import PrintMessage from "./PrintMessage.js";
-import waitingSpinner from "./WaitingSpinner.js";
+import PrintError from "../utils/PrintError.js";
+import PrintMessage from "../utils/PrintMessage.js";
+import waitingSpinner from "../utils/WaitingSpinner.js";
 import {encodeFiles} from "../utils/tools.js";
 
 const API_BASE_URL = "api/furnitures/";
@@ -311,7 +311,6 @@ async function FurniturePage(id) {
                                 </div>
                             `;
         } else if (furniture.condition === "SOUS_OPTION") {
-            console.log(option, optionUser)
             page.innerHTML += `<div id="optiondiv">
                                     <div class="option-days-below">
                                         <p>Utilisateur: ${optionUser.username}</p>

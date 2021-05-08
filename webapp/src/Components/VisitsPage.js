@@ -1,9 +1,9 @@
 import callAPI from "../utils/api";
 import {RedirectUrl} from "./Router";
 import {getUserSessionData} from "../utils/session.js";
-import PrintError from "./PrintError";
+import PrintError from "../utils/PrintError";
 import Navbar from "./Navbar";
-import WaitingSpinner from "./WaitingSpinner.js"
+import WaitingSpinner from "../utils/WaitingSpinner.js"
 import {convertDateTimeToStringDate} from "../utils/tools.js";
 import {FurniturePage} from "./FurniturePage.js";
 
@@ -44,25 +44,21 @@ let VisitsPage = () => {
 
 const onVisits = (e) => {
     e.preventDefault();
-    console.log("to visits");
     RedirectUrl("/visits");
 };
 
 const onVisitsToBeProcessed = (e) => {
     e.preventDefault();
-    console.log("to visits to be processed");
     RedirectUrl("/visitsToBeProcessed");
 }
 
 const onAdvancedSearches = (e) => {
     e.preventDefault();
-    console.log("to advancedSearches")
     RedirectUrl("/advancedSearches");
 };
 
 const onConfirmRegister = (e) => {
     e.preventDefault();
-    console.log("toConfirmRegistration");
     RedirectUrl("/confirmRegistration");
 };
 
@@ -106,7 +102,6 @@ const onVisitsWaiting = async () => {
                     ${visit.warehouseAddress.country}</p></td>
                 <td><button name="trigger_popup_fricc" class="btn btn-dark condensed small-caps block-display" data-id="${visit.idRequest}" type="submit">Consulter la demande de visite</button></td>
             </tr>
-
             `
         ).join("");
 
@@ -247,9 +242,7 @@ async function onClickVisit(e) {
     allFurnitures.innerHTML = toAdd;
     
     let listDesFurnitures = document.getElementsByClassName("toClick");
-    console.log(listDesFurnitures)
     Array.from(listDesFurnitures).forEach((e) => {
-        console.log('click')
         e.addEventListener("click", onFurniture);
     });
 
@@ -284,7 +277,6 @@ const onConfirm = async (e) => {
             },
         );
     } catch (err) {
-        console.log("VisitsPage::onConfirm", err);
         PrintError(err);
     }
     Navbar();
@@ -318,16 +310,13 @@ const onCancel = async (e) => {
             },
         );
     } catch (err) {
-        console.log("VisitsPage::onCancel", err);
         PrintError(err);
     }
     VisitsPage();
 }
 
 const onFurniture = (e) => {
-    console.log(e);
     let id = e.srcElement.dataset.id;
-    console.log(id);
     onClose(e);
     FurniturePage(id);
 };

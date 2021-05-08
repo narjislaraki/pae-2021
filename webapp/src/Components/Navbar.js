@@ -1,8 +1,8 @@
 let navBar = document.querySelector(".navigationbar");
 import callAPI from "../utils/api.js";
 import {removeSessionData, currentUser, resetCurrentUser, getUserSessionData} from "../utils/session.js";
-import PrintError from "./PrintError.js";
-import PrintMessage from "./PrintMessage.js";
+import PrintError from "../utils/PrintError.js";
+import PrintMessage from "../utils/PrintMessage.js";
 import {RedirectUrl} from "./Router.js";
 import {encodeFiles} from "../utils/tools.js";
 
@@ -100,7 +100,6 @@ const Navbar = async () => {
   if (user) {
     let profil = document.getElementById("profil");
     profil.addEventListener("click", onProfil);
-    //todo
 
         let logout = document.querySelector("#logout");
         logout.addEventListener("click", onLogout);
@@ -317,7 +316,7 @@ const onTypesOfFurnituresFilter = (data) => {
 
 const onAddFurniture = (e) => {
     idFurniture++;
-    console.log(idFurniture - 1);
+
     let eachFurniture = document.getElementById("eachFurniture");
     let newFurniture = document.createElement('div');
     newFurniture.innerHTML =
