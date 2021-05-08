@@ -1371,6 +1371,11 @@ footer{
     display: grid;
     grid-template-columns: 20% 20% 30% 30%;
 }
+#spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
 .clientHandles div{
     font-style: italic;
 }

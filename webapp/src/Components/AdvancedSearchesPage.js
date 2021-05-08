@@ -4,7 +4,7 @@ import { getUserSessionData } from "../utils/session.js";
 import { FurniturePage } from "./FurniturePage.js";
 import PrintError from "./PrintError";
 import { convertDateTimeToStringDate, convertDateTimeToStringTime } from "../utils/tools.js";
-import waitingSpinner from "./WaitingSpinner";
+import waitingSpinner from "./WaitingSpinner.js";
 
 const API_BASE_URL = "/api/searches/";
 
@@ -76,6 +76,7 @@ let AdvancedSearchesPage = async () => {
         </datalist>
         <input id="input-postCode" class="form-control" list="postCode-list" placeholder ="Code Postal">
     </div>
+    <div id="spinner"></div>
     `;
 
     advancedSearchesPageFurniture = `
@@ -93,6 +94,7 @@ let AdvancedSearchesPage = async () => {
         </div>
        
     </div>
+    <div id="spinner"></div>
     `;
 
 
@@ -215,7 +217,8 @@ const onSearch = async (e) => {
         let name = document.querySelector("#names-list option[value='" + inputName + "']");
         let inputPostCode = document.getElementById("input-postCode").value;
         let postcode = document.querySelector("#postCode-list option[value='" + inputPostCode + "']");
-        AdvancedSearchesPage();
+        await AdvancedSearchesPage();
+        waitingSpinner(document.getElementById("spinner"))
         try {
             clientList = await callAPI(
                 "/api/users/validatedList",
@@ -264,7 +267,8 @@ const onSearch = async (e) => {
         let type = document.querySelector("#types-list option[value='" + inputType + "']");
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
-        AdvancedSearchesPage();
+        await AdvancedSearchesPage();
+        waitingSpinner(document.getElementById("spinner"))
         try {
             furnList = await callAPI(
                 "/api/furnitures/research",
@@ -386,7 +390,7 @@ const onShowFurnitureList = async (data) => {
             </div>
         </div>
     </div>`).join("");
-
+    document.getElementById("spinner").innerHTML = ``;
     page.innerHTML += furnitureList;
 
     let furniturePhotos;
@@ -476,7 +480,7 @@ const onShowClientList = async (data) => {
         </div> `)
 
         .join("");
-
+    document.getElementById("spinner").innerHTML = ``;
     page.innerHTML += clientList;
     for (let i = 0; i < data.length; i++) {
         let meublesVendusHTML = document.getElementById("meublesVendus" + data[i].id);
