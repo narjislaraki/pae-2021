@@ -28,6 +28,7 @@ public class UserDAOImpl implements UserDAO {
 
   PreparedStatement ps;
 
+  @Override
   public UserDTO getUserFromEmail(String email) {
     UserDTO user = null;
     try {

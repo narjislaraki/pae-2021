@@ -7,7 +7,7 @@ public interface SaleDAO {
 
   /**
    * Add the sale passed as a parameter in the database after updating its idBuyer to null if it is
-   * an anonymous sale
+   * an anonymous sale.
    * 
    * @param sale the sale to add
    */

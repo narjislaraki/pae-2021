@@ -130,7 +130,7 @@ public interface FurnitureDAO {
 
   /**
    * Get the list of furnitures having the type whose id is passed in parameter and whose status is
-   * "en vente" or "sous option"
+   * "en vente" or "sous option".
    * 
    * @param idType the id type
    * @return the furniture list
