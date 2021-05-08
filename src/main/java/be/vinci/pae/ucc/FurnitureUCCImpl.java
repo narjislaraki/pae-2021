@@ -114,6 +114,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void indicateSentToWorkshop(int id) {
     dalServices.getBizzTransaction(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
+    if (furniture == null) {
+      throw new BusinessException("The given id is invalid");
+    }
     if (furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateSentToWorkshop(id);
       dalServices.commitBizzTransaction();
@@ -126,6 +129,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void indicateDropOfStore(int id) {
     dalServices.getBizzTransaction(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
+    if (furniture == null) {
+      throw new BusinessException("The given id is invalid");
+    }
     if (furniture.getCondition().equals(Condition.EN_RESTAURATION)
         || furniture.getCondition().equals(Condition.ACHETE)) {
       furnitureDao.indicateDropInStore(id);
@@ -139,6 +145,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void indicateOfferedForSale(int id, double price) {
     dalServices.getBizzTransaction(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
+    if (furniture == null) {
+      throw new BusinessException("The given id is invalid");
+    }
     if (price > 0 && furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.indicateOfferedForSale(furniture, price);
       dalServices.commitBizzTransaction();
@@ -151,6 +160,9 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void withdrawSale(int id) {
     dalServices.getBizzTransaction(false);
     FurnitureDTO furniture = furnitureDao.getFurnitureById(id);
+    if (furniture == null) {
+      throw new BusinessException("The given id is invalid");
+    }
     if (furniture.getCondition().equals(Condition.EN_VENTE)
         || furniture.getCondition().equals(Condition.DEPOSE_EN_MAGASIN)) {
       furnitureDao.withdrawSale(id);
@@ -162,7 +174,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public void introduceOption(int optionTerm, int idUser, int idFurniture) {
-    if (optionTerm <= 0) {
+    if (optionTerm <= 0 || optionTerm > 5) {
       throw new UnauthorizedException("optionTerm negative");
     }
     dalServices.getBizzTransaction(false);
@@ -182,11 +194,11 @@ public class FurnitureUCCImpl implements FurnitureUCC {
 
   @Override
   public void cancelOption(String cancellationReason, int idOption, UserDTO user) {
-    if (idOption < 1) {
-      throw new BusinessException("Invalid id");
-    }
     dalServices.getBizzTransaction(false);
     OptionDTO opt = furnitureDao.getOption(idOption);
+    if (opt == null || cancellationReason == null || cancellationReason.isEmpty()) {
+      throw new BusinessException("Invalid option id");
+    }
     if (user.getId() == opt.getIdUser() || user.getRole() == Role.ADMIN) {
       int idFurniture = furnitureDao.cancelOption(cancellationReason, opt.getId());
       FurnitureDTO furniture = furnitureDao.getFurnitureById(idFurniture);
@@ -307,12 +319,10 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   @Override
   public boolean edit(EditionDTO edition) {
     dalServices.getBizzTransaction(false);
-
-    if (edition.getIdFurniture() <= 0) {
+    FurnitureDTO furniture = furnitureDao.getFurnitureById(edition.getIdFurniture());
+    if (furniture == null) {
       throw new BusinessException("The furniture id is invalid");
     }
-
-    FurnitureDTO furniture = furnitureDao.getFurnitureById(edition.getIdFurniture());
     int id = furniture.getId();
     String description = edition.getDescription() == null || edition.getDescription().isEmpty()
         ? furniture.getDescription()
