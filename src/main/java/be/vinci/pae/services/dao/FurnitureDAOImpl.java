@@ -21,6 +21,8 @@ import be.vinci.pae.factories.interfaces.OptionFactory;
 import be.vinci.pae.factories.interfaces.PhotoFactory;
 import be.vinci.pae.factories.interfaces.TypeOfFurnitureFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
 import jakarta.inject.Inject;
 
 public class FurnitureDAOImpl implements FurnitureDAO {
@@ -342,9 +344,9 @@ public class FurnitureDAOImpl implements FurnitureDAO {
       String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
           + "f.pick_up_date, f.store_deposit, f.deposit_date, "
           + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
-          + "p.photo FROM pae.furnitures f LEFT OUTER JOIN pae.photos p "
-          + "ON p.id_photo = f.favorite_photo WHERE f.condition = ? "
-          + "OR f.condition = ? OR f.condition = ?" + " ORDER BY random() LIMIT ?";
+          + "p.photo FROM pae.furnitures f, pae.photos p "
+          + "WHERE p.id_photo = f.favorite_photo AND (f.condition = ? "
+          + "OR f.condition = ? OR f.condition = ?)  ORDER BY random() LIMIT ?";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, Condition.EN_VENTE.toString());
       ps.setString(2, Condition.SOUS_OPTION.toString());

@@ -1,4 +1,4 @@
-package be.vinci.pae.services.dao;
+package be.vinci.pae.services.dao.interfaces;
 
 import java.time.LocalDateTime;
 import java.util.List;

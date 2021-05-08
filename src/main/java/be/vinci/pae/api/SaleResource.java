@@ -2,19 +2,27 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
+
 import java.util.List;
+
 import org.glassfish.jersey.server.ContainerRequest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.SaleDTO;
-import be.vinci.pae.ucc.SaleUCC;
+import be.vinci.pae.ucc.interfaces.SaleUCC;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -50,5 +58,19 @@ public class SaleResource {
       responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
     }
     return responseOkWithEntity(r);
+  }
+
+  /**
+   * Add a sale and change the state of the furniture from the sale to "vendu".
+   * 
+   * @param request the request
+   * @param sale the sale
+   * @return
+   */
+  @AdminAuthorize
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public boolean addSale(@Context ContainerRequest request, SaleDTO sale) {
+    return saleUCC.addSale(sale);
   }
 }

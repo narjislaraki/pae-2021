@@ -18,6 +18,9 @@ import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.factories.interfaces.FurnitureFactory;
 import be.vinci.pae.factories.interfaces.VisitFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.dao.interfaces.AddressDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
+import be.vinci.pae.services.dao.interfaces.VisitDAO;
 import jakarta.inject.Inject;
 
 public class VisitDAOImpl implements VisitDAO {

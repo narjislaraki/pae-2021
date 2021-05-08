@@ -21,9 +21,9 @@ import be.vinci.pae.domain.interfaces.VisitDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.VisitDTO.VisitCondition;
 import be.vinci.pae.exceptions.BusinessException;
-import be.vinci.pae.services.dao.UserDAO;
-import be.vinci.pae.services.dao.VisitDAO;
-import be.vinci.pae.ucc.VisitUCC;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
+import be.vinci.pae.services.dao.interfaces.VisitDAO;
+import be.vinci.pae.ucc.interfaces.VisitUCC;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 

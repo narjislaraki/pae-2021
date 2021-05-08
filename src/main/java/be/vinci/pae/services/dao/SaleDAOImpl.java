@@ -14,6 +14,7 @@ import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.factories.interfaces.FurnitureFactory;
 import be.vinci.pae.factories.interfaces.SaleFactory;
 import be.vinci.pae.services.dal.DalBackendServices;
+import be.vinci.pae.services.dao.interfaces.SaleDAO;
 import jakarta.inject.Inject;
 
 public class SaleDAOImpl implements SaleDAO {

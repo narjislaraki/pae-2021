@@ -775,7 +775,7 @@ const onSell = async () => {
 
     try {
         const registeredSale = await callAPI(
-            API_BASE_URL + "sale",
+            "api/sales/",
             "POST",
             userData.token,
             sale
@@ -901,7 +901,7 @@ const onCancelOption = async () => {
     }
     try {
         await callAPI(
-            API_BASE_URL + id + "/cancelOption",
+            "api/options/" + id + "/cancelOption",
             "POST",
             userData.token,
             {
