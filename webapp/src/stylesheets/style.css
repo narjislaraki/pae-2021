@@ -1371,9 +1371,9 @@ footer{
     display: grid;
     grid-template-columns: 20% 20% 30% 30%;
 }
-#spinner {
+#searchspinner {
     position: absolute;
-    top: 50%;
+    top: 30%;
     left: 50%;
 }
 .clientHandles div{

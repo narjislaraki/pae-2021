@@ -14,7 +14,7 @@ const EN_VENTE = `<h4><span class="badge bg-success small-caps">EN VENTE</span><
 let typesOfFurnitures;
 const HomePage = async (pageData) => {
   let page = document.querySelector("#page");
-  waitingSpinner(page);
+  waitingSpinner();
   let furnitures;
   
   try {

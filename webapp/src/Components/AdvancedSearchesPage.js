@@ -76,7 +76,7 @@ let AdvancedSearchesPage = async () => {
         </datalist>
         <input id="input-postCode" class="form-control" list="postCode-list" placeholder ="Code Postal">
     </div>
-    <div id="spinner"></div>
+    <div id="searchspinner"></div>
     `;
 
     advancedSearchesPageFurniture = `
@@ -94,7 +94,7 @@ let AdvancedSearchesPage = async () => {
         </div>
        
     </div>
-    <div id="spinner"></div>
+    <div id="searchspinner"></div>
     `;
 
 
@@ -218,7 +218,7 @@ const onSearch = async (e) => {
         let inputPostCode = document.getElementById("input-postCode").value;
         let postcode = document.querySelector("#postCode-list option[value='" + inputPostCode + "']");
         await AdvancedSearchesPage();
-        waitingSpinner(document.getElementById("spinner"))
+        waitingSpinner(document.getElementById("searchspinner"))
         try {
             clientList = await callAPI(
                 "/api/users/validatedList",
@@ -268,7 +268,7 @@ const onSearch = async (e) => {
         let minAmount = document.getElementById("montantMin").value;
         let maxAmount = document.getElementById("montantMax").value;
         await AdvancedSearchesPage();
-        waitingSpinner(document.getElementById("spinner"))
+        waitingSpinner(document.getElementById("searchspinner"))
         try {
             furnList = await callAPI(
                 "/api/furnitures/research",
@@ -390,7 +390,7 @@ const onShowFurnitureList = async (data) => {
             </div>
         </div>
     </div>`).join("");
-    document.getElementById("spinner").innerHTML = ``;
+    document.getElementById("searchspinner").innerHTML = ``;
     page.innerHTML += furnitureList;
 
     let furniturePhotos;
@@ -480,7 +480,7 @@ const onShowClientList = async (data) => {
         </div> `)
 
         .join("");
-    document.getElementById("spinner").innerHTML = ``;
+    document.getElementById("searchspinner").innerHTML = ``;
     page.innerHTML += clientList;
     for (let i = 0; i < data.length; i++) {
         let meublesVendusHTML = document.getElementById("meublesVendus" + data[i].id);
