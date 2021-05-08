@@ -203,7 +203,7 @@ public class VisitResource {
   @Path("introduce")
   public Response introduceRequestForVisit(VisitDTO visit) {
     if (!checkFieldsIntroduce(visit)) {
-      return responseWithStatus(Status.UNAUTHORIZED, "Missing fields");
+      return responseWithStatus(Status.PRECONDITION_FAILED, "Missing fields");
     }
     return responseWithStatus(Status.CREATED, visitUCC.submitRequestOfVisit(visit));
   }
