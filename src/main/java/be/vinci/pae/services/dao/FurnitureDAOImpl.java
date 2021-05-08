@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.OptionDTO;
@@ -43,12 +42,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
 
   PreparedStatement ps;
 
-  /**
-   * Searching through the database for the furniture, using his id.
-   * 
-   * @param id the id
-   * @return the furniture if he exists, otherwise null
-   */
   @Override
   public FurnitureDTO getFurnitureById(int id) {
     FurnitureDTO furniture = null;
@@ -69,13 +62,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return furniture;
   }
 
-
-  /**
-   * Calculate and return the number of days booked by the user for a furniture.
-   * 
-   * @param idFurniture the id of the furniture
-   * @param idUser the id of the user
-   */
   @Override
   public int getSumOfOptionDaysForAUserAboutAFurniture(int idFurniture, int idUser) {
     int number = 0;
@@ -176,7 +162,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   @Override
   public int cancelOption(String cancellationReason, int idOption) {
     try {
-
       String sql = "UPDATE pae.options SET condition = ?, cancellation_reason = ? "
           + "WHERE id_option = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
@@ -338,34 +323,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
   }
 
   @Override
-  public List<FurnitureDTO> getSliderFurnitureList(int limit) {
-    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
-    try {
-      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
-          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
-          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
-          + "p.photo FROM pae.furnitures f, pae.photos p "
-          + "WHERE p.id_photo = f.favorite_photo AND (f.condition = ? "
-          + "OR f.condition = ? OR f.condition = ?)  ORDER BY random() LIMIT ?";
-      ps = dalBackendService.getPreparedStatement(sql);
-      ps.setString(1, Condition.EN_VENTE.toString());
-      ps.setString(2, Condition.SOUS_OPTION.toString());
-      ps.setString(3, Condition.VENDU.toString());
-      ps.setInt(4, limit);
-      ResultSet rs = ps.executeQuery();
-      FurnitureDTO furniture = null;
-      while (rs.next()) {
-        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
-        furnitureDTO.setFavouritePhoto(rs.getString(13));
-        list.add(furnitureDTO);
-      }
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    return list;
-  }
-
-  @Override
   public List<FurnitureDTO> getFurnitureListByType(int idType) {
     List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
     try {
@@ -388,8 +345,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
     return list;
   }
-
-
 
   @Override
   public List<FurnitureDTO> getPublicFurnitureListByType(int idType) {
@@ -419,12 +374,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return list;
   }
 
-
-  /**
-   * Returns the type of the furniture based on its id.
-   * 
-   * @param id the id of the type
-   */
   @Override
   public String getFurnitureTypeById(int id) {
     String label = "";
@@ -442,12 +391,6 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     return label;
   }
 
-
-  /**
-   * Returns the favourite photo based on its id.
-   * 
-   * @param id the id of the photo
-   */
   @Override
   public String getFavouritePhotoById(int id) {
     String favouritePhoto = "";
@@ -708,6 +651,33 @@ public class FurnitureDAOImpl implements FurnitureDAO {
     }
   }
 
+  @Override
+  public List<FurnitureDTO> getSliderFurnitureList(int limit) {
+    List<FurnitureDTO> list = new ArrayList<FurnitureDTO>();
+    try {
+      String sql = "SELECT f.id_furniture, f.condition, f.description, f.purchase_price, "
+          + "f.pick_up_date, f.store_deposit, f.deposit_date, "
+          + "f.offered_selling_price, f.id_type, f.request_visit, f.seller, f.favorite_photo, "
+          + "p.photo FROM pae.furnitures f, pae.photos p "
+          + "WHERE p.id_photo = f.favorite_photo AND (f.condition = ? "
+          + "OR f.condition = ? OR f.condition = ?)  ORDER BY random() LIMIT ?";
+      ps = dalBackendService.getPreparedStatement(sql);
+      ps.setString(1, Condition.EN_VENTE.toString());
+      ps.setString(2, Condition.SOUS_OPTION.toString());
+      ps.setString(3, Condition.VENDU.toString());
+      ps.setInt(4, limit);
+      ResultSet rs = ps.executeQuery();
+      FurnitureDTO furniture = null;
+      while (rs.next()) {
+        FurnitureDTO furnitureDTO = setFurniture(rs, furniture);
+        furnitureDTO.setFavouritePhoto(rs.getString(13));
+        list.add(furnitureDTO);
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return list;
+  }
 
   @Override
   public List<FurnitureDTO> getSliderFurnitureListByType(int limit, int idType) {
