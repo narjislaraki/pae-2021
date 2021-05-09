@@ -166,7 +166,7 @@ public class FurnitureDAOImpl implements FurnitureDAO {
           + "WHERE id_option = ? RETURNING id_furniture;";
       ps = dalBackendService.getPreparedStatement(sql);
       ps.setString(1, "annulée");
-      ps.setString(2, cancellationReason);
+      ps.setString(2, cancellationReason == null ? "" : cancellationReason);
       ps.setInt(3, idOption);
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {

@@ -4,7 +4,7 @@ import callAPI from "../utils/api.js";
 import PrintError from "../utils/PrintError.js";
 import PrintMessage from "../utils/PrintMessage.js";
 import waitingSpinner from "../utils/WaitingSpinner.js";
-import {encodeFiles} from "../utils/tools.js";
+import {encodeFiles, convertDateTimeToStringDate2} from "../utils/tools.js";
 
 const API_BASE_URL = "api/furnitures/";
 
@@ -174,9 +174,9 @@ async function FurniturePage(id) {
     })
     if (currentUser.role === "CLIENT" || currentUser.role === "ANTIQUAIRE") {
         if (furniture.condition === "SOUS_OPTION") {
-
+            console.log(addDays(new Date(option.date), option.optionTerm))
             if (option.idUser !== currentUser.id) {
-                page.innerHTML += `<div id="optiondiv"> <div class="option-days condensed small-caps">Ce meuble est sous option, repassez plus tard</div></div>`;
+                page.innerHTML += `<div id="optiondiv"> <div class="option-days condensed small-caps">Ce meuble est sous option jusqu'au ${convertDateTimeToStringDate2(addDays(new Date(option.date), option.optionTerm))}, repassez plus tard</div></div>`;
             } else {
                 page.innerHTML += `<div id="optiondiv">
                                         <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
@@ -891,14 +891,6 @@ const onWithdrawSale = async () => {
 const onCancelOption = async () => {
     let id = furniture.id;
     let reason = document.getElementById("cancelOption").value;
-    if (reason === "") {
-        let error = {
-            message: "Veuillez d'abord entrer une raison d'annulation",
-        }
-        console.error(error);
-        PrintError(error);
-        return;
-    }
     try {
         await callAPI(
             "api/options/" + id + "/cancelOption",
@@ -1013,5 +1005,11 @@ async function populateSellingDiv() {
             `<option data-role="${element.role}" data-userId="${element.id}" value="${element.username}">${element.role}</option>`;
     })
 }
+
+function addDays(date, days) {
+    const copy = new Date(Number(date))
+    copy.setDate(date.getDate() + days)
+    return copy
+  }
 
 export {FurniturePage};

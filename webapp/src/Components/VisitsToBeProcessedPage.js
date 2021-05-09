@@ -75,7 +75,7 @@ const onVisitsToBeProcessed = async() => {
                     <th scope="col">Date de la demande</th>
                     <th scope="col">Client</th>
                     <th scope="col">Nombres de meubles</th>
-                    <th scope="col">Date</th>
+                    <th scope="col">Date de la visite</th>
                     <th scope="col">Adresse</th>
                     <th scope="col"></th>
                 </tr>

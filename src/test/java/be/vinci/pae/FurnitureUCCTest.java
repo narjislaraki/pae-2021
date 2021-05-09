@@ -7,10 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
@@ -349,26 +346,6 @@ public class FurnitureUCCTest {
     Mockito.when(furnitureDAO.getOption(goodOption.getId())).thenReturn(null);
     assertThrows(BusinessException.class,
         () -> furnitureUCC.cancelOption(goodReason, goodOption.getId(), goodUser));
-  }
-
-  @DisplayName("Test to cancel an option with null cancellationReason")
-  @Test
-  public void cancelOptionTest6() {
-    int id = goodUser.getId() + 1;
-    goodOption.setIdUser(id);
-    Mockito.when(furnitureDAO.getOption(goodOption.getId())).thenReturn(goodOption);
-    assertThrows(BusinessException.class,
-        () -> furnitureUCC.cancelOption(null, goodOption.getId(), goodUser));
-  }
-
-  @DisplayName("Test to cancel an option when user is admin")
-  @Test
-  public void cancelOptionTest7() {
-    int id = goodUser.getId() + 1;
-    goodOption.setIdUser(id);
-    Mockito.when(furnitureDAO.getOption(goodOption.getId())).thenReturn(goodOption);
-    assertThrows(BusinessException.class,
-        () -> furnitureUCC.cancelOption("", goodOption.getId(), goodUser));
   }
 
   @DisplayName("Test to get the furniture list with a null user")
