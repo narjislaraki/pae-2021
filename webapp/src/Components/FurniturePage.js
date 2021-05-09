@@ -417,7 +417,7 @@ async function FurniturePage(id) {
             sellingAnonCheck.addEventListener("change", onCheckBtnAnon);
         }
         let anonymousdiv = document.getElementById("anonymousdiv");
-        if (anonymousdiv){
+        if (anonymousdiv && furniture.condition != "EN_VENTE"){
             anonymousdiv.style.display = "none";
         }
     }

@@ -185,6 +185,11 @@ function addEL() {
 
     let confirmRegister = document.getElementById("confirmRegister");
     confirmRegister.addEventListener("click", onConfirmRegister);
+
+    let listDesFurnitures = document.getElementsByClassName("advancedSearchFurntItem_description");
+    Array.from(listDesFurnitures).forEach((e) => {
+        e.addEventListener("click", onFurniture);
+    });
 }
 
 const onVisits = (e) => {
@@ -359,7 +364,7 @@ const onShowFurnitureList = async (data) => {
         `<div class="advancedSearchClientItem-container">
         <div class="advancedSearchClientItem condensed">
             <div class="advancedSearchClientItem_pseudo">${furniture.type == null ? "N/A" : furniture.type}</div>
-            <div class="advancedSearchFurntItem_description">${furniture.description}</div>
+            <div class="advancedSearchFurntItem_description" data-id="${furniture.id}">${furniture.description}</div>
             <div class="advancedSearchFurnItem_moreInfo1">
                 <div>Statut: ${furniture.condition}</div>
                 <div>Prix d'achat: ${furniture.purchasePrice == null ? "N/A" : furniture.purchasePrice}</div>
@@ -385,7 +390,7 @@ const onShowFurnitureList = async (data) => {
             </div>
             <div class="furnInfo-cat">
                 <p  class="small-caps">Photo préférée:</p>
-                <img data-id ="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto ? furniture.favouritePhoto : "../assets/furniture_sketch.jpg"}" alt="Petite image"  width = 60px
+                <img data-id="${nbPhoto}" id="small-img${nbPhoto++}" src="${furniture.favouritePhoto ? furniture.favouritePhoto : "../assets/furniture_sketch.jpg"}" alt="Petite image"  width = 60px
                 height= 60px>
             </div>
         </div>
