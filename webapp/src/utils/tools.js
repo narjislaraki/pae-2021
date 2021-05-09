@@ -1,7 +1,12 @@
 
 function convertDateTimeToStringDate(requestDateTime) {
     let datetime = new Date(requestDateTime);
-    return "Le " + datetime.getUTCDate() + "/" + datetime.getUTCMonth() + "/" + datetime.getUTCFullYear();
+    return "Le " + (datetime.getUTCDate()+1) + "/" + (datetime.getUTCMonth()+1) + "/" + datetime.getUTCFullYear();
+}
+
+function convertDateTimeToStringDate2(datetime) {
+    console.log(datetime);
+    return  (datetime.getUTCDate())+ "/" + (datetime.getUTCMonth()+1) + "/" + datetime.getUTCFullYear();
 }
 
 function convertDateTimeToStringTime(requestDateTime) {
@@ -33,4 +38,4 @@ async function encodeFiles(files) {
     return returnedFiles;
 }
 
-export {convertDateTimeToStringDate, convertDateTimeToStringTime, encodeFiles, encodeFile}
+export {convertDateTimeToStringDate, convertDateTimeToStringDate2,convertDateTimeToStringTime, encodeFiles, encodeFile}

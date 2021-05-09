@@ -11,7 +11,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 import be.vinci.pae.domain.interfaces.EditionDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
@@ -196,7 +195,7 @@ public class FurnitureUCCImpl implements FurnitureUCC {
   public void cancelOption(String cancellationReason, int idOption, UserDTO user) {
     dalServices.getBizzTransaction(false);
     OptionDTO opt = furnitureDao.getOption(idOption);
-    if (opt == null || cancellationReason == null || cancellationReason.isEmpty()) {
+    if (opt == null) {
       throw new BusinessException("Invalid option id");
     }
     if (user.getId() == opt.getIdUser() || user.getRole() == Role.ADMIN) {

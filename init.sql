@@ -191,6 +191,7 @@ SELECT id_user, username, last_name, first_name, email, role, registration_date,
 SELECT id_type, label FROM pae.types_of_furnitures ORDER BY id_type;
 SELECT id_request, time_slot, request_date, condition, explanatory_note, scheduled_date_time, warehouse_address, r.client,  u.username FROM pae.requests_for_visits r, pae.users u WHERE r.client = u.id_user ORDER BY id_request;
 SELECT f.id_furniture, f.condition, f.description, f.purchase_price, f.pick_up_date, f.store_deposit, f.deposit_date, f.offered_selling_price, f.id_type, t.label, f.request_visit, f.seller, u.username, f.favorite_photo FROM pae.types_of_furnitures t, pae.furnitures f LEFT OUTER JOIN pae.users u ON f.seller = u.id_user WHERE t.id_type = f.id_type ORDER BY f.id_furniture;
+SELECT o.id_option, o.date, o.option_term, o.cancellation_reason, o.condition, o.id_user, u.username, o.id_furniture, f.description FROM pae.options o, pae.users u, pae.furnitures f WHERE o.id_user = u.id_user AND o.id_furniture = f.id_furniture;
 SELECT id_photo, photo, is_visible, is_a_client_photo, p.id_furniture, f.description FROM pae.photos p, pae.furnitures f WHERE p.id_furniture = f.id_furniture ORDER BY id_photo;
 SELECT id_sales, selling_price, s.id_furniture, f.description, s.id_buyer, u.username, date_of_sale FROM pae.furnitures f, pae.sales s LEFT OUTER JOIN pae.users u ON s.id_buyer = u.id_user WHERE s.id_furniture = f.id_furniture ORDER BY id_sales;
 	
