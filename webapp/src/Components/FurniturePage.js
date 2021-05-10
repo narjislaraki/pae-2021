@@ -179,7 +179,7 @@ async function FurniturePage(id) {
                 page.innerHTML += `<div id="optiondiv"> <div class="option-days condensed small-caps">Ce meuble est sous option jusqu'au ${convertDateTimeToStringDate2(addDays(new Date(option.date), option.optionTerm))}, repassez plus tard</div></div>`;
             } else {
                 page.innerHTML += `<div id="optiondiv">
-                                        <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jours</div>
+                                        <div class="option-days condensed small-caps">Vous avez déjà réservé ${nbOfDay} jour(s)</div>
                                         <div class="option-days-below">
                                             <p>Raison de l'annulation</p>
                                             <input type="text" id="cancelOption">

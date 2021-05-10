@@ -325,7 +325,7 @@ input[type="checkbox"]:focus,
 
 #menuType{
     overflow-y: scroll;
-    height: 1100%;
+    height: 850%;
 }
 
 /*
@@ -1209,7 +1209,7 @@ footer{
     font-weight: bold;
 }
 
-.furniture{
+.frnToBeProcessed{
     margin-inline-start: 10%;
 }
 
@@ -1217,10 +1217,9 @@ footer{
 /*Confirm Registration**************************************************************/
 
 #ringdiv {
-    width: fit-content;
-    margin: 20%;
-    margin-inline: auto;
-    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .tableConfirmRegistration{
     margin-left: 20%;

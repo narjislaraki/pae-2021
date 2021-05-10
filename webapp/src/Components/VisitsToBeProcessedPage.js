@@ -211,7 +211,7 @@ async function onClickVisit(e){
             let idFurniture = 0
             toAdd += `
                 <li>
-                    <div class="furniture" id="${furniture.id}" data-id="${furniture.id}">
+                    <div class="furniture frnToBeProcessed" id="${furniture.id}" data-id="${furniture.id}">
                         ${furniture.description}
                         <div class="photoDiv">`;
                         furniture.listPhotos.map(e => {
