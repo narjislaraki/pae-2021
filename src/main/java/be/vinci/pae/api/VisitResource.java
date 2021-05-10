@@ -2,17 +2,13 @@ package be.vinci.pae.api;
 
 import static be.vinci.pae.utils.ResponseTool.responseOkWithEntity;
 import static be.vinci.pae.utils.ResponseTool.responseWithStatus;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.glassfish.jersey.server.ContainerRequest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
@@ -88,7 +84,7 @@ public class VisitResource {
   }
 
   /**
-   * Get a list of furnitures for one request for visit.
+   * Get a list of furnitures for one request for visit for admins.
    * 
    * @param request the request
    * @param idVisit the id of the request for visit
@@ -103,6 +99,29 @@ public class VisitResource {
     String r = null;
     try {
       r = jsonMapper.writerWithView(Views.Private.class).writeValueAsString(list);
+
+    } catch (JsonProcessingException e) {
+      return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");
+    }
+    return responseOkWithEntity(r);
+  }
+
+  /**
+   * Get a list of furnitures for one request for visit for client.
+   * 
+   * @param request the request
+   * @param idVisit the id of the request for visit
+   * @return a list of furnitures for one requests for visits wrapped in a Response
+   */
+  @GET
+  @Path("{idVisit}/furnitures/public")
+  @Authorize
+  public Response getListFurnituresForOneVisitPublic(@Context ContainerRequest request,
+      @PathParam("idVisit") int idVisit) {
+    List<FurnitureDTO> list = visitUCC.getListFurnituresForOneVisit(idVisit);
+    String r = null;
+    try {
+      r = jsonMapper.writerWithView(Views.Public.class).writeValueAsString(list);
 
     } catch (JsonProcessingException e) {
       return responseWithStatus(Status.INTERNAL_SERVER_ERROR, "Problem while converting data");

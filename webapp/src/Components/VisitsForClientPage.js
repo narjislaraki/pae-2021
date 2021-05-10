@@ -171,7 +171,7 @@ async function onClickVisit(e) {
     let listFurnituresForOnVisit;
     try{
         listFurnituresForOnVisit = await callAPI(
-            API_BASE_URL + idVisit + "/furnitures",
+            API_BASE_URL + idVisit + "/furnitures/public",
             "GET",
             userData.token,
             undefined,
