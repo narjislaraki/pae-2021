@@ -495,7 +495,19 @@
 	<td style="border:1px solid black; padding:5px">Yes</td>
 	<td style="border:1px solid black; padding:5px">Yes</td>
 	<td style="border:1px solid black; padding:5px">
-	Returns a list of furnitures for one request for visit.
+	Returns a list of furnitures for one request for visit for admin users.
+	{id_visit} is the visit id.
+	</td>
+    <td style="border:1px solid black; padding:5px"></td>
+</tr>
+
+<tr>
+	<td style="border:1px solid black; padding:5px">visits/{id_visit}/furnitures/public</td>
+	<td style="border:1px solid black; padding:5px">GET</td>
+	<td style="border:1px solid black; padding:5px">Yes</td>
+	<td style="border:1px solid black; padding:5px">Yes</td>
+	<td style="border:1px solid black; padding:5px">
+	Returns a list of furnitures for one request for visit for client users.
 	{id_visit} is the visit id.
 	</td>
     <td style="border:1px solid black; padding:5px"></td>
