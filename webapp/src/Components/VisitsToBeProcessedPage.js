@@ -152,7 +152,7 @@ async function onClickVisit(e){
                     ${visit.warehouseAddress.postCode} - ${visit.warehouseAddress.city} <br>
                     ${visit.warehouseAddress.country} 
                 </div>
-                <span class="titre">Date : </span>${visit.scheduledDateTime}<br>
+                <span class="titre">Date : </span>${convertDateTimeToStringDate(visit.scheduledDateTime)}<br>
                 <h4>Meuble(s) : </h4><br>
                 
                 <div id="allFurnitures"></div>

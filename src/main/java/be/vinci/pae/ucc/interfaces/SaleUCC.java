@@ -17,7 +17,7 @@ public interface SaleUCC {
    * Change the condition of a furniture and add a sale.
    * 
    * @param sale the sale to be add
-   * @return true if the sale as been effectuate, false if the furniture is already sold
+   * @return true if the sale as been done, false if the furniture is already sold
    */
   boolean addSale(SaleDTO sale);
 }
