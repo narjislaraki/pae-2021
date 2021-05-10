@@ -1136,8 +1136,7 @@ footer{
 }
 
 .photoDiv img{
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-right: 2%;
 }
 .imageVisits{
     width: 60%;
@@ -1208,6 +1207,10 @@ footer{
 .titre {
     font-size: large;
     font-weight: bold;
+}
+
+.furniture{
+    margin-inline-start: 10%;
 }
 
 
