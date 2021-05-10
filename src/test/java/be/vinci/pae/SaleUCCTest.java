@@ -24,6 +24,7 @@ import be.vinci.pae.domain.interfaces.UserDTO.Role;
 import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
 import be.vinci.pae.services.dao.interfaces.SaleDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
 import be.vinci.pae.ucc.interfaces.SaleUCC;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
@@ -33,6 +34,7 @@ public class SaleUCCTest {
   private static SaleUCC saleUCC;
   private static SaleDAO saleDAO;
   private static FurnitureDAO furnitureDAO;
+  private static UserDAO userDAO;
   private static SaleDTO sale;
   private static FurnitureDTO goodFurniture;
   private static FurnitureDTO badFurniture;
@@ -51,6 +53,7 @@ public class SaleUCCTest {
     saleUCC = locator.getService(SaleUCC.class);
     saleDAO = locator.getService(SaleDAO.class);
     furnitureDAO = locator.getService(FurnitureDAO.class);
+    userDAO = locator.getService(UserDAO.class);
   }
 
   /**
@@ -100,19 +103,22 @@ public class SaleUCCTest {
   @Test
   public void addSaleTest1() {
     user.setValidated(false);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale with a null user")
   @Test
   public void addSaleTest2() {
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, null));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale with a null sale")
   @Test
   public void addSaleTest3() {
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(null, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(null));
   }
 
   @DisplayName("Testing a sale with an invalid furniture id")
@@ -120,7 +126,8 @@ public class SaleUCCTest {
   public void addSaleTest4() {
     sale.setIdFurniture(-5);
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(null);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_ATTENTE' with 'admin' user")
@@ -130,7 +137,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.EN_ATTENTE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_ATTENTE' with 'client' user")
@@ -140,7 +148,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.EN_ATTENTE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_ATTENTE' with 'antiquaire' user")
@@ -150,7 +159,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     badFurniture.setCondition(Condition.EN_ATTENTE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'VENDU' with 'admin' user")
@@ -160,7 +170,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.VENDU.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'VENDU' with 'client' user")
@@ -170,7 +181,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.VENDU.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'VENDU' with 'antiquaire' user")
@@ -180,7 +192,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     badFurniture.setCondition(Condition.VENDU.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'REFUSE' with 'admin' user")
@@ -190,7 +203,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.REFUSE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'REFUSE' with 'client' user")
@@ -200,7 +214,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.REFUSE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'REFUSE' with 'antiquaire' user")
@@ -210,7 +225,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     badFurniture.setCondition(Condition.REFUSE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'RETIRE' with 'admin' user")
@@ -220,7 +236,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.RETIRE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'RETIRE' with 'client' user")
@@ -230,7 +247,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.RETIRE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'RETIRE' with 'antiquaire' user")
@@ -240,7 +258,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     badFurniture.setCondition(Condition.RETIRE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'SOUS_OPTION' with 'admin' user")
@@ -250,7 +269,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.SOUS_OPTION.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'SOUS_OPTION' with 'client' user")
@@ -260,7 +280,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.SOUS_OPTION.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'SOUS_OPTION' with 'antiquaire' user")
@@ -270,7 +291,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     badFurniture.setCondition(Condition.SOUS_OPTION.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_VENTE' with 'client' user")
@@ -280,7 +302,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     goodFurniture.setCondition(Condition.EN_VENTE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
-    assertTrue(saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertTrue(saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_VENTE' with 'admin' user")
@@ -290,7 +313,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     goodFurniture.setCondition(Condition.EN_VENTE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
-    assertTrue(saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertTrue(saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_VENTE' with 'antiquaire' user")
@@ -300,7 +324,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     goodFurniture.setCondition(Condition.EN_VENTE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
-    assertTrue(saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertTrue(saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'DEPOSE_EN_MAGASIN' with 'admin' user")
@@ -310,7 +335,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.DEPOSE_EN_MAGASIN.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'DEPOSE_EN_MAGASIN' with 'client' user")
@@ -320,7 +346,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.DEPOSE_EN_MAGASIN.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'DEPOSE_EN_MAGASIN' with 'antiquaire' user")
@@ -330,7 +357,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     goodFurniture.setCondition(Condition.DEPOSE_EN_MAGASIN.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
-    assertTrue(saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertTrue(saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'ACHETE' with 'admin' user")
@@ -340,7 +368,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.ACHETE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'ACHETE' with 'client' user")
@@ -350,7 +379,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.ACHETE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'ACHETE' with 'antiquaire' user")
@@ -360,7 +390,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     goodFurniture.setCondition(Condition.ACHETE.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
-    assertTrue(saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertTrue(saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_RESTAURATION' with 'admin' user")
@@ -370,7 +401,8 @@ public class SaleUCCTest {
     user.setRole(Role.ADMIN.toString());
     badFurniture.setCondition(Condition.EN_RESTAURATION.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_RESTAURATION' with 'client' user")
@@ -380,7 +412,8 @@ public class SaleUCCTest {
     user.setRole(Role.CLIENT.toString());
     badFurniture.setCondition(Condition.EN_RESTAURATION.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
-    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
 
   @DisplayName("Testing a sale which condition is 'EN_RESTAURATION' with 'antiquaire' user")
@@ -390,7 +423,8 @@ public class SaleUCCTest {
     user.setRole(Role.ANTIQUAIRE.toString());
     goodFurniture.setCondition(Condition.EN_RESTAURATION.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
-    assertTrue(saleUCC.addSale(sale, user));
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertTrue(saleUCC.addSale(sale));
   }
 
 }

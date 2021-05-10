@@ -12,6 +12,7 @@ import be.vinci.pae.exceptions.BusinessException;
 import be.vinci.pae.services.dal.DalServices;
 import be.vinci.pae.services.dao.interfaces.FurnitureDAO;
 import be.vinci.pae.services.dao.interfaces.SaleDAO;
+import be.vinci.pae.services.dao.interfaces.UserDAO;
 import be.vinci.pae.ucc.interfaces.SaleUCC;
 import jakarta.inject.Inject;
 
@@ -21,6 +22,9 @@ public class SaleUCCImpl implements SaleUCC {
 
   @Inject
   private FurnitureDAO furnitureDao;
+
+  @Inject
+  private UserDAO userDao;
 
   @Inject
   private DalServices dalServices;
@@ -35,20 +39,21 @@ public class SaleUCCImpl implements SaleUCC {
   }
 
   @Override
-  public boolean addSale(SaleDTO sale, UserDTO user) {
-    if (user == null || !user.isValidated()) {
-      throw new BusinessException("The user is invalid");
-    }
+  public boolean addSale(SaleDTO sale) {
     if (sale == null) {
       throw new BusinessException("The sale is invalid");
     }
     dalServices.getBizzTransaction(false);
+    UserDTO user = userDao.getUserFromId(sale.getId());
+    if (user == null || !user.isValidated()) {
+      throw new BusinessException("The user is invalid");
+    }
     FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());
     if (furniture == null) {
       throw new BusinessException("The given furniture's id is invalid");
     }
-    if ((!furniture.getCondition().equals(Condition.EN_VENTE)
-        && !user.getRole().equals(Role.ANTIQUAIRE))
+    if (!furniture.getCondition().equals(Condition.EN_VENTE)
+        && !user.getRole().equals(Role.ANTIQUAIRE)
         || furniture.getCondition().equals(Condition.EN_ATTENTE)
         || furniture.getCondition().equals(Condition.SOUS_OPTION)
         || furniture.getCondition().equals(Condition.VENDU)
