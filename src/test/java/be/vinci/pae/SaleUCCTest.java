@@ -103,6 +103,7 @@ public class SaleUCCTest {
   @Test
   public void addSaleTest1() {
     user.setValidated(false);
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
     Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
     assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
   }
@@ -424,6 +425,97 @@ public class SaleUCCTest {
     goodFurniture.setCondition(Condition.EN_RESTAURATION.toString());
     Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
     Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(user);
+    assertTrue(saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'EN_RESTAURATION' with no user")
+  @Test
+  public void addSaleTest32() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.EN_RESTAURATION.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'ACHETE' with no user")
+  @Test
+  public void addSaleTest33() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.ACHETE.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'DEPOSE_EN_MAGASIN' with no user")
+  @Test
+  public void addSaleTest34() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.DEPOSE_EN_MAGASIN.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'EN_ATTENTE' with no user")
+  @Test
+  public void addSaleTest35() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.EN_ATTENTE.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'REFUSE' with no user")
+  @Test
+  public void addSaleTest36() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.REFUSE.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'RETIRE' with no user")
+  @Test
+  public void addSaleTest37() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.RETIRE.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'VENDU' with no user")
+  @Test
+  public void addSaleTest38() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.VENDU.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'SOUS_OPTION' with no user")
+  @Test
+  public void addSaleTest39() {
+    sale.setIdFurniture(badFurniture.getId());
+    badFurniture.setCondition(Condition.SOUS_OPTION.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(badFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
+    assertThrows(BusinessException.class, () -> saleUCC.addSale(sale));
+  }
+
+  @DisplayName("Testing a sale which condition is 'EN_VENTE' with no user")
+  @Test
+  public void addSaleTest40() {
+    sale.setIdFurniture(goodFurniture.getId());
+    user.setRole(Role.ANTIQUAIRE.toString());
+    goodFurniture.setCondition(Condition.EN_VENTE.toString());
+    Mockito.when(furnitureDAO.getFurnitureById(sale.getIdFurniture())).thenReturn(goodFurniture);
+    Mockito.when(userDAO.getUserFromId(user.getId())).thenReturn(null);
     assertTrue(saleUCC.addSale(sale));
   }
 
