@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import be.vinci.pae.api.filters.AdminAuthorize;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.interfaces.SaleDTO;
+import be.vinci.pae.domain.interfaces.UserDTO;
 import be.vinci.pae.ucc.interfaces.SaleUCC;
 import be.vinci.pae.views.Views;
 import jakarta.inject.Inject;
@@ -71,6 +72,6 @@ public class SaleResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public boolean addSale(@Context ContainerRequest request, SaleDTO sale) {
-    return saleUCC.addSale(sale);
+    return saleUCC.addSale(sale, (UserDTO) request.getProperty("user"));
   }
 }
