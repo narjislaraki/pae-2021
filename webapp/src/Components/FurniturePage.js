@@ -53,7 +53,7 @@ async function FurniturePage(id) {
     if (!currentUser) {
         RedirectUrl("/");
         let err = {
-            message: "Vous n'êtes pas autorisé",
+            message: "Veuillez vous connecter pour pouvoir accéder à cette page",
         }
         PrintError(err);
         return;
