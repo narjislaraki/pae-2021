@@ -2,7 +2,6 @@ package be.vinci.pae.ucc;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import be.vinci.pae.domain.interfaces.FurnitureDTO;
 import be.vinci.pae.domain.interfaces.FurnitureDTO.Condition;
 import be.vinci.pae.domain.interfaces.SaleDTO;
@@ -44,15 +43,12 @@ public class SaleUCCImpl implements SaleUCC {
       throw new BusinessException("The sale is invalid");
     }
     dalServices.getBizzTransaction(false);
-    UserDTO user = userDao.getUserFromId(sale.getId());
-    if (user == null || !user.isValidated()) {
-      throw new BusinessException("The user is invalid");
-    }
+    UserDTO user = userDao.getUserFromId(sale.getIdBuyer());
     FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());
     if (furniture == null) {
       throw new BusinessException("The given furniture's id is invalid");
     }
-    if (!furniture.getCondition().equals(Condition.EN_VENTE)
+    if (user != null && !furniture.getCondition().equals(Condition.EN_VENTE)
         && !user.getRole().equals(Role.ANTIQUAIRE)
         || furniture.getCondition().equals(Condition.EN_ATTENTE)
         || furniture.getCondition().equals(Condition.SOUS_OPTION)
