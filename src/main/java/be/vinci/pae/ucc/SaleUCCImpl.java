@@ -44,16 +44,18 @@ public class SaleUCCImpl implements SaleUCC {
       throw new BusinessException("The sale is invalid");
     }
     dalServices.getBizzTransaction(false);
-    UserDTO user = userDao.getUserFromId(sale.getId());
-    if (user == null || !user.isValidated()) {
-      throw new BusinessException("The user is invalid");
-    }
+
     FurnitureDTO furniture = furnitureDao.getFurnitureById(sale.getIdFurniture());
     if (furniture == null) {
       throw new BusinessException("The given furniture's id is invalid");
     }
-    if (!furniture.getCondition().equals(Condition.EN_VENTE)
+    UserDTO user = userDao.getUserFromId(sale.getIdBuyer());
+    if (user != null && !user.isValidated()) {
+      throw new BusinessException("The user is not validated yet");
+    }
+    if (!furniture.getCondition().equals(Condition.EN_VENTE) && user != null
         && !user.getRole().equals(Role.ANTIQUAIRE)
+        || !furniture.getCondition().equals(Condition.EN_VENTE) && user == null
         || furniture.getCondition().equals(Condition.EN_ATTENTE)
         || furniture.getCondition().equals(Condition.SOUS_OPTION)
         || furniture.getCondition().equals(Condition.VENDU)
