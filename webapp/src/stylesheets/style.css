@@ -408,6 +408,10 @@ footer{
     opacity:0.6;
 }
 
+.scrollHomePage{
+    overflow-y: scroll;
+    height: 900%;
+}
 
 /*
 *=================================

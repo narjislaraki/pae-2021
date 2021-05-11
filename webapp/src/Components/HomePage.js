@@ -137,7 +137,7 @@ const HomePage = async (pageData) => {
     <button class="btn btn-secondary dropdown-toggle" type="buttonType" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Choisir un type de meuble
     </button>
-    <div class="dropdown-menu" id="type" aria-labelledby="dropdownMenuButton"></div>
+    <div class="dropdown-menu scrollHomePage" id="type" aria-labelledby="dropdownMenuButton"></div>
   </div>
 </div>
 `;
