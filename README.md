@@ -5,7 +5,7 @@
 ### Operations associated with authentication
 
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -53,7 +53,7 @@
 ### Operations associated with users
 
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -146,7 +146,7 @@
 
 ### Operations associated with furnitures
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -328,7 +328,7 @@
 
 ### Operations associated with types of furnitures
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -354,7 +354,7 @@
 
 ### Operations associated with photos
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -381,7 +381,7 @@
 
 ### Operations associated with options
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -444,7 +444,7 @@
 
 #### Operations associated with requests for visits
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -563,7 +563,7 @@
 
 ### Operations associated with sales
 
-<table style="border:1px solid black; padding:5px border-collapse: collapse">
+<table style="border:1px solid black; padding:5px border-collapse: collapse; min-width: 100%">
 
 <tr>
     <th style="border:1px solid black; padding:5px">URI</th>
@@ -600,6 +600,11 @@
 
 ---
 ## Properties
+
+<p>Without arguments, the default properties files is <em>prod.properties</em>.</p>
+<p>If any argument is given, it should be a properties file only, and this is the one that will be used.</p>
+<p>Either wey, those files should be in the application's root directory.</p>
+
 ### JWTSecret
 
 <p>A custom string not to share to encrypt the token</p>
