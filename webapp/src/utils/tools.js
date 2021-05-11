@@ -5,7 +5,6 @@ function convertDateTimeToStringDate(requestDateTime) {
 }
 
 function convertDateTimeToStringDate2(datetime) {
-    console.log(datetime);
     return  (datetime.getUTCDate())+ "/" + (datetime.getUTCMonth()+1) + "/" + datetime.getUTCFullYear();
 }
 
