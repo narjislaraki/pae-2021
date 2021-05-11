@@ -1,4 +1,4 @@
--- Last modification date : 10/05/2021 --
+-- Last modification date : 11/05/2021 --
 DROP SCHEMA IF EXISTS pae CASCADE;
 CREATE SCHEMA pae;
 
@@ -199,5 +199,5 @@ SELECT COUNT(id_photo) FROM pae.photos WHERE is_visible = true;
 SELECT f.condition, COUNT(f.id_furniture) FROM pae.furnitures f WHERE f.condition = 'en vente' OR f.condition = 'sous option' OR f.condition='vendu' GROUP BY f.condition;
 SELECT COUNT(p.id_photo) FROM pae.photos p, pae.furnitures f WHERE p.id_furniture = f.id_furniture AND f.favorite_photo = p.id_photo;
 
---INSERT INTO pae.options VALUES(default, '2021-05-08', 1, null, 'en cours', 3, 2);
+--INSERT INTO pae.options VALUES(default, '2021-05-10', 1, null, 'en cours', 3, 2);
 
